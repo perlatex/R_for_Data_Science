@@ -1,0 +1,21 @@
+# 贝叶斯数据分析 {#tidybayes}
+
+
+> "If you want to master something, teach it."
+>
+> --- ― Yogi Bhajan
+
+
+## Bayesian New Statistics 
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(here)
+library(fs)
+library(stringr)
+library(purrr)
+```
+
+
+
+

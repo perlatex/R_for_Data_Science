@@ -1,0 +1,1264 @@
+# ggplot2 {#ggplot2}
+
+> 采菊东篱下，悠然见南山。
+>
+
+
+根据大家投票，觉得`ggplot2`是最想掌握的技能，我想这就是R语言中最有质感的部分吧。所以，这里专门拿出一节课讲`ggplot2`，也算是补上之前第 \@ref(visual) 章数据可视化没讲的内容。
+
+
+
+有几个新的宏包需要提前安装（不是必须的）
+```{r, eval=FALSE}
+install.packages(c("sf", "cowplot"))
+
+install.packages("devtools")
+devtools::install_github("thomasp85/patchwork")
+devtools::install_github("yutannihilation/gghighlight")
+```
+
+如果安装不成功，请先update宏包，再执行上面安装命令
+
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/update_packages.png")
+```
+
+
+
+
+```{r,warning = FALSE, message = FALSE}
+library(tidyverse)
+library(gghighlight)
+library(cowplot)
+library(patchwork)
+```
+
+
+## 一个有趣的案例
+
+先看一组数据
+
+```{r}
+df <- read_csv("./demo_data/datasaurus.csv")
+df
+```
+
+先用`dataset`分组后，然后计算每组下`x`的均值和方差，`y`的均值和方差，以及`x，y`两者的相关系数，我们发现每组数据下它们几乎都是相等的
+```{r}
+df %>%
+  group_by(dataset) %>%
+  summarise_all(list(mean, sd)) %>%
+  mutate_if(is.numeric, round, 3)
+```
+
+如果上面代码不熟悉，可以用第 \@ref(dplyr) 章的代码重新表达，也是一样的
+```{r}
+df %>%
+  group_by(dataset) %>%
+  summarize(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    std_dev_x = sd(x),
+    std_dev_y = sd(y),
+    corr_x_y = cor(x, y)
+  )
+```
+
+那么，我们是否能得出结论，每组的数据长的差不多呢？然而，我们画图发现
+
+```{r, fig.asp=1.2}
+ggplot(df, aes(x = x, y = y, colour = dataset)) +
+  geom_point() +
+  # geom_smooth(method = lm) +
+  theme(legend.position = "none") +
+  facet_wrap(~dataset, ncol = 3)
+```
+
+
+事实上，每张图都相差很大。所以，这里想说明的是，眼见为实。换句话说，可视化是数据探索中非常重要的部分。本章的目的就是带领大家学习ggplot2基本的绘图技能。
+
+
+## 学习目标
+
+1. Grammer of Graphics
+
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/ggplot_template.png")
+```
+
+
+2. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
+
+3. `aes`: 数据框中的变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
+    + x（x轴方向的位置）
+    + y（y轴方向的位置）
+    + color（点或者线等元素的颜色）
+    + size（点或者线等元素的大小）
+    + shape（点或者线等元素的形状）
+    + alpha（点或者线等元素的透明度）
+    
+4. `geoms`: 几何对象，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何对象推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
+
+    + `geom_bar()`
+    + `geom_density()`
+    + `geom_freqpoly()`
+    + `geom_histogram()`
+    + `geom_violin()`
+    + `geom_boxplot()`
+    + `geom_col()`
+    + `geom_point()`
+    + `geom_smooth()`
+    + `geom_tile()`
+    + `geom_density2d()`
+    + `geom_bin2d()`
+    + `geom_hex()`
+    + `geom_count()`
+    + `geom_text()`
+    + `geom_sf()`
+    
+
+5. `stats`:   统计变换
+6. `scales`:  标度
+7. `coord`:   坐标系统
+8. `facet`:   分面
+9. `layer`：  增加图层
+10. `theme`:   主题风格
+11. `save`:    保存图片
+
+
+
+
+## 开始
+
+```{block, type="try"}
+前面讲到R语言数据类型有字符串型、数值型、因子型、逻辑型、日期型等，ggplot2会将字符串型、因子型、逻辑型、日期型默认为**离散变量**，而数值型默认为**连续变量**。我们在而呈现数据的时候，可能会同时用到多种类型的数据，比如
+
+* 一个离散
+* 一个连续
+
+* 两个离散
+* 两个连续
+* 一个离散, 一个连续
+
+* 三个连续
+
+```
+
+
+### 导入数据
+
+```{r}
+gapdata <- read_csv("./demo_data/gapminder.csv")
+gapdata
+```
+
+### 检查数据
+```{r}
+# 是否有缺失值
+gapdata %>%
+  summarise_all(~ any(is.na(.)))
+```
+
+* `country` 代表国家
+* `countinet` 表示所在的洲
+* `year` 时间
+* `lifeExp` 平均寿命
+* `pop` 人口数量
+* `gdpPercap` 人均GDP
+
+
+
+```{block, type = "try"}
+接下来，我们需要思考我们应该选择什么样的图，呈现这些不同类型的数据，探索数据背后的故事
+```
+
+
+## 基本绘图
+
+### 柱状图
+常用于一个离散变量
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent)) + geom_bar()
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar() +
+  coord_flip()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent)) + stat_count()
+```
+
+
+
+```{r}
+gapdata %>% count(continent)
+```
+可见，geom_bar() 自动完成了这个统计，更多geom与stat对应关系见[这里]()
+
+
+
+```{r}
+gapdata %>%
+  distinct(continent, country) %>%
+  ggplot(aes(x = continent)) +
+  geom_bar()
+```
+
+我个人比较喜欢先统计，然后画图
+```{r}
+gapdata %>%
+  distinct(continent, country) %>%
+  group_by(continent) %>%
+  summarise(num = n()) %>%
+  ggplot(aes(x = continent, y = num)) +
+  geom_col()
+```
+
+
+
+### 直方图
+常用于一个连续变量
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_histogram()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_histogram(binwidth = 1)
+```
+
+
+```{r}
+#' histograms, 默认使用 `position = "stack"`
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram()
+```
+
+
+```{r}
+#' 使用`position = "identity"`
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram(position = "identity")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, color = continent)) +
+  geom_freqpoly()
+```
+
+
+```{r}
+#' smooth histogram = densityplot
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density()
+```
+
+如果不喜欢下面那条线，可以这样
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_line(stat = "density")
+```
+
+
+
+```{r}
+# adjust 调节bandwidth,
+# adjust = 1/2 means use half of the default bandwidth.
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density(adjust = 1)
+
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density(adjust = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, color = continent)) +
+  geom_density()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_density(alpha = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_density(alpha = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_density() +
+  # facet_wrap(vars(continent))
+  facet_grid(. ~ continent)
+```
+
+
+
+
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  facet_grid(continent ~ .)
+```
+
+
+直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, y = stat(density))) +
+  geom_histogram(aes(fill = continent)) +
+  geom_density() +
+  facet_grid(continent ~ .)
+```
+
+
+### 箱线图
+一个离散变量 + 一个连续变量
+```{r}
+#' 思考下结果为什么是这样？
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot()
+```
+
+
+```{r}
+# 数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
+gapdata %>%
+  ggplot(aes(x = as.factor(year), y = lifeExp)) + geom_boxplot()
+```
+
+
+
+
+```{r}
+# 明确指定分组变量
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot(aes(group = year))
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_violin(aes(group = year)) +
+  geom_jitter(alpha = 1 / 4) +
+  geom_smooth(se = FALSE)
+```
+
+
+
+### 抖散图
+
+点重叠的处理方案
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_point()
+```
+
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_jitter()
+```
+
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_boxplot()
+```
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_jitter() +
+  stat_summary(fun.y = median, colour = "red", geom = "point", size = 5)
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(reorder(x = continent, lifeExp), y = lifeExp)) +
+  geom_jitter() +
+  stat_summary(fun.y = median, colour = "red", geom = "point", size = 5)
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_violin(
+    trim = FALSE,
+    alpha = 0.5
+  ) +
+  stat_summary(
+    fun.y = mean,
+    fun.ymax = function(x) {
+      mean(x) + sd(x)
+    },
+    fun.ymin = function(x) {
+      mean(x) - sd(x)
+    },
+    geom = "pointrange"
+  )
+```
+
+
+### ridges图
+
+常用于一个离散变量 + 一个连续变量
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp,
+             y = continent,
+             fill = continent)) +
+  ggridges::geom_density_ridges() 
+```
+
+
+### 散点图
+常用于两个连续变量
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
+  geom_point()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  scale_x_log10() # A better way to log transform
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(color = continent))
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = (1 / 3), size = 2)
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE)
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~continent)
+```
+
+
+```{r}
+jCountries <- c("Canada", "Rwanda", "Cambodia", "Mexico")
+
+gapdata %>%
+  filter(country %in% jCountries) %>%
+  ggplot(aes(x = year, y = lifeExp, color = country)) +
+  geom_line() +
+  geom_point()
+```
+
+
+```{r}
+gapdata %>%
+  filter(country %in% jCountries) %>%
+  ggplot(aes(
+    x = year, y = lifeExp,
+    color = reorder(country, -1 * lifeExp, max)
+  )) +
+  geom_line() +
+  geom_point()
+```
+
+###  Cleveland dot plot
+```{r}
+gapdata %>%
+  filter(continent == "Asia" & year == 2007) %>%
+  ggplot(aes(x = lifeExp, y = country)) +
+  geom_point()
+```
+
+
+
+```{r}
+gapdata %>%
+  filter(continent == "Asia" & year == 2007) %>%
+  ggplot(aes(
+    x = lifeExp,
+    y = reorder(country, lifeExp)
+  )) +
+  geom_point(color = "blue", size = 2) +
+  geom_segment(aes(
+    x = 40,
+    xend = lifeExp,
+    y = reorder(country, lifeExp),
+    yend = reorder(country, lifeExp)
+  ),
+  color = "lightgrey"
+  ) +
+  labs(
+    x = "Life Expectancy (years)",
+    y = "",
+    title = "Life Expectancy by Country",
+    subtitle = "GapMinder data for Asia - 2007"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### 文本标注
+
+```{r}
+ten_countries <- gapdata %>%
+  distinct(country) %>%
+  pull() %>%
+  sample(10)
+```
+
+
+```{r}
+library(ggrepel)
+gapdata %>%
+  filter(year == 2007) %>%
+  mutate(
+    label = ifelse(country %in% ten_countries, as.character(country), "")
+  ) %>%
+  ggplot(aes(log(gdpPercap), lifeExp)) +
+  geom_point(
+    size = 3.5,
+    alpha = .9,
+    shape = 21,
+    col = "white",
+    fill = "#0162B2"
+  ) +
+  geom_text_repel(
+    aes(label = label),
+    size = 4.5,
+    point.padding = .2,
+    box.padding = .3,
+    force = 1,
+    min.segment.length = 0
+  ) +
+  theme_minimal(14) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank()
+  ) +
+  labs(
+    x = "log(GDP per capita)",
+    y = "life expectancy"
+  )
+```
+
+
+### errorbar图
+
+```{r}
+avg_gapdata <- gapdata %>%
+  group_by(continent) %>%
+  summarise(
+    mean = mean(lifeExp),
+    sd = sd(lifeExp)
+  )
+avg_gapdata
+```
+
+
+```{r }
+avg_gapdata %>%
+  ggplot(aes(continent, mean, fill = continent)) +
+  # geom_col(alpha = 0.5) +
+  geom_point() +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.25)
+```
+
+### 椭圆图
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
+  geom_point() +
+  stat_ellipse(type = "norm", level = 0.95)
+```
+
+
+
+### 2D 密度图
+
+与一维的情形`geom_density()`类似，
+`geom_density_2d()`, `geom_bin2d()`, `geom_hex()`常用于刻画两个变量构成的二维区间的密度
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_bin2d()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_hex()
+```
+
+
+
+### 马赛克图
+
+`geom_tile()`， `geom_contour()`， `geom_raster()`常用于3个变量
+
+```{r}
+gapdata %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  ggplot(aes(x = year, y = continent, fill = mean_lifeExp)) +
+  geom_tile() +
+  scale_fill_viridis_c()
+```
+
+事实上可以有更好的呈现方式
+
+```{r}
+gapdata %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  ggplot(aes(x = year, y = continent, size = mean_lifeExp)) +
+  geom_point()
+```
+
+
+## 主题风格
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggtitle("Life expectancy over time by continent")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_grey() # the default
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_bw()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_calc() +
+  ggtitle("ggthemes::theme_calc()")
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist() +
+  ggtitle("ggthemes::theme_economist()")
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist_white() +
+  ggtitle("ggthemes::theme_economist_white()")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_few() +
+  ggtitle("ggthemes::theme_few()")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_gdocs() +
+  ggtitle("ggthemes::theme_gdocs()")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_tufte() +
+  ggtitle("ggthemes::theme_tufte()")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_wsj() +
+  ggtitle("ggthemes::theme_wsj()")
+```
+
+
+
+
+
+
+## 定制
+
+### Labels 
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  ggtitle("My Plot Title") +
+  xlab("The X Variable") +
+  ylab("The Y Variable")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  labs(
+    title = "My Plot Title",
+    subtitle = "My Plot subtitle",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+
+
+
+### 定制颜色
+
+ 我喜欢用这两个函数定制喜欢的绘图色彩，`scale_colour_manual()` 和 `scale_fill_manual()`. 更多方法可以参考 [Colours chapter in Cookbook for R](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/) 
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  )
+```
+ 
+
+## 组合图片
+
+我们有时候想把多张图组合到一起
+
+### cowplot
+
+可以使用 [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html) 宏包的`plot_grid()`函数完成多张图片的组合，使用方法很简单。
+
+```{r}
+p1 <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(color = lifeExp > mean(lifeExp))) +
+  scale_x_log10() +
+  theme(legend.position = "none") +
+  scale_color_manual(values = c("orange", "pink")) +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+```{r}
+p2 <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+```{r}
+cowplot::plot_grid(
+  p1,
+  p2,
+  labels = c("A", "B")
+)
+```
+
+
+也可以使用patchwork宏包，更简单的方法
+```{r}
+library(patchwork)
+p1 + p2
+```
+
+
+```{r}
+p1 / p2
+```
+
+patchwork 使用方法很简单，根本不需要记
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/patchwork.png")
+```
+
+
+
+
+
+### 保存图片
+
+使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等， 还可以指定图片的高度和宽度，默认`units`是英寸，也可以使用"cm", or "mm".
+
+```{r ggsave-example}
+pp <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+
+# ggsave("demo_plot.pdf", plot = pp, width = 8, height = 6)
+```
+
+
+
+## 中文字体
+```{r}
+library(showtext)
+showtext_auto()
+
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "这是我的标题美美哒",
+    x = "这是我的x坐标",
+    y = "这是我的y坐标"
+  )
+
+# ggsave("myfirst.pdf", width = 8, height = 6)
+```
+
+
+
+## 高亮某一组
+画图很容易，然而画一张好图，不容易。图片质量好不好，其原则就是**不增加看图者的心智负担**，有些图片的色彩很丰富，然而需要看图人配合文字和图注等信息才能看懂作者想表达的意思，这样就失去了图片“一图胜千言”的价值。
+
+
+分析数据过程中，我们可以使用**高亮**我们某组数据，**突出**我们想表达的信息，是非常好的一种可视化探索手段。
+
+
+### ggplot2方法
+
+这种方法是将**背景部分**和**高亮部分**分两步来画
+
+```{r}
+drop_facet <- function(x) select(x, -continent)
+
+gapdata %>%
+  ggplot() +
+  geom_line(
+    data = drop_facet,
+    aes(x = year, y = lifeExp, group = country), color = "grey",
+  ) +
+  geom_line(aes(x = year, y = lifeExp, color = country, group = country)) +
+  facet_wrap(vars(continent)) +
+  theme(legend.position = "none")
+```
+
+再来一个
+```{r, fig.width= 8, fig.height= 8}
+gapdata %>%
+  mutate(group = country) %>%
+  filter(continent == "Asia") %>%
+  ggplot() +
+  geom_line(
+    data = function(d) select(d, -country),
+    aes(x = year, y = lifeExp, group = group), color = "grey",
+  ) +
+  geom_line(aes(x = year, y = lifeExp, group = country), color = "red") +
+  facet_wrap(vars(country)) +
+  theme(legend.position = "none")
+```
+
+
+
+
+### gghighlight方法
+
+这里推荐[gghighlight宏包](<https://yutannihilation.github.io/gghighlight/articles/gghighlight.html>)
+
+- dplyr has filter()
+- ggplot has Highlighting
+
+```{r}
+gapdata %>% filter(country == "China")
+```
+
+```{r}
+gapdata %>%
+  ggplot(
+    aes(x = year, y = lifeExp, color = continent, group = country)
+  ) +
+  geom_line() +
+  gghighlight(
+    country == "China", # which is passed to dplyr::filter().
+    label_key = country
+  )
+```
+
+
+```{r}
+gapdata %>% filter(continent == "Asia")
+```
+
+
+
+```{r}
+gapdata %>%
+  filter(continent == "Asia") %>%
+  ggplot(aes(year, lifeExp, color = country, group = country)) +
+  geom_line(size = 1.2, alpha = .9, color = "#E58C23") +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  ) +
+  gghighlight(
+    country %in% c("China", "India", "Japan", "Korea, Rep."),
+    use_group_by = FALSE,
+    use_direct_label = FALSE,
+    unhighlighted_params = list(color = "grey90")
+  ) +
+  facet_wrap(vars(country))
+```
+
+## 函数图
+
+有时候我们想画一个函数图，比如正态分布的函数，可能会想到先产生数据，然后画图，比如下面的代码
+
+```{r}
+tibble(x = seq(from = -3, to = 3, by = .01)) %>%
+  mutate(y = dnorm(x, mean = 0, sd = 1)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(color = "grey33")
+```
+
+
+事实上，`stat_function()`可以简化这个过程
+```{r}
+ggplot(data = data.frame(x = c(-3, 3)), aes(x = x)) +
+  stat_function(fun = dnorm)
+```
+
+
+当然我们也可以绘制自定义函数
+```{r}
+myfun <- function(x) {
+  (x - 1)**2
+}
+
+ggplot(data = data.frame(x = c(-1, 3)), aes(x = x)) +
+  stat_function(fun = myfun, geom = "line", colour = "red")
+```
+
+
+下面这是一个很不错的例子，细细体会下
+```{r}
+d <- tibble(x = rnorm(2000, mean = 2, sd = 4))
+
+ggplot(data = d, aes(x = x)) +
+  geom_histogram(aes(y = stat(density))) +
+  geom_density() +
+  stat_function(fun = dnorm, args = list(mean = 2, sd = 4), colour = "red")
+```
+
+## 地图
+
+> 小时候画地图很容易，长大了画地图却不容易了。
+> 
+>
+
+
+这是一个公园`r emo::ji("park")`地图和公园里松鼠`r emo::ji("squirrel")`数量的数据集
+
+```{r}
+nyc_squirrels <- read_csv("./demo_data/nyc_squirrels.csv")
+central_park <- sf::read_sf("./demo_data/central_park")
+```
+
+
+先来一个地图，
+
+```{r}
+ggplot() +
+  geom_sf(data = central_park)
+```
+
+一个`geom_sf`就搞定了`r emo::ji("celebrate")`，貌似没那么难呢？ 好吧，换个姿势，在地图上标注松鼠出现的位置
+
+
+
+```{r}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  )
+```
+
+分开画呢
+```{r, out.width = '100%'}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  theme(legend.position = "none")
+```
+
+
+
+
+
+```{r, out.width = '100%'}
+label_colors <-
+  c("all squirrels" = "grey75", "highlighted group" = "#0072B2")
+
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    data = function(x) select(x, -primary_fur_color),
+    aes(x = long, y = lat, color = "all squirrels"),
+    size = .8
+  ) +
+  geom_point(
+    aes(x = long, y = lat, color = "highlighted group"),
+    size = .8
+  ) +
+  cowplot::theme_map(16) +
+  theme(
+    legend.position = "bottom",
+    legend.justification = "center"
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  scale_color_manual(name = NULL, values = label_colors) +
+  guides(color = guide_legend(override.aes = list(size = 2)))
+```
+
+```{r}
+# ggsave("Squirrels.pdf", width = 9, height = 6)
+```
+
+
+当然，也可以用`gghighlight`的方法
+```{r, out.width = '100%'}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  ) +
+  gghighlight(
+    label_key = primary_fur_color,
+    use_direct_label = FALSE
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  cowplot::theme_map(16) +
+  theme(legend.position = "none")
+```
+
+
+
+## 参考资料
+
+* [Look at Data](http://socviz.co/look-at-data.html) from [Data Vizualization for Social Science](http://socviz.co/)
+* [Chapter 3: Data Visualisation](http://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science*
+* [Chapter 28: Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) of *R for Data Science*
+* [Graphs](https://r-graphics.org/) in *R Graphics Cookbook*
+* [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
+* [ggplot2 documentation](https://ggplot2.tidyverse.org/reference/)
+* [The R Graph Gallery](http://www.r-graph-gallery.com/) (this is really useful)
+* [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+* [R Graphics Cookbook](http://www.cookbook-r.com/Graphs/) by Winston Chang
+* [ggplot extensions](https://www.ggplot2-exts.org/)
+* [plotly](https://plot.ly/ggplot2/) for creating interactive graphs

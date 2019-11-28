@@ -1,0 +1,156 @@
+# 可重复性研究 {#rmarkdown}
+
+```{r, echo=FALSE}
+library(rmarkdown)
+```
+
+
+
+## Communicating with Data via R Markdown
+
+*Instructions*
+
+1. 安装最新版本 [R](https://cran.r-project.org/mirrors.html) (>3.5) 和 [RStudio Desktop](https://rstudio.com/products/rstudio/) (>1.2).
+2. 安装 [LaTeX](https://www.latex-project.org/get/). 然而这个软件会比较大
+   (e.g. MacTeX is approximate 3.9G). 如果你之前没有安装过
+   LaTeX，我推荐你安装轻量级的 `tinytex`. 安装方法如下，打开R，然后再命令行输入:
+
+```{r, eval = FALSE}
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+3. 安装如下宏包:
+```{r, eval = FALSE}
+install.packages(c("tidyverse", 
+                 "rmarkdown", 
+                 "knitr",
+                 "xaringan", 
+                 "usethis",
+                 "rmdformats", 
+                 "prettydoc",
+                 "rticles",
+                 "linl",
+                 "shiny",
+                 "bookdown",
+                 "pagedown",
+                 "remotes"))
+# the following is not on CRAN 
+remotes::install_github("gadenbuie/xaringanthemer")
+remotes::install_github("hadley/emo")
+```
+
+
+
+## markdown 基本语法
+```{markdown, eval = FALSE, echo = TRUE}
+
+# This is a title
+
+
+This is a sentence.
+
+Now a list begins:
+  
+- no importance
+- again
+- repeat
+  
+A numbered list:
+  
+1. first
+2. second
+
+__bold__, _italic_, ~~strike through~~
+```
+
+
+
+
+## Hello R Markdown
+
+`Rstudio` create Rmd file ： `File -> New File -> R Markdown`.
+
+
+基本构成
+
+- metadata
+- text
+- code
+   
+
+### 插入公式
+
+
+```{r comment=NA,echo=FALSE}
+cat("$$\\frac{\\sum (\\bar{x} - x_i)^2}{n-1}$$")
+```
+
+
+
+$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$
+
+
+### 插入图片
+
+```{r out.width = '35%', fig.align='left', echo = TRUE}
+knitr::include_graphics("images/R_logo.png")
+```
+
+
+### 表格
+
+```{r tables-mtcars,  echo = TRUE}
+knitr::kable(iris[1:5, ], caption = "A caption")
+```
+
+需要更优美的表格，可参考[这里](https://haozhu233.github.io/kableExtra/)
+
+## html_document
+
+```yaml
+---
+title: Habits
+author: John Doe
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    df_print: paged
+    toc: yes
+    number_sections: yes
+---
+```
+
+## pdf_document
+
+```yaml
+---
+title: 'Going deeper with dplyr'
+author: "王小二"
+date: 2018-09-27
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    extra_dependencies:
+      ctex: UTF8
+    number_sections: yes
+    toc: yes
+classoptions: "hyperref, 12pt, a4paper"
+---
+```
+
+## 本章代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/ch06_rmd_pdf.Rmd')
+```
+
+
+## 延伸阅读
+
+* Markdown tutorial https://www.markdowntutorial.com (10分钟学完)
+* LaTeX tutorial https://www.latex-tutorial.com/quick-start/
+
+
+

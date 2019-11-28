@@ -1,0 +1,8 @@
+# 线性混合模型 {#lmm}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+## 从一个案例开始

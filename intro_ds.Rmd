@@ -1,0 +1,84 @@
+\mainmatter
+
+# 数据科学与R语言 {#intro-ds}
+
+马克思曾说过：“一门科学只有当它达到能够成功运用数学时，才算真正得到发展。”数学为数据科学提供了坚实的理论基础，数据科学也为**数学与实际应用**之间建立起一个直接的桥梁。
+
+
+## 什么是数据科学
+
+数据科学是综合了统计学、计算机科学和领域知识的交叉学科，其基本内容就是用数据的方法研究科学，用科学的方法研究数据（鄂维南院士）。2010年，Drew Conway画了一张数据科学的韦恩图
+
+```{r out.width = '40%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/Data_Science2010.png", dpi = 120)
+```
+
+从数据科学所涉及的学科领域来看，其知识结构不仅仅包括数学、统计学、计算机科学、信息科学等在内的基础性理论，还应该包括社会学、物理学、情报学、生物医学等在内的专业性领域理论。
+
+（事实上，最重要的最下面那个部分，专业领域的知识）
+
+## 数据科学流程
+Hadley Wickham将[数据科学流程](https://r4ds.had.co.nz/)分解成6个环节
+
+```{r out.width = '80%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/data-science-explore.png")
+```
+即数据导入、数据规整、数据处理、可视化、建模以及形成可重复性报告，整个分析和探索过程都在一个程序代码中完成，这种方式对训练我们的数据思维非常有帮助。
+
+
+
+## 为什么选择 R
+
+2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
+
+```{r out.width = '60%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/Languages02.jpg", dpi = 90)
+```
+
+事实上，python和R都是非常强大的工具，两者各有优劣，作为初学者，究竟选择谁?
+可以参考[《为什么R语言是当今最值得学习的数据科学语言》](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)，这篇文章做了详细的对比。我个人的观点是，如果想做程序员或者打算今后在工业企业里工作，可以选择python; 如果你今后打算在科研机构做学术研究，我推荐R语言作为入门语言。
+
+
+2019 年国际统计学年会将考普斯总统奖（The Committee of Presidents of Statistical Societies
+Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
+
+* 数据科学为什么选择 R & tidyverse
+  +  统计
+  +  可视化
+  +  探索性分析
+  +  可重复性报告
+  
+* tidyverse
+  + 语法一致性（学习一个宏包，可以帮助理解其他宏包）
+  + 代码可读性，接近人类语言 ( `%>%` 太酷了 )
+
+
+
+<!-- R 是一种为统计计算和绘图而生的语言和环境 -->
+
+<!-- -  R 是一个全面的.hl[统计]研究平台 -->
+
+<!-- - R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X -->
+
+<!-- - R 拥有顶尖水准的.hl[制图]功能 -->
+
+<!-- - R 是免费的 -->
+
+<!-- - R 应用广泛，拥有丰富的.hl[库包]  -->
+
+<!-- - 活跃的社区 -->
+
+
+
+
+## R vs Excel
+
+为什么不能用excel做数据分析？画个图说明下
+
+```{r out.width = '70%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/R_Excel.png", dpi = 150)
+```
+
+
+
+

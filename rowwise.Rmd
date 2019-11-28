@@ -1,0 +1,188 @@
+# tidyverse中行方向的操作 {#rowwise}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+tidyverse 喜欢数据框，因为一列就是一个向量，一列一列的处理起来很方便。然而我们有时候也要，完成行方向的操作，所以有必要介绍tidyverse中行方向的处理机制。
+
+## 问题
+
+```{r}
+df <- tibble(x = 1:3, y = 4:6)
+df
+```
+对每行的求和、求均值、最小值或者最大值？
+
+
+## rowwise函数
+
+dplyr提供了rowwise函数，但大神说不推荐
+```{r}
+df %>% 
+  rowwise() %>% 
+  mutate( i = sum(x, y) )
+```
+
+
+```{r}
+df %>% 
+  rowwise() %>% 
+  mutate( i = mean(c(x, y) ))
+```
+
+```{r}
+df %>%
+  rowwise() %>% 
+  mutate(min = min(x,y),
+         max = max(x,y)
+         )
+```
+
+
+```{r}
+df %>% 
+  rowwise() %>% 
+  do(i = mean(c(.$x, .$y))) %>% 
+  unnest(i)
+```
+
+## Row-wise Summaries
+```{r}
+df %>% mutate(row_sum = rowSums(.[1:2])  )
+```
+
+
+```{r}
+df %>% mutate(row_mean = rowMeans(.[1:2])  ) 
+```
+
+```{r}
+df %>% mutate(t_sum = rowSums(select_if(., is.numeric)))
+```
+
+固然可解决问题， 然而，却不是一个很好的办法，比如除了求和与计算均值，可能还要计算每行的中位数、方差等等， 因为，不是每种计算都对应的row_函数？ 既然是tidyverse ，还是用tidyverse 的方法解决
+
+
+## purrr::map方案
+
+按照Jenny Bryan的方案
+
+```{r}
+df %>% mutate(t_sum = pmap_dbl(list(x, y), sum))
+```
+
+
+```{r}
+df %>%
+	mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
+```
+
+计算均值的时候， 然而报错了
+```{r, eval=FALSE}
+df %>% mutate(t_sum = pmap_dbl(select_if(., is.numeric), mean))
+```
+
+tidyverse 总会想出办法来解决，把`mean()` 变成 `lift_vd(mean)`
+
+```{r}
+df %>%
+	mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
+```
+
+
+同理
+```{r}
+df %>% mutate(t_median = pmap_dbl(select_if(., is.numeric), lift_vd(median)))
+```
+
+
+```{r}
+df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
+```
+
+
+
+
+
+## tidy 的方案
+
+我个人推荐的方法(Gather, group, summarize, left_join)
+
+```{r}
+new_df <- df %>%
+  mutate(id = row_number()) 
+
+s <- new_df %>% 
+  gather("time", "val", -id) %>%
+  group_by(id) %>%
+  summarize(
+    t_avg = mean(val),
+    t_sum = sum(val)
+  )
+
+s
+```
+
+```{r, warning=FALSE, message=FALSE}
+new_df %>%
+  left_join(s)
+```
+
+有点繁琐，但思路清晰
+
+```{r}
+ss <- new_df %>%
+  group_by(id) %>%
+  summarise(t_avg = mean(c(x, y)) )
+
+ss
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+new_df %>%
+  left_join(ss)
+```
+
+
+之所以有这么多的搞法，是因为没有一个很好的搞法
+
+
+
+
+## slide方案
+
+[slide](https://github.com/DavisVaughan/slide)很强大，可以滚动喔
+
+
+- 如果第一个参数是数据框，`slide`把数据框看作a vector of rows， 然后行方向的滚动，事实上， .x是一个个的小数据框（如下）
+- 与`purrr::map`不同，因为map把数据框看作列方向的向量， 然后迭代
+- 如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动
+
+```{r, warning=FALSE, message=FALSE}
+library(slide)
+
+df <- tibble(a = 1:3, b = 4:6)
+
+slide(
+  select_if(df, is.numeric), 
+  ~.x, 
+  .before = 1
+)
+```
+
+
+
+```{r}
+df %>% 
+  mutate(
+    r_mean = slide_dbl(
+      select_if(df, is.numeric), 
+      ~mean(unlist(.x)), 
+      .before = 1
+    )
+  )
+```
+

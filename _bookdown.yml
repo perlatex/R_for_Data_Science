@@ -1,0 +1,45 @@
+book_filename: R4DS
+clean: [packages.bib, bookdown.bbl]
+language:
+  label:
+    fig: "图 "
+    tab: "表 "
+  ui:
+    edit: "编辑"
+    chapter_name: ["第 ", " 章"]
+
+rmd_files: [
+  "index.Rmd",
+  "author.Rmd",
+
+  "intro_ds.Rmd",
+  "intro_R.Rmd",
+  "subsetting.Rmd",
+
+  "visualization.Rmd",
+  "rmarkdown.Rmd",
+  "dplyr.Rmd",
+  "stringr.Rmd",
+  "purrr.Rmd",
+  "eda.Rmd",
+  "ggplot2.Rmd",
+
+  "sampling.Rmd",
+  "tidystats.Rmd",
+  "lm.Rmd",
+  "glm.Rmd",
+  "lmm.Rmd",
+  "tidybayes.Rmd",
+
+  "adv_dplyr.Rmd",
+  "rowwise.Rmd",
+  "dot.Rmd",
+  "rvest.Rmd",
+  "tidymodels.Rmd",
+  "tidygraph.Rmd",
+  "r4psy.Rmd",
+
+
+  "Appendix.Rmd",
+  "references.Rmd"
+]

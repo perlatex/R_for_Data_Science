@@ -1,0 +1,115 @@
+# Tidy Statistics {#tidystats}
+
+
+本章介绍基本的方差分析内容
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+## 从一个案例开始
+
+从这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集，数据在这里下载
+```{r echo=FALSE}
+xfun::embed_file("./demo_data/wages.csv")
+```
+
+首先，我们下载后导入数据
+```{r message = FALSE, warning = FALSE}
+wages <- read_csv("./demo_data/wages.csv")
+
+wages %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+我们的问题：男性是否就比女性挣的多？
+
+
+## 单因素方差分析
+
+```{r}
+t.test(earn ~ sex, data = wages)
+```
+
+
+```{r}
+lm(earn ~ sex, data = wages) %>% 
+  summary()
+```
+
+
+```{r}
+aov(earn ~ sex, data = wages) %>% 
+  summary()
+
+```
+
+
+## 双因素方差分析
+
+我们采用`ggpubr`宏包下的`ToothGrowth`来说明，这个数据集包含60个样本，记录着每10只豚鼠在不同的喂食方法和不同的药物剂量下，牙齿的生长情况.
+
+- len :  牙齿长度
+- supp : 两种喂食方法 (橙汁和维生素C)
+- dose : 抗坏血酸剂量 (0.5, 1, and 2 mg) 
+
+
+```{r message=FALSE, warning=FALSE}
+library("ggpubr")
+my_data <- ToothGrowth %>%
+  mutate_at(vars(supp, dose), ~ as_factor(.))
+
+my_data %>% head()
+```
+
+
+
+```{r}
+my_data %>%
+  ggplot(aes(x = supp, y = len, fill = supp)) +
+  geom_boxplot(position = position_dodge()) +
+  facet_wrap(vars(dose)) +
+  labs(title = "VC剂量和摄入方式对豚鼠牙齿的影响")
+```
+
+
+
+问题：豚鼠牙齿的长度是否与药物的食用方法和剂量有关？
+
+线性回归时，我们是通过独立变量来**预测**响应变量，但现在我们关注的重点会从预测**转向**不同组别差异之间的分析，这即为方差分析（ANOVA）。
+
+这里是两个解释变量，所以问题需要双因素方差分析 (ANOVA)
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  broom::tidy()
+```
+
+
+检验表明不同类型之间存在显著差异，但是并没有告诉我们具体谁与谁之间的不同。需要多重比较帮助我们解决这个问题。使用`TurkeyHSD`函数
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  TukeyHSD(which = "dose") %>%
+  broom::tidy()
+```
+
+
+
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  TukeyHSD(which = "supp") %>%
+  broom::tidy()
+```
+
+思考：交互效应是否显著？
+```{r}
+aov(len ~ supp * dose, data = my_data) %>%
+  broom::tidy()
+```
+
+
+

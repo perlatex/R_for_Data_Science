@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+<g stroke="#983E82" stroke-width="1" stroke-linecap="round">
+  <polyline points="17.4,6.9 13.1,2.6 6.9,2.6 2.6,6.9 2.6,13.1 6.9,17.4 13.1,17.4 17.4,13.1 17.4,6.9" fill="transparent" />
+  <line x1="5" x2="15" y1="5" y2="15" />
+</g>
+</svg>

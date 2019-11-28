@@ -1,0 +1,251 @@
+# tidyverse中的dot {#dot}
+
+本章介绍tidyverse的语法中经常遇到`.`， 不同的场景，含义不同。因此很有必要弄清楚各自的含义。
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+## 每一行的 `.` 各自代表什么意思呢?
+
+```{r, eval = F}
+read_csv("./data/wages.csv") %>%
+  mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
+  select(., -letter) %>%
+  mutate_at(vars(race), ~ as.factor(.)) %>%
+  mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
+  filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
+  split(.$sex) %>%
+  map(~ lm(earn ~ ., data = .)) %>%
+  map_dfr(~ broom::tidy(.), .id = "sex")
+```
+
+回答之前，我们先介绍一些相关知识点
+
+## 占位符
+
+管道符号` %>%` 主要功能是传递参数。
+
+- `y %>% f()` is equivalent to `f(y)` 
+
+- `y %>% f(x, .)` is equivalent to `f(x, y)` 
+ 
+- `z %>% f(x, y, arg = .)` is equivalent to `f(x, y, arg  = z)`
+
+我们经常这样写
+```{r}
+mtcars %>% 
+  select(cyl, disp, hp) %>% 
+  head(2)
+```
+
+实际上，这里是有占位符的
+```{r}
+mtcars %>% 
+  select(., cyl, disp, hp) %>% 
+  head(., 2)
+```
+
+## Lambda函数
+
+`.`出现在函数`.f`的位置上， 就是 purrr 风格的Lambda函数`~ fun(.)`， 
+```{r}
+mtcars %>% 
+  select_at(vars(contains("ar")), ~toupper(.)) %>% 
+  head(3)
+```
+
+有时候程序员会将`~toupper(.) `简写成 `toupper`
+```{r}
+mtcars %>% 
+  select_at(vars(contains("ar")), toupper) %>% 
+  head(3)
+```
+
+
+## 正则表达式
+
+```{r}
+words <- "the fattest cat."
+```
+
+
+```{r}
+words %>% str_replace_all("t.", "-")
+```
+
+
+```{r}
+words %>% str_replace_all("t\\.", "-")
+```
+
+
+## Unary funciton (只带一个参数的函数)
+<!-- A pipeline with a dot (.) as LHS will create a unary function. -->
+
+```{r}
+mean_rm <- . %>% mean(na.rm = T)
+
+c(1, 2, 3, NA) %>% mean_rm
+```
+
+等价于
+```{r}
+# is equivalent to
+c(1, 2, 3, NA) %>% mean(., na.rm = T)
+```
+
+
+## more placeholder
+
+
+
+```{r}
+iris %>% subset(1:nrow(.) %% 30 == 0)
+```
+
+
+```{r}
+1:10 %>% {c(min(.), max(.))}
+```
+
+
+## 当mutate遇到map
+
+当`dplyr::mutate`遇到`purrr::map`，情况就复杂很多了。然而，这种情况，tidyverse比比皆是。我就多说几句吧
+
+```{r}
+iris %>% 
+  head(3) %>% 
+  mutate(., r_sum = pmap_dbl(select_if(., is.numeric), sum)) 
+```
+
+这里`mutate()`行，有两个`.`, 实际这两个`.`都是等待`iris %>% head(3)`传来的data.frame
+
+
+
+```{r, warning=FALSE, message=FALSE}
+df <- tibble(
+  mean = c(1, 2),
+  sd = c(2, 4)
+)
+df
+
+
+df %>%
+  mutate(., rand  = map(mean, ~ rnorm(5, .))) %>% 
+  unnest_wider(rand)
+```
+
+
+- 第一个 `.`， 是`df`
+- 第二个 `.`， 是`df`中的`mean`
+
+
+
+```{r, warning=FALSE, message=FALSE}
+df %>%
+  mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>% 
+  unnest_wider(rand)
+```
+
+- `mean`传给 `.x`
+- `sd`传给 `.y`
+
+
+
+再来一个变态的。（我们不一定要这样写，但我们尽可能的要明白它的意思。）
+
+```{r}
+df <- tribble(
+  ~ a, ~b,
+  1, 10,
+  2, 11
+)
+
+
+df %>%
+   mutate(., sum = purrr::pmap_dbl(., ~sum(...)))
+```
+
+
+
+
+
+## Dot dot dot
+```{r}
+commas <- function(...) 
+  stringr::str_c(..., collapse = ", ")
+
+
+commas(letters[1:10])
+```
+
+
+
+## Don't confuse 
+
+<!-- Don't confuse with many function arguments that are prefixed with a . -->
+注意：有些函数的参数前缀是 .
+
+```{r, eval= F}
+mutate_all(.tbl, .funs, ...)
+
+mutate_if(.tbl, .predicate, .funs, ...)
+
+mutate_at(.tbl, .vars, .funs, ..., .cols = NULL)
+
+select_all(.tbl, .funs = list(), ...)
+
+rename_all(.tbl, .funs = list(), ...)
+
+```
+
+
+
+## 小结
+
+* tidyvere中
+  + 占位符(时常经常和 `%>%` 一起)
+  + Lambda函数
+  + 一元函数（LHS）
+ 
+* 其他情形
+  + 回归公式
+  + 正则表达式
+ 
+* 注意
+  + 有些函数参数以 . 前缀(不要混淆喔! )
+ 
+ 
+ 
+
+## 回答问题
+
+现在回答本章开始的问题
+
+```{r, warning=FALSE, message=FALSE}
+read_csv("./demo_data/wages.csv") %>%
+  mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
+  select(., -letter) %>%
+  mutate_at(vars(race), ~ as.factor(.)) %>%
+  mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
+  filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
+  split(.$sex) %>%
+  map(~ lm(earn ~ ., data = .)) %>%
+  map_dfr(., ~ broom::tidy(.), .id = "sex")
+```
+
+- 第1行：路径中`.`代表当前位置，如果是`..`表示上一级目录
+- 第2行：正则表达式，代表任何字符
+- 第3行：占位符，等待数据框的传入，也可以简写`select(-letter)`
+- 第4行: lambda函数，`~ as.factor(.)`也可以简写`as.factor`，`~`和`(.)`要么都写，要么都不写
+- 第5行：同上,lambda函数
+- 第6行：第一个`.`代表lambda函数; 第二个`.`也是lambda函数，但这里它是`all_vars(expr)`中expr的一种特有写法，代表所有数值型变量，***行方向构成的向量**, `all_vars(. != 0)`函数返回TRUE或FALSE，从而帮助`filter()`是否筛选该行
+- 第7行：占位符，代表上面传来的数据框
+- 第8行：回归模型`lm`中，第一个`.`代表除**因变量**earn之外所有的变量，第二个`.`占位符，留给上面的数据框
+- 第9行：第一个`.`是占位符，代表上面传来的list，第二个`.`lambda函数，依次对list的元素迭代处理，第二个`.`是参数名，`.id`是特有的一个符号。
+
+
+

@@ -1,0 +1,25 @@
+# 广义线性模型 {#glm}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+
+线性回归需要满足四个前提假设：
+
+1. **Linearity **
+    - 因变量和每个自变量都是线性关系
+
+2. **Indpendence **
+    - 对于所有的观测值，它们的误差项相互之间是独立的
+
+3. **Normality **
+    - 误差项服从正态分布
+
+4. **Equal-variance **  
+    - [所有的误差项具有同样方差](<https://www.zhihu.com/question/67473778>)
+
+这四个假设的首字母，合起来就是\alert{LINE}，这样很好记
+

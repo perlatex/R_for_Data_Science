@@ -1,0 +1,41 @@
+\cleardoublepage 
+
+# (APPENDIX) 附录 {-}
+
+# 期末考试 {#exams}
+
+研究生生涯的主要工作就是学习，而**学以致用**是最好的学习路径。考虑同学们不同的学科背景，同时也参考国内其它高校的做法，本学期《数据科学中的 R 语言》期末考试安排如下：
+
+## 方式
+
+结合所在学科，找一篇与自己研究方向相关的文献，用课堂上学到的R统计编程技能，**重复**文献的数据分析过程。
+
+
+## 要求
+
+在2019年12月31日前，将以下资料打包并提交`38552109@qq.com`邮箱
+
+  - 所重复的文献
+  - 数据 
+  - Rmarkdown源代码
+  - 分析结果(生成的pdf或者html文件)
+  - 注明学号和姓名
+  
+
+
+## 数据集
+
+仅供参考
+
+- <https://datahub.io/collections/economic-data>
+- <https://cnki.net/>
+- <https://osf.io/>
+- <https://www.kaggle.com/datasets>
+- <https://toolbox.google.com/datasetsearch>
+- <https://chfs.swufe.edu.cn/>（中国家庭金融调查）
+- <http://www.isss.pku.edu.cn/cfps/index.htm>（中国家庭追踪调查）
+- <http://www.ciejournal.org/> (中国工业经济)
+
+
+
+

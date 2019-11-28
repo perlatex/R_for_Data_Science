@@ -1,0 +1,14 @@
+# 社会网络分析 {#tidygraph}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(here)
+library(fs)
+library(stringr)
+library(purrr)
+library(tidygraph)
+library(ggraph)
+```
+
+

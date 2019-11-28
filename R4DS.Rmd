@@ -1,0 +1,6902 @@
+--- 
+title: "数据科学中的 R 语言"
+author: "王敏杰"
+date: "`r Sys.Date()`"
+documentclass: ctexbook
+output:
+  bookdown::gitbook:
+    df_print: paged
+bibliography: [book.bib, packages.bib, yet-another.bib]
+biblio-style: apalike
+link-citations: yes
+colorlinks: yes
+lot: yes
+lof: yes
+geometry: [a4paper, tmargin=2.5cm, bmargin=2.5cm, lmargin=2cm, rmargin=2cm]
+site: bookdown::bookdown_site
+description: "一个简单的中文书示例。"
+github-repo: ybj2004/bookdown_data_science
+#cover-image: images/cover.jpg
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+options(
+  htmltools.dir.version = FALSE, formatR.indent = 2, width = 55, digits = 4
+)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      fig.width = 6, 
+                      fig.height = 4)
+
+# 填上你需要用到的包，如 c('ggplot2', 'dplyr')
+lapply(c(), function(pkg) {
+  if (system.file(package = pkg) == "") install.packages(pkg)
+})
+```
+
+# 前言 {-}
+你好，这里是四川师范大学研究生公选课《数据科学中的R语言》的课程内容。考虑到大家来自不同的学院，有着不同的学科背景，因此讲授的内容不会太深奥（要有信心喔）。
+
+比如在课程中以下内容就不会出现
+
+$$
+f(x)=\frac{1}{\sqrt{2 \pi}} e^{-\frac{1}{2} x^{2}}
+$$
+
+而出现更多的是
+
+```{r, eval = FALSE}
+library(tidyverse)
+summary_monthly_temp <- weather %>% 
+  group_by(month) %>% 
+  summarize(mean = mean(temp), 
+            std_dev = sd(temp))
+```
+
+
+在**跟进**本课程的同时， 我强烈推荐大家阅读Hadley Wickham的
+[r4ds](https://r4ds.had.co.nz/)这本书 [@Wickham2017]。作者可是2019年8月刚刚获得考普斯总统奖（被誉为统计学的诺贝尔奖）的大神喔，点击[这里](http://hadley.nz/)可以看他照片。
+
+```{r echo = FALSE, out.width = "35%"}
+knitr::include_graphics("images/rbook1.png")
+```
+
+## 关于课程 {-}
+
+1、课程安排是这样的，每个章节研究的内容都是彼此独立的，大家可以单独阅读每章及运行代码。
+
+- 基础篇
+   - 第 \@ref(intro-ds) 章介绍数据科学基础
+   - 第 \@ref(intro-R) 章介绍R语言基本概念
+   - 第 \@ref(subsetting) 章介绍R语言中的子集选取
+- tidyverse篇
+   - 第 \@ref(visual) 章介绍数据可视化
+   - 第 \@ref(rmarkdown) 章介绍可重复性研究
+   - 第 \@ref(dplyr) 章介绍数据规整与数据处理
+   - 第 \@ref(stringr) 章介绍字符串处理
+   - 第 \@ref(purrr) 章介绍函数式编程
+   - 第 \@ref(eda) 章介绍探索性数据分析   
+   - 第 \@ref(ggplot2) 章再讲ggplot2
+- 建模篇
+   - 第 \@ref(sampling) 章介绍模拟与抽样
+   - 第 \@ref(tidystats) 章介绍方差分析
+   - 第 \@ref(lm) 章介绍线性模型
+   - 第 \@ref(glm) 章介绍广义线性模型
+   - 第 \@ref(lmm) 章介绍线性混合模型
+   - 第 \@ref(tidybayes) 章介绍贝叶斯分析
+- 应用篇
+   - 第 \@ref(advR) 章介绍tidyverse中数据操作进阶
+   - 第 \@ref(rowwise) 章介绍tidyverse中行方向的操作
+   - 第 \@ref(dot) 章介绍tidyverse中的dot
+   - 第 \@ref(rvest) 章介绍网页爬虫
+   - 第 \@ref(tidymodels) 章介绍机器学习
+   - 第 \@ref(tidygraph) 章介绍社会网络分析
+   - 第 \@ref(r4psy) 章介绍心理学中的应用。
+
+
+
+2、**关于课程目标**
+
+- 课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用
+
+- 授课方式: 
+  - 边写**代码**边讲
+  - 通过案例式、问题式的方法，增强参与感和目标感
+
+- 课堂要求
+  - 自带电脑，配好运行环境
+  
+
+
+3、**关于如何提问**
+
+有的同学，这样一上来就问：**老师，我的代码怎么运行不出来呢？**或者图省事，干脆手机拍个照片一发。
+
+- 我想说，要想获得快速的帮助，在问问题之前，请先告诉对方三个信息：
+   - 想解决的问题是什么？
+   - 代码是什么？
+   - 报错信息是什么？
+
+4、课件所有数据（下载后解压）
+
+```{r echo=FALSE}
+xfun::embed_dir('./demo_data/', text = 'Download full data')
+```
+
+## RYouWithMe {-}
+
+```{r echo = FALSE, out.width = "30%"}
+knitr::include_graphics("images/QQgroup.png")
+```
+
+
+
+## 致谢 {-}
+
+非常感谢川师研究生院的信任， 有了您的支持，才会有更多的川师学子了解R的美！
+
+```{block2, type='flushright', html.tag='p'}
+王敏杰  
+于 川师图书馆某角落
+```
+
+
+<!--chapter:end:index.Rmd-->
+
+# 作者简介 {#author .unnumbered}
+
+王敏杰，四川师范大学研究生公选课《数据科学中的R语言》授课老师，西南交通大学量子物理学博士，爱好数据科学，喜欢用R和Raku编程，
+联系方式 38552109@qq.com
+
+<!--chapter:end:author.Rmd-->
+
+\mainmatter
+
+# 数据科学与R语言 {#intro-ds}
+
+马克思曾说过：“一门科学只有当它达到能够成功运用数学时，才算真正得到发展。”数学为数据科学提供了坚实的理论基础，数据科学也为**数学与实际应用**之间建立起一个直接的桥梁。
+
+
+## 什么是数据科学
+
+数据科学是综合了统计学、计算机科学和领域知识的交叉学科，其基本内容就是用数据的方法研究科学，用科学的方法研究数据（鄂维南院士）。2010年，Drew Conway画了一张数据科学的韦恩图
+
+```{r out.width = '40%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/Data_Science2010.png", dpi = 120)
+```
+
+从数据科学所涉及的学科领域来看，其知识结构不仅仅包括数学、统计学、计算机科学、信息科学等在内的基础性理论，还应该包括社会学、物理学、情报学、生物医学等在内的专业性领域理论。
+
+（事实上，最重要的最下面那个部分，专业领域的知识）
+
+## 数据科学流程
+Hadley Wickham将[数据科学流程](https://r4ds.had.co.nz/)分解成6个环节
+
+```{r out.width = '80%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/data-science-explore.png")
+```
+即数据导入、数据规整、数据处理、可视化、建模以及形成可重复性报告，整个分析和探索过程都在一个程序代码中完成，这种方式对训练我们的数据思维非常有帮助。
+
+
+
+## 为什么选择 R
+
+2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
+
+```{r out.width = '60%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/Languages02.jpg", dpi = 90)
+```
+
+事实上，python和R都是非常强大的工具，两者各有优劣，作为初学者，究竟选择谁?
+可以参考[《为什么R语言是当今最值得学习的数据科学语言》](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)，这篇文章做了详细的对比。我个人的观点是，如果想做程序员或者打算今后在工业企业里工作，可以选择python; 如果你今后打算在科研机构做学术研究，我推荐R语言作为入门语言。
+
+
+2019 年国际统计学年会将考普斯总统奖（The Committee of Presidents of Statistical Societies
+Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
+
+* 数据科学为什么选择 R & tidyverse
+  +  统计
+  +  可视化
+  +  探索性分析
+  +  可重复性报告
+  
+* tidyverse
+  + 语法一致性（学习一个宏包，可以帮助理解其他宏包）
+  + 代码可读性，接近人类语言 ( `%>%` 太酷了 )
+
+
+
+<!-- R 是一种为统计计算和绘图而生的语言和环境 -->
+
+<!-- -  R 是一个全面的.hl[统计]研究平台 -->
+
+<!-- - R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X -->
+
+<!-- - R 拥有顶尖水准的.hl[制图]功能 -->
+
+<!-- - R 是免费的 -->
+
+<!-- - R 应用广泛，拥有丰富的.hl[库包]  -->
+
+<!-- - 活跃的社区 -->
+
+
+
+
+## R vs Excel
+
+为什么不能用excel做数据分析？画个图说明下
+
+```{r out.width = '70%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/R_Excel.png", dpi = 150)
+```
+
+
+
+
+
+<!--chapter:end:intro_ds.Rmd-->
+
+# R语言基础 {#intro-R}
+
+
+R 软件是一个自由、开源软件平台，具有统计分析、可视化和编程的强大功能。
+你可以从这里免费[下载](https://cloud.r-project.org)。 为了更好的使用 R 软件，我推荐大家使用 [RStudio](https://www.rstudio.com/products/rstudio)这个 IDE。这里有个[在线教程](https://www.rstudio.com/online-learning/)帮助我们熟悉 R 和 RStudio。
+
+
+
+## 安装 R
+
+我们从官方网站[http://cran.r-project.org](https://cloud.r-project.org)下载, 网站界面感觉有点朴素:
+
+
+![](images/Rinstall.png)
+ 
+
+
+
+
+## 安装 RStudio
+安装完R， 还需要安装RStudio。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。
+
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics(c("images/engine.jpg", "images/dashboard.jpg"))
+```
+
+
+
+同样，我们从官方网站下载并安装，苹果系统的用户，选择苹果系统对应的rstudio版本即可。
+
+- <https://www.rstudio.com/download>
+- 选择`RStudio Desktop`
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/rstudio_install.png")
+```
+
+
+```{block, type="danger"}
+这里有个小小的提示：
+
+- 电脑不要用中文用户名，否则Rstudio会杠上中文用户名
+- 尽量安装在非系统盘，比如，可以选择安装在D盘
+- 安装路径不要有中文和空格。比如，这样就比较好
+   - `D:/R`
+   - `D:/Rstudio`
+```
+
+
+
+
+
+## 开始
+
+安装完毕后，从windos`开始菜单`，点开`rstudio`图标，就打开了rstudio的窗口，界面效果如下
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/rstudio-editor.png")
+```
+
+
+
+RStudio 的用户界面十分友好，想要运行一段R代码，只需要在 RStudio 控制台面板最下面一行内键入R 代码，然后回车即可。比如我们键入`1 + 1` 并按回车后，RStudio 将显示如下结果
+```{r }
+1 + 1
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+log(8)
+```
+
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+1:15
+```
+
+
+
+## 对象
+
+
+在R中存储的数据称为**对象**， R语言数据处理实际上就是不断的创建和操控这些对象。创建一个R对象，首先确定一个名称，然后使用
+赋值操作符 `<-`，将数据赋值给它。比如，如果想给变量 x 赋值为5，在命令行中可以这样写 `x <- 5` ，然后回车.
+
+```{r assignment operator}
+x <- 5
+```
+
+
+
+当键入`x` 然后回车，就打印出 x 的值。当然也可以使用命令`print(x)`，结果一样。
+```{r print x}
+x
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+x + 2
+```
+
+
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die <- 1:6
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die / 2
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die * die
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die %*% die
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die %o% die
+```
+
+
+
+
+## 数据结构
+
+- 大家前面看到`x <- 1` 和 `x <- c(1, 2, 3)`，这就是最简单的数据对象，叫**原子型向量**。
+- 用`c`函数将一组数据**构造**成向量
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+die <- c(2, 4, 3, 1, 5, 7)
+die
+```
+
+长度为 1 的原子型向量
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+x <- 1 # or
+x <- c(1)
+```
+
+
+- 大家看到前面`die %o% die` 是**矩阵**类型，矩阵就是二维数组
+- 可以用`matrix` 函数创建
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+m <- matrix(c(2, 4, 3, 1, 5, 7),
+  nrow = 2, ncol = 3, byrow = TRUE
+)
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+m
+```
+
+
+- 数据对象：**数组**
+- `array` 函数生成`n`维数组
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+ar <- array(c(11:14, 21:24, 31:34), dim = c(2, 2, 3))
+ar
+```
+
+
+
+
+
+
+- 数据对象：**列表**
+- 与`c`函数创建向量的方式相似，不同的元素用逗号分开。不同的是，列表允许不同的数据类型（数值型，字符型，逻辑型等）， 而向量要求每个元素的数据类型必须相同。
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+list1 <- list(100:110, "R", c(2, 4, 3, 1, 5, 7))
+list1
+```
+
+
+
+
+- 数据对象：**数据框**
+- `data.frame`函数构建
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+df <- data.frame(
+  name = c("ace", "bob", "carl", "kaite"),
+  age = c(21, 14, 13, 15),
+  sex = c("girl", "boy", "boy", "girl")
+)
+df
+```
+
+
+
+
+
+
+R 对象的数据结构(向量、矩阵、数组、列表和数据框)，总结如下
+
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/data_struction1.png")
+```
+
+为了更好地理解相关概念，建议大家阅读Garrett Grolemund的
+[hopr](https://rstudio-education.github.io/hopr/)这本书 [@Garrett2014]。
+
+
+
+
+
+## 函数
+
+R 语言的强大在于使用**函数**操控各种对象，你可以把对象看作是名词，而函数看作是动词。
+我们用一个简单的例子，`sum()`来演示函数如何工作的。这个函数的功能正如它的名字一样，对输入的各个对象求和，然后返回求和后的值，你可以在命令行中键入`?sum()`查看其官方文档。
+`sum()`后的结果可以直接显示出来，也可以赋名。比如下面代码，首先计算`x + 10`并赋以名字`y`， 然后第二行中打印出来这个新创建的对象`y`
+
+```{r sum}
+y <- sum(x, 10)
+y
+```
+
+因为代码的灵活性，可以不断地重新定义对象。只要数据发生改变，原来的代码就会返回新的值。比如，对`x`重新赋值为 15， 同样运行`sum()`函数，这次我们不赋值给对象`y`，而是让它直接显示
+
+```{r reassign object}
+x <- 15
+sum(x, 10)
+```
+
+再比如
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+round(3.14159)
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+mean(1:6)
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+n <- 100
+x <- seq(1, n)
+sum(x)
+```
+
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+dt <- mtcars[, 1:4]
+head(dt)
+```
+
+
+```{r echo=TRUE, message=TRUE, warning=TRUE}
+cor(dt)
+```
+
+
+## 脚本
+
+如果我们已经写好了一段R程序，我们可以保存为**脚本**文件，脚本文件通常以.R作为文件的后缀名。比如我们可以将刚才创建`x`和 `y`对象的命令，保存为脚本文件`my_script.R`。
+这样我们可以在其它时间修改和重新运行它。
+
+在RStudio中，你可以通过菜单栏依此点击`File > New File > R Script` 来创建一个新的脚本。
+强烈建议大家在运行代码之前，使用脚本的形式编写和编辑自己的程序，养成这样的习惯后，你今后所有的工作都有案可查，并且具有可重复性。
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/script1.png")
+```
+
+
+
+
+- 点击 `Run` 或者 `Source` 运行脚本
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/script2.png")
+```
+
+
+
+
+## 宏包
+
+R 语言的强大还在于各种宏包，一般在[The Comprehensive R Archive Network (CRAN)](https://cran.r-project.org)下载安装。宏包扩展了R语言本身的各种功能，也为解决问题提供了各种方案。截至撰写本书时止，CRAN上大约有1.4万个宏包可以使用。但由于各种包接口不统一，语法不一致，也带来一些困扰。为了解决这个问题，RStudio 公司的[Hadley Wickham](http://hadley.nz) 与其带领的团队推出了`tidyverse`宏包， [tidyverse](https://www.tidyverse.org)将常用的宏包整合在一起，并保持了语法的一致性。可以说，`tidyverse`宏包是R语言[入门](http://varianceexplained.org/r/teach-tidyverse/) 学习的首选。
+本书正是基于`tidyverse`宏包而成的，本书也将通过一些例子不断地展示`tidyverse`在数据分析和可视化的应用。
+
+可以用如下命令安装 `ggplot2` 宏包:
+
+```{r, eval = FALSE }
+# 安装单个包
+install.packages("tidyverse")
+```
+
+```{r, eval = FALSE }
+# 安装多个包
+install.packages(c("ggplot2", "devtools", "dplyr"))
+```
+
+
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+my_packages <- c("ggplot2", "dplyr", "tidyr", "stringr", "widyr", "ggRadar",
+                 "ggiraph", "ggiraphExtra", "ggraph", "tidygraph", "googlevis", 
+                 "broom", "modelr", "knitr", "rlang", "tidytext", "wordcloud2", 
+                 "tibbletime", "corrr", "devtools")
+
+#install.packages(my_packages, repos = "http://cran.rstudio.com")
+```
+
+
+
+如果下载速度太慢，可以选择国内镜像
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/mirror1.png")
+knitr::include_graphics("images/mirror2.png")
+```
+
+如果安装宏包过程中出错，可以试试这样
+```{r, eval = FALSE }
+install.packages("tidyverse", repos = "http://cran.rstudio.com")
+# 或者
+install.packages("tidyverse", repos = "https://CRAN.R-project.org")
+```
+
+如果遇到如下报错信息
+```{r, eval = FALSE }
+Warning in install.packages :
+  unable to access index for repository http://cran.rstudio.com/src/contrib:
+  cannot open URL 'http://cran.rstudio.com/src/contrib/PACKAGES'
+```
+
+输入下面命令后，再试试
+```{r, eval = FALSE }
+options(download.file.method="libcurl")
+```
+
+或者打开`D:\R\etc\Rprofile.site`，添加以下内容：
+```{r, eval = FALSE }
+local({r <- getOption("repos")
+       r["CRAN"] <- "http://mirrors.tuna.tsinghua.edu.cn/CRAN"
+       options(repos=r)})
+
+options(download.file.method="libcurl")
+```
+
+
+如果打开代码是乱码，可以试试修改如下设置
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/code_utf_8.png")
+```
+
+
+
+## 如何获取帮助
+
+
+- 记住和学习所有的函数几乎是不可能的
+- 打开函数的帮助页面(`Rstudio`右下面板的`Help`选项卡)
+
+```{r, eval = FALSE }
+?sqrt
+?gather
+?spread
+?ggplot2
+?scale
+?map_dfr
+```
+
+比如：
+
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/Rhelp.png")
+```
+
+
+
+
+## R 语言社区
+
+R 语言社区非常友好，可以在这里找到你问题的答案
+
+  - twitter: <https://twitter.com/>
+  - R-Bloggers: <https://www.r-bloggers.com/>
+  - kaggle: <https://www.kaggle.com/>
+  - stackoverflow: <https://stackoverflow.com/questions/tagged/r>
+  - rstudio: <https://community.rstudio.com/>
+  
+## 本章代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/ch02_introR.R')
+```
+
+
+## 延伸阅读 
+
+- 如何获取向量`a <- c("a", "c", "e")`的第二个元素？矩阵和列表的时候，又该如何?
+- 试试 `c(1, FALSE)` 与 `c("a", TRUE)` 会是什么？ 
+- `1 == "1"` 和 `-1 < FALSE` 为什么为真？ `"one" < 2` 为什么为假？
+- R语言里可以构造哪些数据对象？
+- 数据框可以装载哪些数据类型的数据？
+- 数据框和列表区别在哪里？
+
+<!--chapter:end:intro_R.Rmd-->
+
+# 子集选取 {#subsetting}
+
+子集选取单独作一章，说明它确实很重要。
+
+## 向量
+
+
+对于原子型向量，我们有至少四种方法取子集
+```{r}
+x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
+```
+
+
+- 正整数： 指定向量元素中的位置
+```{r}
+x[1]
+```
+
+```{r}
+x[c(3,1)]
+```
+
+- 负整数：删除指定位置的元素
+```{r}
+x[-2]
+```
+
+- 逻辑向量：将`TRUE`对应位置的元素提取出来
+```{r}
+x[c(TRUE, FALSE, TRUE, FALSE, TRUE)]
+```
+
+
+
+- 如果是命名向量
+```{r}
+y <- c("a" =  11, "b" =  12, "c" =  13, "d" =  14)
+y
+```
+
+我们可以用名字向量，返回对应位置的向量
+```{r}
+y[c("d", "c", "a")]
+```
+
+## 列表
+
+对列表取子集，和向量的方法一样。使用`[`总是返回列表，`[[`和`$` 返回列表中的元素
+```{r}
+l <- list("one" = c("a", "b", "c"), 
+		  "two" = c(1:5), 
+		  "three" = c(TRUE, FALSE)
+		  )
+l
+```
+
+```{r}
+l[1]
+```
+
+```{r}
+l[[1]]
+```
+也可以
+```{r}
+l[["one"]]
+```
+取出`one`位置上的元素，需要写`[["one"]]`， 程序员觉得太麻烦了，所以用`$`来简写
+```{r}
+l$one
+```
+
+所以请记住
+- `[` 和`[[`的区别
+-`x$y` 是 `x[["y"]]`的简写
+ 
+ 
+## 矩阵
+
+```{r}
+a <- matrix(1:9, nrow = 3)
+a
+```
+我们取第1到2行的2-3列，`[1:2, 2:3]`，中间以逗号分隔，于是得到一个新的矩阵
+```{r}
+a[1:2, 2:3]
+```
+
+默认情况下, `[` 会将获取的数据，以尽可能低的维度形式呈现。比如
+```{r}
+a[1, 1:2]
+```
+表示第1行的第1、2列，此时不是$1 \times 2$矩阵，而是包含了两个元素的向量。
+**以尽可能低的维度形式呈现**，换句话说，这个`r a[1, 1:2]`长的像个矩阵，又有点像向量，向量的维度比矩阵低，那就是向量吧。
+
+
+有些时候，我们想保留所有的行或者列，比如这里我们选取1到2行的所有列，可以这样简写
+
+```{r}
+a[1:2, ]
+```
+
+想想，会输出什么
+```{r}
+a[,]
+```
+可以再简化点？
+```{r}
+a[]
+```
+
+是不是可以再简化点？
+```{r}
+a
+```
+
+## 数据框
+
+数据框具有list和matrix的属性，因此
+
+- 当选取数据框的某几列的时候，可以和list一样，指定元素位置，比如`df[1:2]`选取前两列 
+- 也可以像矩阵一样，使用行和列的标识选取，比如`df[1:3, ]`选取前三行的所有列
+
+```{r}
+df <- data.frame(x = 1:4,
+				 y = 4:1,
+				 z = c("a", "b", "c", "d")
+				 )
+df
+```
+```{r}
+# Like a list
+df[c("x", "z")]
+```
+
+
+
+```{r}
+# Like a matrix
+df[, c("x", "z")]
+```
+
+
+也可以通过行和列的位置
+```{r}
+df[1:2]
+```
+
+
+```{r}
+df[1:3, ]
+```
+
+
+也和矩阵一样，遇到单行单列的时候，数据会降维
+```{r}
+df[, "x"]
+```
+
+
+如果不想避免降维，需要多写一句话
+```{r}
+df[, "x", drop = FALSE]
+```
+这样输出的还是矩阵形式, 但程序员总是偷懒的，有时候我们也容易忘记写`drop = FALSE`，
+所以我比较喜欢下面的`tibble`.
+
+
+
+## tibble
+
+tibble是增强型的data.frame，选取tibble的行或者列，即使遇到单行或者单列的时候，数据也不会降维，总是返回tibble，即仍然是数据框的形式。
+
+```{r}
+tb <- tibble::tibble(
+  x = 1:4,
+  y = 4:1,
+  z = c("a", "b", "c", "d")
+)
+tb
+```
+
+
+```{r}
+tb["x"]
+```
+
+
+```{r}
+tb[, "x"]
+```
+除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)。
+
+## 本章代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/ch03_subsetting.R')
+```
+
+## 延伸阅读
+
+- 如何获取`matrix(1:9, nrow = 3)`上对角元? 对角元？
+- 对数据框，思考`df["x"]`， `df[["x"]]`， `df$x`三者的区别?
+- 如果`x`是一个矩阵，请问 `x[] <- 0` 和`x <- 0` 有什么区别？
+
+
+
+<!--chapter:end:subsetting.Rmd-->
+
+# 数据可视化 {#visual}
+
+上节课介绍了R语言的基本数据结构，可能大家有种看美剧的感觉，有些懵。这很正常，我在开始学习R的时候，感觉和大家一样，所以不要惊慌，我们后面会慢慢填补这些知识点。
+
+这节课，我们介绍R语言最强大的可视化，看看都有哪些炫酷的操作。
+
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(patchwork)
+```
+
+
+## 为什么要可视化
+我们先从一个故事开始，1854年伦敦爆发严重霍乱，当时流行的观点是霍乱是通过空气传播的，而John Snow医生（不是《权力的游戏》里的 Jon Snow）研究发现，霍乱是通过饮用水传播的。研究过程中，John Snow医生统计每户病亡人数，每死亡一人标注一条横线，分析发现，大多数病例的住所都围绕在Broad Street水泵附近，结合其他证据得出饮用水传播的结论，于是移掉了Broad Street水泵的把手，霍乱最终得到控制。
+
+
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics(c("images/Cholera1.png", "images/Cholera2.png"))
+```
+
+
+另一个有趣的例子就是辛普森悖论（Simpson's Paradox）。比如我们想研究下，学习时间和考试成绩的关联。结果发现两者呈负相关性，即补课时间越长，考试成绩反而越差（下图横坐标是学习时间，纵坐标是考试成绩），很明显这个结果有违生活常识。
+
+```{r echo=FALSE}
+## simulate data
+N <- 100
+Sigma <- matrix(c(1, 0.75, 0.75, 1), 2, 2) * 1.5
+means <- list(c(11, 3), c(9, 5), c(7, 7), c(5, 9), c(3, 11))
+
+data <- means %>% purrr::map(~ MASS::mvrnorm(N, .x, Sigma)) %>% map(as.data.frame)
+dat <- reduce(data, bind_rows) %>%
+  mutate(Z = as.character(rep(seq_along(means), each = N))) %>%
+  set_names(c("X", "Y", "Z"))
+
+
+## First plot
+dat %>%
+  ggplot(aes(X, Y)) + geom_point(alpha = .5) +
+  ggtitle(paste("correlation = ", round(cor(dat$X, dat$Y), 2)))
+
+## second plot
+means <- means %>% map(~set_names(., c("x", "y"))) %>% reduce(bind_rows) %>% 
+  mutate(z = as.character(seq_along(means)))
+
+  
+  # means %>% map(~set_names(., c("x", "y"))) %>% 
+  #   enframe()  %>% 
+  #   mutate(a = map(value, ~as.data.frame(.)))
+  
+
+    
+corrs <- dat %>% group_by(Z) %>% summarize(cor = cor(X, Y)) %>% .$cor
+
+p <- dat %>%
+  ggplot(aes(X, Y, color = Z)) +
+  geom_point(show.legend = FALSE, alpha = 0.5) +
+  ggtitle(paste("correlations =", paste(signif(corrs, 2), collapse = " ")))
+
+
+
+## third plot
+p + annotate("text",
+             x = means$x, y = means$y,
+             label = paste("Z=", means$z), cex = 5
+)
+```
+
+事实上，当我们把学生按照不同年级分成五组，再来观察学习时间和考试成绩之间的关联，发现相关性完全逆转了! 我们可以看到学习时间和考试成绩强烈正相关。
+
+
+辛普森悖论在日常生活中层出不穷。 那么如何避免辛普森悖论呢？我们能做的，就是仔细地研究分析各种影响因素，不要笼统概括地、浅尝辄止地看问题。其中，可视化分析为我们提供了一个好的方法。
+
+## ggplot2 的图形语法
+
+ggplot2是R语言最流行的宏包，是RStudio首席科学家Hadley Wickham读博期间的作品，是R相比其他语言一个独领风骚的特点。包名中“gg”是grammar of graphics的简称，是一套优雅的绘图语法。
+ggplot的语法包括9个部件：
+
+- **数据 (data)**
+- **映射 (mapping)**
+- **几何对象 (geom)**
+- 统计变换 (stats)
+- 标度 (scale)
+- 坐标系 (coord)
+- 分面 (facet)
+- 主题 (theme)
+- 存储和输出 (output)
+
+其中前三个是必需的。Hadley Wickham将这套语法诠释为，一张统计图形就是从数据到几何对象（geometric object，缩写geom）的图形属性（aesthetic attribute，缩写aes）的一个映射。此外，图形中还可能包含数据的统计变换（statistical transformation，缩写stats），最后绘制在某个特定的坐标系（coordinate system，缩写coord）中，而分面（facet）则可以用来生成数据不同子集的图形。
+
+
+
+我们用ggplot2宏包内置的汽车测试数据（mpg）来演示，我们用到了四个变量
+
+```{r}
+mpg %>% select(displ, hwy, cyl, class)
+```
+
+- displ： 发动机排量
+- hwy： 每加仑英里数
+- cyl：汽缸数目
+- class：汽车类型
+
+最简单的例子开始，绘制displ和hwy的散点图，
+```{r, eval = FALSE}
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+```
+
+- `ggplot()`表示调用该函数画图，`data = mpg` 表示使用mpg数据框来画图。
+- `aes()`表示数据和视觉属性之间的映射，通俗来讲，不同的数值，转换成不同的位置、色彩或透明度等。
+
+`aes(x = displ, y = hwy)`，意思是变量displ作为（映射为）x轴方向的**位置**，变量hwy作为（映射为）y轴方向的**位置**。
+- `+`表示添加图层。
+- `geom_point()`表示绘制散点图。
+
+
+运行脚本后生成图片：
+
+```{r echo=FALSE}
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+```
+
+刚才看到的是位置上的映射，ggplot还包含了颜色、形状以及透明度等图形属性的映射，可以来比较不同分组，比如我们在`aes()`里增加一个`color = class`
+```{r}
+ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+```
+
+此图绘制了displ和hwy的散点图， 其中不同的汽车类型，用不同的颜色显示。
+
+大家试试下面代码呢，
+```{r, eval = FALSE}
+ggplot(data = mpg, aes(x = displ, y = hwy, size = class)) + 
+  geom_point()
+
+ggplot(data = mpg, aes(x = displ, y = hwy, shape = class)) + 
+  geom_point()
+
+ggplot(data = mpg, aes(x = displ, y = hwy, aphha = class)) + 
+  geom_point()
+```
+
+
+
+## 映射 vs.设置
+
+想把图中的点指定为某一种颜色，可以使用设置语句，比如
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) + geom_point(color = "blue")
+```
+
+大家也可以试试下面
+```{r, eval = FALSE}
+ggplot(mpg, aes(displ, hwy)) + geom_point(size = 5)
+ggplot(mpg, aes(displ, hwy)) + geom_point(shape = 3)
+ggplot(mpg, aes(displ, hwy)) + geom_point(alpha = 0.5)
+```
+
+
+思考下`aes(color = "blue")`为什么会红色的点？
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = "blue")) + 
+  geom_point()
+```
+
+
+
+
+## 几何对象
+
+`geom_point()` 可以画散点图，也可以使用`geom_smooth()`绘制平滑曲线，
+```{r}
+p1 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+
+p2 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_smooth()
+
+p3 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+   geom_point() +
+   geom_smooth()
+
+p1 + p2 + p3
+```
+
+
+
+
+## Global vs. Local
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+```
+
+
+```{r}
+ggplot(mpg) + 
+  geom_point( aes(x = displ, y = hwy, color = class))
+```
+
+大家可以看到，以上两段代码出来的图是一样。
+
+
+
+
+事实上，如果映射关系`aes()` 写在`ggplot()`里, 
+
+```{r, eval=FALSE}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point()
+```
+`x = displ, y = hwy, color = class` 为全局变量。如果映射关系`aes()` 写在几何对象`geom_point()`里, 就为局部变量, 比如。
+```{r, eval=FALSE}
+ggplot(mpg) + 
+  geom_point(aes(displ, hwy, color = class))
+```
+
+
+如果`geom_point()`中缺少所绘图所需要的映射关系，就会继承全局变量的映射关系`aes(x = displ, y = hwy, color = class)` 。
+```{r, eval=FALSE}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point() +
+  geom_smooth()
+```
+这里的 `geom_point()` 和 `geom_smooth()` 都会从全局变量中继承映射关系。如果局部变量中的映射关系已经存在，那么就不会从全局变量中继承，沿用当前的映射关系。
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point(aes(color = factor(cyl))) 
+```
+
+
+大家细细体会下，下面两段代码的区别
+```{r}
+ggplot(mpg, aes(displ, hwy, color = class)) + 
+  geom_smooth(method = lm) +
+  geom_point()
+```
+
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_smooth(method = lm) +
+  geom_point(aes(color = class))
+
+```
+
+
+
+
+## saving plots
+
+可以使用ggsave()函数，将图片保存为所需要的格式，如".pdf", ".png"等
+
+```{r, eval = FALSE}
+ggsave("myfirst_plot.pdf", width = 6, height = 6, dpi = 300)
+```
+
+## 本章代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/ch04_ggplot2.R')
+```
+
+## 延伸阅读 
+
+在第 \@ref(ggplot2) 章会再讲ggplot2
+
+<!--chapter:end:visualization.Rmd-->
+
+# 可重复性研究 {#rmarkdown}
+
+```{r, echo=FALSE}
+library(rmarkdown)
+```
+
+
+
+## Communicating with Data via R Markdown
+
+*Instructions*
+
+1. 安装最新版本 [R](https://cran.r-project.org/mirrors.html) (>3.5) 和 [RStudio Desktop](https://rstudio.com/products/rstudio/) (>1.2).
+2. 安装 [LaTeX](https://www.latex-project.org/get/). 然而这个软件会比较大
+   (e.g. MacTeX is approximate 3.9G). 如果你之前没有安装过
+   LaTeX，我推荐你安装轻量级的 `tinytex`. 安装方法如下，打开R，然后再命令行输入:
+
+```{r, eval = FALSE}
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+3. 安装如下宏包:
+```{r, eval = FALSE}
+install.packages(c("tidyverse", 
+                 "rmarkdown", 
+                 "knitr",
+                 "xaringan", 
+                 "usethis",
+                 "rmdformats", 
+                 "prettydoc",
+                 "rticles",
+                 "linl",
+                 "shiny",
+                 "bookdown",
+                 "pagedown",
+                 "remotes"))
+# the following is not on CRAN 
+remotes::install_github("gadenbuie/xaringanthemer")
+remotes::install_github("hadley/emo")
+```
+
+
+
+## markdown 基本语法
+```{markdown, eval = FALSE, echo = TRUE}
+
+# This is a title
+
+
+This is a sentence.
+
+Now a list begins:
+  
+- no importance
+- again
+- repeat
+  
+A numbered list:
+  
+1. first
+2. second
+
+__bold__, _italic_, ~~strike through~~
+```
+
+
+
+
+## Hello R Markdown
+
+`Rstudio` create Rmd file ： `File -> New File -> R Markdown`.
+
+
+基本构成
+
+- metadata
+- text
+- code
+   
+
+### 插入公式
+
+
+```{r comment=NA,echo=FALSE}
+cat("$$\\frac{\\sum (\\bar{x} - x_i)^2}{n-1}$$")
+```
+
+
+
+$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$
+
+
+### 插入图片
+
+```{r out.width = '35%', fig.align='left', echo = TRUE}
+knitr::include_graphics("images/R_logo.png")
+```
+
+
+### 表格
+
+```{r tables-mtcars,  echo = TRUE}
+knitr::kable(iris[1:5, ], caption = "A caption")
+```
+
+需要更优美的表格，可参考[这里](https://haozhu233.github.io/kableExtra/)
+
+## html_document
+
+```yaml
+---
+title: Habits
+author: John Doe
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    df_print: paged
+    toc: yes
+    number_sections: yes
+---
+```
+
+## pdf_document
+
+```yaml
+---
+title: 'Going deeper with dplyr'
+author: "王小二"
+date: 2018-09-27
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    extra_dependencies:
+      ctex: UTF8
+    number_sections: yes
+    toc: yes
+classoptions: "hyperref, 12pt, a4paper"
+---
+```
+
+## 本章代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/ch06_rmd_pdf.Rmd')
+```
+
+
+## 延伸阅读
+
+* Markdown tutorial https://www.markdowntutorial.com (10分钟学完)
+* LaTeX tutorial https://www.latex-tutorial.com/quick-start/
+
+
+
+
+<!--chapter:end:rmarkdown.Rmd-->
+
+# 数据处理 {#dplyr}
+
+Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
+
+- 一切都是数据框，任何数据都可以规整
+- 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
+- 函数处理数据时，数据框进数据框出
+
+
+本章我们介绍tidyverse里数据处理的神器dplyr宏包。首先，我们加载该宏包
+```{r message = FALSE, warning = FALSE}
+library(dplyr)
+```
+
+
+
+dplyr 定义了数据处理的规范语法，其中主要包含以下七个主要的函数。
+
+
+
+* `mutate() `, `select() `, `filter() ` 
+* `summarise() `, `group_by()`, `arrange() `
+* `left_join()`, `right_join()`， `full_join()`
+
+我们依次介绍
+
+## `mutate() `
+
+假定我们有一数据框，包含三位学生的英语和数学
+
+```{r}
+df <- tibble(
+      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
+      type = c("english", "math", "english", "math", "english", "math")
+)
+
+df
+```
+
+这里有他们的考试成绩， 我们想增加到数据框里去
+```{r}
+s <- c(80.2, 90.5, 92.2, 90.8, 82.5, 84.6)
+s 
+```
+语法这样写
+```{r}
+mutate(df, score = s)
+```
+
+`mutate()` 函数第一参数是我们要处理的数据框，比如这里的`df`，紧跟着的是`score = s`，等号左边的`score`是我们打算创建一个新列，而取的列名；等号右边是装着学生成绩的向量（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
+
+## `管道` %>%
+
+这里有必要介绍下管道操作符 `%>%` .
+
+
+```{r}
+sum(c(1:10))
+```
+与下面的写法是等价的,
+```{r}
+c(1:10) %>% sum()
+```
+这条语句的意思，向量`c(1:10)` 通过管道操作符 `%>%` ，传递到函数`sum()`的第一个参数位置，即`sum(c(1:10))`， 这个`%>%`管道操作符还是很形象的， 且对执行多个函数操作的时候，就显得格外方便，代码可读性更强。
+```{r}
+# sqrt(sum(abs(c(-10:10)))) 
+c(-10:10) %>% abs() %>% sum() %>% sqrt()
+```
+
+
+那么，上面增加学生成绩的语句`mutate(df, score = s)`就可以写为
+
+```{r}
+# 等价于
+df %>% mutate(score = s)
+```
+是不是很赞？
+
+
+## `select() `
+
+`select() `顾名思义`选择`，就是选择数据框的某一列，我们还是以学生成绩的数据框为例
+```{r}
+df <- df %>% mutate(score = s)
+df
+```
+
+我们可以选择`name`列, 结果是只有一列的数据框（仍然数据框喔）
+```{r}
+df %>% select(name)
+```
+
+
+如果选取多列，就再写一个就行了
+```{r}
+df %>% select(name, score)
+```
+如果不想要某列， 可以在变量前面加`-`， 结果与上面的一样
+
+```{r}
+df %>% select(-type)
+```
+
+
+## `filter() `
+
+`select`是列方向的选择， 我们还可以对数据行方向的选择和筛选，比如这里把**成绩高于90分的**同学筛选出来
+
+```{r}
+df %>% filter(score >= 90)
+```
+
+也可以限定多个条件进行筛选, 英语成绩高于90分的筛选出来
+```{r}
+df %>% filter(type == "english", score >= 90)
+```
+
+## `summarise() `统计
+
+`summarise() `主要用于统计，往往与其他函数配合使用，比如计算所有同学的考试成绩的均值
+```{r}
+df %>% summarise( mean_score = mean(score))
+```
+还同时完成多个统计
+```{r}
+df %>% summarise( mean_score = mean(score),
+                  median_score = median(score)
+                  )
+```
+
+
+## `group_by()`分组
+
+事实上，`summarise() `往往配合`group_by()`一起使用，即，先分组再统计。比如，我们想统计每个学生的平均成绩，那么就需要先按学生`name`分组，然后求平均
+```{r}
+df %>% 
+  group_by(name) %>% 
+  summarise( mean_score = mean(score)  )
+```
+
+## `arrange() `排序
+这个很好理解的。比如我们按照考试成绩从低到高排序，然后输出
+```{r}
+df %>% arrange(score)
+```
+如果从高到低排序呢，有两种方法:
+```{r}
+df %>% arrange(-score)
+```
+
+写成下面这种形式也是降序排列，但可读性更强些
+```{r}
+df %>% arrange(desc(score))
+```
+
+
+也可对多个变量先后排序。先按学科排，然后按照成绩从高到底排序
+```{r}
+df %>% 
+  arrange(type, -score)
+```
+
+
+## `left_join`
+数据框合并，假定我们已经统计了每个同学的平均成绩，存放在`df1`
+
+```{r}
+df1 <- df %>% 
+  group_by(name) %>% 
+  summarise( mean_score = mean(score) )
+
+df1
+```
+
+我们有新一个数据框`df2`，包含同学们的年龄信息
+```{r}
+df2 <- tibble(
+      name = c("Alice", "Bob"),
+      age =  c(12, 13)
+)
+
+df2
+```
+
+可以用 `left_join`把两个数据框`df1`和`df2`，合并连接再一起, 两个数据框是通过姓名`name`连接的，因此需要指定`by = "name"`
+
+```{r, message=FALSE}
+df1 %>% left_join(df2, by = "name")
+```
+
+大家注意到最后一行Carol的年龄是`NA`， 大家想想为什么呢？
+
+我们再试试`right_join()`
+
+```{r, message=FALSE}
+df1 %>% right_join(df2, by = "name")
+```
+Carol同学的信息没有了？ 大家想想又为什么呢？
+
+
+事实上，答案就在函数的名字上，`left_join()`是左合并，即以左边数据框`df1`中的学生姓名`name`为准，在右边数据框`df2`里，有`Alice`和`Bob`的年龄，那么就对应合并过来，没有`Carol`，就为缺失值`NA`
+
+`left_join()`是右合并，即以右边数据框`df2`中的学生姓名`name`为准，只有`Alice`和`Bob`，因此而`df1`只需要把`Alice`和`Bob`的信息粘过来。
+
+
+
+## 延伸阅读
+
+- 推荐[https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/).
+- 作业：读懂并运行下面的代码
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('./data/nycflights.Rmd')
+```
+
+
+
+<!--chapter:end:dplyr.Rmd-->
+
+# 正则表达式 {#stringr}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(stringr)
+```
+
+
+## 什么是正则表达式
+
+我们在word文档或者excel中，经常使用查找和替换, 然而有些情况，word是解决不了的，比如
+
+- 条件搜索
+  - 统计文中，前面有 “data”, “computer” or “statistical” 的 “analysis”，这个单词的个数
+  - 找出文中重复的单词，比如“we love love you”
+- 拼写检查
+  - 电话号码（邮件，密码等）是否正确格式
+  - 日期书写的规范与统一
+- 提取信息
+  - 提取文本特定位置的数据 
+- 文本挖掘
+  - 非结构化的提取成结构化
+
+
+这个时候就需要用到正则表达式（Regular Expression），这一强大、便捷、高效的文本处理工具。那么，什么是正则表达式呢？简单点说，正则表达式是处理字符串的。复杂点说，正则表达式描述了一种字符串匹配的模式（pattern），通常被用来检索、替换那些符合某个模式(规则)的文本。这种固定的格式的文本，生活中常见的有电话号码、网络地址、邮件地址和日期格式等等。
+
+正则表达式并不是R语言特有的，事实上，几乎所有程序语言都支持正则表达式。
+
+R语言中的字符串操作，基础包里有很多函数可以使用，然而大神Hadley Wickham开发的stringr包让正则表达式简单易懂，所以今天我们介绍这个包，本章的内容与《R for data science》第10章基本一致。本章目的教大家写**简单的**正则表示式就行了。
+
+
+
+
+## 字符串基础
+
+
+### 字符串长度
+
+想获取字符串的长度，可以使用`str_length()`函数
+```{r}
+str_length("R for data science")
+```
+
+对字符串向量
+```{r}
+str_length(c("a", "R for data science", NA))
+```
+
+数据框里配合dplyr函数，同样很方便
+```{r}
+data.frame(
+  x = c("a", "R for data science", NA)
+  ) %>%
+  mutate(y = str_length(x))
+```
+
+
+
+
+
+
+
+### 字符串组合
+
+
+把字符串拼接在一起
+```{r}
+str_c("x", "y")
+```
+
+
+把字符串拼接在一起，可以设置中间的间隔
+```{r}
+str_c("x", "y", sep = ", ")
+```
+
+
+```{r}
+str_c(c("x", "y", "z"), sep = ", ")
+```
+是不是和你想象的不一样，那就`?str_c`，或者试试这个
+
+```{r}
+str_c(c("x", "y", "z"), c("x", "y", "z"), sep = ", ")
+```
+
+用在数据框里
+```{r}
+data.frame(
+  x = c("I", "love", "you"),
+  y = c("you", "like", "me")
+  ) %>%
+  mutate(z = str_c(x, y, sep = "|"))
+```
+
+使用collapse选项，是先组合，然后再转换成单个字符串，大家对比下
+
+```{r}
+str_c(c("x", "y", "z"), c("a", "b", "c"), sep = "|")
+```
+
+```{r}
+str_c(c("x", "y", "z"), c("a", "b", "c"), collapse = "|")
+```
+
+
+
+
+
+
+
+### 字符串取子集
+
+截取字符串的一部分，需要指定截取的开始位置和结束位置
+```{r}
+x <- c("Apple", "Banana", "Pear")
+str_sub(x, 1, 3)
+```
+
+开始位置和结束位置如果是负整数，就表示位置是从后往前数，比如下面这段代码，截取倒数第3个至倒数第1个位置上的字符串
+```{r}
+x <- c("Apple", "Banana", "Pear")
+str_sub(x, -3, -1)
+```
+
+
+也可以进行赋值，如果该位置上有字符，就用新的字符替换旧的字符
+```{r}
+str_sub(x, 1, 1) <- "Q"
+x
+```
+
+
+
+
+
+
+## 使用正则表达式进行模式匹配
+
+正则表示式慢慢会呈现了
+
+### 基础匹配
+
+`str_view()` 是查看string是否匹配pattern，如果匹配，就高亮显示
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(string = x, pattern = "an")
+```
+
+有时候，我们希望在字符串中，`a`前后都有字符（a处在两字符中间， rap, bad, sad, wave，spear等等）
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, ".a.")
+```
+
+这里的`.` 代表任意字符。如果向表达.本身呢？
+
+```{r}
+c("s.d") %>% 
+  str_view(".")
+```
+
+```{r}
+c("s.d") %>% 
+  str_view("\\.")
+```
+
+
+### 锚点
+
+希望`a`是字符串的开始
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "^a")
+```
+
+
+希望`a`是一字符串的末尾
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "a$")
+```
+
+
+```{r}
+x <- c("apple pie", "apple", "apple cake")
+str_view(x, "^apple$")
+```
+
+
+
+
+
+### 字符类与字符选项
+
+前面提到，`.`匹配任意字符，事实上还有很多这种**特殊含义**的字符：
+
+* `\d`: matches any digit.
+* `\s`: matches any whitespace (e.g. space, tab, newline).
+* `[abc]`: matches a, b, or c.
+* `[^abc]`: matches anything except a, b, or c.
+
+
+```{r}
+str_view(c("grey", "gray"), "gr[ea]y")
+```
+
+
+
+
+
+
+
+
+### 重复
+
+控制匹配次数:
+
+* `?`: 0 or 1
+* `+`: 1 or more
+* `*`: 0 or more
+
+
+
+```{r}
+x <- "Roman numerals: MDCCCLXXXVIII"
+str_view(x, "CC?")
+str_view(x, "X+")
+```
+
+
+
+
+
+控制匹配次数:
+
+* `{n}`: exactly n
+* `{n,}`: n or more
+* `{,m}`: at most m
+* `{n,m}`: between n and m
+
+
+
+
+```{r}
+x <- "Roman numerals: MDCCCLXXXVIII"
+str_view(x, "C{2}")
+str_view(x, "C{2,}")
+str_view(x, "C{2,3}")
+```
+
+
+- 默认的情况，`*`, `+` 匹配都是**贪婪**的，也就是它会尽可能的匹配更多
+- 如果想让它不贪婪，而是变得懒惰起来，可以在`*`, `+` 加个`?`
+
+
+
+```{r}
+x <- "Roman numerals: MDCCCLXXXVIII"
+
+str_view(x, "CLX+")
+str_view(x, "CLX+?")
+```
+
+
+小结一下呢
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/regex_repeat.jpg")
+```
+
+
+
+
+### 分组与回溯引用
+
+
+```{r}
+ft <- fruit %>% head(10)
+ft
+```
+
+我们想看看这些单词里，有哪些字母是重复两次的，比如`aa`, `pp`. 如果用上面学的方法
+```{r}
+str_view(ft, ".{2}", match = TRUE)
+```
+
+发现不是和我们的预想不一样呢。
+
+所以需要用到新技术 **分组与回溯引用**，
+```{r}
+str_view(ft, "(.)\\1", match = TRUE)
+```
+
+- `.` 是匹配任何字符
+- `(.)` 将匹配项括起来，它就用了一个名字，叫`\\1`； 如果有两个括号，就叫`\\1`和`\\2`
+- `\\1` 表示回溯引用，表示引用`\\1`对于的`(.)`
+
+所以`(.)\\1`的意思就是，匹配到了字符，后面还希望有个**同样的字符**
+
+
+如果是匹配`abab`, `wcwc`
+```{r}
+str_view(ft, "(..)\\1", match = TRUE)
+```
+
+如果是匹配`abba`, `wccw`呢？
+
+```{r}
+str_view(ft, "(.)(.)\\2\\1", match = TRUE)
+```
+
+是不是很神奇？
+
+
+
+## 解决实际问题
+
+
+
+### 确定一个字符向量是否匹配一种模式
+
+实际问题中，我们希望得到，是否匹配？或者将匹配的筛选处理，
+这个时候，需要用到`str_detect`等函数
+```{r}
+x <- c("apple", "banana", "pear")
+str_detect(x, "e")
+```
+
+`stringr::words`包含了牛津字典里常用单词
+```{r}
+stringr::words %>% head()
+```
+
+我们统计下以`t`开头的单词，有多少个？
+```{r}
+# How many common words start with t?
+sum(str_detect(words, "^t"))
+```
+我们又一次看到了**强制转换**.
+
+
+以元音结尾的单词，占比多少？
+```{r}
+# proportion of common words end with a vowel?
+mean(str_detect(words, "[aeiou]$"))
+```
+
+
+放在数据框里看看, 看看以`x`结尾的单词是哪些？
+```{r}
+tibble(
+  word = words
+) %>%
+  filter(str_detect(word, "x$"))
+```
+
+
+
+
+`str_detect()` 有一个功能类似的函数`str_count()`，区别在于，后者不是简单地返回是或否，而是返回字符串中匹配的数量
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_count(x, "a")
+```
+
+
+```{r}
+tibble(
+  word = words
+) %>%
+  mutate(
+    vowels = str_count(word, "[aeiou]"),
+    consonants = str_count(word, "[^aeiou]")
+  )
+```
+
+
+
+
+
+
+
+
+### 确定匹配的位置
+
+
+大家放心，正则表达式不会重叠匹配。比如用`"aba"`去匹配`"abababa"`，肉眼感觉是三次，但正则表达式告诉我们是两次，因为不会重叠匹配
+
+```{r}
+str_count("abababa", "aba")
+```
+
+
+```{r}
+str_view_all("abababa", "aba")
+```
+
+
+
+
+
+### 提取匹配的内容
+
+```{r}
+colours <- c(
+  "red", "orange", "yellow",
+  "green", "blue", "purple"
+)
+colour_match <- str_c(colours, collapse = "|")
+colour_match
+```
+
+colour_match 这里是一个字符串，放在pattern参数位置上也是正则表达式了,
+
+这里注意以下两者的区别
+
+```{r, eval=FALSE}
+str_view("abcd", "ab|cd")
+str_view("abc", "a[bc]d")
+```
+
+
+
+```{r}
+more <- "It is hard to erase blue or red ink."
+str_extract(more, pattern = colour_match)
+```
+
+
+```{r}
+str_extract_all(more, pattern = colour_match)
+```
+
+
+
+
+```{r}
+more <- sentences[str_count(sentences, colour_match) > 1]
+more
+```
+取出sentences中，含有有两种和两种颜色以上的句子。不过，不喜欢这种写法，看着费劲，还是用tidyverse的方法
+```{r}
+tibble(sentence = sentences) %>% 
+  filter(str_count(sentences, colour_match) > 1)
+```
+
+`str_extract()`提取匹配, 谁先匹配就提取谁
+```{r}
+tibble(x = more) %>%
+  mutate(color = str_extract(x, colour_match))
+```
+
+
+`str_extract_all()`提取全部匹配项
+
+```{r}
+tibble(x = more) %>%
+  mutate(color = str_extract_all(x, colour_match))
+```
+
+```{r, message=FALSE}
+tibble(x = more) %>%
+  mutate(color = str_extract_all(x, colour_match)) %>% 
+  unnest_wider(color)
+```
+
+
+
+
+### 替换匹配内容
+
+
+只替换匹配的第一项
+```{r}
+x <- c("apple", "pear", "banana")
+str_replace(x, "[aeiou]", "-")
+```
+
+
+替换全部匹配项
+```{r}
+str_replace_all(x, "[aeiou]", "-")
+```
+
+
+
+
+
+
+
+### 拆分字符串
+
+这个和`str_c()`是相反的操作
+
+```{r}
+lines <- "I love my country"
+lines
+```
+
+
+```{r}
+str_split(lines, " ")
+```
+
+
+```{r}
+fields <- c("Name: Hadley", "Country: NZ", "Age: 35")
+fields %>% str_split(": ", n = 2, simplify = TRUE)
+```
+
+
+
+
+
+
+
+
+## 进阶部分
+
+带有条件的匹配
+
+### look ahead
+
+想匹配Windows，同时希望Windows右侧是`"95", "98", "NT", "2000"`中的一个
+```{r}
+win <- c("Windows2000", "Windows", "Windows3.1")
+str_view(win, "Windows(?=95|98|NT|2000)")
+```
+
+
+
+```{r}
+win <- c("Windows2000", "Windows", "Windows3.1")
+str_view(win, "Windows(?!95|98|NT|2000)")
+```
+
+
+
+Windows后面的 `()` 是匹配条件，事实上，有四种情形：
+
+- `(?=pattern)`  要求此位置的后面必须匹配表达式pattern
+- `(?!pattern)`  要求此位置的后面不能匹配表达式pattern
+- `(?<=pattern)` 要求此位置的前面必须匹配表达式pattern
+- `(?<!pattern)` 要求此位置的前面不能匹配表达式pattern
+
+
+```{block, type="danger"}
+注意：对于正则表达式引擎来说，它是从文本头部向尾部（从左到右）开始解析的，因此对于文本尾部方向，称为“前”，因为这个时候，正则引擎还没走到那块；而对文本头部方向，则称为“后”，因为正则引擎已经走过了那一块地方。
+```
+
+
+
+### look behind
+
+
+```{r}
+win <- c("2000Windows", "Windows", "3.1Windows")
+str_view(win, "(?<=95|98|NT|2000)Windows")
+```
+
+
+```{r}
+win <- c("2000Windows", "Windows", "3.1Windows")
+str_view(win, "(?<!95|98|NT|2000)Windows")
+```
+
+
+
+
+
+
+## 案例分析
+
+### 案例1
+
+我们希望能提取第二列中的数值，构成新的一列
+
+```{r}
+dt <- tibble(
+  x = 1:4,
+  y = c("wk 3", "week-1", "7", "w#9")
+)
+dt
+```
+
+
+```{r, eval=FALSE,include=FALSE}
+dt %>% 
+  mutate(z = parse_number(y))
+```
+
+```{r, eval = FALSE, include=FALSE}
+# parse_number() parse_integer() parse_double()
+
+# parse_factor() parse_logical() parse_character()
+
+# parse_datetime() parse_time() parse_date()
+```
+
+```{r}
+dt %>%
+  mutate(
+    z = str_extract(y, "[0-9]")
+  ) 
+```
+
+
+
+
+
+
+
+
+
+
+### 案例2
+
+提取第二列中的大写字母
+
+```{r}
+df <- data.frame(
+  x = seq_along(1:7),
+  y = c("2016123456", "20150513", "AB2016123456", "J2017000987", "B2017000987C", "aksdf", "2014")
+)
+df
+```
+
+
+
+
+```{r}
+df %>%
+  mutate(
+    item = str_extract_all(y, "[A-Z]")
+  ) %>%
+  tidyr::unnest(item)
+```
+
+
+
+
+
+
+
+### 案例3
+
+要求：中英文分开
+
+```{r}
+tb <- tibble(x = c("I我", "love爱", "you你"))
+tb
+```
+
+
+
+```{r}
+tb %>% 
+  tidyr::extract(
+  x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
+  remove = FALSE
+)
+```
+
+
+
+### 案例4
+
+要求：提取起始数字
+
+```{r}
+df <- tibble(x = c("1-12周", "1-10周", "5-12周"))
+df
+```
+
+
+
+```{r}
+df %>% extract(
+  x,
+  c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
+  remove = FALSE
+)
+```
+
+
+
+
+
+### 案例5
+
+要求：提取大写字母后的数字
+
+```{r}
+df <- tibble(
+  x = c("12W34", "AB2C46", "B217C", "akTs6df", "21WD4")
+)
+```
+
+
+```{r}
+df %>% 
+  mutate( item =  str_extract_all(x, "(?<=[A-Z])[0-9]")  ) %>% 
+  tidyr::unnest(item)
+```
+
+思考题，
+
+- 如何提取大写字母后的连续数字，比如B217C后面的217
+- 如何提取提取数字前的大写字母？
+- 为什么第一个正则表达式返回结果为"" 
+
+```{r}
+x <- "Roman numerals: MDCCCLXXXVIII"
+str_match_all(x, "C?") # "?"的意思是匹配0次或者1次
+str_match_all(x, "CC?")
+```
+ 
+
+
+### 案例6
+
+提取数字并求和
+
+```{r}
+df <- tibble(
+  x = c("1234", "B246", "217C", "2357f", "21WD4")
+)
+df
+```
+
+
+```{r}
+df %>% 
+  mutate(num = str_match_all(x, "\\d")) %>% 
+  unnest(num) %>% 
+  mutate_at(vars(num), as.numeric) %>% 
+  group_by(x) %>% 
+  summarise(sum = sum(num))
+```
+
+
+
+
+## 一些有趣的正则表达式的宏包
+
+- https://github.com/gadenbuie/regexplain
+- https://github.com/daranzolin/inferregex
+- https://github.com/VerbalExpressions/RVerbalExpressions
+
+
+```{r}
+library(inferregex) # remotes::install_github("daranzolin/inferregex")
+s <- "abcd-9999-ab9"
+infer_regex(s)$regex
+```
+
+
+
+
+
+<!--chapter:end:stringr.Rmd-->
+
+# 函数式编程 {#purrr}
+
+
+很多教材都是讲函数和循环，都是从`for, while, ifelse`讲起
+，如果我也这样讲，又回到了Base R的老路上去了。考虑到大家都没有编程背景，也不会立志当程序员，所以我直接讲purrr包，留坑以后填吧。
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+```
+
+## 简单回顾
+
+大家知道R常用的数据结构是向量、矩阵、列表和数据框，如下图
+
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/data_struction1.png")
+```
+
+
+他们构造起来，很多相似性。
+
+```{r, eval=FALSE}
+        list(a = 1, b = "a")   # 列表
+           c(a = 1, b = 2)     # 命名向量
+  data.frame(a = 1, b = 2)     # 数据框
+      tibble(a = 1, b = 2)     # 增强型数据框
+```
+
+## 多说说列表
+
+我们构造一个列表
+
+```{r}
+a_list <- list(
+  num = c(8, 9),
+  log = TRUE,
+  cha = c("a", "b", "c")
+)
+a_list
+```
+
+要想访问某个元素，可以这样
+```{r}
+a_list["num"]
+```
+注意返回结果，第一行是`$num`，说明返回的结果仍然是列表, 相比`a_list`来说，`a_list["num"]`是只包含一个元素的列表。
+
+想将num元素里面的向量提取出来，就得用两个`[[`
+```{r}
+a_list[["num"]]
+```
+
+大家知道程序员都是偷懒的，为了节省体力，用一个美元符号`$`代替`[[" "]]`六个字符
+```{r}
+a_list$num
+```
+
+
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/list_subset.png")
+```
+
+
+在tidyverse里，还可以用
+```{r}
+a_list %>% pluck(1)
+```
+或者
+```{r}
+a_list %>% pluck("num")
+```
+
+
+## 列表 vs 向量
+
+假定一向量
+```{r}
+v <- c(-2, -1, 0, 1, 2)
+v
+```
+我们对元素分别取绝对值
+```{r}
+abs(v)
+```
+
+如果是列表形式，`abs`函数应用到列表中就会报错
+```{r}
+lst <- list(-2, -1, 0, 1, 2)
+```
+
+
+```{r, error=TRUE}
+abs(lst)
+```
+
+报错了。用在向量的函数用在list上，往往行不通。
+
+
+再来一个例子：我们模拟了5个学生的10次考试的成绩
+```{r}
+exams <- list(
+  student1 = round(runif(10, 50, 100)),
+  student2 = round(runif(10, 50, 100)),
+  student3 = round(runif(10, 50, 100)),
+  student4 = round(runif(10, 50, 100)),
+  student5 = round(runif(10, 50, 100))
+)
+exams
+```
+
+很显然，`exams`是一个列表。那么，每个学生的平均成绩是多呢？
+
+我们可能会想到用mean函数，但是
+```{r, error=TRUE}
+mean(exams)
+```
+
+发现报错了，可以看看帮助文档看看问题出在什么地方
+```{r, eval=FALSE}
+?mean()
+```
+
+帮助文档告诉我们，`mean()`要求第一个参数是**数值型或者逻辑型**的向量。
+而我们这里的`exams`是列表，因此无法运行。
+
+那好，我们就用笨办法吧
+```{r}
+list(
+  student1 = mean(exams$student1),
+  student2 = mean(exams$student2),
+  student3 = mean(exams$student3),
+  student4 = mean(exams$student4),
+  student5 = mean(exams$student5)
+)
+```
+
+成功了。但发现我们写了好多代码，如果有100个学生，那就得写更多的代码，如果是这样，程序员就不高兴了，这太累了啊。于是`purrr`包的`map`函数来解救我们，下面主角出场了。
+
+
+
+## purrr
+
+介绍之前，先试试
+```{r}
+exams %>% map(mean)
+```
+哇，短短几句话，得出了相同的结果。如果希望返回的是数值型的**向量**，可以这样写
+```{r}
+exams %>% map_dbl(mean)
+```
+
+如果希望返回的结果是数据框
+```{r}
+exams %>% map_df(mean)
+```
+
+是不是很酷？
+
+
+
+事实上，`map`函数
+
+```{r out.width = '80%', echo = FALSE}
+knitr::include_graphics("images/map_function1.png")
+```
+
+- 第一个参数是列表（数据框是列表的一种特殊形式，因此数据框也是可以的）
+- 第二个参数是函数，这个函数会**应用到列表的每一个元素**
+
+
+`map`函数执行过程如下
+：
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/map_function2.png")
+```
+
+具体为，`exams`有5个元素，一个元素装着一个学生的10次考试成绩，
+运行`map(exams, mean)`函数后， 首先取出exams第一个元素`exams$student1`(它是向量)，然后执行
+`mean(exams$student1)`, 然后将计算结果存放在列表result中的第一个位置`result1`上；
+
+
+做完第一个学生的，紧接着取出`exams`第二个元素`exams$student2`，执行
+`mean(exams$student2)`, 然后将计算结果存放在列表`result`中的第一个位置`result2`上；
+
+
+如此这般，直到所有学生都处理完毕。我们得到了最终结果---一个新的列表`result`。
+
+
+当然，我们也可以根据需要，让map返回我们需要的数据格式, purrr也提供了方便的函数，具体如下
+
+```{r out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/map_function3.png")
+```
+
+
+我们将`mean`函数换成求方差`var`函数试试，
+```{r}
+exams %>% map_df(var)
+```
+
+
+## 自定义函数
+
+刚才我们是让学生成绩执行求平均`mean`，求方差`var`等函数。我们也可以自定义函数。
+比如我们这里定义了将向量**中心化**的函数（先求出10次考试的平均值，然后每次考试成绩去减这个平均值）
+```{r}
+my_fun <- function(x){
+  x - mean(x)
+}
+
+exams %>% map_df(my_fun)
+```
+
+当然可以偷懒将函数直接写在`map()`里，用`~`代替`my_fun`， 但**代价**是参数必须是规定的写法，比如`.x`
+```{r}
+exams %>% map_df(~ .x - mean(.x))
+```
+
+
+有时候，程序员觉得`x`还是有点多余，于是更够懒一点，只用`.`， 也是可以的
+```{r}
+exams %>% map_df(~ . - mean(.))
+```
+
+
+
+
+## 延伸阅读
+
+1、看手册`?purrr::modify()`， 思考下它与`map()`的区别
+```{r, eval=FALSE}
+exams %>% modify(~ . - mean(.))
+```
+
+2、他们的区别哪里？函数能否互换？
+```{r, eval=FALSE}
+mtcars %>% map_chr(typeof)
+mtcars %>% map_lgl(is.double)
+mtcars %>% map_int(n_unique)
+mtcars %>% map_dbl(mean)
+```
+
+
+
+<!--chapter:end:purrr.Rmd-->
+
+# 探索性数据分析 {#eda}
+
+探索性数据分析（exporatory data analysis）是各种知识的综合运用。本章通过一个案例，讲解探索性数据分析的基本思路，也算是对前面几章内容的一次总结复习。
+
+## 探索性
+
+- 数据准备（对数据要做到心中有数）
+
+  - 描述变量
+  - 数据结构
+  - 缺失值及其处理
+
+
+- 数据探索（围绕探索的目标）
+
+  - 数据规整
+  - 可视化
+  - 建模
+
+
+## 数据集
+
+这是一个诺贝尔奖获得者的数据集，
+
+```{r out.width = '80%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/nobel_prize_winners_list.jpg")
+```
+
+
+## 导入数据
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+df <- read_csv("./demo_data/nobel_winners.csv")
+df 
+```
+## 数据结构
+
+一行就是一个诺奖获得者的记录? 确定？
+
+
+缺失值及其处理
+```{r}
+df %>% map_df(~sum(is.na(.)))
+```
+
+
+性别缺失怎么造成的？
+```{r}
+df %>% count(laureate_type)
+```
+
+
+
+
+## 我们想探索哪些问题？
+
+你想关心哪些问题，可能是
+
+- 每个学科颁过多少次奖？
+- 这些大神都是哪个年代的人？
+- 性别比例
+- 平均年龄和获奖数量
+- 最年轻的诺奖获得者是谁？
+- 中国诺奖获得者有哪些？
+- 得奖的时候多大年龄？
+- 获奖者所在国家的经济情况？
+- 有大神多次获得诺贝尔奖，而且在不同科学领域获奖？
+- 出生地分布？工作地分布？迁移模式？
+- GDP经济与诺奖模型？
+- 诺奖分享情况？
+
+
+## 每个学科颁过多少次奖
+
+```{r}
+df %>% count(category)
+```
+
+```{r}
+df %>%
+  count(category) %>%
+  ggplot(aes(x = category, y = n, fill = category)) +
+  geom_col() +
+  geom_text(aes(label = n), vjust = -0.25) +
+  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  theme(legend.position = "none")
+```
+
+
+```{r, fig.width= 6, fig.height= 4}
+df %>% 
+  count(category) %>% 
+  ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
+  geom_col() +
+  geom_text(aes(label = n), vjust = -0.25) +
+  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  theme(legend.position = "none")
+  
+```
+
+也可以使用别人定义好的配色方案
+
+```{r, fig.width= 6, fig.height= 4, warning=FALSE, message=FALSE}
+library(ggthemr) # install.packages("devtools")
+                 # devtools::install_github('cttobin/ggthemr')
+ggthemr('dust')
+
+df %>% 
+  count(category) %>% 
+  ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
+  geom_col() +
+  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  theme(legend.position = "none")
+```
+
+
+```{r echo=FALSE}
+ggthemr_reset()
+```
+
+这个配色方案感觉挺好看的呢，比较适合我这种又挑剔又懒惰的人。
+
+
+当然，也可以自己DIY，或者使用配色网站的主题方案(https://learnui.design/tools/data-color-picker.html#palette)
+
+```{r, fig.width= 6, fig.height= 4}
+df %>% 
+  count(category) %>% 
+  ggplot(aes(x = fct_reorder(category, n), y = n)) +
+  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")
+  ) +
+  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  theme(legend.position = "none")
+  
+```
+
+
+让图骚动起来吧
+```{r}
+library(gganimate) #install.packages("gganimate", dependencies = T)
+
+df %>% 
+  count(category) %>% 
+  mutate(category = fct_reorder(category, n)) %>% 
+  ggplot(aes(x = category, y = n)) +
+  geom_text(aes(label = n), vjust = -0.25) +
+  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")
+  ) +
+  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  theme(legend.position = "none") +
+  transition_states(category)  +
+  shadow_mark(past = TRUE)
+  
+```
+
+和ggplot2的分面一样，动态图可以增加数据展示的维度。
+
+
+
+
+
+## 看看我们伟大的祖国
+```{r}
+df %>% 
+  filter(birth_country == "China") %>% 
+  select(full_name, prize_year, category)
+```
+
+
+
+我们发现获奖者有多个地址，就会有重复的情况，比如 Charles Kuen Kao在2009年Physics有两次，为什么重复计数了呢？
+
+
+下面我们去重吧， 去重可以用`distinct()`函数
+
+```{r}
+dt <- tibble::tribble(
+  ~x, ~y,  ~z,
+   1,  1, "a",
+   1,  1, "b",
+   1,  2, "c",
+   1,  2, "d"
+  )
+
+dt
+```
+
+
+```{r}
+dt %>% distinct_at(vars(x), .keep_all = T)
+```
+
+
+```{r}
+dt %>% distinct_at(vars(x, y), .keep_all = T)
+```
+
+
+
+```{r}
+nobel_winners <- df %>%
+  mutate_if(is.character, tolower) %>% 
+  distinct_at(vars(full_name, prize_year, category), .keep_all = TRUE) %>%
+  mutate(decade = 10 * (prize_year %/% 10),
+         prize_age = prize_year - year(birth_date))
+
+nobel_winners
+```
+
+
+```{block, type="danger"}
+这是时候，我们才对数据有了一个初步的了解
+```
+
+
+再来看看我的祖国
+```{r}
+nobel_winners %>%
+  filter(birth_country == "china") %>%
+  select(full_name, prize_year, category)
+```
+
+## 哪些大神多次获得诺贝尔奖
+```{r}
+nobel_winners %>% count(full_name, sort =T)
+```
+
+```{r}
+nobel_winners %>%
+  group_by(full_name) %>%
+  mutate( 
+    number_prize = n(),
+    number_cateory = n_distinct(category)
+    ) %>% 
+  arrange(desc(number_prize), full_name) %>% 
+  filter(number_cateory == 2) 
+```
+
+
+
+## 大神在得奖的时候是多大年龄？
+
+
+```{r}
+nobel_winners %>%
+   count(prize_age) %>% 
+   ggplot(aes(x =  prize_age, y = n)) + 
+   geom_col()
+```
+
+```{r}
+nobel_winners %>% 
+  group_by(category) %>% 
+  summarise(mean_prize_age = mean(prize_age, na.rm = T)
+            )
+```
+```{r}
+nobel_winners %>%
+  mutate(category = fct_reorder(category, prize_age, median, na.rm = TRUE)) %>%
+  ggplot(aes(category, prize_age)) + 
+  geom_point() +
+  geom_boxplot() +
+  coord_flip()
+  
+```
+
+```{r}
+nobel_winners %>%
+  filter(!is.na(prize_age)) %>%
+  group_by(decade, category) %>%
+  summarize(average_age = mean(prize_age),
+            median_age = median(prize_age)) %>%
+  ggplot(aes(decade, average_age, color = category)) +
+  geom_line()
+```
+
+```{r}
+library(ggridges)
+
+nobel_winners %>% 
+  ggplot(aes(x = prize_age,
+             y = category,
+             fill = category)) +
+  geom_density_ridges()
+```
+
+
+他们60多少岁才得诺奖，大家才23或24岁，还年轻，不用焦虑喔。
+
+
+```{r}
+nobel_winners %>% 
+  
+  ggplot(aes(x = prize_age, fill = category, color = category))  +
+  geom_density() +
+  facet_wrap(vars(category)) +
+  theme(legend.position = "none")
+```
+
+
+有同学说要一个个的画，至于`group_split()`函数，下次课在讲
+```{r}
+nobel_winners %>% 
+  group_split(category) %>%
+  map(
+    ~ ggplot(data = .x, aes(x = prize_age)) +
+      geom_density()
+  )
+```
+
+
+
+
+## 性别比例
+```{r}
+nobel_winners %>% 
+  filter(laureate_type == "individual") %>% 
+  count(category, gender) %>% 
+  group_by(category) %>% 
+  mutate(prop = n / sum(n)
+         )
+```
+
+各年代性别比例
+```{r, fig.width= 9, fig.height= 6}
+nobel_winners %>%
+  filter(laureate_type == "individual") %>%
+  # mutate(decade = glue::glue("{round(prize_year - 1, -1)}s")) %>%
+  count(decade, category, gender) %>%
+  group_by(decade, category) %>%
+  mutate(prop = n / sum(n)) %>%
+  ggplot(aes(decade, category, fill = prop)) +
+  geom_tile(size = 0.7) +
+  #geom_text(aes(label = scales::percent(prop, accuracy = .01))) + 
+  geom_text(aes(label = scales::number(prop, accuracy = .01))) + 
+  facet_grid(vars(gender)) +
+  scale_fill_gradient(low = "#FDF4E9", high = "#834C0D")
+```
+
+```{r}
+library(ggbeeswarm)#install.packages("ggbeeswarm")
+
+nobel_winners %>% 
+  ggplot(aes(x = category,
+             y = prize_age,
+             colour = gender,
+             alpha = gender)) +
+  ggbeeswarm::geom_beeswarm() +
+  coord_flip() +
+  scale_color_manual(values = c("#BB1288", "#5867A6")) +
+  scale_alpha_manual(values = c(1, .4)) +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs(title = "诺奖获得者性别不平衡",
+       subtitle = "1901年-2016年数据",
+       colour = "Gender",
+       alpha = "Gender",
+       x = "学科",
+       y = "获奖年龄")
+```
+
+```{r}
+nobel_winners %>%
+  count(decade,
+        category,
+        gender = coalesce(gender, laureate_type)) %>%
+  
+  
+  group_by(decade, category) %>%
+  mutate(percent = n / sum(n)) %>%
+  ggplot(aes(decade, n, fill = gender)) +
+  geom_col() +
+  facet_wrap(~ category) +
+  labs(x = "Decade",
+       y = "# of nobel prize winners",
+       fill = "Gender",
+       title = "Nobel Prize gender distribution over time")
+```
+
+
+
+
+## 这些大神都是哪个年代出生的人？
+```{r, fig.width= 9, fig.height= 6}
+nobel_winners %>% 
+  select(category, birth_date) %>% 
+  mutate(year =  floor(year(birth_date)/10) * 10 ) %>% 
+  count(category, year) %>% 
+  filter(!is.na(year)) %>% 
+  ggplot(aes(x = year, y = n)) +
+  geom_col() +
+  scale_x_continuous(breaks = seq(1810, 1990, 20)) +
+  geom_text(aes(label = n), vjust = -0.25) +
+  facet_wrap(vars(category))
+
+```
+
+课堂练习，哪位同学能把图弄得好看些？
+
+
+## 最年轻的诺奖获得者？
+
+```{r}
+nobel_winners %>% 
+    filter(prize_age == min(prize_age, na.rm = T))
+```
+
+
+```{r}
+nobel_winners %>% 
+  filter(
+    rank(prize_year - year(birth_date) ) == 1
+  )
+```
+
+
+```{r}
+nobel_winners %>% 
+  arrange(
+    prize_year - year(birth_date)
+  )
+```
+
+
+
+## 平均年龄和获奖数量
+```{r}
+df1 <- nobel_winners %>% 
+  group_by(category) %>% 
+  summarise(
+   mean_prise_age = mean(prize_age, na.rm = T),
+   total_num = n()
+)
+df1
+```
+
+
+```{r}
+df1 %>%
+  ggplot(aes(mean_prise_age, total_num)) +
+  geom_point(aes(color = category)) +
+  geom_smooth(method = lm, se = FALSE)
+```
+
+
+
+## 出生地与工作地分布
+```{r}
+nobel_winners_clean <- nobel_winners %>% 
+  mutate_at(
+    vars(birth_country, death_country),
+    ~ ifelse(str_detect(., "\\(" ), str_extract(., "(?<=\\().*?(?=\\))" ), .)
+  ) %>%
+  mutate_at(
+    vars(birth_country, death_country),
+    ~ case_when(
+      . == "scotland" ~ "united kingdom",
+      . == "northern ireland" ~ "united kingdom",
+      str_detect(., "czech") ~ "czechia",
+      str_detect(., "germany") ~ "germany",
+      TRUE ~ .
+    )
+  ) %>%
+  select(full_name, prize_year, category, birth_date, birth_country, gender, organization_name, organization_country, death_country)
+```
+
+
+```{r}
+nobel_winners_clean %>% count(death_country, sort = TRUE)
+```
+
+
+## 迁移模式
+```{r, fig.width= 9, fig.height= 8}
+nobel_winners_clean %>% 
+  mutate(
+    colour = case_when(
+      death_country == "united states of america" ~ "#FF2B4F",
+      death_country == "germany" ~ "#fcab27",
+      death_country == "united kingdom" ~ "#3686d3",
+      death_country == "france" ~ "#88398a",
+      death_country == "switzerland" ~ "#20d4bc",
+      TRUE ~ "gray60"
+    )
+  ) %>%
+  ggplot(aes(
+    x = 0,
+    y = fct_rev(factor(birth_country)),
+    xend = death_country,
+    yend = 1,
+    colour = colour,
+    alpha = (colour != "gray60")
+  )) +
+  geom_curve(curvature = -0.5,
+             arrow = arrow(length = unit(0.01, "npc"))) +
+  scale_x_discrete() +
+  scale_y_discrete() +
+  scale_color_identity() +
+  scale_alpha_manual(values = c(0.1, 0.2), guide = F) +
+  scale_size_manual(values = c(0.1, 0.4), guide = F) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    plot.background = element_rect(fill = "#F0EFF1", colour = "#F0EFF1"),
+    legend.position = "none",
+    axis.text.x = element_text(angle = 40, hjust = 1)
+  ) 
+
+```
+
+
+## 地图
+```{r}
+library(here)
+library(sf)
+library(countrycode)
+
+#countrycode('Albania', 'country.name', 'iso3c')
+
+nobel_winners_birth_country <- nobel_winners_clean %>%
+  count(birth_country) %>%
+  filter(!is.na(birth_country)) %>%
+  mutate(ISO3 = countrycode(birth_country, 
+                            origin = "country.name", destination = "iso3c"))
+
+
+global <- 
+  sf::st_read("./demo_data/worldmap/TM_WORLD_BORDERS_SIMPL-0.3.shp") %>%
+  st_transform(4326)
+
+global %>%
+  full_join(nobel_winners_birth_country, by = "ISO3") %>%
+  ggplot() +
+  geom_sf(aes(fill = n),
+          color = "white",
+          size = 0.1
+  ) +
+  labs(
+    x = NULL, y = NULL,
+    title = "Nobel Winners by country",
+    subtitle = "color of map indicates number of Nobel lauretes",
+    fill = "num of Nobel lauretes",
+    caption = "Made: wang_minjie"
+  ) +
+  scale_fill_gradientn(colors = c("royalblue1","magenta","orange","gold"), na.value = "white") +
+  #scale_fill_gradient(low = "wheat1", high = "red") +
+  theme_void()  +
+  theme(
+    legend.position = c(0.1, 0.3),
+    plot.background = element_rect(fill = "gray")
+  )
+
+```
+
+
+
+
+
+
+```{r}
+# Determine to 10 Countries
+topCountries <- nobel_winners_clean  %>%
+    count(birth_country, sort = TRUE) %>%
+    na.omit() %>%
+    top_n(8)
+
+topCountries
+```
+
+
+```{r}
+df4 <- nobel_winners_clean %>%
+    filter(birth_country %in% topCountries$birth_country) %>%
+    group_by(birth_country, category, prize_year) %>%
+    summarise(prizes = n()) %>%
+    mutate(cumPrizes = cumsum(prizes))
+
+df4
+```
+
+
+
+```{r, fig.width= 12, fig.height= 6}
+library(gganimate)
+df4 %>% 
+  mutate(prize_year = as.integer(prize_year)) %>% 
+  ggplot(aes(x = birth_country, y = category, color = birth_country)) +
+    geom_point(aes(size = cumPrizes), alpha = 0.6) +
+    #geom_text(aes(label = cumPrizes)) +
+    scale_size_continuous(range = c(2, 30)) +
+    transition_reveal(prize_year) +
+    labs(title = '诺奖获得者最多的10个国家',
+         subtitle = "Year: {frame_along}",
+         y = 'Category') +
+    theme_minimal() +
+    theme(
+        plot.title = element_text(size = 22),
+        axis.title = element_blank()) +
+    scale_color_brewer(palette = "RdYlBu") +
+    theme(legend.position = "none") +
+    theme(plot.margin = margin(5.5, 5.5, 5.5, 5.5))
+```
+
+
+## 出生地和工作地不一样的占比
+
+```{r}
+nobel_winners_clean %>%
+  select(category, birth_country, death_country) %>% 
+  mutate(immigration = if_else(birth_country == death_country, 0, 1))
+```
+
+## 诺奖分享者
+
+<!-- # https://github.com/gkaramanis/tidytuesday/blob/master/week-20/nobelShared.R -->
+
+```{r}
+nobel_winners %>% 
+  separate(prize_share, into = c("num", "deno"), sep = "/", remove = FALSE)
+```
+
+```{r}
+nobel_winners %>% 
+  filter(category == "medicine") %>%
+  mutate(num_a = as.numeric(str_sub(prize_share, 1, 1)),
+         num_b = as.numeric(str_sub(prize_share, -1)),
+         share = num_a/num_b,
+         year = prize_year %% 10,
+         decade = 10 * (prize_year %/% 10)
+         ) %>% 
+  group_by(prize_year) %>% 
+  mutate(n = row_number()) %>%
+
+
+  ggplot() +
+  geom_col(aes(x = "", y = share, fill = as.factor(n)),
+           show.legend = FALSE
+  ) +
+  coord_polar("y") +
+  facet_grid(decade ~ year, switch = "both") +
+  labs(title = "每年诺贝尔奖分享情况") +
+  theme_void() +
+  theme(
+    plot.title = element_text(face = "bold", vjust = 8),
+    strip.text.x = element_text(size = 7,
+                                margin = margin(t = 5)),
+    strip.text.y = element_text(size = 7,
+             angle = 180, hjust = 1, margin = margin(r = 10))
+    )
+
+```
+
+
+
+
+
+## 其它
+
+没有回答的问题，大家自己花时间探索下。
+
+
+
+## 延伸阅读
+
+- 有些图可以再美化下
+
+
+<!--chapter:end:eda.Rmd-->
+
+# ggplot2 {#ggplot2}
+
+> 采菊东篱下，悠然见南山。
+>
+
+
+根据大家投票，觉得`ggplot2`是最想掌握的技能，我想这就是R语言中最有质感的部分吧。所以，这里专门拿出一节课讲`ggplot2`，也算是补上之前第 \@ref(visual) 章数据可视化没讲的内容。
+
+
+
+有几个新的宏包需要提前安装（不是必须的）
+```{r, eval=FALSE}
+install.packages(c("sf", "cowplot"))
+
+install.packages("devtools")
+devtools::install_github("thomasp85/patchwork")
+devtools::install_github("yutannihilation/gghighlight")
+```
+
+如果安装不成功，请先update宏包，再执行上面安装命令
+
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/update_packages.png")
+```
+
+
+
+
+```{r,warning = FALSE, message = FALSE}
+library(tidyverse)
+library(gghighlight)
+library(cowplot)
+library(patchwork)
+```
+
+
+## 一个有趣的案例
+
+先看一组数据
+
+```{r}
+df <- read_csv("./demo_data/datasaurus.csv")
+df
+```
+
+先用`dataset`分组后，然后计算每组下`x`的均值和方差，`y`的均值和方差，以及`x，y`两者的相关系数，我们发现每组数据下它们几乎都是相等的
+```{r}
+df %>%
+  group_by(dataset) %>%
+  summarise_all(list(mean, sd)) %>%
+  mutate_if(is.numeric, round, 3)
+```
+
+如果上面代码不熟悉，可以用第 \@ref(dplyr) 章的代码重新表达，也是一样的
+```{r}
+df %>%
+  group_by(dataset) %>%
+  summarize(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    std_dev_x = sd(x),
+    std_dev_y = sd(y),
+    corr_x_y = cor(x, y)
+  )
+```
+
+那么，我们是否能得出结论，每组的数据长的差不多呢？然而，我们画图发现
+
+```{r, fig.asp=1.2}
+ggplot(df, aes(x = x, y = y, colour = dataset)) +
+  geom_point() +
+  # geom_smooth(method = lm) +
+  theme(legend.position = "none") +
+  facet_wrap(~dataset, ncol = 3)
+```
+
+
+事实上，每张图都相差很大。所以，这里想说明的是，眼见为实。换句话说，可视化是数据探索中非常重要的部分。本章的目的就是带领大家学习ggplot2基本的绘图技能。
+
+
+## 学习目标
+
+1. Grammer of Graphics
+
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/ggplot_template.png")
+```
+
+
+2. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
+
+3. `aes`: 数据框中的变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
+    + x（x轴方向的位置）
+    + y（y轴方向的位置）
+    + color（点或者线等元素的颜色）
+    + size（点或者线等元素的大小）
+    + shape（点或者线等元素的形状）
+    + alpha（点或者线等元素的透明度）
+    
+4. `geoms`: 几何对象，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何对象推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
+
+    + `geom_bar()`
+    + `geom_density()`
+    + `geom_freqpoly()`
+    + `geom_histogram()`
+    + `geom_violin()`
+    + `geom_boxplot()`
+    + `geom_col()`
+    + `geom_point()`
+    + `geom_smooth()`
+    + `geom_tile()`
+    + `geom_density2d()`
+    + `geom_bin2d()`
+    + `geom_hex()`
+    + `geom_count()`
+    + `geom_text()`
+    + `geom_sf()`
+    
+
+5. `stats`:   统计变换
+6. `scales`:  标度
+7. `coord`:   坐标系统
+8. `facet`:   分面
+9. `layer`：  增加图层
+10. `theme`:   主题风格
+11. `save`:    保存图片
+
+
+
+
+## 开始
+
+```{block, type="try"}
+前面讲到R语言数据类型有字符串型、数值型、因子型、逻辑型、日期型等，ggplot2会将字符串型、因子型、逻辑型、日期型默认为**离散变量**，而数值型默认为**连续变量**。我们在而呈现数据的时候，可能会同时用到多种类型的数据，比如
+
+* 一个离散
+* 一个连续
+
+* 两个离散
+* 两个连续
+* 一个离散, 一个连续
+
+* 三个连续
+
+```
+
+
+### 导入数据
+
+```{r}
+gapdata <- read_csv("./demo_data/gapminder.csv")
+gapdata
+```
+
+### 检查数据
+```{r}
+# 是否有缺失值
+gapdata %>%
+  summarise_all(~ any(is.na(.)))
+```
+
+* `country` 代表国家
+* `countinet` 表示所在的洲
+* `year` 时间
+* `lifeExp` 平均寿命
+* `pop` 人口数量
+* `gdpPercap` 人均GDP
+
+
+
+```{block, type = "try"}
+接下来，我们需要思考我们应该选择什么样的图，呈现这些不同类型的数据，探索数据背后的故事
+```
+
+
+## 基本绘图
+
+### 柱状图
+常用于一个离散变量
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent)) + geom_bar()
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar() +
+  coord_flip()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent)) + stat_count()
+```
+
+
+
+```{r}
+gapdata %>% count(continent)
+```
+可见，geom_bar() 自动完成了这个统计，更多geom与stat对应关系见[这里]()
+
+
+
+```{r}
+gapdata %>%
+  distinct(continent, country) %>%
+  ggplot(aes(x = continent)) +
+  geom_bar()
+```
+
+我个人比较喜欢先统计，然后画图
+```{r}
+gapdata %>%
+  distinct(continent, country) %>%
+  group_by(continent) %>%
+  summarise(num = n()) %>%
+  ggplot(aes(x = continent, y = num)) +
+  geom_col()
+```
+
+
+
+### 直方图
+常用于一个连续变量
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_histogram()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_histogram(binwidth = 1)
+```
+
+
+```{r}
+#' histograms, 默认使用 `position = "stack"`
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram()
+```
+
+
+```{r}
+#' 使用`position = "identity"`
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram(position = "identity")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, color = continent)) +
+  geom_freqpoly()
+```
+
+
+```{r}
+#' smooth histogram = densityplot
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density()
+```
+
+如果不喜欢下面那条线，可以这样
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_line(stat = "density")
+```
+
+
+
+```{r}
+# adjust 调节bandwidth,
+# adjust = 1/2 means use half of the default bandwidth.
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density(adjust = 1)
+
+gapdata %>%
+  ggplot(aes(x = lifeExp)) + geom_density(adjust = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, color = continent)) +
+  geom_density()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_density(alpha = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_density(alpha = 0.2)
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_density() +
+  # facet_wrap(vars(continent))
+  facet_grid(. ~ continent)
+```
+
+
+
+
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  facet_grid(continent ~ .)
+```
+
+
+直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`
+```{r}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, y = stat(density))) +
+  geom_histogram(aes(fill = continent)) +
+  geom_density() +
+  facet_grid(continent ~ .)
+```
+
+
+### 箱线图
+一个离散变量 + 一个连续变量
+```{r}
+#' 思考下结果为什么是这样？
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot()
+```
+
+
+```{r}
+# 数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
+gapdata %>%
+  ggplot(aes(x = as.factor(year), y = lifeExp)) + geom_boxplot()
+```
+
+
+
+
+```{r}
+# 明确指定分组变量
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot(aes(group = year))
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_violin(aes(group = year)) +
+  geom_jitter(alpha = 1 / 4) +
+  geom_smooth(se = FALSE)
+```
+
+
+
+### 抖散图
+
+点重叠的处理方案
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_point()
+```
+
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_jitter()
+```
+
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_boxplot()
+```
+
+```{r}
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_jitter() +
+  stat_summary(fun.y = median, colour = "red", geom = "point", size = 5)
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(reorder(x = continent, lifeExp), y = lifeExp)) +
+  geom_jitter() +
+  stat_summary(fun.y = median, colour = "red", geom = "point", size = 5)
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_violin(
+    trim = FALSE,
+    alpha = 0.5
+  ) +
+  stat_summary(
+    fun.y = mean,
+    fun.ymax = function(x) {
+      mean(x) + sd(x)
+    },
+    fun.ymin = function(x) {
+      mean(x) - sd(x)
+    },
+    geom = "pointrange"
+  )
+```
+
+
+### ridges图
+
+常用于一个离散变量 + 一个连续变量
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp,
+             y = continent,
+             fill = continent)) +
+  ggridges::geom_density_ridges() 
+```
+
+
+### 散点图
+常用于两个连续变量
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
+  geom_point()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  scale_x_log10() # A better way to log transform
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(color = continent))
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = (1 / 3), size = 2)
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE)
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~continent)
+```
+
+
+```{r}
+jCountries <- c("Canada", "Rwanda", "Cambodia", "Mexico")
+
+gapdata %>%
+  filter(country %in% jCountries) %>%
+  ggplot(aes(x = year, y = lifeExp, color = country)) +
+  geom_line() +
+  geom_point()
+```
+
+
+```{r}
+gapdata %>%
+  filter(country %in% jCountries) %>%
+  ggplot(aes(
+    x = year, y = lifeExp,
+    color = reorder(country, -1 * lifeExp, max)
+  )) +
+  geom_line() +
+  geom_point()
+```
+
+###  Cleveland dot plot
+```{r}
+gapdata %>%
+  filter(continent == "Asia" & year == 2007) %>%
+  ggplot(aes(x = lifeExp, y = country)) +
+  geom_point()
+```
+
+
+
+```{r}
+gapdata %>%
+  filter(continent == "Asia" & year == 2007) %>%
+  ggplot(aes(
+    x = lifeExp,
+    y = reorder(country, lifeExp)
+  )) +
+  geom_point(color = "blue", size = 2) +
+  geom_segment(aes(
+    x = 40,
+    xend = lifeExp,
+    y = reorder(country, lifeExp),
+    yend = reorder(country, lifeExp)
+  ),
+  color = "lightgrey"
+  ) +
+  labs(
+    x = "Life Expectancy (years)",
+    y = "",
+    title = "Life Expectancy by Country",
+    subtitle = "GapMinder data for Asia - 2007"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### 文本标注
+
+```{r}
+ten_countries <- gapdata %>%
+  distinct(country) %>%
+  pull() %>%
+  sample(10)
+```
+
+
+```{r}
+library(ggrepel)
+gapdata %>%
+  filter(year == 2007) %>%
+  mutate(
+    label = ifelse(country %in% ten_countries, as.character(country), "")
+  ) %>%
+  ggplot(aes(log(gdpPercap), lifeExp)) +
+  geom_point(
+    size = 3.5,
+    alpha = .9,
+    shape = 21,
+    col = "white",
+    fill = "#0162B2"
+  ) +
+  geom_text_repel(
+    aes(label = label),
+    size = 4.5,
+    point.padding = .2,
+    box.padding = .3,
+    force = 1,
+    min.segment.length = 0
+  ) +
+  theme_minimal(14) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank()
+  ) +
+  labs(
+    x = "log(GDP per capita)",
+    y = "life expectancy"
+  )
+```
+
+
+### errorbar图
+
+```{r}
+avg_gapdata <- gapdata %>%
+  group_by(continent) %>%
+  summarise(
+    mean = mean(lifeExp),
+    sd = sd(lifeExp)
+  )
+avg_gapdata
+```
+
+
+```{r }
+avg_gapdata %>%
+  ggplot(aes(continent, mean, fill = continent)) +
+  # geom_col(alpha = 0.5) +
+  geom_point() +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 0.25)
+```
+
+### 椭圆图
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
+  geom_point() +
+  stat_ellipse(type = "norm", level = 0.95)
+```
+
+
+
+### 2D 密度图
+
+与一维的情形`geom_density()`类似，
+`geom_density_2d()`, `geom_bin2d()`, `geom_hex()`常用于刻画两个变量构成的二维区间的密度
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_bin2d()
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_hex()
+```
+
+
+
+### 马赛克图
+
+`geom_tile()`， `geom_contour()`， `geom_raster()`常用于3个变量
+
+```{r}
+gapdata %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  ggplot(aes(x = year, y = continent, fill = mean_lifeExp)) +
+  geom_tile() +
+  scale_fill_viridis_c()
+```
+
+事实上可以有更好的呈现方式
+
+```{r}
+gapdata %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  ggplot(aes(x = year, y = continent, size = mean_lifeExp)) +
+  geom_point()
+```
+
+
+## 主题风格
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggtitle("Life expectancy over time by continent")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_grey() # the default
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_bw()
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_calc() +
+  ggtitle("ggthemes::theme_calc()")
+```
+
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist() +
+  ggtitle("ggthemes::theme_economist()")
+```
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist_white() +
+  ggtitle("ggthemes::theme_economist_white()")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_few() +
+  ggtitle("ggthemes::theme_few()")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_gdocs() +
+  ggtitle("ggthemes::theme_gdocs()")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_tufte() +
+  ggtitle("ggthemes::theme_tufte()")
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_wsj() +
+  ggtitle("ggthemes::theme_wsj()")
+```
+
+
+
+
+
+
+## 定制
+
+### Labels 
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  ggtitle("My Plot Title") +
+  xlab("The X Variable") +
+  ylab("The Y Variable")
+```
+
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  labs(
+    title = "My Plot Title",
+    subtitle = "My Plot subtitle",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+
+
+
+### 定制颜色
+
+ 我喜欢用这两个函数定制喜欢的绘图色彩，`scale_colour_manual()` 和 `scale_fill_manual()`. 更多方法可以参考 [Colours chapter in Cookbook for R](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/) 
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  )
+```
+ 
+
+## 组合图片
+
+我们有时候想把多张图组合到一起
+
+### cowplot
+
+可以使用 [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html) 宏包的`plot_grid()`函数完成多张图片的组合，使用方法很简单。
+
+```{r}
+p1 <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(color = lifeExp > mean(lifeExp))) +
+  scale_x_log10() +
+  theme(legend.position = "none") +
+  scale_color_manual(values = c("orange", "pink")) +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+```{r}
+p2 <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+```
+
+
+```{r}
+cowplot::plot_grid(
+  p1,
+  p2,
+  labels = c("A", "B")
+)
+```
+
+
+也可以使用patchwork宏包，更简单的方法
+```{r}
+library(patchwork)
+p1 + p2
+```
+
+
+```{r}
+p1 / p2
+```
+
+patchwork 使用方法很简单，根本不需要记
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/patchwork.png")
+```
+
+
+
+
+
+### 保存图片
+
+使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等， 还可以指定图片的高度和宽度，默认`units`是英寸，也可以使用"cm", or "mm".
+
+```{r ggsave-example}
+pp <- gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "My Plot Title",
+    x = "The X Variable",
+    y = "The Y Variable"
+  )
+
+# ggsave("demo_plot.pdf", plot = pp, width = 8, height = 6)
+```
+
+
+
+## 中文字体
+```{r}
+library(showtext)
+showtext_auto()
+
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_color_manual(
+    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
+  ) +
+  theme(legend.position = "none") +
+  labs(
+    title = "这是我的标题美美哒",
+    x = "这是我的x坐标",
+    y = "这是我的y坐标"
+  )
+
+# ggsave("myfirst.pdf", width = 8, height = 6)
+```
+
+
+
+## 高亮某一组
+画图很容易，然而画一张好图，不容易。图片质量好不好，其原则就是**不增加看图者的心智负担**，有些图片的色彩很丰富，然而需要看图人配合文字和图注等信息才能看懂作者想表达的意思，这样就失去了图片“一图胜千言”的价值。
+
+
+分析数据过程中，我们可以使用**高亮**我们某组数据，**突出**我们想表达的信息，是非常好的一种可视化探索手段。
+
+
+### ggplot2方法
+
+这种方法是将**背景部分**和**高亮部分**分两步来画
+
+```{r}
+drop_facet <- function(x) select(x, -continent)
+
+gapdata %>%
+  ggplot() +
+  geom_line(
+    data = drop_facet,
+    aes(x = year, y = lifeExp, group = country), color = "grey",
+  ) +
+  geom_line(aes(x = year, y = lifeExp, color = country, group = country)) +
+  facet_wrap(vars(continent)) +
+  theme(legend.position = "none")
+```
+
+再来一个
+```{r, fig.width= 8, fig.height= 8}
+gapdata %>%
+  mutate(group = country) %>%
+  filter(continent == "Asia") %>%
+  ggplot() +
+  geom_line(
+    data = function(d) select(d, -country),
+    aes(x = year, y = lifeExp, group = group), color = "grey",
+  ) +
+  geom_line(aes(x = year, y = lifeExp, group = country), color = "red") +
+  facet_wrap(vars(country)) +
+  theme(legend.position = "none")
+```
+
+
+
+
+### gghighlight方法
+
+这里推荐[gghighlight宏包](<https://yutannihilation.github.io/gghighlight/articles/gghighlight.html>)
+
+- dplyr has filter()
+- ggplot has Highlighting
+
+```{r}
+gapdata %>% filter(country == "China")
+```
+
+```{r}
+gapdata %>%
+  ggplot(
+    aes(x = year, y = lifeExp, color = continent, group = country)
+  ) +
+  geom_line() +
+  gghighlight(
+    country == "China", # which is passed to dplyr::filter().
+    label_key = country
+  )
+```
+
+
+```{r}
+gapdata %>% filter(continent == "Asia")
+```
+
+
+
+```{r}
+gapdata %>%
+  filter(continent == "Asia") %>%
+  ggplot(aes(year, lifeExp, color = country, group = country)) +
+  geom_line(size = 1.2, alpha = .9, color = "#E58C23") +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  ) +
+  gghighlight(
+    country %in% c("China", "India", "Japan", "Korea, Rep."),
+    use_group_by = FALSE,
+    use_direct_label = FALSE,
+    unhighlighted_params = list(color = "grey90")
+  ) +
+  facet_wrap(vars(country))
+```
+
+## 函数图
+
+有时候我们想画一个函数图，比如正态分布的函数，可能会想到先产生数据，然后画图，比如下面的代码
+
+```{r}
+tibble(x = seq(from = -3, to = 3, by = .01)) %>%
+  mutate(y = dnorm(x, mean = 0, sd = 1)) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(color = "grey33")
+```
+
+
+事实上，`stat_function()`可以简化这个过程
+```{r}
+ggplot(data = data.frame(x = c(-3, 3)), aes(x = x)) +
+  stat_function(fun = dnorm)
+```
+
+
+当然我们也可以绘制自定义函数
+```{r}
+myfun <- function(x) {
+  (x - 1)**2
+}
+
+ggplot(data = data.frame(x = c(-1, 3)), aes(x = x)) +
+  stat_function(fun = myfun, geom = "line", colour = "red")
+```
+
+
+下面这是一个很不错的例子，细细体会下
+```{r}
+d <- tibble(x = rnorm(2000, mean = 2, sd = 4))
+
+ggplot(data = d, aes(x = x)) +
+  geom_histogram(aes(y = stat(density))) +
+  geom_density() +
+  stat_function(fun = dnorm, args = list(mean = 2, sd = 4), colour = "red")
+```
+
+## 地图
+
+> 小时候画地图很容易，长大了画地图却不容易了。
+> 
+>
+
+
+这是一个公园`r emo::ji("park")`地图和公园里松鼠`r emo::ji("squirrel")`数量的数据集
+
+```{r}
+nyc_squirrels <- read_csv("./demo_data/nyc_squirrels.csv")
+central_park <- sf::read_sf("./demo_data/central_park")
+```
+
+
+先来一个地图，
+
+```{r}
+ggplot() +
+  geom_sf(data = central_park)
+```
+
+一个`geom_sf`就搞定了`r emo::ji("celebrate")`，貌似没那么难呢？ 好吧，换个姿势，在地图上标注松鼠出现的位置
+
+
+
+```{r}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  )
+```
+
+分开画呢
+```{r, out.width = '100%'}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  theme(legend.position = "none")
+```
+
+
+
+
+
+```{r, out.width = '100%'}
+label_colors <-
+  c("all squirrels" = "grey75", "highlighted group" = "#0072B2")
+
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    data = function(x) select(x, -primary_fur_color),
+    aes(x = long, y = lat, color = "all squirrels"),
+    size = .8
+  ) +
+  geom_point(
+    aes(x = long, y = lat, color = "highlighted group"),
+    size = .8
+  ) +
+  cowplot::theme_map(16) +
+  theme(
+    legend.position = "bottom",
+    legend.justification = "center"
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  scale_color_manual(name = NULL, values = label_colors) +
+  guides(color = guide_legend(override.aes = list(size = 2)))
+```
+
+```{r}
+# ggsave("Squirrels.pdf", width = 9, height = 6)
+```
+
+
+当然，也可以用`gghighlight`的方法
+```{r, out.width = '100%'}
+nyc_squirrels %>%
+  drop_na(primary_fur_color) %>%
+  ggplot() +
+  geom_sf(data = central_park, color = "grey85") +
+  geom_point(
+    aes(x = long, y = lat, color = primary_fur_color),
+    size = .8
+  ) +
+  gghighlight(
+    label_key = primary_fur_color,
+    use_direct_label = FALSE
+  ) +
+  facet_wrap(vars(primary_fur_color)) +
+  cowplot::theme_map(16) +
+  theme(legend.position = "none")
+```
+
+
+
+## 参考资料
+
+* [Look at Data](http://socviz.co/look-at-data.html) from [Data Vizualization for Social Science](http://socviz.co/)
+* [Chapter 3: Data Visualisation](http://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science*
+* [Chapter 28: Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html) of *R for Data Science*
+* [Graphs](https://r-graphics.org/) in *R Graphics Cookbook*
+* [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
+* [ggplot2 documentation](https://ggplot2.tidyverse.org/reference/)
+* [The R Graph Gallery](http://www.r-graph-gallery.com/) (this is really useful)
+* [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+* [R Graphics Cookbook](http://www.cookbook-r.com/Graphs/) by Winston Chang
+* [ggplot extensions](https://www.ggplot2-exts.org/)
+* [plotly](https://plot.ly/ggplot2/) for creating interactive graphs
+
+<!--chapter:end:ggplot2.Rmd-->
+
+# 模拟与抽样 {#sampling}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+本章目的是在tidyverse的架构下，介绍一些基本统计的知识。先回顾下Hadley Wickham提出的数据科学tidy原则，tidy思想体现在:
+
+- 任何数据都可以规整为数据框 
+- 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
+- 函数处理数据时，数据框进、数据框出
+
+## 模拟
+
+### 生成随机数
+
+比如生成5个高斯分布的随机数，高斯分布就是正态分布，R语言里我们用`rnorm()`函数产生正态分布的随机数
+```{r}
+rnorm(n = 5, mean = 0, sd = 1)
+```
+
+事实上，R内置了很多随机数产生的函数
+
+| Distrution 	| Notation 		| R |
+|----------	|:-------------:|:-------------:|
+|Uniform | $\text{U}(a, b)$ | `runif`|
+|Normal  | $\text{N}(\mu, \sigma)$ | `rnorm`|
+|Binormal  | $\text{Bin}(n, p)$ | `rbinorm`|
+|Piosson  | $\text{pois}(\lambda)$ | `rpois`|
+|Beta  | $\text{Beta}(\alpha, \beta)$ | `rbeta`|
+
+如果大家查看帮助文档`?runif`，会发现每种**分布**都有对应的四个函数
+
+- d:density 
+- p:cumulative probability 
+- q:quantile 
+- r:random 
+
+
+
+在tidyverse的框架下，我们喜欢在数据框(data.frame)下运用这些函数，因为这样我们可以方便使用ggplot2来可视化，
+
+- 例子1，我们生成100个正态分布的点，然后看看其分布
+```{r}
+tibble(
+  x = rnorm(n = 100, mean = 0, sd = 1)
+) %>%
+  ggplot(aes(x = x)) +
+  geom_density()
+```
+
+
+我们将模拟的正态分布和理论上正态分布画在一起
+```{r}
+tibble(
+  x = rnorm(n = 100, mean = 0, sd = 1)
+) %>%
+  ggplot(aes(x = x)) +
+  geom_density() +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = 0, sd = 1),
+    color = "red"
+  )
+```
+如果我们模拟点再增加点，会越来越逼近理论上的分布。
+
+
+
+- 例子2，在数据框(data.frame)下，建立模拟$x$和$y$的线性关系
+
+$$ y_i  = 4 + 3.2\, x_i$$
+现实中，观察值往往会带入误差，假定误差服从正态分布，那么$x$和$y$的线性关系重新表述为
+$$ y_i  = 4 + 3.2\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) $$
+
+```{r}
+sim_normal <- tibble(
+  x = seq(0, 1, length.out = 100),
+  yexp = 4 + 3.2 * x,
+  yobs = yexp + rnorm(100, mean = 0, sd = 1) # 误差服从高斯分布
+)
+
+sim_normal %>% head()
+```
+
+
+```{r}
+sim_normal %>%
+  ggplot(aes(x = x, y = yexp)) +
+  geom_line(color = "red", size = 2) +
+  geom_point(aes(y = yobs))
+```
+
+
+
+
+## 抽样与样本
+
+
+### 总体分布
+假定一个事实，川师男生总体的平均身高和身高的方差分别为
+```{r}
+true.mean <- 175.7
+true.sd <- 15.19
+```
+
+那么我们可以模拟分布情况如下
+
+```{r}
+pop.distn <-
+  tibble(
+    height = seq(100, 250, 0.5),
+    density = dnorm(height, mean = true.mean, sd = true.sd)
+  )
+
+ggplot(pop.distn) +
+  geom_line(aes(height, density)) +
+  geom_vline(
+    xintercept = true.mean,
+    color = "red",
+    linetype = "dashed"
+  ) +
+  geom_vline(
+    xintercept = true.mean + true.sd,
+    color = "blue",
+    linetype = "dashed"
+  ) +
+  geom_vline(
+    xintercept = true.mean - true.sd,
+    color = "blue",
+    linetype = "dashed"
+  ) +
+  labs(
+    x = "Height (cm)", y = "Density",
+    title = "川师男生身高分布"
+  )
+```
+
+### 样本
+假定我们从中抽取30个男生身高样本
+
+```{r}
+sample.a <-
+  tibble(height = rnorm(n = 30, mean = true.mean, sd = true.sd))
+```
+
+然后看看样本的直方图
+
+```{r}
+sample.a %>%
+  ggplot(aes(x = height)) +
+  geom_histogram(aes(y = stat(density)),
+    fill = "steelblue",
+    alpha = 0.75,
+    bins = 10
+  ) +
+  geom_line(
+    data = pop.distn,
+    aes(x = height, y = density),
+    alpha = 0.25, size = 1.5
+  ) +
+  geom_vline(xintercept = true.mean, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = mean(sample.a$height), linetype = "solid")
+```
+
+红色的虚线代表分布的总体的均值，黑色实线代表30个样本的均值，
+
+```{r}
+sample.a %>%
+  summarize(
+    sample.mean = mean(height),
+    sample.sd = sd(height)
+  )
+```
+也就是说，基于这30个观察值的样本，我们认为川师男生的身高均值为`r mean(sample.a$height)`cm，方差为`r sd(sample.a$height)`
+
+
+可能有同学说，这个样本太少了，计算的均值还不够科学，会以偏概全。于是又重新找了30个男生，和上次类似，用`rnorm`函数模拟，我们记为样本b
+
+```{r}
+sample.b <-
+  tibble(height = rnorm(30, mean = true.mean, sd = true.sd))
+```
+
+再来看看这次样本的分布
+```{r}
+sample.b %>%
+  ggplot(aes(x = height)) +
+  geom_histogram(aes(y = stat(density)),
+    fill = "steelblue", alpha = 0.75, bins = 10
+  ) +
+  geom_line(
+    data = pop.distn, aes(x = height, y = density),
+    alpha = 0.25, size = 1.5
+  ) +
+  geom_vline(xintercept = true.mean, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = mean(sample.a$height), linetype = "solid")
+```
+
+同样，我们计算样本b的均值和方差
+
+```{r}
+sample.b %>%
+  summarize(
+    sample.mean = mean(height),
+    sample.sd = sd(height)
+  )
+```
+
+
+这次抽样的结果，均值为`r mean(sample.b$height)`cm，方差为`r sd(sample.b$height)`
+
+和样本a比，有一点点变化。不经想问，我能否继续抽样呢？结果会有变化吗？为了避免重复写代码
+，我把上面的过程整合到一起，写一个**子函数**，专门模拟抽样过程
+
+```{r}
+rnorm.stats <- function(n, mu, sigma) {
+  the.sample <- rnorm(n, mu, sigma)
+  tibble(
+    sample.size = n,
+    sample.mean = mean(the.sample),
+    sample.sd = sd(the.sample)
+  )
+}
+```
+
+于是，我们又可以继续模拟了。注意我们之前设定的总体分布的均值和方差
+```{r, eval= FALSE}
+true.mean <- 175.7
+true.sd <- 15.19
+```
+
+```{r}
+rnorm.stats(30, true.mean, true.sd)
+```
+yes，代码工作的很好，但不过只是代码减少了一点点，仍然只是一次抽样（这里30个样本为一次抽样），**我们的目的是反复抽样**， 抽很多次的那种喔。
+
+
+那我们用`purrr`包的`rerun`函数偷个懒，
+
+```{r}
+df.samples.of.30 <-
+  purrr::rerun(2500, rnorm.stats(30, true.mean, true.sd)) %>%
+  dplyr::bind_rows()
+```
+哇，一下子抽了2500个样本,全部装进了`df.sample.of.30`这个数据框， 偷偷看一眼呢
+```{r}
+df.samples.of.30 %>% head()
+```
+
+回过头看看`df.samples.of.30`是什么：
+
+ - 从川师的男生中随机抽取30个，计算这30个人身高的均值和方差，这叫一次抽样
+ - 把上面的工作，重复2500次，得到2500个均值和方差
+ - 2500个均值和方差，组成了一个数据框
+ 
+ 
+ 
+我们发现每次抽样的均值都不一样，感觉又像一个分布(抽样的均值分布)，我们画出来看看吧
+```{r}
+df.samples.of.30 %>%
+  ggplot(aes(x = sample.mean, y = stat(density))) +
+  geom_histogram(bins = 25, fill = "firebrick", alpha = 0.5) +
+  geom_vline(xintercept = true.mean, linetype = "dashed", color = "red") +
+  labs(
+    title = "抽样2500次（每次30个男生）身高均值的分布",
+    subtitle = "Distribution of mean heights for 2500 samples of size 30"
+  )
+```
+注意到，这不是男生身高的分布，而是**每次抽样计算的均值**构成的分布.
+
+为了更清楚的说明，我们把**整体的分布(灰色曲线)、样本a（蓝色直方图）、抽样的均值分布（红色直方图）**三者画在一起。
+
+
+```{r, message=FALSE, warning=FALSE}
+df.samples.of.30 %>%
+  ggplot(aes(x = sample.mean, y = stat(density))) +
+  geom_histogram(bins = 50, fill = "firebrick", alpha = 0.5) +
+  geom_histogram(
+    data = sample.a,
+    aes(x = height, y = stat(density)),
+    bins = 11, fill = "steelblue", alpha = 0.25
+  ) +
+  geom_vline(xintercept = true.mean, linetype = "dashed", color = "red") +
+  geom_line(data = pop.distn, aes(x = height, y = density), alpha = 0.25, size = 1.5) +
+  xlim(125, 225)
+```
+
+样本的均值分布，是个很有意思的结果，比如，我们**再选30个男生**再抽样一次，我们可以断定，这次抽样的均值会落在了红色的区间之内。
+
+然而，注意到，必须限定再次抽样的大小仍然是30个男生，以上这句话才成立。
+
+
+```{r}
+df.samples.of.30 %>%
+  summarize(
+    mean.of.means = mean(sample.mean),
+    sd.of.means = sd(sample.mean)
+  )
+```
+
+这里计算的是抽样(样本大小为30)均值分布，而不是整体的均值分布。言外之意，样本大小可以是其它的呗， 那就把样本调整为50、100、250、500分别试试看
+```{r}
+df.samples.of.50 <-
+  rerun(2500, rnorm.stats(50, true.mean, true.sd)) %>%
+  bind_rows()
+
+df.samples.of.100 <-
+  rerun(2500, rnorm.stats(100, true.mean, true.sd)) %>%
+  bind_rows()
+
+df.samples.of.250 <-
+  rerun(2500, rnorm.stats(250, true.mean, true.sd)) %>%
+  bind_rows()
+
+df.samples.of.500 <-
+  rerun(2500, rnorm.stats(500, true.mean, true.sd)) %>%
+  bind_rows()
+```
+忍不住想画图看看，每次抽取的男生数量不同，均值的分布会有不同？
+```{r}
+df.combined <-
+  bind_rows(
+    df.samples.of.30,
+    df.samples.of.50,
+    df.samples.of.100,
+    df.samples.of.250,
+    df.samples.of.500
+  ) %>%
+  mutate(sample.sz = as.factor(sample.size))
+```
+
+
+```{r, fig.width = 10, fig.asp= 0.3}
+df.combined %>%
+  ggplot(aes(x = sample.mean, y = stat(density), fill = sample.sz)) +
+  geom_histogram(bins = 25, alpha = 0.5) +
+  geom_vline(xintercept = true.mean, linetype = "dashed") +
+  facet_wrap(vars(sample.sz), nrow = 1) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(
+    x = "Sample means", y = "Density",
+    title = "Distribution of mean heights for samples of varying size"
+  )
+```
+
+随着样本大小由30增加到500，抽样的均值分布围绕着越来越聚合到实际的均值，或者说随着样本大小的增多，对均值估计的不确定性越小。 
+
+```{r}
+sampling.distn.mean.table <-
+  df.combined %>%
+  group_by(sample.size) %>%
+  summarize(
+    mean.of.means = mean(sample.mean),
+    sd.of.means = sd(sample.mean)
+  )
+sampling.distn.mean.table
+```
+
+有个统计学上的概念需要明确。
+
+输出结果的第三列`sd.of.means` 是不同样本大小(30,50,100,250,500)下，反复抽样后平均数分布的标准差。
+
+
+数学上，如果已知总体的标准差($\sigma$)，那么抽取无限多份大小为 $n$ 的样本，每个样本各有一个平均值，所有这个大小的样本之平均值的标准差可证明为
+
+$$
+\frac{\sigma}{\sqrt{n}}
+$$
+即，**平均值的标准误差**。
+
+
+
+下面我们画图看看，模拟出来的$sd.of.means$和理论值$\frac{\sigma}{\sqrt{n}}$是否一致。
+
+注意到这里的$\sigma$是总体的标准差，即最开始我们设定的川师男生身高的标准差`true.sd`. 也就说，理论上
+
+```{r}
+df.se.mean.theory <- tibble(
+  sample.size = seq(10,500,10)
+  ) %>% 
+  mutate(std.error = true.sd/sqrt(sample.size))
+
+df.se.mean.theory
+```
+
+
+
+```{r}
+sampling.distn.mean.table %>%
+  ggplot(aes(x = sample.size, y = sd.of.means)) +
+  geom_point() +
+  geom_line(aes(x = sample.size, y = std.error), 
+            data = df.se.mean.theory, 
+            color = "red") +
+  labs(
+    x = "Sample size", y = "Std Error of Mean",
+    title = "平均值标准误差随样本大小变化（理论值和模拟值对比）"
+  )
+```
+
+两者吻合的很好。
+
+
+
+刚刚我们看到的，**抽样均值分布**随着**样本大小**变化而变化。可以试想下，抽样的其他统计量分布（方差，中位数），是不是也随着样本大小变化而变化呢？
+
+
+
+```{r}
+sampling.distn.sd.table <-
+  df.combined %>%
+  group_by(sample.size) %>%
+  summarize(
+    mean.of.sds = mean(sample.sd),
+    sd.of.sds = sd(sample.sd)
+  )
+
+sampling.distn.sd.table
+```
+
+答案是肯定的，样本量的增多，抽样方差的不确定性减少。
+
+
+
+
+
+<!--chapter:end:sampling.Rmd-->
+
+# Tidy Statistics {#tidystats}
+
+
+本章介绍基本的方差分析内容
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+## 从一个案例开始
+
+从这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集，数据在这里下载
+```{r echo=FALSE}
+xfun::embed_file("./demo_data/wages.csv")
+```
+
+首先，我们下载后导入数据
+```{r message = FALSE, warning = FALSE}
+wages <- read_csv("./demo_data/wages.csv")
+
+wages %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+我们的问题：男性是否就比女性挣的多？
+
+
+## 单因素方差分析
+
+```{r}
+t.test(earn ~ sex, data = wages)
+```
+
+
+```{r}
+lm(earn ~ sex, data = wages) %>% 
+  summary()
+```
+
+
+```{r}
+aov(earn ~ sex, data = wages) %>% 
+  summary()
+
+```
+
+
+## 双因素方差分析
+
+我们采用`ggpubr`宏包下的`ToothGrowth`来说明，这个数据集包含60个样本，记录着每10只豚鼠在不同的喂食方法和不同的药物剂量下，牙齿的生长情况.
+
+- len :  牙齿长度
+- supp : 两种喂食方法 (橙汁和维生素C)
+- dose : 抗坏血酸剂量 (0.5, 1, and 2 mg) 
+
+
+```{r message=FALSE, warning=FALSE}
+library("ggpubr")
+my_data <- ToothGrowth %>%
+  mutate_at(vars(supp, dose), ~ as_factor(.))
+
+my_data %>% head()
+```
+
+
+
+```{r}
+my_data %>%
+  ggplot(aes(x = supp, y = len, fill = supp)) +
+  geom_boxplot(position = position_dodge()) +
+  facet_wrap(vars(dose)) +
+  labs(title = "VC剂量和摄入方式对豚鼠牙齿的影响")
+```
+
+
+
+问题：豚鼠牙齿的长度是否与药物的食用方法和剂量有关？
+
+线性回归时，我们是通过独立变量来**预测**响应变量，但现在我们关注的重点会从预测**转向**不同组别差异之间的分析，这即为方差分析（ANOVA）。
+
+这里是两个解释变量，所以问题需要双因素方差分析 (ANOVA)
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  broom::tidy()
+```
+
+
+检验表明不同类型之间存在显著差异，但是并没有告诉我们具体谁与谁之间的不同。需要多重比较帮助我们解决这个问题。使用`TurkeyHSD`函数
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  TukeyHSD(which = "dose") %>%
+  broom::tidy()
+```
+
+
+
+
+```{r}
+aov(len ~ supp + dose, data = my_data) %>%
+  TukeyHSD(which = "supp") %>%
+  broom::tidy()
+```
+
+思考：交互效应是否显著？
+```{r}
+aov(len ~ supp * dose, data = my_data) %>%
+  broom::tidy()
+```
+
+
+
+
+<!--chapter:end:tidystats.Rmd-->
+
+# 线性回归 {#lm}
+
+线性模型是数据分析中最常用的一种分析方法。最基础的往往最深刻。
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+## 从一个案例开始
+
+这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集。数据在课件首页提供了下载链接。
+
+首先，我们下载后导入数据
+```{r message = FALSE, warning = FALSE}
+wages <- read_csv("./demo_data/wages.csv")
+
+wages %>% 
+  head() 
+```
+
+
+
+
+### 缺失值检查
+
+一般情况下，拿到一份数据，首先要了解数据，知道每个变量的含义，
+
+```{r}
+wages %>% colnames()
+```
+
+同时检查数据是否有缺失值，这点很重要。在R中 NA（notavailable，不可用）表示缺失值, 比如可以这样检查是否有缺失值。
+
+
+```{r}
+# 如何检查数据是否有缺失值？
+wages %>% 
+  summarise(
+     earn_na =  sum(is.na(earn)),
+     height_na =  sum(is.na(height)),
+     sex_na =  sum(is.na(sex)),
+     race_na =  sum(is.na(race)),
+     ed_na =  sum(is.na(ed)),
+     age_na =  sum(is.na(age))
+)
+```
+
+
+程序员都是偷懒的，所以也可以写的简便一点。大家在学习的过程中，也会慢慢的发现tidyverse的函数很贴心，很周到。
+```{r}
+wages %>% 
+  summarise_all(
+     ~ sum(is.na(.))
+)
+
+```
+
+当然，也可以用`purrr::map()`的方法。这部分我会在后面的章节中逐步介绍。
+```{r}
+wages %>%
+  map_df(~ sum(is.na(.)))
+
+```
+
+
+
+###  变量简单统计
+
+然后探索下每个变量的分布。比如调研数据中男女的数量分别是多少？
+```{r}
+wages %>% count(sex)
+```
+男女这两组的身高均值分别是多少？收入的均值分别是多少？
+```{r}
+wages %>% 
+  group_by(sex) %>% 
+  summarise(
+    n = n(),
+    mean_height = mean(height),
+    mean_earn = mean(earn)
+  )
+```
+
+也有可以用可视化的方法，呈现男女收入的分布情况
+```{r}
+wages %>% 
+  ggplot(aes(x = earn, color = sex)) +
+  geom_density()
+```
+
+大家可以自行探索其他变量的情况。现在提出几个问题，希望大家带着这些问题去探索：
+
+1. 长的越高的人挣钱越多？
+
+2. 是否男性就比女性挣的多？
+
+3. 影响收入最大的变量是哪个？
+  
+4. 怎么判定我们建立的模型是不是很好？
+
+
+
+## 线性回归模型
+
+**长的越高的人挣钱越多？**
+
+要回答这个问题，我们先介绍线性模型。顾名思义，就是认为$x$和$y$之间有线性关系，数学上可以写为
+
+$$
+\begin{aligned}
+y &= \alpha + \beta x + \epsilon \\
+\epsilon &\in \text{Normal}(\mu, \sigma) 
+\end{aligned}
+$$
+
+$ \epslion$ 代表误差项，它与$x$ 无关，且服从正态分布。
+建立线性模型，就是要估计这里的系数$\hat\alpha$和$\hat\beta$，即截距项和斜率项。常用的方法是最小二乘法（ordinary least squares (OLS) regression）：
+就是我们估算的$\hat\alpha$和$\hat\beta$, 要使得残差的平方和最小，即$\sum_i(y_i - \hat y_i)^2$或者叫$\sum_i \epsilon_i^2$最小。当然，数据量很大，手算是不现实的，我们借助R语言代码吧
+
+
+## 使用`lm()` 函数
+
+用R语言代码(建议大家先`?lm`看看帮助文档)，
+
+`lm`参数很多, 但很多我们都用不上，所以我们只关注其中重要的两个参数
+
+```{r, eval = FALSE}
+lm(formula = y ~ x, data)
+```
+
+`lm(y ~ x, data)` 是最常用的线性模型函数(lm是linear model的缩写)。参数解释说明
+
+
+```{block, type="danger"}
+* formula：指定回归模型的公式，对于简单的线性回归模型`y ~ x`. 
+* ~ 符号：代表“预测”，可以读做“y由x预测”。有些学科不同的表述，比如下面都是可以的
+  - `response ~ explanatory`  
+  - `dependent ~ independent` 
+  - `outcome ~ predictors`
+* data：代表数据框，数据框包含了响应变量和独立变量
+```
+
+
+
+在运行`lm()`之前，先画出身高和收入的散点图(记在我们想干什么，寻找身高和收入的关系)
+
+```{r}
+wages %>% 
+  ggplot(aes(x = height, y = earn)) +
+  geom_point()
+```
+
+
+等不及了，就运行代码吧
+```{r}
+mod1 <- lm(formula = earn ~ height, 
+          data = wages)
+```
+
+
+这里我们将`earn`作为响应变量，`height`为预测变量。`lm()`返回赋值给`mod1`. `mod1`现在是个什么东东呢？ mod1是一个叫`lm object`或者叫`类`的东西，
+
+```{r}
+names(mod1)
+```
+
+我们打印看看，会发生什么
+
+```{r}
+print(mod1)
+```
+
+
+这里有两部分信息。首先第一部分是我们建立的模型；第二部分是R给出了截距（$\alpha = -126532$）和斜率（$\beta = 2387$）. 也就是说我们建立的线性回归模型是
+$$
+\hat y = -126532 + 2387 \; x 
+$$
+
+
+
+
+<!-- tidyverse框架下，喜欢**数据框**的统计结果，因此，可用broom的`tidy()`函数将系数转换为数据框的形式 -->
+<!-- ```{r} -->
+<!-- broom::tidy(mod) -->
+<!-- ``` -->
+
+<!-- 也可以用broom的`glance()`函数**规整**模型的信息 -->
+<!-- ```{r} -->
+<!-- broom::glance(mod) -->
+<!-- ``` -->
+
+## 模型的解释
+
+**建立一个`lm`模型是简单的，然而最重要的是，我们能解释这个模型。**
+
+`mod1`的解释：
+
+- 对于斜率$\beta = 2387$意味着，当一个人的身高是68英寸时，他的预期收入$earn = -126532 + 2387 \times 68= 35806$ 美元， 换个方式说，身高$height$每增加一个1英寸, 收入$earn$会增加2387美元。
+
+- 对于截距$\alpha = -126532$，即当身高为0时，期望的收入值-126532。呵呵，人的身高不可能为0，所以这是一种极端的理论情况，现实不可能发生。
+
+
+```{r}
+wages %>% 
+  ggplot(aes(x = height, y = earn)) +
+  geom_point(alpha = 0.25) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- y &= \alpha + \beta x + \epsilon \\ -->
+<!-- \epsilon &\in \text{Normal}(\mu, \sigma)  -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+
+## 多元线性回归
+
+刚才讨论的单个预测变量`height`，现在我们增加一个预测变量`ed`，稍微扩展一下我们的一元线性模型，就是多元回归模型
+
+$$
+\begin{aligned}
+earn &= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
+\end{aligned}
+$$
+
+R语言代码实现也很简单，只需要把变量`ed`增加在公式的右边
+```{r}
+mod2 <- lm(earn ~ height + ed, data = wages)
+```
+同样，我们打印`mod2`看看
+
+```{r}
+mod2
+```
+
+大家试着解释下`mod2`. `r emo::ji("smile")`
+
+
+## 更多模型
+
+```{r, eval=FALSE}
+lm(earn ~ sex, data = wages)
+lm(earn ~ ed, data = wages)
+lm(earn ~ age, data = wages)
+
+lm(earn ~ height + sex, data = wages)
+lm(earn ~ height + ed, data = wages)
+lm(earn ~ height + age, data = wages)
+lm(earn ~ height + race, data = wages)
+
+
+lm(earn ~ height + sex + ed, data = wages)
+lm(earn ~ height + sex + age, data = wages)
+lm(earn ~ height + sex + race, data = wages)
+lm(earn ~ height + ed + age, data = wages)
+lm(earn ~ height + ed + race, data = wages)
+lm(earn ~ height + age + race, data = wages)
+
+lm(earn ~ height + sex + ed + age, data = wages)
+lm(earn ~ height + sex + ed + race, data = wages)
+lm(earn ~ height + sex + age + race, data = wages)
+lm(earn ~ height + ed + age + race, data = wages)
+lm(earn ~ sex + ed + age + race, data = wages)
+
+lm(earn ~ height + sex + ed + age + race, data = wages)
+```
+
+
+
+
+## 可能遇到的情形
+
+根据同学们的建议，模型中涉及统计知识，留给统计老师讲，我们这里是R语言课，应该讲代码。
+因此，这里再介绍几种线性回归中遇到的几种特殊情况
+
+
+### 截距项
+
+```{r, eval=FALSE}
+# 包含截距，以下两者是等价的
+lm(earn ~ 1 + height, data = wages)
+lm(earn ~ height, data = wages)
+
+# 去掉截距，以下两者是等价的
+lm(earn ~ height - 1, data = wages)
+lm(earn ~ 0 + height, data = wages)
+```
+
+
+### 只有截距
+
+```{r}
+lm(earn ~ 1, data = wages)
+```
+
+```{r}
+wages %>%
+  summarise(
+    mean_wages = mean(earn)
+  )
+```
+
+
+### 分类变量
+
+race变量就是数据框wages的一个分类变量，代表四个不同的种族。用分类变量做回归，本质上是各组之间的进行比较。
+
+```{r}
+wages %>% distinct(race)
+```
+
+
+```{r}
+wages %>% 
+  ggplot(aes(x = race, y = earn, fill = race)) + 
+  geom_boxplot(position = position_dodge()) +
+  scale_y_continuous(limits = c(0, 20000))
+```
+
+以分类变量作为解释变量，做线性回归
+
+```{r}
+mod3 <- lm(earn ~ race, data = wages)
+mod3
+```
+
+tidyverse框架下，喜欢**数据框**的统计结果，因此，可用broom的`tidy()`函数将**模型输出**转换为数据框的形式
+
+```{r}
+broom::tidy(mod3)
+```
+
+
+我们看到输出结果，只有race_hispanic、 race_other和race_white三个系数和Intercept截距，race_black去哪里了呢？
+
+事实上，race变量里有4组，回归时，选择black为**基线**，hispanic的系数，可以理解为由black**切换**到hispanic，引起earn收入的变化（效应）
+
+-  对 black 组的估计，`earn = 28372.09 = 28372.09`
+-  对 hispanic组的估计，`earn = 28372.09 + -2886.79 = 25485.30`
+-  对 other 组的估计，`earn = 28372.09 + 3905.32 = 32277.41`
+-  对 white 组的估计，`earn = 28372.09 + 4993.33 = 33365.42`
+
+<!-- Linear regression with a categorical variable, is the equivalent -->
+<!-- of ANOVA (Analysis of Variance) -->
+
+```{block, type="danger"}
+分类变量的线性回归本质上就是方差分析
+```
+第 \@ref(tidystats) 章专题讨论方差分析
+
+
+### 因子变量
+
+hispanic组的估计最低，适合做基线，因此可以将race转换为因子变量，这样方便调整因子先后顺序
+```{r}
+wages_fct <- wages %>% 
+  mutate(race = factor(race, levels = c("hispanic", "white", "black", "other"))) %>% 
+  select(earn, race)
+
+head(wages_fct)
+```
+
+`wages_fct`替换`wages`，然后建立线性模型
+```{r}
+mod4 <- lm(earn ~ race, data = wages_fct)
+broom::tidy(mod4)
+```
+
+以hispanic组作为基线，各组系数也调整了，但加上截距后，实际值是没有变的。
+
+
+大家可以用sex变量试试看
+```{r, eval=FALSE}
+lm(earn ~ sex, data = wages)
+```
+
+
+
+### 一个分类变量和一个连续变量
+
+如果预测变量是一个分类变量和一个连续变量
+
+```{r}
+mod5 <- lm(earn ~ height + sex, data = wages)
+coef(mod5)
+```
+
+- `height = 879.424`  当sex保持不变时，height变化引起的earn变化
+- `sexmale = 16874.158`  当height保持不变时，sex变化(female变为male)引起的earn变化
+
+
+```{r}
+wages %>%
+  ggplot(aes(x = height, y = earn, color = sex)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict(mod5))) +
+  scale_y_continuous(limits = c(0, 100000))
+```
+
+### 偷懒的写法
+
+. is shorthand for "everything else." 
+
+```{r, eval=FALSE}
+lm(earn ~ height + sex + race + ed + age, data = wages)
+lm(earn ~ ., data = wages)
+
+lm(earn ~ height + sex + race + ed, data = wages)
+lm(earn ~ . - age, data = wages)
+```
+
+R 语言很多时候都出现了`.`，不同的场景，含义是不一样的。我会在后面第 \@ref(dot) 章专门讨论这个问题， 这是一个非常重要的问题
+
+
+### 交互项
+
+```{r, eval=FALSE}
+lm(earn ~ height + sex + height:sex, data = wages)
+lm(earn ~ height * sex, data = wages)
+lm(earn ~ (height + sex)^2, data = wages)
+```
+
+```{r, eval=FALSE}
+lm(earn ~ height:sex, data = wages)
+lm(earn ~ height:sex:race, data = wages)
+```
+
+
+```{r}
+mod6 <- lm(earn ~ height + sex + height:sex, data = wages)
+coef(mod6)
+```
+
+<!-- - For men, a 1" increase in height is associated with a gain in earnings of 1265.92 -->
+<!-- - For women, a 1" increase in height is associated with a gain in earnings of1265.92 + (-701.41) = 564.51 -->
+
+- 对于女性，height增长1个单位，引起earn的增长`564.5102`
+- 对于男性，height增长1个单位，引起earn的增长`564.5102 + 701.4065 = 1265.92` 
+
+
+```{r}
+wages %>%
+  ggplot(aes(x = height, y = earn, color = sex)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict(mod6))) +
+  scale_y_continuous(limits = c(0, 100000))
+```
+
+### predict vs fit
+
+- fitted() , 模型一旦建立，可以使用拟合函数`fitted()`返回拟合值，建模和拟合使用的是同一数据
+- predict()， 模型建立后，可以用新的数据进行预测，`predict()`要求数据框包含新的预测变量，如果没有提供，那么就使用建模时的预测变量进行预测，这种情况下，得出的结果和`fitted()`就时一回事了。
+
+
+`predict()`函数和`fitted()`函数不同的地方，还在于`predict()`函数往往带有返回何种类型的选项，可以是具体数值，也可以是分类变量。具体会在第 \@ref(tidymodels) 章介绍。
+
+<!-- <https://stackoverflow.com/questions/12201439/is-there-a-difference-between-the-r-functions-fitted-and-predict> -->
+
+### 回归和相关的关系
+
+- 相关，比如求两个变量的相关系数`cor(x, y)`
+- 回归，也是探寻自变量和因变量的关系，一般用来**预测**
+
+回归分析中，如果自变量只有一个$x$，也就是模型`lm(y~x)`，那么回归和相关就有关联了。
+
+
+比如：计算身高和收入两者的Pearson相关系数的平方
+```{r}
+r <- cor(wages$height, wages$earn)  
+print( r^2 ) 
+```
+
+
+然后看看，身高和收入的线性模型
+
+```{r}
+lm(formula = earn ~ height, data = wages) %>% 
+  broom::glance() %>% 
+  pull(r.squared)
+```
+相关系数的平方 和 线性模型的$R^2$是相等的
+
+
+## 延伸阅读
+
+一篇极富思考性和启发性的文章[《常见统计检验的本质是线性模型》](https://lindeloev.github.io/tests-as-linear/)
+
+
+
+<!--chapter:end:lm.Rmd-->
+
+# 广义线性模型 {#glm}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+
+线性回归需要满足四个前提假设：
+
+1. **Linearity **
+    - 因变量和每个自变量都是线性关系
+
+2. **Indpendence **
+    - 对于所有的观测值，它们的误差项相互之间是独立的
+
+3. **Normality **
+    - 误差项服从正态分布
+
+4. **Equal-variance **  
+    - [所有的误差项具有同样方差](<https://www.zhihu.com/question/67473778>)
+
+这四个假设的首字母，合起来就是\alert{LINE}，这样很好记
+
+
+<!--chapter:end:glm.Rmd-->
+
+# 线性混合模型 {#lmm}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+## 从一个案例开始
+
+<!--chapter:end:lmm.Rmd-->
+
+# 贝叶斯数据分析 {#tidybayes}
+
+
+> "If you want to master something, teach it."
+>
+> --- ― Yogi Bhajan
+
+
+## Bayesian New Statistics 
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(here)
+library(fs)
+library(stringr)
+library(purrr)
+```
+
+
+
+
+
+<!--chapter:end:tidybayes.Rmd-->
+
+# tidyverse进阶 {#advR}
+
+让我们继续聊聊，相见恨晚的tidyverse
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+##  From gather to pivot
+
+Easily Tidy Data
+
+```{r out.width = '45%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/import_datatype01.png")
+```
+
+
+- Each variable is a column
+- Each observation is a row
+- Each type of observational unit is a table
+
+
+
+从2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增了一组函数`pivot_longer()/pivot_wider()`，用来补充原来的`gather()/spread()` 
+
+
+* `gather()/pivot_longer `  it makes “wide” data longer.
+* `spread()/pivot_wider`  it makes “long” data wider.
+
+
+
+```{r}
+fake_data <- data.frame(
+  id = 1:20,
+  variable1 = runif(20, 0, 1),
+  variable2 = rnorm(20)
+)
+```
+
+
+```{r, eval=FALSE}
+melted <- gather(fake_data, variable, value, 2:3)
+
+## Column names instead of indices
+melted <- gather(fake_data, variable, value, variable1, variable2)
+
+## Excluding instead of including
+melted <- gather(fake_data, variable, value, -1)
+
+## Excluding using column name
+melted <- gather(fake_data, variable, value, -id)
+```
+
+
+
+现在推荐大家，使用`pivot_longer()`函数
+```{r}
+long <- pivot_longer(fake_data, 2:3,
+  names_to = "variable",
+  values_to = "value"
+)
+long
+```
+
+
+```{r}
+wide <- pivot_wider(long,
+  names_from = "variable",
+  values_from = "value"
+)
+wide
+```
+
+## if_else
+
+```{r}
+df <- tibble(
+      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
+      type = c("english", "math", "english", "math", "english", "math"),
+      score = c(60.2, 90.5, 92.2, 98.8, 82.5, 74.6)
+)
+
+df
+```
+
+
+```{r}
+df %>% mutate(
+  assess = if_else(score > 85, "very_good", "good")
+  )
+```
+
+```{r}
+dt <- tribble(
+  ~name, ~age,
+  "a", 1,
+  "b", 2,
+  "c", NA,
+  "d", 2
+)
+
+  
+dt %>%
+  mutate(
+    age_adj = ifelse(is.na(age), mean(age, na.rm = TRUE), age)
+  )
+    
+```
+
+## case_when
+
+```{r}
+df %>% mutate(
+  assess = case_when(
+    score < 70 ~ "general",
+    score >= 70 & score < 80 ~ "good",
+    score >= 80 & score < 90 ~ "very_good",
+    score >= 90 ~ "best",
+    TRUE ~ "other"
+  )
+)
+```
+
+## scoped 函数
+
+在第 \@ref(dplyr) 章介绍了dplyr的一些函数（`mutate()`, `select()`等等），事实上，这些函数加上后缀
+`_all, _at, _if`，形成三组变体函数，可以方便对**特定的子集**进行操作。比如
+
+- 对数据框所有列操作，可以用`_all`
+- 对数据框指定的几列操作，可以用`_at`
+- 对数据框符合条件的几列进行操作，可以用`_if`
+
+| Operate   | _all          | _at          | _if          |
+|-----------|---------------|--------------|--------------|
+| `select()`    | `select_all()`    | `select_at()`    | `select_if()`    |
+| `mutate()`    | `mutate_all()`    | `mutate_at()`    | `mutate_if()`    |
+| `rename()`    | `rename_all()`    | `rename_at()`    | `rename_if()`    |
+| `arrange()`   | `arrange_all()`   | `arrange_at()`   | `arrange_if()`   |
+| `filter()`    | `filter_all()`    | `filter_at()`    | `filter_if()`    |
+| `distinct()`  | `distinct_all()`  | `distinct_at()`  | `distinct_if()`  |
+| `group_by()`  | `group_by_all()`  | `group_by_at()`  | `group_by_if()`  |
+| `summarise()` | `summarise_all()` | `summarise_at()` | `summarise_if()` |
+| `map()`       | `map_all()`       | `map_at()`       | `map_if()`       |
+| `modify()`    | `modify_all()`    | `modify_at()`    | `modify_if()`    |
+
+
+下面选取其中几个函数加以说明
+
+### mutate_if
+
+```{r}
+df_iris <- iris %>%
+  head(5)
+
+df_iris
+```
+
+```{r}
+df_iris %>% mutate_if(is.double, as.integer)
+```
+
+可以一次性增加多列
+```{r}
+df_iris %>% mutate_if(is.numeric, list(scale, log))
+```
+
+也可以把函数放在list()中，用 Purrr-style lambda 形式写出
+```{r}
+df_iris %>% mutate_if(is.numeric, list(~ scale(.), ~ log(.)))
+```
+
+
+
+###  select_if()
+
+
+```{r}
+df <- tibble::tibble(
+  x = letters[1:3],
+  y = c(1:3),
+  z = c(0, 0, 0)
+)
+df
+```
+
+
+```{r}
+df %>% select_if(is.numeric)
+```
+
+```{r}
+df %>% select_if(~ n_distinct(.) > 2)
+```
+
+
+`select_if` 多个条件的情况
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) | is.character(.)))
+)
+```
+
+
+```{r}
+df %>% select_if(
+  ~ (is.numeric(.) | is.character(.))
+)
+```
+
+
+```{r}
+to_keep <- function(x) is.numeric(x) | is.character(x)
+df %>% select_if(to_keep)
+```
+
+
+
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) && sum(.) > 2))
+)
+```
+
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) && mean(.) > 1))
+)
+```
+
+
+我们也可以写成函数的形式
+```{r}
+to_want <- function(x) is.numeric(x) && sum(x) > 3
+
+df %>% select_if(to_want)
+```
+
+
+## summarise_if
+
+```{r, message=FALSE, warning=FALSE}
+msleep <- ggplot2::msleep
+msleep %>%
+  group_by(vore) %>%
+  summarise_all(~ mean(., na.rm = TRUE))
+```
+
+
+```{r}
+msleep <- ggplot2::msleep
+msleep %>%
+  group_by(vore) %>%
+  # summarise_if(is.numeric, ~mean(., na.rm = TRUE))
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+```
+
+
+## filter_if()
+
+
+事实上，filter已经很强大了，有了scoped函数，就如虎添翼了
+
+
+```{r}
+msleep <- ggplot2::msleep
+msleep %>%
+  select(name, sleep_total) %>%
+  filter(sleep_total > 18)
+```
+
+
+```{r}
+msleep %>%
+  select(name, sleep_total) %>%
+  filter(between(sleep_total, 16, 18))
+```
+
+
+```{r}
+msleep %>%
+  select(name, sleep_total) %>%
+  # filter(near(sleep_total, 17,  tol=sd(sleep_total)))
+  filter(near(sleep_total, mean(sleep_total), tol = 0.5 * sd(sleep_total)))
+```
+
+
+mtcars是 R内置数据集，记录了32种不同品牌的轿车的的11个属性
+
+```{r, layout = "l-body-outset"}
+mtcars %>% rmarkdown::paged_table()
+```
+
+
+`filter_if()`配合`all_vars(), any_vars()`函数，可以完成很酷的工作.
+比如，要求一行中所有变量的值都大于150
+```{r}
+mtcars %>% filter_all(all_vars(. > 150))
+```
+
+
+比如，要求一行中至少有一个变量的值都大于150
+```{r}
+# Or the union:
+mtcars %>% filter_all(any_vars(. > 150))
+```
+
+
+
+
+```{r}
+# You can vary the selection of columns on which to apply the predicate.
+# filter_at() takes a vars() specification:
+mtcars %>% filter_at(vars(starts_with("d")), any_vars((. %% 2) == 0))
+```
+
+
+
+
+`filter_if(.tbl, .predicate, .vars_predicate)` 相对复杂点，我这里多说几句。
+
+filter_if() 有三个参数：
+
+- .tbl, 数据框
+- .predicate, 应用在列上的函数，一般作为列的选择条件
+- .vars_predicate, 应用在一行上的函数，通过 `all_vars(), any_vars()`返回值决定是否选取该行。
+
+
+```{r}
+# And filter_if() selects variables with a predicate function:
+# filter_if(.tbl, .predicate, .vars_predicate)
+# mtcars %>% map_df(~ all(floor(.) == .) )
+# mtcars %>% select_if( ~ all(floor(.) == .) )
+
+mtcars %>% filter_if(~ all(floor(.) == .), all_vars(. != 0))
+```
+所以这里是，先通过`.predicate = ~ all(floor(.) == .)` 选取变量值为整数的列，然后再看选取的这些列的行方向，如果每一行的值`.vars_predicate = all_vars(. != 0)` ，都不为0，就保留下来，否则过滤掉。
+
+简单点说，这段代码的意思，**数值全部为整数的列，不能同时为0**
+
+
+
+
+
+
+## group_by
+
+`group_by()` 用的很多，所以要多讲讲
+
+```{r}
+mtcars %>% group_by(cyl)
+```
+
+
+```{r}
+mtcars %>% group_by_at(vars(cyl))
+```
+
+
+```{r}
+# Group a data frame by all variables:
+mtcars %>% group_by_all()
+```
+
+
+```{r}
+# Group by variables selected with a predicate:
+iris %>% group_by_if(is.factor)
+```
+
+
+
+
+
+### group_split(), group_map(), group_modify()
+
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  group_split()
+```
+
+简单点写，就是
+```{r}
+iris %>%
+  group_split(Species)
+```
+
+
+
+
+
+
+
+如果使用`group_split()`, 注意分组后，返回的是列表
+```{r}
+iris %>%
+  group_split(Species)
+```
+
+
+既然是列表，当然想到用前面讲到的`purrr::map()`家族
+```{r}
+iris %>%
+  group_split(Species) %>%
+  map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+
+```{r}
+iris %>%
+  group_split(Species) %>%
+  map_df(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+上面这个代码，数据框分割成list, 处理完后再合并成数据框，难道不觉得折腾么？ 为什么直接点？
+tidyverse不会让我们失望的，先看看`group_map()`
+```{r}
+## The result of .f should be a data frame(.f 必须返回数据框)
+## `group_map()` return a list of tibble(返回元素均为df的一个列表list(df1,df2,df3))
+iris %>%
+  group_by(Species) %>%
+  group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+数据框进来，然后分组，依次处理成一个个数据框，最后以列表形式（a list of tibble）输出。
+
+
+
+`group_modify()` 才是真正意义上的"数据框进、数据框出"。
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  group_modify(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+
+
+
+为了大家方便查阅和记忆，我总结下表
+
+
+
+| 函数 | 说明 | 常用组合 | 返回值 | 要求 |
+|----------|-------------|-------------------|------------------|---------|
+| map() | 列表进、列表出 | df %>% <br>group_split() %>% <br>map() | list |  |
+| map_df() | 列表进、数据框出 | df %>% <br>group_split() %>% <br>map_df() | df |  |
+| group_map() | 数据框进、列表出 | df %>% <br>group_by() %>% <br>group_map() | 返回list(df1, df2, ...) | .f返回df |
+| group_modify() | 数据框进、数据框出 | df %>% <br>group_by() %>% <br>group_modify() | 返回grouped tibble | .f返回df |
+|  |  |  |  |  |
+| walk | 列表进 | df %>% <br>group_split() %>%<br>walk() | side effects |  |
+| group_walk() | 数据框进 | df %>% <br>group_by() %>% <br>group_walk() | side effects |  |
+
+
+
+### 其他group函数
+group_nest(), group_data(), group_keys(), group_rows()
+
+
+
+
+
+## 列名清理
+
+
+数据框的列名，不要用有空格和中文。
+如果拿到的原始数据中列比较多，手动修改麻烦，可以使用`janitor::clean_names()`函数
+```{r}
+library(readxl)
+library(janitor) # install.packages("janitor")
+
+roster_raw <- read_excel(here::here("demo_data", "dirty_data.xlsx"))
+
+glimpse(roster_raw)
+```
+
+
+
+```{r}
+roster <- roster_raw %>%
+  clean_names()
+
+glimpse(roster)
+```
+
+
+
+
+
+## 缺失值检查与处理
+
+
+
+### purrr & dplyr 技巧
+```{r message=FALSE, warning=FALSE}
+library(purrr)
+airquality %>% map(~ sum(is.na(.)))
+```
+
+
+```{r}
+airquality %>%
+  map_df(~ sum(is.na(.)))
+```
+
+
+```{r}
+airquality %>%
+  summarise_at(2:3, ~ sum(is.na(.)))
+```
+
+
+
+### 缺失值替换
+```{r message=FALSE, warning=FALSE}
+airquality %>%
+  mutate_all(funs(replace(., is.na(.), 0))) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r message=FALSE, warning=FALSE} 
+airquality %>%
+  mutate_all(replace_na, replace = 0) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r message=FALSE, warning=FALSE} 
+airquality %>%
+  mutate_if(is.numeric, replace_na, replace = 0) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r}
+airquality %>%
+  mutate_all(as.numeric) %>%
+  mutate_all(~ coalesce(., 0)) %>% 
+  rmarkdown::paged_table()
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+tibble(
+  y = c(1, 2, NA, NA, 5),
+  z = c(NA, NA, 3, 4, 5)
+) %>%
+  mutate_all(~ coalesce(., 0))
+```
+
+
+
+
+
+## 标准化
+
+
+```{r include=FALSE}
+df_mtcars <- mtcars %>%
+  rownames_to_column(var = "rowname") %>%
+  mutate(
+    cyl = factor(cyl),
+    vs = factor(vs),
+    am = factor(am),
+    gear = factor(gear),
+    carb = factor(carb)
+  ) %>%
+  as_tibble()
+```
+
+
+
+```{r}
+df_mtcars
+```
+
+
+
+```{r}
+df_mtcars %>% select_if(funs(is.numeric))
+```
+
+
+
+```{r}
+# way 1
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), ~ scale(., center = T, scale = T))
+```
+
+
+```{r}
+# way 2
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), funs((. - mean(.)) / sd(.)))
+```
+
+
+
+```{r}
+# way 3
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), ~ func(.))
+```
+
+
+如果所有的列，都是数值型
+
+```{r, error=TRUE}
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+
+df_mtcars %>% mutate_all(~ func(.))
+```
+
+-  但这里数据中还有其他类型（fct, chr），所以这里 `mutate_all()` 会报错。
+-  这种情形，用`mutate_if()`
+
+
+
+
+```{r}
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+
+df_mtcars %>% mutate_if(is.numeric, ~ func(.))
+```
+
+
+
+```{r}
+funs <- list(
+  centered = mean, # Function object
+  scaled = ~ . - mean(.) / sd(.) # Purrr-style lambda
+)
+
+iris %>% 
+  mutate_if(is.numeric, funs) %>% 
+  rmarkdown::paged_table()
+```
+
+
+
+<!-- ## ggplot2 未了情 -->
+
+<!-- ### 中文字体 -->
+
+<!-- 有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包 -->
+
+<!-- ```{r, eval=funs} -->
+<!-- library(ggplot2) -->
+<!-- ggplot(data = mpg) +  -->
+<!-- 	geom_point(mapping = aes(x = displ, y = hwy)) + -->
+<!-- 	ggtitle("这是默认的龙泉驿字体") -->
+
+<!-- ## maybe, 保存为pdf图，才能看到有效字体 -->
+<!-- ggsave("showtext-example-0.pdf", width = 7, height = 4, dpi = 200)   -->
+<!-- ``` -->
+
+
+
+
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- library(showtext) -->
+<!-- showtext_auto() -->
+
+<!-- font_families() -->
+<!-- font_paths() -->
+<!-- font_files() -->
+
+<!-- ## Add fonts that are available on Windows(默认路径"C:\\Windows\\Fonts") -->
+<!-- font_add("heiti", "simhei.ttf") -->
+<!-- font_add("constan", "constan.ttf", italic = "constani.ttf") -->
+<!-- font_add("kaishu", "simkai.ttf") -->
+<!-- #font_add("Noto", "NotoSansCJKsc-Regular.otf") -->
+<!-- font_add("Yahei", "Yahei.ttf")    -->
+
+<!-- # 也可放在指定的目录(尽量英文) -->
+<!-- # https://github.com/yixuan/showtext/issues/18 -->
+<!-- font_add("fzfsj",  here::here("myfont", "fzfsj.ttf")) -->
+<!-- font_add("fzxbsj", here::here("myfont", "FZXBSJW.ttf")) -->
+<!-- font_add("maoti",  here::here("myfont", "maoti.ttf")) -->
+<!-- font_add("fzshuliu", here::here("myfont", "fzshuliu.ttf")) -->
+<!-- font_families() -->
+
+<!-- ## maybe, 保存为pdf图，才能看到有效字体 -->
+<!-- ggplot(data = mpg) +  -->
+<!-- 	geom_point(mapping = aes(x = displ, y = hwy)) + -->
+<!-- 	ggtitle("这是我的小标宋简体") + -->
+<!-- 	theme( -->
+<!-- 		plot.title = element_text(family = "fzxbsj") -->
+<!-- 	) + -->
+<!-- 	geom_text(aes(x = 5, y = 40), label = "方正仿宋简体",  -->
+<!-- 			  family = "fzfsj") + -->
+<!-- 	geom_text(aes(x = 5, y = 38), label = "这是我的雅黑",  -->
+<!-- 			  family = "Yahei") + -->
+<!-- 	geom_text(aes(x = 5, y = 35), label = "方正楷书简体",  -->
+<!-- 			  family = "kaishu") + -->
+<!--  	geom_text(aes(x = 5, y = 30), label = "草檀斋毛泽东字体",  -->
+<!--  			  family = "maoti") + -->
+<!--  	geom_text(aes(x = 5, y = 28), label = "方正苏新诗柳楷简体",  -->
+<!--  			  family = "fzshuliu")  -->
+
+
+<!-- #ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)   -->
+<!-- ``` -->
+
+
+
+<!-- ### latex公式 -->
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- library(latex2exp) -->
+
+<!-- ggplot(mpg, aes(x = displ, y = hwy)) + -->
+<!--   geom_point() +  -->
+<!--   annotate("text", x = 4, y = 40,  -->
+<!--   		 label = TeX("$\\alpha^2 + \\theta^2 = \\omega^2 $"),  -->
+<!--   		 size = 9) + -->
+<!--   labs(title = TeX("The ratio of 1 and 2 is $\\,\\, \\frac{1}{2}$"),  -->
+<!--            x = TeX("$\\alpha$"), -->
+<!--            y = TeX("$\\alpha^2$") ) -->
+<!-- ``` -->
+
+
+
+
+
+
+<!--chapter:end:adv_dplyr.Rmd-->
+
+# tidyverse中行方向的操作 {#rowwise}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+tidyverse 喜欢数据框，因为一列就是一个向量，一列一列的处理起来很方便。然而我们有时候也要，完成行方向的操作，所以有必要介绍tidyverse中行方向的处理机制。
+
+## 问题
+
+```{r}
+df <- tibble(x = 1:3, y = 4:6)
+df
+```
+对每行的求和、求均值、最小值或者最大值？
+
+
+## rowwise函数
+
+dplyr提供了rowwise函数，但大神说不推荐
+```{r}
+df %>% 
+  rowwise() %>% 
+  mutate( i = sum(x, y) )
+```
+
+
+```{r}
+df %>% 
+  rowwise() %>% 
+  mutate( i = mean(c(x, y) ))
+```
+
+```{r}
+df %>%
+  rowwise() %>% 
+  mutate(min = min(x,y),
+         max = max(x,y)
+         )
+```
+
+
+```{r}
+df %>% 
+  rowwise() %>% 
+  do(i = mean(c(.$x, .$y))) %>% 
+  unnest(i)
+```
+
+## Row-wise Summaries
+```{r}
+df %>% mutate(row_sum = rowSums(.[1:2])  )
+```
+
+
+```{r}
+df %>% mutate(row_mean = rowMeans(.[1:2])  ) 
+```
+
+```{r}
+df %>% mutate(t_sum = rowSums(select_if(., is.numeric)))
+```
+
+固然可解决问题， 然而，却不是一个很好的办法，比如除了求和与计算均值，可能还要计算每行的中位数、方差等等， 因为，不是每种计算都对应的row_函数？ 既然是tidyverse ，还是用tidyverse 的方法解决
+
+
+## purrr::map方案
+
+按照Jenny Bryan的方案
+
+```{r}
+df %>% mutate(t_sum = pmap_dbl(list(x, y), sum))
+```
+
+
+```{r}
+df %>%
+	mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
+```
+
+计算均值的时候， 然而报错了
+```{r, eval=FALSE}
+df %>% mutate(t_sum = pmap_dbl(select_if(., is.numeric), mean))
+```
+
+tidyverse 总会想出办法来解决，把`mean()` 变成 `lift_vd(mean)`
+
+```{r}
+df %>%
+	mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
+```
+
+
+同理
+```{r}
+df %>% mutate(t_median = pmap_dbl(select_if(., is.numeric), lift_vd(median)))
+```
+
+
+```{r}
+df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
+```
+
+
+
+
+
+## tidy 的方案
+
+我个人推荐的方法(Gather, group, summarize, left_join)
+
+```{r}
+new_df <- df %>%
+  mutate(id = row_number()) 
+
+s <- new_df %>% 
+  gather("time", "val", -id) %>%
+  group_by(id) %>%
+  summarize(
+    t_avg = mean(val),
+    t_sum = sum(val)
+  )
+
+s
+```
+
+```{r, warning=FALSE, message=FALSE}
+new_df %>%
+  left_join(s)
+```
+
+有点繁琐，但思路清晰
+
+```{r}
+ss <- new_df %>%
+  group_by(id) %>%
+  summarise(t_avg = mean(c(x, y)) )
+
+ss
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+new_df %>%
+  left_join(ss)
+```
+
+
+之所以有这么多的搞法，是因为没有一个很好的搞法
+
+
+
+
+## slide方案
+
+[slide](https://github.com/DavisVaughan/slide)很强大，可以滚动喔
+
+
+- 如果第一个参数是数据框，`slide`把数据框看作a vector of rows， 然后行方向的滚动，事实上， .x是一个个的小数据框（如下）
+- 与`purrr::map`不同，因为map把数据框看作列方向的向量， 然后迭代
+- 如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动
+
+```{r, warning=FALSE, message=FALSE}
+library(slide)
+
+df <- tibble(a = 1:3, b = 4:6)
+
+slide(
+  select_if(df, is.numeric), 
+  ~.x, 
+  .before = 1
+)
+```
+
+
+
+```{r}
+df %>% 
+  mutate(
+    r_mean = slide_dbl(
+      select_if(df, is.numeric), 
+      ~mean(unlist(.x)), 
+      .before = 1
+    )
+  )
+```
+
+
+<!--chapter:end:rowwise.Rmd-->
+
+# tidyverse中的dot {#dot}
+
+本章介绍tidyverse的语法中经常遇到`.`， 不同的场景，含义不同。因此很有必要弄清楚各自的含义。
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+## 每一行的 `.` 各自代表什么意思呢?
+
+```{r, eval = F}
+read_csv("./data/wages.csv") %>%
+  mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
+  select(., -letter) %>%
+  mutate_at(vars(race), ~ as.factor(.)) %>%
+  mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
+  filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
+  split(.$sex) %>%
+  map(~ lm(earn ~ ., data = .)) %>%
+  map_dfr(~ broom::tidy(.), .id = "sex")
+```
+
+回答之前，我们先介绍一些相关知识点
+
+## 占位符
+
+管道符号` %>%` 主要功能是传递参数。
+
+- `y %>% f()` is equivalent to `f(y)` 
+
+- `y %>% f(x, .)` is equivalent to `f(x, y)` 
+ 
+- `z %>% f(x, y, arg = .)` is equivalent to `f(x, y, arg  = z)`
+
+我们经常这样写
+```{r}
+mtcars %>% 
+  select(cyl, disp, hp) %>% 
+  head(2)
+```
+
+实际上，这里是有占位符的
+```{r}
+mtcars %>% 
+  select(., cyl, disp, hp) %>% 
+  head(., 2)
+```
+
+## Lambda函数
+
+`.`出现在函数`.f`的位置上， 就是 purrr 风格的Lambda函数`~ fun(.)`， 
+```{r}
+mtcars %>% 
+  select_at(vars(contains("ar")), ~toupper(.)) %>% 
+  head(3)
+```
+
+有时候程序员会将`~toupper(.) `简写成 `toupper`
+```{r}
+mtcars %>% 
+  select_at(vars(contains("ar")), toupper) %>% 
+  head(3)
+```
+
+
+## 正则表达式
+
+```{r}
+words <- "the fattest cat."
+```
+
+
+```{r}
+words %>% str_replace_all("t.", "-")
+```
+
+
+```{r}
+words %>% str_replace_all("t\\.", "-")
+```
+
+
+## Unary funciton (只带一个参数的函数)
+<!-- A pipeline with a dot (.) as LHS will create a unary function. -->
+
+```{r}
+mean_rm <- . %>% mean(na.rm = T)
+
+c(1, 2, 3, NA) %>% mean_rm
+```
+
+等价于
+```{r}
+# is equivalent to
+c(1, 2, 3, NA) %>% mean(., na.rm = T)
+```
+
+
+## more placeholder
+
+
+
+```{r}
+iris %>% subset(1:nrow(.) %% 30 == 0)
+```
+
+
+```{r}
+1:10 %>% {c(min(.), max(.))}
+```
+
+
+## 当mutate遇到map
+
+当`dplyr::mutate`遇到`purrr::map`，情况就复杂很多了。然而，这种情况，tidyverse比比皆是。我就多说几句吧
+
+```{r}
+iris %>% 
+  head(3) %>% 
+  mutate(., r_sum = pmap_dbl(select_if(., is.numeric), sum)) 
+```
+
+这里`mutate()`行，有两个`.`, 实际这两个`.`都是等待`iris %>% head(3)`传来的data.frame
+
+
+
+```{r, warning=FALSE, message=FALSE}
+df <- tibble(
+  mean = c(1, 2),
+  sd = c(2, 4)
+)
+df
+
+
+df %>%
+  mutate(., rand  = map(mean, ~ rnorm(5, .))) %>% 
+  unnest_wider(rand)
+```
+
+
+- 第一个 `.`， 是`df`
+- 第二个 `.`， 是`df`中的`mean`
+
+
+
+```{r, warning=FALSE, message=FALSE}
+df %>%
+  mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>% 
+  unnest_wider(rand)
+```
+
+- `mean`传给 `.x`
+- `sd`传给 `.y`
+
+
+
+再来一个变态的。（我们不一定要这样写，但我们尽可能的要明白它的意思。）
+
+```{r}
+df <- tribble(
+  ~ a, ~b,
+  1, 10,
+  2, 11
+)
+
+
+df %>%
+   mutate(., sum = purrr::pmap_dbl(., ~sum(...)))
+```
+
+
+
+
+
+## Dot dot dot
+```{r}
+commas <- function(...) 
+  stringr::str_c(..., collapse = ", ")
+
+
+commas(letters[1:10])
+```
+
+
+
+## Don't confuse 
+
+<!-- Don't confuse with many function arguments that are prefixed with a . -->
+注意：有些函数的参数前缀是 .
+
+```{r, eval= F}
+mutate_all(.tbl, .funs, ...)
+
+mutate_if(.tbl, .predicate, .funs, ...)
+
+mutate_at(.tbl, .vars, .funs, ..., .cols = NULL)
+
+select_all(.tbl, .funs = list(), ...)
+
+rename_all(.tbl, .funs = list(), ...)
+
+```
+
+
+
+## 小结
+
+* tidyvere中
+  + 占位符(时常经常和 `%>%` 一起)
+  + Lambda函数
+  + 一元函数（LHS）
+ 
+* 其他情形
+  + 回归公式
+  + 正则表达式
+ 
+* 注意
+  + 有些函数参数以 . 前缀(不要混淆喔! )
+ 
+ 
+ 
+
+## 回答问题
+
+现在回答本章开始的问题
+
+```{r, warning=FALSE, message=FALSE}
+read_csv("./demo_data/wages.csv") %>%
+  mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
+  select(., -letter) %>%
+  mutate_at(vars(race), ~ as.factor(.)) %>%
+  mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
+  filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
+  split(.$sex) %>%
+  map(~ lm(earn ~ ., data = .)) %>%
+  map_dfr(., ~ broom::tidy(.), .id = "sex")
+```
+
+- 第1行：路径中`.`代表当前位置，如果是`..`表示上一级目录
+- 第2行：正则表达式，代表任何字符
+- 第3行：占位符，等待数据框的传入，也可以简写`select(-letter)`
+- 第4行: lambda函数，`~ as.factor(.)`也可以简写`as.factor`，`~`和`(.)`要么都写，要么都不写
+- 第5行：同上,lambda函数
+- 第6行：第一个`.`代表lambda函数; 第二个`.`也是lambda函数，但这里它是`all_vars(expr)`中expr的一种特有写法，代表所有数值型变量，***行方向构成的向量**, `all_vars(. != 0)`函数返回TRUE或FALSE，从而帮助`filter()`是否筛选该行
+- 第7行：占位符，代表上面传来的数据框
+- 第8行：回归模型`lm`中，第一个`.`代表除**因变量**earn之外所有的变量，第二个`.`占位符，留给上面的数据框
+- 第9行：第一个`.`是占位符，代表上面传来的list，第二个`.`lambda函数，依次对list的元素迭代处理，第二个`.`是参数名，`.id`是特有的一个符号。
+
+
+
+
+<!--chapter:end:dot.Rmd-->
+
+# 网络爬虫 {#rvest}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(purrr)
+```
+
+
+<!--chapter:end:rvest.Rmd-->
+
+# 机器学习 {#tidymodels}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(tidymodels)
+```
+
+
+
+<!--chapter:end:tidymodels.Rmd-->
+
+# 社会网络分析 {#tidygraph}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(here)
+library(fs)
+library(stringr)
+library(purrr)
+library(tidygraph)
+library(ggraph)
+```
+
+
+
+<!--chapter:end:tidygraph.Rmd-->
+
+# 在代表性领域的应用 {#r4psy}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(psych)
+```
+
+
+- 心理学 <https://bookdown.org/wangminjie/R4psy/>
+- 经  管 <https://bookdown.org/wangminjie/R4cfps/>
+- 统  计 <https://bookdown.org/wangminjie/R4EDA/>
+- 信息学 <https://bookdown.org/wangminjie/R4IS/>
+- 教育学 <https://bookdown.org/wangminjie/R4edu/>
+- 语音学 <https://bookdown.org/wangminjie/R4speech/>
+- 音乐学
+
+<!--chapter:end:r4psy.Rmd-->
+
+\cleardoublepage 
+
+# (APPENDIX) 附录 {-}
+
+# 期末考试 {#exams}
+
+研究生生涯的主要工作就是学习，而**学以致用**是最好的学习路径。考虑同学们不同的学科背景，同时也参考国内其它高校的做法，本学期《数据科学中的 R 语言》期末考试安排如下：
+
+## 方式
+
+结合所在学科，找一篇与自己研究方向相关的文献，用课堂上学到的R统计编程技能，**重复**文献的数据分析过程。
+
+
+## 要求
+
+在2019年12月31日前，将以下资料打包并提交`38552109@qq.com`邮箱
+
+  - 所重复的文献
+  - 数据 
+  - Rmarkdown源代码
+  - 分析结果(生成的pdf或者html文件)
+  - 注明学号和姓名
+  
+
+
+## 数据集
+
+仅供参考
+
+- <https://datahub.io/collections/economic-data>
+- <https://cnki.net/>
+- <https://osf.io/>
+- <https://www.kaggle.com/datasets>
+- <https://toolbox.google.com/datasetsearch>
+- <https://chfs.swufe.edu.cn/>（中国家庭金融调查）
+- <http://www.isss.pku.edu.cn/cfps/index.htm>（中国家庭追踪调查）
+- <http://www.ciejournal.org/> (中国工业经济)
+
+
+
+
+
+<!--chapter:end:Appendix.Rmd-->
+
+`r if (knitr:::is_html_output()) '# 参考文献 {#references .unnumbered}'`
+
+```{r include=FALSE}
+# 自动生成 R 包的参考文献
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+
+<!--chapter:end:references.Rmd-->
+

@@ -1,0 +1,743 @@
+# tidyverse进阶 {#advR}
+
+让我们继续聊聊，相见恨晚的tidyverse
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+##  From gather to pivot
+
+Easily Tidy Data
+
+```{r out.width = '45%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/import_datatype01.png")
+```
+
+
+- Each variable is a column
+- Each observation is a row
+- Each type of observational unit is a table
+
+
+
+从2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增了一组函数`pivot_longer()/pivot_wider()`，用来补充原来的`gather()/spread()` 
+
+
+* `gather()/pivot_longer `  it makes “wide” data longer.
+* `spread()/pivot_wider`  it makes “long” data wider.
+
+
+
+```{r}
+fake_data <- data.frame(
+  id = 1:20,
+  variable1 = runif(20, 0, 1),
+  variable2 = rnorm(20)
+)
+```
+
+
+```{r, eval=FALSE}
+melted <- gather(fake_data, variable, value, 2:3)
+
+## Column names instead of indices
+melted <- gather(fake_data, variable, value, variable1, variable2)
+
+## Excluding instead of including
+melted <- gather(fake_data, variable, value, -1)
+
+## Excluding using column name
+melted <- gather(fake_data, variable, value, -id)
+```
+
+
+
+现在推荐大家，使用`pivot_longer()`函数
+```{r}
+long <- pivot_longer(fake_data, 2:3,
+  names_to = "variable",
+  values_to = "value"
+)
+long
+```
+
+
+```{r}
+wide <- pivot_wider(long,
+  names_from = "variable",
+  values_from = "value"
+)
+wide
+```
+
+## if_else
+
+```{r}
+df <- tibble(
+      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
+      type = c("english", "math", "english", "math", "english", "math"),
+      score = c(60.2, 90.5, 92.2, 98.8, 82.5, 74.6)
+)
+
+df
+```
+
+
+```{r}
+df %>% mutate(
+  assess = if_else(score > 85, "very_good", "good")
+  )
+```
+
+```{r}
+dt <- tribble(
+  ~name, ~age,
+  "a", 1,
+  "b", 2,
+  "c", NA,
+  "d", 2
+)
+
+  
+dt %>%
+  mutate(
+    age_adj = ifelse(is.na(age), mean(age, na.rm = TRUE), age)
+  )
+    
+```
+
+## case_when
+
+```{r}
+df %>% mutate(
+  assess = case_when(
+    score < 70 ~ "general",
+    score >= 70 & score < 80 ~ "good",
+    score >= 80 & score < 90 ~ "very_good",
+    score >= 90 ~ "best",
+    TRUE ~ "other"
+  )
+)
+```
+
+## scoped 函数
+
+在第 \@ref(dplyr) 章介绍了dplyr的一些函数（`mutate()`, `select()`等等），事实上，这些函数加上后缀
+`_all, _at, _if`，形成三组变体函数，可以方便对**特定的子集**进行操作。比如
+
+- 对数据框所有列操作，可以用`_all`
+- 对数据框指定的几列操作，可以用`_at`
+- 对数据框符合条件的几列进行操作，可以用`_if`
+
+| Operate   | _all          | _at          | _if          |
+|-----------|---------------|--------------|--------------|
+| `select()`    | `select_all()`    | `select_at()`    | `select_if()`    |
+| `mutate()`    | `mutate_all()`    | `mutate_at()`    | `mutate_if()`    |
+| `rename()`    | `rename_all()`    | `rename_at()`    | `rename_if()`    |
+| `arrange()`   | `arrange_all()`   | `arrange_at()`   | `arrange_if()`   |
+| `filter()`    | `filter_all()`    | `filter_at()`    | `filter_if()`    |
+| `distinct()`  | `distinct_all()`  | `distinct_at()`  | `distinct_if()`  |
+| `group_by()`  | `group_by_all()`  | `group_by_at()`  | `group_by_if()`  |
+| `summarise()` | `summarise_all()` | `summarise_at()` | `summarise_if()` |
+| `map()`       | `map_all()`       | `map_at()`       | `map_if()`       |
+| `modify()`    | `modify_all()`    | `modify_at()`    | `modify_if()`    |
+
+
+下面选取其中几个函数加以说明
+
+### mutate_if
+
+```{r}
+df_iris <- iris %>%
+  head(5)
+
+df_iris
+```
+
+```{r}
+df_iris %>% mutate_if(is.double, as.integer)
+```
+
+可以一次性增加多列
+```{r}
+df_iris %>% mutate_if(is.numeric, list(scale, log))
+```
+
+也可以把函数放在list()中，用 Purrr-style lambda 形式写出
+```{r}
+df_iris %>% mutate_if(is.numeric, list(~ scale(.), ~ log(.)))
+```
+
+
+
+###  select_if()
+
+
+```{r}
+df <- tibble::tibble(
+  x = letters[1:3],
+  y = c(1:3),
+  z = c(0, 0, 0)
+)
+df
+```
+
+
+```{r}
+df %>% select_if(is.numeric)
+```
+
+```{r}
+df %>% select_if(~ n_distinct(.) > 2)
+```
+
+
+`select_if` 多个条件的情况
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) | is.character(.)))
+)
+```
+
+
+```{r}
+df %>% select_if(
+  ~ (is.numeric(.) | is.character(.))
+)
+```
+
+
+```{r}
+to_keep <- function(x) is.numeric(x) | is.character(x)
+df %>% select_if(to_keep)
+```
+
+
+
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) && sum(.) > 2))
+)
+```
+
+
+```{r}
+df %>% select_if(
+  list(~ (is.numeric(.) && mean(.) > 1))
+)
+```
+
+
+我们也可以写成函数的形式
+```{r}
+to_want <- function(x) is.numeric(x) && sum(x) > 3
+
+df %>% select_if(to_want)
+```
+
+
+## summarise_if
+
+```{r, message=FALSE, warning=FALSE}
+msleep <- ggplot2::msleep
+msleep %>%
+  group_by(vore) %>%
+  summarise_all(~ mean(., na.rm = TRUE))
+```
+
+
+```{r}
+msleep <- ggplot2::msleep
+msleep %>%
+  group_by(vore) %>%
+  # summarise_if(is.numeric, ~mean(., na.rm = TRUE))
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+```
+
+
+## filter_if()
+
+
+事实上，filter已经很强大了，有了scoped函数，就如虎添翼了
+
+
+```{r}
+msleep <- ggplot2::msleep
+msleep %>%
+  select(name, sleep_total) %>%
+  filter(sleep_total > 18)
+```
+
+
+```{r}
+msleep %>%
+  select(name, sleep_total) %>%
+  filter(between(sleep_total, 16, 18))
+```
+
+
+```{r}
+msleep %>%
+  select(name, sleep_total) %>%
+  # filter(near(sleep_total, 17,  tol=sd(sleep_total)))
+  filter(near(sleep_total, mean(sleep_total), tol = 0.5 * sd(sleep_total)))
+```
+
+
+mtcars是 R内置数据集，记录了32种不同品牌的轿车的的11个属性
+
+```{r, layout = "l-body-outset"}
+mtcars %>% rmarkdown::paged_table()
+```
+
+
+`filter_if()`配合`all_vars(), any_vars()`函数，可以完成很酷的工作.
+比如，要求一行中所有变量的值都大于150
+```{r}
+mtcars %>% filter_all(all_vars(. > 150))
+```
+
+
+比如，要求一行中至少有一个变量的值都大于150
+```{r}
+# Or the union:
+mtcars %>% filter_all(any_vars(. > 150))
+```
+
+
+
+
+```{r}
+# You can vary the selection of columns on which to apply the predicate.
+# filter_at() takes a vars() specification:
+mtcars %>% filter_at(vars(starts_with("d")), any_vars((. %% 2) == 0))
+```
+
+
+
+
+`filter_if(.tbl, .predicate, .vars_predicate)` 相对复杂点，我这里多说几句。
+
+filter_if() 有三个参数：
+
+- .tbl, 数据框
+- .predicate, 应用在列上的函数，一般作为列的选择条件
+- .vars_predicate, 应用在一行上的函数，通过 `all_vars(), any_vars()`返回值决定是否选取该行。
+
+
+```{r}
+# And filter_if() selects variables with a predicate function:
+# filter_if(.tbl, .predicate, .vars_predicate)
+# mtcars %>% map_df(~ all(floor(.) == .) )
+# mtcars %>% select_if( ~ all(floor(.) == .) )
+
+mtcars %>% filter_if(~ all(floor(.) == .), all_vars(. != 0))
+```
+所以这里是，先通过`.predicate = ~ all(floor(.) == .)` 选取变量值为整数的列，然后再看选取的这些列的行方向，如果每一行的值`.vars_predicate = all_vars(. != 0)` ，都不为0，就保留下来，否则过滤掉。
+
+简单点说，这段代码的意思，**数值全部为整数的列，不能同时为0**
+
+
+
+
+
+
+## group_by
+
+`group_by()` 用的很多，所以要多讲讲
+
+```{r}
+mtcars %>% group_by(cyl)
+```
+
+
+```{r}
+mtcars %>% group_by_at(vars(cyl))
+```
+
+
+```{r}
+# Group a data frame by all variables:
+mtcars %>% group_by_all()
+```
+
+
+```{r}
+# Group by variables selected with a predicate:
+iris %>% group_by_if(is.factor)
+```
+
+
+
+
+
+### group_split(), group_map(), group_modify()
+
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  group_split()
+```
+
+简单点写，就是
+```{r}
+iris %>%
+  group_split(Species)
+```
+
+
+
+
+
+
+
+如果使用`group_split()`, 注意分组后，返回的是列表
+```{r}
+iris %>%
+  group_split(Species)
+```
+
+
+既然是列表，当然想到用前面讲到的`purrr::map()`家族
+```{r}
+iris %>%
+  group_split(Species) %>%
+  map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+
+```{r}
+iris %>%
+  group_split(Species) %>%
+  map_df(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+上面这个代码，数据框分割成list, 处理完后再合并成数据框，难道不觉得折腾么？ 为什么直接点？
+tidyverse不会让我们失望的，先看看`group_map()`
+```{r}
+## The result of .f should be a data frame(.f 必须返回数据框)
+## `group_map()` return a list of tibble(返回元素均为df的一个列表list(df1,df2,df3))
+iris %>%
+  group_by(Species) %>%
+  group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+数据框进来，然后分组，依次处理成一个个数据框，最后以列表形式（a list of tibble）输出。
+
+
+
+`group_modify()` 才是真正意义上的"数据框进、数据框出"。
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  group_modify(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+```
+
+
+
+
+
+
+为了大家方便查阅和记忆，我总结下表
+
+
+
+| 函数 | 说明 | 常用组合 | 返回值 | 要求 |
+|----------|-------------|-------------------|------------------|---------|
+| map() | 列表进、列表出 | df %>% <br>group_split() %>% <br>map() | list |  |
+| map_df() | 列表进、数据框出 | df %>% <br>group_split() %>% <br>map_df() | df |  |
+| group_map() | 数据框进、列表出 | df %>% <br>group_by() %>% <br>group_map() | 返回list(df1, df2, ...) | .f返回df |
+| group_modify() | 数据框进、数据框出 | df %>% <br>group_by() %>% <br>group_modify() | 返回grouped tibble | .f返回df |
+|  |  |  |  |  |
+| walk | 列表进 | df %>% <br>group_split() %>%<br>walk() | side effects |  |
+| group_walk() | 数据框进 | df %>% <br>group_by() %>% <br>group_walk() | side effects |  |
+
+
+
+### 其他group函数
+group_nest(), group_data(), group_keys(), group_rows()
+
+
+
+
+
+## 列名清理
+
+
+数据框的列名，不要用有空格和中文。
+如果拿到的原始数据中列比较多，手动修改麻烦，可以使用`janitor::clean_names()`函数
+```{r}
+library(readxl)
+library(janitor) # install.packages("janitor")
+
+roster_raw <- read_excel(here::here("demo_data", "dirty_data.xlsx"))
+
+glimpse(roster_raw)
+```
+
+
+
+```{r}
+roster <- roster_raw %>%
+  clean_names()
+
+glimpse(roster)
+```
+
+
+
+
+
+## 缺失值检查与处理
+
+
+
+### purrr & dplyr 技巧
+```{r message=FALSE, warning=FALSE}
+library(purrr)
+airquality %>% map(~ sum(is.na(.)))
+```
+
+
+```{r}
+airquality %>%
+  map_df(~ sum(is.na(.)))
+```
+
+
+```{r}
+airquality %>%
+  summarise_at(2:3, ~ sum(is.na(.)))
+```
+
+
+
+### 缺失值替换
+```{r message=FALSE, warning=FALSE}
+airquality %>%
+  mutate_all(funs(replace(., is.na(.), 0))) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r message=FALSE, warning=FALSE} 
+airquality %>%
+  mutate_all(replace_na, replace = 0) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r message=FALSE, warning=FALSE} 
+airquality %>%
+  mutate_if(is.numeric, replace_na, replace = 0) %>% 
+  rmarkdown::paged_table()
+```
+
+
+```{r}
+airquality %>%
+  mutate_all(as.numeric) %>%
+  mutate_all(~ coalesce(., 0)) %>% 
+  rmarkdown::paged_table()
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+tibble(
+  y = c(1, 2, NA, NA, 5),
+  z = c(NA, NA, 3, 4, 5)
+) %>%
+  mutate_all(~ coalesce(., 0))
+```
+
+
+
+
+
+## 标准化
+
+
+```{r include=FALSE}
+df_mtcars <- mtcars %>%
+  rownames_to_column(var = "rowname") %>%
+  mutate(
+    cyl = factor(cyl),
+    vs = factor(vs),
+    am = factor(am),
+    gear = factor(gear),
+    carb = factor(carb)
+  ) %>%
+  as_tibble()
+```
+
+
+
+```{r}
+df_mtcars
+```
+
+
+
+```{r}
+df_mtcars %>% select_if(funs(is.numeric))
+```
+
+
+
+```{r}
+# way 1
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), ~ scale(., center = T, scale = T))
+```
+
+
+```{r}
+# way 2
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), funs((. - mean(.)) / sd(.)))
+```
+
+
+
+```{r}
+# way 3
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+df_mtcars %>%
+  mutate_at(vars(mpg, disp), ~ func(.))
+```
+
+
+如果所有的列，都是数值型
+
+```{r, error=TRUE}
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+
+df_mtcars %>% mutate_all(~ func(.))
+```
+
+-  但这里数据中还有其他类型（fct, chr），所以这里 `mutate_all()` 会报错。
+-  这种情形，用`mutate_if()`
+
+
+
+
+```{r}
+func <- function(x) (x - min(x)) / (max(x) - min(x))
+
+df_mtcars %>% mutate_if(is.numeric, ~ func(.))
+```
+
+
+
+```{r}
+funs <- list(
+  centered = mean, # Function object
+  scaled = ~ . - mean(.) / sd(.) # Purrr-style lambda
+)
+
+iris %>% 
+  mutate_if(is.numeric, funs) %>% 
+  rmarkdown::paged_table()
+```
+
+
+
+<!-- ## ggplot2 未了情 -->
+
+<!-- ### 中文字体 -->
+
+<!-- 有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包 -->
+
+<!-- ```{r, eval=funs} -->
+<!-- library(ggplot2) -->
+<!-- ggplot(data = mpg) +  -->
+<!-- 	geom_point(mapping = aes(x = displ, y = hwy)) + -->
+<!-- 	ggtitle("这是默认的龙泉驿字体") -->
+
+<!-- ## maybe, 保存为pdf图，才能看到有效字体 -->
+<!-- ggsave("showtext-example-0.pdf", width = 7, height = 4, dpi = 200)   -->
+<!-- ``` -->
+
+
+
+
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- library(showtext) -->
+<!-- showtext_auto() -->
+
+<!-- font_families() -->
+<!-- font_paths() -->
+<!-- font_files() -->
+
+<!-- ## Add fonts that are available on Windows(默认路径"C:\\Windows\\Fonts") -->
+<!-- font_add("heiti", "simhei.ttf") -->
+<!-- font_add("constan", "constan.ttf", italic = "constani.ttf") -->
+<!-- font_add("kaishu", "simkai.ttf") -->
+<!-- #font_add("Noto", "NotoSansCJKsc-Regular.otf") -->
+<!-- font_add("Yahei", "Yahei.ttf")    -->
+
+<!-- # 也可放在指定的目录(尽量英文) -->
+<!-- # https://github.com/yixuan/showtext/issues/18 -->
+<!-- font_add("fzfsj",  here::here("myfont", "fzfsj.ttf")) -->
+<!-- font_add("fzxbsj", here::here("myfont", "FZXBSJW.ttf")) -->
+<!-- font_add("maoti",  here::here("myfont", "maoti.ttf")) -->
+<!-- font_add("fzshuliu", here::here("myfont", "fzshuliu.ttf")) -->
+<!-- font_families() -->
+
+<!-- ## maybe, 保存为pdf图，才能看到有效字体 -->
+<!-- ggplot(data = mpg) +  -->
+<!-- 	geom_point(mapping = aes(x = displ, y = hwy)) + -->
+<!-- 	ggtitle("这是我的小标宋简体") + -->
+<!-- 	theme( -->
+<!-- 		plot.title = element_text(family = "fzxbsj") -->
+<!-- 	) + -->
+<!-- 	geom_text(aes(x = 5, y = 40), label = "方正仿宋简体",  -->
+<!-- 			  family = "fzfsj") + -->
+<!-- 	geom_text(aes(x = 5, y = 38), label = "这是我的雅黑",  -->
+<!-- 			  family = "Yahei") + -->
+<!-- 	geom_text(aes(x = 5, y = 35), label = "方正楷书简体",  -->
+<!-- 			  family = "kaishu") + -->
+<!--  	geom_text(aes(x = 5, y = 30), label = "草檀斋毛泽东字体",  -->
+<!--  			  family = "maoti") + -->
+<!--  	geom_text(aes(x = 5, y = 28), label = "方正苏新诗柳楷简体",  -->
+<!--  			  family = "fzshuliu")  -->
+
+
+<!-- #ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)   -->
+<!-- ``` -->
+
+
+
+<!-- ### latex公式 -->
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- library(ggplot2) -->
+<!-- library(latex2exp) -->
+
+<!-- ggplot(mpg, aes(x = displ, y = hwy)) + -->
+<!--   geom_point() +  -->
+<!--   annotate("text", x = 4, y = 40,  -->
+<!--   		 label = TeX("$\\alpha^2 + \\theta^2 = \\omega^2 $"),  -->
+<!--   		 size = 9) + -->
+<!--   labs(title = TeX("The ratio of 1 and 2 is $\\,\\, \\frac{1}{2}$"),  -->
+<!--            x = TeX("$\\alpha$"), -->
+<!--            y = TeX("$\\alpha^2$") ) -->
+<!-- ``` -->
+
+
+
+
+
