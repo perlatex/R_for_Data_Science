@@ -202,6 +202,7 @@ gapdata %>%
 
 
 ```{r}
+# geom_bar vs stat_count
 gapdata %>%
   ggplot(aes(x = continent)) + stat_count()
 ```
@@ -239,7 +240,7 @@ gapdata %>%
 ```{r}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
-  geom_histogram()
+  geom_histogram() # 对应的stat_bin()
 ```
 
 
@@ -340,7 +341,8 @@ gapdata %>%
 ```
 
 
-直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`
+直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`, `stat(level)`
+
 ```{r}
 gapdata %>%
   filter(continent != "Oceania") %>%
@@ -450,7 +452,7 @@ gapdata %>%
 ```
 
 
-### ridges图
+### 山峦图
 
 常用于一个离散变量 + 一个连续变量
 ```{r}
@@ -565,7 +567,7 @@ gapdata %>%
   geom_point()
 ```
 
-###  Cleveland dot plot
+###  点线图
 ```{r}
 gapdata %>%
   filter(continent == "Asia" & year == 2007) %>%
@@ -725,6 +727,18 @@ gapdata %>%
   geom_point()
 ```
 
+
+```{r}
+gapdata %>%
+  group_by(continent, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  
+  ggplot(aes(x = year, y = continent, size = mean_lifeExp)) +
+  geom_point(shape = 21, color = "red", fill = "white") +
+  scale_size_continuous(range = c(7, 15)) +
+  geom_text(aes(label = round(mean_lifeExp, 2)), size = 3, color = "black") +
+  theme(legend.position = "none")
+```
 
 ## 主题风格
 
@@ -949,6 +963,17 @@ p1 + p2
 
 ```{r}
 p1 / p2
+```
+
+
+```{r}
+p1 + p2 + 
+  plot_annotation(
+  tag_levels = 'A',
+  title = 'The surprising truth about mtcars',
+  subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
+  caption = 'Disclaimer: None of these plots are insightful'
+)
 ```
 
 patchwork 使用方法很简单，根本不需要记

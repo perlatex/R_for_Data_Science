@@ -120,11 +120,10 @@ knitr::include_graphics("images/rbook1.png")
    - 代码是什么？
    - 报错信息是什么？
 
-4、课件所有数据（下载后解压）
+4、课件所有数据
+  <https://github.com/perlatex/R_for_Data_Science/tree/master/demo_data>
 
-```{r echo=FALSE}
-xfun::embed_dir('./demo_data/', text = 'Download full data')
-```
+
 
 ## RYouWithMe {-}
 
