@@ -321,12 +321,14 @@ install.packages(c("ggplot2", "devtools", "dplyr"))
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 my_packages <- c("ggplot2", "dplyr", "tidyr", "stringr", "widyr", "ggRadar",
-                 "ggiraph", "ggiraphExtra", "ggraph", "tidygraph", "googlevis", 
+                 "ggraph", "tidygraph", "patchwork", "ggridges", "here", 
+                 "brms", "sf", "rvest", "rmarkdown", "cowplot", "gapminder",
                  "broom", "modelr", "knitr", "rlang", "tidytext", "wordcloud2", 
-                 "tibbletime", "corrr", "devtools")
+                 "tibbletime",  "scales", "devtools")
 
 #install.packages(my_packages, repos = "http://cran.rstudio.com")
 ```
+
 
 
 

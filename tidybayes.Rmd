@@ -6,6 +6,7 @@
 > --- ― Yogi Bhajan
 
 
+
 ## Bayesian New Statistics 
 
 ```{r message = FALSE, warning = FALSE}
@@ -17,5 +18,59 @@ library(purrr)
 ```
 
 
+## The mechanics of MCMC.
+
+这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse
+
+
+```{r out.width = '50%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/pi.jpg")
+```
+
+
+
+```{r}
+n <- 50000
+
+set.seed(2019)
+points <- tibble("x" = runif(n), "y" = runif(n))
+```
+
+
+
+
+
+```{r}
+points <- points %>% 
+    mutate(inside = map2_dbl(.x = x, .y = y, ~if_else(.x**2 + .y**2 < 1, 1, 0))) %>% 
+    rowid_to_column("N")
+```
+
+正方形的面积是1，圆的面积是$\pi r^2 = \frac{1}{4} \pi$，如果知道两者的比例，就可以估算$\pi$
+
+```{r}
+points <- points %>% 
+    mutate(estimate = 4*cumsum(inside)/N)
+```
+
+```{r}
+points %>% tail()
+```
+
+
+```{r}
+points %>% 
+	ggplot() + 
+    geom_line(aes(y = estimate, x = N), colour = "#82518c") + 
+    geom_hline(yintercept = pi) 
+```
+
+
+## Metropolis-Hastings：
+
+neighbour of the current state
+
+## Hamiltonian Monte Carlo：
+冰球
 
 

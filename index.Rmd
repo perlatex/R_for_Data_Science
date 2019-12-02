@@ -97,8 +97,14 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(r4psy) 章介绍心理学中的应用。
 
 
+2、**课件源代码和数据**
 
-2、**关于课程目标**
+- <https://github.com/perlatex/R_for_Data_Science>
+- <https://github.com/perlatex/R_for_Data_Science/tree/master/demo_data>
+
+
+
+3、**关于课程目标**
 
 - 课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用
 
@@ -111,7 +117,7 @@ knitr::include_graphics("images/rbook1.png")
   
 
 
-3、**关于如何提问**
+4、**关于如何提问**
 
 有的同学，这样一上来就问：**老师，我的代码怎么运行不出来呢？**或者图省事，干脆手机拍个照片一发。
 
@@ -120,8 +126,8 @@ knitr::include_graphics("images/rbook1.png")
    - 代码是什么？
    - 报错信息是什么？
 
-4、课件所有数据
-  <https://github.com/perlatex/R_for_Data_Science/tree/master/demo_data>
+
+
 
 
 
