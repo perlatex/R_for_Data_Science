@@ -23,6 +23,7 @@ rmd_files: [
   "purrr.Rmd",
   "eda.Rmd",
   "ggplot2.Rmd",
+  "tidyverse_tips.Rmd",
 
   "sampling.Rmd",
   "tidystats.Rmd",

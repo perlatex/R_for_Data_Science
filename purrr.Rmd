@@ -164,11 +164,14 @@ exams %>% map_df(mean)
 knitr::include_graphics("images/map_function1.png")
 ```
 
-- 第一个参数是列表（数据框是列表的一种特殊形式，因此数据框也是可以的）
-- 第二个参数是函数，这个函数会**应用到列表的每一个元素**
+- 第一个参数是向量或列表（数据框是列表的一种特殊形式，因此数据框也是可以的）
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/map_fun.png")
+```
 
 
-`map`函数执行过程如下
+- 第二个参数是函数，这个函数会**应用到列表的每一个元素**，比如这里`map`函数执行过程如下
 ：
 ```{r out.width = '90%', echo = FALSE}
 knitr::include_graphics("images/map_function2.png")
@@ -223,16 +226,51 @@ exams %>% map_df(~ . - mean(.))
 ```
 
 
+总之，有三种方法将函数传递给`map()`
+
+
+- 直接传递 
+```{r, eval=FALSE}
+map(.x, 
+    mean, 
+    na.rm = TRUE
+  )
+```
+
+- 匿名函数 
+
+```{r, eval=FALSE}
+map(.x, 
+    funciton(.x) {
+      mean(.x, 
+           na.rm = TRUE)
+      }
+    )
+```
+
+- 使用 `~`  
+
+```{r, eval=FALSE}
+map(.x, 
+    ~ mean(.x, 
+           na.rm = TRUE)
+    )
+```
+
+
+
 
 
 ## 延伸阅读
 
-1、看手册`?purrr::modify()`， 思考下它与`map()`的区别
+1、阅读Hadley Wickham的[r4ds](https://r4ds.had.co.nz/)这本书第16章。
+
+2、看手册`?purrr::modify()`， 思考下它与`map()`的区别
 ```{r, eval=FALSE}
 exams %>% modify(~ . - mean(.))
 ```
 
-2、他们的区别哪里？函数能否互换？
+3、他们的区别哪里？函数能否互换？
 ```{r, eval=FALSE}
 mtcars %>% map_chr(typeof)
 mtcars %>% map_lgl(is.double)

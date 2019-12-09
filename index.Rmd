@@ -80,6 +80,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(purrr) 章介绍函数式编程
    - 第 \@ref(eda) 章介绍探索性数据分析   
    - 第 \@ref(ggplot2) 章再讲ggplot2
+   - 第 \@ref(tips) 章介绍tidyverse中常用技巧
 - 建模篇
    - 第 \@ref(sampling) 章介绍模拟与抽样
    - 第 \@ref(tidystats) 章介绍方差分析
@@ -88,7 +89,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(lmm) 章介绍线性混合模型
    - 第 \@ref(tidybayes) 章介绍贝叶斯分析
 - 应用篇
-   - 第 \@ref(advR) 章介绍tidyverse中数据操作进阶
+   - 第 \@ref(advR) 章介绍tidyverse进阶
    - 第 \@ref(rowwise) 章介绍tidyverse中行方向的操作
    - 第 \@ref(dot) 章介绍tidyverse中的dot
    - 第 \@ref(rvest) 章介绍网页爬虫

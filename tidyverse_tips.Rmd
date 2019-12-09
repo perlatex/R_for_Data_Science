@@ -1,0 +1,617 @@
+# tidyverse中的若干技巧 {#tips}
+
+聊聊tidyverse中常用的一些小技巧
+
+> "most of data science is counting, and sometimes dividing"
+>  --- ― Hadley Wickham
+
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+##  From `gather()` to `pivot()`
+
+make data tidy
+
+```{r out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/import_datatype01.png")
+```
+
+VARIABLE, OBSERVATION, VALUE
+
+- Each variable is a column
+- Each observation is a row
+- Each type of observational unit is a table
+
+
+
+
+
+```{r}
+plant_heigt <- data.frame(
+  Day = 1:5,
+  A = c(0.7, 1.0, 1.5, 1.8, 2.2),
+  B = c(0.5, 0.7, 0.9, 1.3, 1.8)
+)
+```
+
+
+
+```{block, type="danger"}
+大家想想，用不同的颜色画出两种植物生长曲线，怎么写语句?
+```
+
+
+
+
+```{r, eval = FALSE}
+plant_heigt %>% 
+  ggplot(aes(x = Day, y = ___, color = ___)) +
+  geom_line()
+```
+
+
+想用上面的语句，数据就得变形。那么怎么变形了？ 
+
+```{r out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/make_data_tidy.png")
+```
+
+
+```{r, eval=FALSE}
+melted <- gather(plant_heigt, variable, value, 2:3)
+
+## Column names instead of indices
+melted <- gather(plant_heigt, variable, value, variable1, variable2)
+
+## Excluding instead of including
+melted <- gather(plant_heigt, variable, value, -1)
+
+## Excluding using column name
+melted <- gather(plant_heigt, variable, value, -id)
+```
+
+
+```{r out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/tidyr-fig.png")
+```
+
+从2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增了一组函数`pivot_longer()/pivot_wider()`，用来补充和完善原来的`gather()/spread()` 
+
+
+* `gather()/pivot_longer `  it makes “wide” data longer.
+* `spread()/pivot_wider`  it makes “long” data wider.
+
+
+所以现在使用`pivot_longer()`函数
+```{r}
+long <- pivot_longer(plant_heigt, 2:3,
+  names_to = "plant",
+  values_to = "height"
+)
+long
+```
+
+
+```{r}
+long %>% 
+  ggplot(aes(x = Day, y = height, color = plant)) +
+  geom_line()
+```
+
+```{r}
+wide <- long %>% 
+  pivot_wider(
+  names_from = "plant",
+  values_from = "height"
+)
+wide
+```
+
+
+## count()
+
+我之前多次用到`count()`函数，其功能就是统计某个变量中**各组**出现的次数
+
+```{r}
+df <- tibble(
+  name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
+  type = c("english", "math", "english", "math", "english", "math"),
+  score = c(60.2, 90.5, 92.2, 98.8, 82.5, 74.6)
+)
+
+df
+```
+
+```{r}
+df %>% count(name)
+```
+
+
+
+
+```{r}
+df %>% count(name,
+  sort = TRUE,
+  wt = score,
+  name = "total_score"
+)
+```
+
+
+如果不用`count()`，用`group_by() + summarisze()`写
+```{r}
+df %>%
+  group_by(name) %>%
+  summarise(
+    n = n(),
+    total_score = sum(score, na.rm = TRUE)
+  ) %>%
+  arrange(desc(total_score))
+```
+
+
+## 在 count() 中创建新变量
+
+可以在`count()`里构建新变量，并利用这个新变量完成统计
+```{r}
+df %>% count(range = 10 * (score %/% 10))
+```
+
+
+
+
+## add_count()
+
+想增加一列，代表每人参加的考试次数
+
+```{r}
+df %>%
+  group_by(name) %>%
+  mutate(n = n()) %>%
+  ungroup()
+```
+
+
+可以有更简单的方法
+```{r}
+df %>% add_count(name)
+```
+
+
+
+
+
+
+## nth(), first(),  last()
+
+```{r}
+c("a", "c", "d", "k") %>% nth(3)
+```
+
+
+```{r}
+c("a", "c", "d", "k") %>% first()
+```
+
+
+用在数据框中，同样可以使用
+```{r}
+df %>%
+  filter(score == first(score))
+```
+
+
+```{r}
+df %>%
+  group_by(name) %>%
+  filter(score == last(score))
+```
+
+## 列变量重新排序
+
+比如想把score放在第一列
+```{r}
+df %>%
+  select(score, everything())
+```
+
+这个方法，对列变量较多的情形非常适用。
+
+
+## if_else
+
+
+```{r}
+df %>% mutate(
+  assess = if_else(score > 85, "very_good", "good")
+)
+```
+
+
+
+
+## case_when
+
+```{r}
+df %>% mutate(
+  assess = case_when(
+    score < 70 ~ "general",
+    score >= 70 & score < 80 ~ "good",
+    score >= 80 & score < 90 ~ "very_good",
+    score >= 90 ~ "best",
+    TRUE ~ "other"
+  )
+)
+```
+
+
+
+## 找出前两名
+```{r}
+df %>%
+  top_n(2, score)
+```
+
+
+
+## drop_na()
+
+```{r}
+dt <- tribble(
+  ~x, ~y,
+  1, NA,
+  2, NA,
+  NA, -3,
+  NA, -4,
+  5, -5
+)
+
+dt
+```
+
+
+```{r}
+dt %>% drop_na()
+# dt %>% drop_na(x)
+```
+
+
+
+## replace_na()
+```{r}
+dt <- tribble(
+  ~x, ~y,
+  1, NA,
+  2, NA,
+  NA, -3,
+  NA, -4,
+  5, -5
+)
+
+dt %>% mutate(x = replace_na(x, 0))
+```
+
+之前讲正则表达式也有类似的函数`stringr::str_replace_na()`，
+
+
+
+## coalesce
+
+```{r}
+dt <- tribble(
+  ~x, ~y,
+  1, NA,
+  2, NA,
+  NA, -3,
+  NA, -4,
+  5, -5
+)
+
+dt %>% mutate(
+  z = coalesce(x, 0)
+  # z = coalesce(x, y)
+)
+```
+
+有时候，我们可能为了减少信息丢失，想填充NA
+```{r}
+dt <- tribble(
+  ~name, ~age,
+  "a", 1,
+  "b", 2,
+  "c", NA,
+  "d", 2
+)
+
+
+dt %>%
+  mutate(
+    age_adj = ifelse(is.na(age), mean(age, na.rm = TRUE), age)
+  )
+```
+
+
+
+## summarise() 生成 list-column
+summarize()会生成一个value，
+
+```{r}
+library(gapminder)
+gapminder %>%
+  group_by(continent) %>%
+  summarise(
+    avg_gdpPercap = mean(gdpPercap)
+  )
+```
+
+summarize()也可以生成一个list，
+
+```{r}
+library(gapminder)
+gapminder %>%
+  group_by(continent) %>%
+  summarise(test = list(t.test(gdpPercap))) %>% # 单样本的t检验
+
+  mutate(tidied = map(test, broom::tidy)) %>%
+  unnest(tidied) %>%
+  ggplot(aes(estimate, continent)) +
+  geom_point() +
+  geom_errorbarh(aes(
+    xmin = conf.low,
+    xmax = conf.high
+  ))
+```
+
+
+
+
+以下两种方法，同样完成上面的工作，具体方法会在第 \@ref(advR) 章介绍
+```{r, eval=FALSE}
+gapminder %>%
+  group_nest(continent) %>%
+  mutate(test = map(data, ~ t.test(.x$gdpPercap))) %>%
+  mutate(tidied = map(test, broom::tidy)) %>%
+  unnest(tidied)
+```
+
+
+```{r, eval=FALSE}
+gapminder %>%
+  group_by(continent) %>%
+  group_modify(
+    ~ broom::tidy(t.test(.x$gdpPercap))
+  )
+```
+
+
+
+
+## count() + fct_reorder() + geom_col() + coord_flip()
+
+最好用的四件套
+
+```{r}
+gapminder %>%
+  distinct(continent, country) %>%
+  count(continent) %>%
+  ggplot(aes(x = continent, y = n)) +
+  geom_col()
+```
+
+```{r}
+gapminder %>%
+  distinct(continent, country) %>%
+  count(continent) %>%
+  ggplot(aes(x = fct_reorder(continent, n), y = n)) +
+  geom_col() +
+  coord_flip()
+```
+
+## scale_x/y_log10
+
+现实世界很多满足对数规则
+
+- 各国人均GDP
+- 各国人口
+- 不同人士的收入
+- 公司的营业额
+
+
+```{r}
+gapminder %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+
+
+```{r}
+gapminder %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  scale_x_log10() # A better way to log transform
+```
+
+
+
+## unite
+
+```{r}
+df <- tribble(
+   ~school, ~class,
+  "chuansi", "01",
+  "chuansi", "02",
+  "shude", "07",
+  "shude", "08",
+  "huapulu", "101",
+  "huapulu", "103"
+)
+
+df
+```
+
+```{r}
+df_united <- df %>% 
+   unite(school, class, col = "school_plus_class", sep = "_", remove = FALSE)
+
+df_united
+```
+
+
+
+## separate()
+
+```{r}
+df_united %>% separate(school_plus_class, into = c("sch", "cls"), sep = "_", remove = F)
+```
+
+
+
+
+
+如果每行不是都恰好分隔成两部分呢？就需要`tidyr::extract()`, 使用方法和`tidyr::separate()`类似
+
+```{r}
+df <- tribble(
+   ~school_class,
+  "chuansi_01",
+  "chuansi_02_03",
+  "shude_07_0",
+  "shude_08_0",
+  "huapulu_101_u",
+  "huapulu_103__p"
+)
+df
+```
+
+
+```{r}
+df %>% separate(school_class, 
+                into = c("sch", "cls"), 
+                sep = "_", 
+                extra = "drop",
+                remove = F)
+```
+
+
+## extract()
+
+有时候分隔符搞不定的，可以用正则表达式，讲捕获的每组弄成一列
+```{r}
+df <- tibble(x = c("1-12week", "1-10wk", "5-12w", "01-05weeks"))
+df
+```
+
+
+
+
+```{r}
+df %>% extract(
+  x,
+  c("start", "end", "letter"), "(\\d+)-(\\d+)([a-z]+)",
+  remove = FALSE
+)
+```
+
+
+
+
+## crossing()  
+
+先看看效果
+```{r}
+crossing(x = c("F", "M"), y = c("a", "b"), z = c(1:2))
+```
+
+
+这个函数在**数据模拟**的时候很方便，
+```{r}
+crossing(trials = 1:10, m = 1:5) %>%
+  group_by(trials) %>%
+  mutate(
+    guess = sample.int(5, n()),
+    result = m == guess
+  ) %>%
+  summarise(score = sum(result) / n())
+```
+
+
+
+再来一个例子
+```{r}
+sim <- tribble(
+  ~f, ~params,
+  "rbinom", list(size = 1, prob = 0.5, n = 10)
+)
+sim %>%
+  mutate(sim = invoke_map(f, params))
+```
+
+
+
+```{r}
+rep_sim <- sim %>%
+  crossing(rep = 1:1e5) %>%
+  mutate(sim = invoke_map(f, params)) %>%
+  unnest(sim) %>%
+  group_by(rep) %>%
+  summarise(mean_sim = mean(sim))
+
+head(rep_sim)
+```
+
+
+
+
+```{r, fig.width= 6, fig.height= 4}
+rep_sim %>% 
+  ggplot(aes(x = mean_sim)) +
+  geom_histogram(binwidth = 0.05,  fill = "skyblue") +
+  theme_classic()
+```
+
+
+也可用在较复杂的模拟，比如下面介绍的**大数极限定理**， 
+```{r}
+sim <- tribble(
+  ~n_tosses, ~f, ~params,
+     10, "rbinom", list(size = 1, prob = 0.5, n = 15),
+     30, "rbinom", list(size = 1, prob = 0.5, n = 30),
+    100, "rbinom", list(size = 1, prob = 0.5, n = 100),
+   1000, "rbinom", list(size = 1, prob = 0.5, n = 1000),
+  10000, "rbinom", list(size = 1, prob = 0.5, n = 1e4)
+)
+sim_rep <- sim %>%
+  crossing(replication = 1:50) %>%
+  mutate(sims = invoke_map(f, params)) %>%
+  unnest(sims) %>%
+  group_by(replication, n_tosses) %>%
+  summarise(avg = mean(sims))
+```
+
+
+```{r, fig.width = 8,  fig.height = 6}
+sim_rep %>%
+  ggplot(aes(x = factor(n_tosses), y = avg)) +
+  ggbeeswarm::geom_quasirandom(color = "lightgrey") +
+  scale_y_continuous(limits = c(0, 1)) +
+  geom_hline(
+    yintercept = 0.5,
+    color = "skyblue", lty = 1, size = 1, alpha = 3 / 4
+  ) +
+  ggthemes::theme_pander() +
+  labs(
+    title = "50 Replicates Of Mean 'Heads' As Number Of Tosses Increase",
+    y = "mean",
+    x = "Number Of Tosses"
+  )
+```
+
+数值模拟我们会在第 \@ref(sampling) 章专门介绍。
+
+
+

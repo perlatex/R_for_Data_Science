@@ -1173,7 +1173,8 @@ ggplot(data = d, aes(x = x)) +
 >
 
 
-这是一个公园`r emo::ji("park")`地图和公园里松鼠`r emo::ji("squirrel")`数量的数据集
+
+这是一个公园[`r emo::ji("park")`]{style="font-size: 3em;"}地图和公园里松鼠[`r emo::ji("squirrel")`]{style="font-size: 4em;"}数量的数据集
 
 ```{r}
 nyc_squirrels <- read_csv("./demo_data/nyc_squirrels.csv")
@@ -1271,6 +1272,94 @@ nyc_squirrels %>%
   cowplot::theme_map(16) +
   theme(legend.position = "none")
 ```
+
+
+<!-- ## ggplot2 未了情 -->
+
+<!-- ### 中文字体 -->
+
+<!-- 有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包 -->
+
+<!-- ```{r, eval=funs} -->
+<!-- library(ggplot2) -->
+<!-- ggplot(data = mpg) +  -->
+<!-- 	geom_point(mapping = aes(x = displ, y = hwy)) + -->
+<!-- 	ggtitle("这是默认的龙泉驿字体") -->
+
+<!-- ## maybe, 保存为pdf图，才能看到有效字体 -->
+<!-- ggsave("showtext-example-0.pdf", width = 7, height = 4, dpi = 200)   -->
+<!-- ``` -->
+
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)
+library(showtext)
+showtext_auto()
+
+font_families()
+font_paths()
+font_files()
+
+## Add fonts that are available on Windows(默认路径"C:\\Windows\\Fonts")
+font_add("heiti", "simhei.ttf")
+font_add("constan", "constan.ttf", italic = "constani.ttf")
+font_add("kaishu", "simkai.ttf")
+#font_add("Noto", "NotoSansCJKsc-Regular.otf")
+font_add("Yahei", "Yahei.ttf")
+
+# 也可放在指定的目录(尽量英文)
+# https://github.com/yixuan/showtext/issues/18
+font_add("fzfsj",  here::here("myfont", "fzfsj.ttf"))
+font_add("fzxbsj", here::here("myfont", "FZXBSJW.ttf"))
+font_add("maoti",  here::here("myfont", "maoti.ttf"))
+font_add("fzshuliu", here::here("myfont", "fzshuliu.ttf"))
+font_families()
+
+## maybe, 保存为pdf图，才能看到有效字体
+ggplot(data = mpg) +
+	geom_point(mapping = aes(x = displ, y = hwy)) +
+	ggtitle("这是我的小标宋简体") +
+	theme(
+		plot.title = element_text(family = "fzxbsj")
+	) +
+	geom_text(aes(x = 5, y = 40), label = "方正仿宋简体",
+			  family = "fzfsj") +
+	geom_text(aes(x = 5, y = 38), label = "这是我的雅黑",
+			  family = "Yahei") +
+	geom_text(aes(x = 5, y = 35), label = "方正楷书简体",
+			  family = "kaishu") +
+ 	geom_text(aes(x = 5, y = 30), label = "草檀斋毛泽东字体",
+ 			  family = "maoti") +
+ 	geom_text(aes(x = 5, y = 28), label = "方正苏新诗柳楷简体",
+ 			  family = "fzshuliu")
+
+#ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)
+```
+
+
+
+### latex公式
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)
+library(latex2exp)
+
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  annotate("text", x = 4, y = 40,
+  		 label = TeX("$\\alpha^2 + \\theta^2 = \\omega^2 $"),
+  		 size = 9) +
+  labs(title = TeX("The ratio of 1 and 2 is $\\,\\, \\frac{1}{2}$"),
+           x = TeX("$\\alpha$"),
+           y = TeX("$\\alpha^2$") )
+```
+
+
+
+
 
 
 

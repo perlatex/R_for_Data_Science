@@ -309,7 +309,20 @@ nobel_winners %>%
   group_split(category) %>%
   map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
-      geom_density()
+      geom_density() +
+      ggtitle(.x$category)
+  )
+```
+
+
+也可以用强大的`group_by() + group_map()`组合，我们会在第 \@ref(advR) 章讲到
+```{r, eval=FALSE}
+nobel_winners %>% 
+  group_by(category) %>%
+  group_map(
+    ~ ggplot(data = .x, aes(x = prize_age)) +
+      geom_density() +
+      ggtitle(.y)
   )
 ```
 
@@ -426,6 +439,12 @@ nobel_winners %>%
   )
 ```
 
+
+
+```{r}
+nobel_winners %>% 
+  top_n(1, year(birth_date) - prize_year )
+```
 
 
 ## 平均年龄和获奖数量
