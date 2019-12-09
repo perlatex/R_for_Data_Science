@@ -10,7 +10,7 @@ library(sf)
 ## 链家网
 
 ```{r}
-urls <-	paste0("https://sh.lianjia.com/ershoufang/pg", seq_along(1:10))
+urls <-	paste0("https://sh.lianjia.com/ershoufang/pg", seq_along(1:2))
 
 
 scrape_house_info  <- function(url) {

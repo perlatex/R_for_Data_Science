@@ -1,0 +1,66 @@
+---
+title: "这是我的标题"
+author: "我的姓名"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document: 
+    extra_dependencies:
+      ctex: UTF8
+    fig_caption: yes
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+classoptions: "hyperref, 12pt, a4paper"    
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+
+# 今天的心情
+
+今天很冷，不知道说些什么，画个图吧
+```{r}
+library(ggplot2)
+data("midwest", package = "ggplot2")
+
+ggplot(midwest, aes(x = area, y = poptotal)) +
+  geom_point(aes(col = state, size = popdensity)) +
+  geom_smooth(method = "loess", se = F) +
+  xlim(c(0, 0.1)) +
+  ylim(c(0, 500000)) +
+  labs(
+    subtitle = "Area Vs Population",
+    y = "Population",
+    x = "Area",
+    title = "Scatterplot",
+    caption = "Source: midwest"
+  )
+```
+
+
+# 你知道我在等你吗？
+
+我们谈谈列表吧
+
+- 第一项
+- 第二项
+- 第三项
+
+
+## 听说你想插入漂亮的公式
+
+$$
+e^{\pi i} + 1 = 0
+$$
+ 
+The beautiful equation  is known as the Euler equation
+
+
+

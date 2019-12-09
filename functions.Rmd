@@ -1,6 +1,0 @@
-# 函数 {#functions}
-
-```{r}
-library(tidyverse)
-```
-

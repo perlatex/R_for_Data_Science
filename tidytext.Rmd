@@ -1,0 +1,9 @@
+# 文本挖掘 {#tidytext}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(tidytext)
+```
+
+

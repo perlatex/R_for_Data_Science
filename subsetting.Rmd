@@ -167,7 +167,7 @@ df[, "x", drop = FALSE]
 
 
 
-## tibble
+## 增强型数据框
 
 tibble是增强型的data.frame，选取tibble的行或者列，即使遇到单行或者单列的时候，数据也不会降维，总是返回tibble，即仍然是数据框的形式。
 
@@ -189,7 +189,8 @@ tb["x"]
 ```{r}
 tb[, "x"]
 ```
-除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)。
+除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)，我们会在第 \@ref(tibble) 章专门讲
+
 
 ## 本章代码
 

@@ -1,0 +1,294 @@
+---
+title: 'Going deeper with dplyr'
+author: "王小二 20190001"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    extra_dependencies:
+      ctex: UTF8
+    number_sections: yes
+classoptions: "hyperref, 12pt, a4paper"
+---
+
+
+# Loading dplyr and the nycflights13 dataset
+
+
+```{r}
+# load packages
+suppressMessages(library(dplyr))
+library(nycflights13)
+
+# print the flights dataset from nycflights13
+flights
+```
+
+
+# Choosing columns: select, rename
+
+```{r}
+# besides just using select() to pick columns...
+flights %>% select(carrier, flight)
+
+# ...you can use the minus sign to hide columns
+flights %>% select(-month, -day)
+```
+
+```{r results='hide'}
+# hide a range of columns
+flights %>% select(-(dep_time:arr_delay))
+
+# hide any column with a matching name
+flights %>% select(-contains("time"))
+```
+
+```{r}
+# pick columns using a character vector of column names
+cols <- c("carrier", "flight", "tailnum")
+flights %>% select(one_of(cols))
+```
+
+```{r}
+# select() can be used to rename columns, though all columns not mentioned are dropped
+flights %>% select(tail = tailnum)
+
+# rename() does the same thing, except all columns not mentioned are kept
+flights %>% rename(tail = tailnum)
+```
+
+
+# Choosing rows: filter, between, slice, sample_n, top_n, distinct
+
+```{r}
+# filter() supports the use of multiple conditions
+flights %>% filter(dep_time >= 600, dep_time <= 605)
+```
+
+```{r results='hide'}
+# between() is a concise alternative for determing if numeric values fall in a range
+flights %>% filter(between(dep_time, 600, 605))
+
+# side note: is.na() can also be useful when filtering
+flights %>% filter(!is.na(dep_time))
+```
+
+
+```{r}
+# slice() filters rows by position
+flights %>% slice(1000:1005)
+
+# keep the first three rows within each group
+flights %>%
+  group_by(month, day) %>%
+  slice(1:3)
+
+# sample three rows from each group
+flights %>%
+  group_by(month, day) %>%
+  sample_n(3)
+
+# keep three rows from each group with the top dep_delay
+flights %>%
+  group_by(month, day) %>%
+  top_n(3, dep_delay)
+
+# also sort by dep_delay within each group
+flights %>%
+  group_by(month, day) %>%
+  top_n(3, dep_delay) %>%
+  arrange(desc(dep_delay))
+```
+
+
+```{r}
+# unique rows can be identified using unique() from base R
+flights %>%
+  select(origin, dest) %>%
+  unique()
+```
+
+```{r results='hide'}
+# dplyr provides an alternative that is more "efficient"
+flights %>%
+  select(origin, dest) %>%
+  distinct()
+
+# side note: when chaining, you don't have to include the parentheses if there are no arguments
+flights %>%
+  select(origin, dest) %>%
+  distinct()
+```
+
+
+# Adding new variables: mutate, transmute, add_rownames
+
+```{r}
+# mutate() creates a new variable (and keeps all existing variables)
+flights %>% mutate(speed = distance / air_time * 60)
+
+# transmute() only keeps the new variables
+flights %>% transmute(speed = distance / air_time * 60)
+```
+
+
+```{r}
+# example data frame with row names
+mtcars %>% head()
+
+# add_rownames() turns row names into an explicit variable
+mtcars %>%
+  add_rownames("model") %>%
+  head()
+
+# side note: dplyr no longer prints row names (ever) for local data frames
+mtcars %>% tbl_df()
+```
+
+
+# Grouping and counting: summarise, tally, count, group_size, n_groups, ungroup
+
+```{r}
+# summarise() can be used to count the number of rows in each group
+flights %>%
+  group_by(month) %>%
+  summarise(cnt = n())
+```
+
+```{r results='hide'}
+# tally() and count() can do this more concisely
+flights %>%
+  group_by(month) %>%
+  tally()
+flights %>% count(month)
+```
+
+```{r}
+# you can sort by the count
+flights %>%
+  group_by(month) %>%
+  summarise(cnt = n()) %>%
+  arrange(desc(cnt))
+```
+
+```{r results='hide'}
+# tally() and count() have a sort parameter for this purpose
+flights %>%
+  group_by(month) %>%
+  tally(sort = TRUE)
+flights %>% count(month, sort = TRUE)
+```
+
+```{r}
+# you can sum over a specific variable instead of simply counting rows
+flights %>%
+  group_by(month) %>%
+  summarise(dist = sum(distance))
+```
+
+```{r results='hide'}
+# tally() and count() have a wt parameter for this purpose
+flights %>%
+  group_by(month) %>%
+  tally(wt = distance)
+flights %>% count(month, wt = distance)
+```
+
+```{r}
+# group_size() returns the counts as a vector
+flights %>%
+  group_by(month) %>%
+  group_size()
+
+# n_groups() simply reports the number of groups
+flights %>%
+  group_by(month) %>%
+  n_groups()
+```
+
+```{r}
+# group by two variables, summarise, arrange (output is possibly confusing)
+flights %>%
+  group_by(month, day) %>%
+  summarise(cnt = n()) %>%
+  arrange(desc(cnt)) %>%
+  print(n = 40)
+
+# ungroup() before arranging to arrange across all groups
+flights %>%
+  group_by(month, day) %>%
+  summarise(cnt = n()) %>%
+  ungroup() %>%
+  arrange(desc(cnt))
+```
+
+
+# Creating data frames: data_frame
+
+`data_frame()` is a better way than `data.frame()` for creating data frames. Benefits of `data_frame()`:
+
+* You can use previously defined columns to compute new columns.
+* It never coerces column types.
+* It never munges column names.
+* It never adds row names. 
+* It only recycles length 1 input.
+* It returns a local data frame (a tbl_df).
+
+```{r}
+# data_frame() example
+data_frame(a = 1:6, b = a * 2, c = "string", "d+e" = 1) %>% glimpse()
+
+# data.frame() example
+data.frame(a = 1:6, c = "string", "d+e" = 1) %>% glimpse()
+```
+
+
+# Viewing more output: print, View
+
+```{r}
+# specify that you want to see more rows
+flights %>% print(n = 15)
+```
+
+```{r eval=FALSE}
+# specify that you want to see ALL rows (don't run this!)
+flights %>% print(n = Inf)
+```
+
+```{r}
+# specify that you want to see all columns
+flights %>% print(width = Inf)
+```
+
+```{r eval=FALSE}
+# show up to 1000 rows and all columns
+flights %>% View()
+
+# set option to see all columns and fewer rows
+options(dplyr.width = Inf, dplyr.print_min = 6)
+
+# reset options (or just close R)
+options(dplyr.width = NULL, dplyr.print_min = 10)
+```
+
+
+# plot
+
+```{r}
+library(ggplot2)
+
+flights %>%
+  group_by(dest) %>%
+  summarize(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  filter(delay, count > 20, dest != "HNL") %>%
+  ggplot(mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1 / 3) +
+  geom_smooth(se = FALSE)
+```
+
+
+

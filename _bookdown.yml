@@ -16,6 +16,7 @@ rmd_files: [
   "intro_R.Rmd",
   "subsetting.Rmd",
 
+  "tibble.Rmd",
   "visualization.Rmd",
   "rmarkdown.Rmd",
   "dplyr.Rmd",
@@ -27,9 +28,11 @@ rmd_files: [
 
   "sampling.Rmd",
   "tidystats.Rmd",
+  "infer.Rmd",
   "lm.Rmd",
   "glm.Rmd",
   "lmm.Rmd",
+  "sem.Rmd",
   "tidybayes.Rmd",
 
   "adv_dplyr.Rmd",
@@ -38,6 +41,7 @@ rmd_files: [
   "rvest.Rmd",
   "tidymodels.Rmd",
   "tidygraph.Rmd",
+  "tidytext.Rmd",
   "r4psy.Rmd",
 
 

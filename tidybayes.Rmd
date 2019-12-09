@@ -70,7 +70,14 @@ points %>%
 
 neighbour of the current state
 
+
 ## Hamiltonian Monte Carlo：
 冰球
 
+
+## Frequentists vs Bayesians
+
+
+Frequentists assume parameters are fixed and data is random.
+Bayesians assume parameters are random and data is fixed"
 
