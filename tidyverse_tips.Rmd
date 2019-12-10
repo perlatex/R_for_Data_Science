@@ -9,6 +9,7 @@
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(patchwork)
 ```
 
 
@@ -250,7 +251,7 @@ df %>% mutate(
 
 
 
-## 找出前两名
+## 找出前几名
 ```{r}
 df %>%
   top_n(2, score)
@@ -436,6 +437,59 @@ gapminder %>%
   scale_x_log10() # A better way to log transform
 ```
 
+## fct_lump
+
+门诊病症的流水记录
+
+```{r}
+tb <- tibble::tribble(
+  ~disease,  ~n,
+      "鼻塞", 112,
+      "流涕", 130,
+      "发热",  89,
+      "腹泻",   5,
+      "呕吐",  12,
+      "咳嗽", 102,
+      "咽痛",  98,
+      "乏力",  15,
+      "腹痛",   2,
+      "妄想",   3,
+      "幻听",   6,
+      "失眠",   1,
+      "贫血",   8,
+      "多动",   2,
+      "胸痛",   4,
+      "胸闷",   5
+  )
+```
+
+```{r}
+p1 <- tb %>% 
+  uncount(n) %>% 
+
+  ggplot(aes(x = disease, fill = disease)) +
+  geom_bar() +
+  coord_flip() +
+  theme(legend.position = "none")
+
+
+
+p2 <- tb %>% 
+  uncount(n) %>% 
+  mutate(
+    disease = forcats::fct_lump(disease, 5),
+    disease = forcats::fct_reorder(disease, .x = disease, .fun = length)
+  ) %>% 
+  ggplot(aes(x = disease, fill = disease)) +
+  geom_bar() +
+  coord_flip() +
+  theme(legend.position = "none")
+  
+```
+
+```{r}
+p1 + p2
+```
 
 
 ## unite

@@ -73,7 +73,6 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(intro-R) 章介绍R语言基本概念
    - 第 \@ref(subsetting) 章介绍R语言中的子集选取
 - tidyverse篇
-   - 第 \@ref(tibble) 章介绍简单数据框
    - 第 \@ref(visual) 章介绍数据可视化
    - 第 \@ref(rmarkdown) 章介绍可重复性研究
    - 第 \@ref(dplyr) 章介绍数据规整与数据处理
@@ -82,6 +81,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda) 章介绍探索性数据分析   
    - 第 \@ref(ggplot2) 章再讲ggplot2
    - 第 \@ref(tips) 章介绍tidyverse中常用技巧
+   - 第 \@ref(tibble) 章介绍简单数据框
 - 建模篇
    - 第 \@ref(sampling) 章介绍模拟与抽样
    - 第 \@ref(tidystats) 章介绍方差分析
@@ -105,7 +105,6 @@ knitr::include_graphics("images/rbook1.png")
 2、**课件源代码和数据**
 
 - <https://github.com/perlatex/R_for_Data_Science>
-- <https://github.com/perlatex/R_for_Data_Science/tree/master/demo_data>
 
 
 

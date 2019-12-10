@@ -16,7 +16,6 @@ rmd_files: [
   "intro_R.Rmd",
   "subsetting.Rmd",
 
-  "tibble.Rmd",
   "visualization.Rmd",
   "rmarkdown.Rmd",
   "dplyr.Rmd",
@@ -25,7 +24,8 @@ rmd_files: [
   "eda.Rmd",
   "ggplot2.Rmd",
   "tidyverse_tips.Rmd",
-
+  "tibble.Rmd",
+  
   "sampling.Rmd",
   "tidystats.Rmd",
   "infer.Rmd",
