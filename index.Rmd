@@ -15,7 +15,7 @@ lof: yes
 geometry: [a4paper, tmargin=2.5cm, bmargin=2.5cm, lmargin=2cm, rmargin=2cm]
 site: bookdown::bookdown_site
 description: "一个简单的中文书示例。"
-github-repo: ybj2004/bookdown_data_science
+github-repo: perlatex/r_for_data_science
 #cover-image: images/cover.jpg
 always_allow_html: yes
 ---

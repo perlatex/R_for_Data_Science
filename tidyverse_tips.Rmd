@@ -42,10 +42,17 @@ plant_heigt <- data.frame(
 
 
 ```{block, type="danger"}
-大家想想，用不同的颜色画出两种植物生长曲线，怎么写语句?
+大家想想，
+
+- 把植物高度大于或等于0.8cm的**筛选**出来，怎么写语句?
+- 用不同的颜色画出两种植物**生长曲线**，怎么写语句?
 ```
 
 
+```{r, eval = FALSE}
+plant_heigt %>% 
+  filter( ___ >= 0.8)
+```
 
 
 ```{r, eval = FALSE}
@@ -55,7 +62,7 @@ plant_heigt %>%
 ```
 
 
-想用上面的语句，数据就得变形。那么怎么变形了？ 
+想用上面的语句，数据就得变形。那么怎么变形呢？ 
 
 ```{r out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/make_data_tidy.png")
@@ -143,7 +150,7 @@ df %>% count(name,
 ```
 
 
-如果不用`count()`，用`group_by() + summarisze()`写
+如果不用`count()`，用`group_by() + summarisze()`写，
 ```{r}
 df %>%
   group_by(name) %>%
