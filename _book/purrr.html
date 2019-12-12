@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-11" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -552,19 +552,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb284-7" title="7">)</a>
 <a class="sourceLine" id="cb284-8" title="8">exams</a></code></pre></div>
 <pre><code>## $student1
-##  [1] 96 52 94 66 84 63 62 91 94 65
+##  [1] 74 79 78 88 79 98 95 80 60 83
 ## 
 ## $student2
-##  [1] 54 92 75 65 86 57 57 67 65 55
+##  [1] 72 87 68 96 66 59 90 84 88 78
 ## 
 ## $student3
-##  [1] 73 82 56 91 69 73 65 92 67 78
+##  [1] 100  50  52  85  69  54  95  99  91  65
 ## 
 ## $student4
-##  [1] 63 57 86 90 50 73 76 55 68 52
+##  [1] 94 60 70 69 54 78 51 67 91 67
 ## 
 ## $student5
-##  [1] 73 57 51 63 56 81 87 93 51 69</code></pre>
+##  [1] 57 58 53 60 86 66 86 75 85 95</code></pre>
 <p>很显然，<code>exams</code>是一个列表。那么，每个学生的平均成绩是多呢？</p>
 <p>我们可能会想到用mean函数，但是</p>
 <div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb286-1" title="1"><span class="kw">mean</span>(exams)</a></code></pre></div>
@@ -582,19 +582,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb289-6" title="6">  <span class="dt">student5 =</span> <span class="kw">mean</span>(exams<span class="op">$</span>student5)</a>
 <a class="sourceLine" id="cb289-7" title="7">)</a></code></pre></div>
 <pre><code>## $student1
-## [1] 76.7
+## [1] 81.4
 ## 
 ## $student2
-## [1] 67.3
+## [1] 78.8
 ## 
 ## $student3
-## [1] 74.6
+## [1] 76
 ## 
 ## $student4
-## [1] 67
+## [1] 70.1
 ## 
 ## $student5
-## [1] 68.1</code></pre>
+## [1] 72.1</code></pre>
 <p>成功了。但发现我们写了好多代码，如果有100个学生，那就得写更多的代码，如果是这样，程序员就不高兴了，这太累了啊。于是<code>purrr</code>包的<code>map</code>函数来解救我们，下面主角出场了。</p>
 </div>
 <div id="purrr-1" class="section level2">
@@ -602,28 +602,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>介绍之前，先试试</p>
 <div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb291-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(mean)</a></code></pre></div>
 <pre><code>## $student1
-## [1] 76.7
+## [1] 81.4
 ## 
 ## $student2
-## [1] 67.3
+## [1] 78.8
 ## 
 ## $student3
-## [1] 74.6
+## [1] 76
 ## 
 ## $student4
-## [1] 67
+## [1] 70.1
 ## 
 ## $student5
-## [1] 68.1</code></pre>
+## [1] 72.1</code></pre>
 <p>哇，短短几句话，得出了相同的结果。如果希望返回的是数值型的<strong>向量</strong>，可以这样写</p>
 <div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb293-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_dbl</span>(mean)</a></code></pre></div>
 <pre><code>## student1 student2 student3 student4 student5 
-##     76.7     67.3     74.6     67.0     68.1</code></pre>
+##     81.4     78.8     76.0     70.1     72.1</code></pre>
 <p>如果希望返回的结果是数据框</p>
 <div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb295-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_df</span>(mean)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"76.7","2":"67.3","3":"74.6","4":"67","5":"68.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"81.4","2":"78.8","3":"76","4":"70.1","5":"72.1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>是不是很酷？</p>
@@ -650,7 +650,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb296-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_df</span>(var)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"277.1","2":"174.5","3":"130","4":"198","5":"227.7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"116","2":"146.6","3":"408.7","4":"201.9","5":"229"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -665,21 +665,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb297-5" title="5">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_df</span>(my_fun)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"19.3","2":"-13.3","3":"-1.6","4":"-4","5":"4.9"},{"1":"-24.7","2":"24.7","3":"7.4","4":"-10","5":"-11.1"},{"1":"17.3","2":"7.7","3":"-18.6","4":"19","5":"-17.1"},{"1":"-10.7","2":"-2.3","3":"16.4","4":"23","5":"-5.1"},{"1":"7.3","2":"18.7","3":"-5.6","4":"-17","5":"-12.1"},{"1":"-13.7","2":"-10.3","3":"-1.6","4":"6","5":"12.9"},{"1":"-14.7","2":"-10.3","3":"-9.6","4":"9","5":"18.9"},{"1":"14.3","2":"-0.3","3":"17.4","4":"-12","5":"24.9"},{"1":"17.3","2":"-2.3","3":"-7.6","4":"1","5":"-17.1"},{"1":"-11.7","2":"-12.3","3":"3.4","4":"-15","5":"0.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"-7.4","2":"-6.8","3":"24","4":"23.9","5":"-15.1"},{"1":"-2.4","2":"8.2","3":"-26","4":"-10.1","5":"-14.1"},{"1":"-3.4","2":"-10.8","3":"-24","4":"-0.1","5":"-19.1"},{"1":"6.6","2":"17.2","3":"9","4":"-1.1","5":"-12.1"},{"1":"-2.4","2":"-12.8","3":"-7","4":"-16.1","5":"13.9"},{"1":"16.6","2":"-19.8","3":"-22","4":"7.9","5":"-6.1"},{"1":"13.6","2":"11.2","3":"19","4":"-19.1","5":"13.9"},{"1":"-1.4","2":"5.2","3":"23","4":"-3.1","5":"2.9"},{"1":"-21.4","2":"9.2","3":"15","4":"20.9","5":"12.9"},{"1":"1.6","2":"-0.8","3":"-11","4":"-3.1","5":"22.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>当然可以偷懒将函数直接写在<code>map()</code>里，用<code>~</code>代替<code>my_fun</code>， 但<strong>代价</strong>是参数必须是规定的写法，比如<code>.x</code></p>
 <div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb298-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_df</span>(<span class="op">~</span><span class="st"> </span>.x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(.x))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"19.3","2":"-13.3","3":"-1.6","4":"-4","5":"4.9"},{"1":"-24.7","2":"24.7","3":"7.4","4":"-10","5":"-11.1"},{"1":"17.3","2":"7.7","3":"-18.6","4":"19","5":"-17.1"},{"1":"-10.7","2":"-2.3","3":"16.4","4":"23","5":"-5.1"},{"1":"7.3","2":"18.7","3":"-5.6","4":"-17","5":"-12.1"},{"1":"-13.7","2":"-10.3","3":"-1.6","4":"6","5":"12.9"},{"1":"-14.7","2":"-10.3","3":"-9.6","4":"9","5":"18.9"},{"1":"14.3","2":"-0.3","3":"17.4","4":"-12","5":"24.9"},{"1":"17.3","2":"-2.3","3":"-7.6","4":"1","5":"-17.1"},{"1":"-11.7","2":"-12.3","3":"3.4","4":"-15","5":"0.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"-7.4","2":"-6.8","3":"24","4":"23.9","5":"-15.1"},{"1":"-2.4","2":"8.2","3":"-26","4":"-10.1","5":"-14.1"},{"1":"-3.4","2":"-10.8","3":"-24","4":"-0.1","5":"-19.1"},{"1":"6.6","2":"17.2","3":"9","4":"-1.1","5":"-12.1"},{"1":"-2.4","2":"-12.8","3":"-7","4":"-16.1","5":"13.9"},{"1":"16.6","2":"-19.8","3":"-22","4":"7.9","5":"-6.1"},{"1":"13.6","2":"11.2","3":"19","4":"-19.1","5":"13.9"},{"1":"-1.4","2":"5.2","3":"23","4":"-3.1","5":"2.9"},{"1":"-21.4","2":"9.2","3":"15","4":"20.9","5":"12.9"},{"1":"1.6","2":"-0.8","3":"-11","4":"-3.1","5":"22.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>有时候，程序员觉得<code>x</code>还是有点多余，于是更够懒一点，只用<code>.</code>， 也是可以的</p>
 <div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb299-1" title="1">exams <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_df</span>(<span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(.))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"19.3","2":"-13.3","3":"-1.6","4":"-4","5":"4.9"},{"1":"-24.7","2":"24.7","3":"7.4","4":"-10","5":"-11.1"},{"1":"17.3","2":"7.7","3":"-18.6","4":"19","5":"-17.1"},{"1":"-10.7","2":"-2.3","3":"16.4","4":"23","5":"-5.1"},{"1":"7.3","2":"18.7","3":"-5.6","4":"-17","5":"-12.1"},{"1":"-13.7","2":"-10.3","3":"-1.6","4":"6","5":"12.9"},{"1":"-14.7","2":"-10.3","3":"-9.6","4":"9","5":"18.9"},{"1":"14.3","2":"-0.3","3":"17.4","4":"-12","5":"24.9"},{"1":"17.3","2":"-2.3","3":"-7.6","4":"1","5":"-17.1"},{"1":"-11.7","2":"-12.3","3":"3.4","4":"-15","5":"0.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["student1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["student2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["student3"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["student4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["student5"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"-7.4","2":"-6.8","3":"24","4":"23.9","5":"-15.1"},{"1":"-2.4","2":"8.2","3":"-26","4":"-10.1","5":"-14.1"},{"1":"-3.4","2":"-10.8","3":"-24","4":"-0.1","5":"-19.1"},{"1":"6.6","2":"17.2","3":"9","4":"-1.1","5":"-12.1"},{"1":"-2.4","2":"-12.8","3":"-7","4":"-16.1","5":"13.9"},{"1":"16.6","2":"-19.8","3":"-22","4":"7.9","5":"-6.1"},{"1":"13.6","2":"11.2","3":"19","4":"-19.1","5":"13.9"},{"1":"-1.4","2":"5.2","3":"23","4":"-3.1","5":"2.9"},{"1":"-21.4","2":"9.2","3":"15","4":"20.9","5":"12.9"},{"1":"1.6","2":"-0.8","3":"-11","4":"-3.1","5":"22.9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>总之，有三种方法将函数传递给<code>map()</code></p>

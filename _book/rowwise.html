@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-11" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -480,12 +480,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="rowwise" class="section level1">
 <h1><span class="header-section-number">第 22 章</span> tidyverse中行方向的操作</h1>
-<div class="sourceCode" id="cb743"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb743-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb756"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb756-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <p>tidyverse 喜欢数据框，因为一列就是一个向量，一列一列的处理起来很方便。然而我们有时候也要，完成行方向的操作，所以有必要介绍tidyverse中行方向的处理机制。</p>
 <div id="section-145" class="section level2">
 <h2><span class="header-section-number">22.1</span> 问题</h2>
-<div class="sourceCode" id="cb744"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb744-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb744-2" title="2">df</a></code></pre></div>
+<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb757-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb757-2" title="2">df</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"4"},{"1":"2","2":"5"},{"1":"3","2":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -496,36 +496,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="rowwise-1" class="section level2">
 <h2><span class="header-section-number">22.2</span> rowwise函数</h2>
 <p>dplyr提供了rowwise函数，但大神说不推荐</p>
-<div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb745-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb745-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb745-3" title="3"><span class="st">  </span><span class="kw">mutate</span>( <span class="dt">i =</span> <span class="kw">sum</span>(x, y) )</a></code></pre></div>
+<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb758-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb758-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb758-3" title="3"><span class="st">  </span><span class="kw">mutate</span>( <span class="dt">i =</span> <span class="kw">sum</span>(x, y) )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["i"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"5"},{"1":"2","2":"5","3":"7"},{"1":"3","2":"6","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb746"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb746-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb746-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb746-3" title="3"><span class="st">  </span><span class="kw">mutate</span>( <span class="dt">i =</span> <span class="kw">mean</span>(<span class="kw">c</span>(x, y) ))</a></code></pre></div>
+<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb759-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb759-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb759-3" title="3"><span class="st">  </span><span class="kw">mutate</span>( <span class="dt">i =</span> <span class="kw">mean</span>(<span class="kw">c</span>(x, y) ))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["i"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.5"},{"1":"2","2":"5","3":"3.5"},{"1":"3","2":"6","3":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb747-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb747-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb747-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">min =</span> <span class="kw">min</span>(x,y),</a>
-<a class="sourceLine" id="cb747-4" title="4">         <span class="dt">max =</span> <span class="kw">max</span>(x,y)</a>
-<a class="sourceLine" id="cb747-5" title="5">         )</a></code></pre></div>
+<div class="sourceCode" id="cb760"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb760-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb760-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb760-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">min =</span> <span class="kw">min</span>(x,y),</a>
+<a class="sourceLine" id="cb760-4" title="4">         <span class="dt">max =</span> <span class="kw">max</span>(x,y)</a>
+<a class="sourceLine" id="cb760-5" title="5">         )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["min"],"name":[3],"type":["int"],"align":["right"]},{"label":["max"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"1","4":"4"},{"1":"2","2":"5","3":"2","4":"5"},{"1":"3","2":"6","3":"3","4":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb748"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb748-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb748-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb748-3" title="3"><span class="st">  </span><span class="kw">do</span>(<span class="dt">i =</span> <span class="kw">mean</span>(<span class="kw">c</span>(.<span class="op">$</span>x, .<span class="op">$</span>y))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb748-4" title="4"><span class="st">  </span><span class="kw">unnest</span>(i)</a></code></pre></div>
+<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb761-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb761-2" title="2"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb761-3" title="3"><span class="st">  </span><span class="kw">do</span>(<span class="dt">i =</span> <span class="kw">mean</span>(<span class="kw">c</span>(.<span class="op">$</span>x, .<span class="op">$</span>y))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb761-4" title="4"><span class="st">  </span><span class="kw">unnest</span>(i)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["i"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"2.5"},{"1":"3.5"},{"1":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -534,19 +534,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="row-wise-summaries" class="section level2">
 <h2><span class="header-section-number">22.3</span> Row-wise Summaries</h2>
-<div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb749-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">row_sum =</span> <span class="kw">rowSums</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])  )</a></code></pre></div>
+<div class="sourceCode" id="cb762"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb762-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">row_sum =</span> <span class="kw">rowSums</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])  )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["row_sum"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"5"},{"1":"2","2":"5","3":"7"},{"1":"3","2":"6","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb750"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb750-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">row_mean =</span> <span class="kw">rowMeans</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])  ) </a></code></pre></div>
+<div class="sourceCode" id="cb763"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb763-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">row_mean =</span> <span class="kw">rowMeans</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])  ) </a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["row_mean"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.5"},{"1":"2","2":"5","3":"3.5"},{"1":"3","2":"6","3":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb751-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">rowSums</span>(<span class="kw">select_if</span>(., is.numeric)))</a></code></pre></div>
+<div class="sourceCode" id="cb764"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb764-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">rowSums</span>(<span class="kw">select_if</span>(., is.numeric)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["t_sum"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"5"},{"1":"2","2":"5","3":"7"},{"1":"3","2":"6","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -557,37 +557,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="purrrmap" class="section level2">
 <h2><span class="header-section-number">22.4</span> purrr::map方案</h2>
 <p>按照Jenny Bryan的方案</p>
-<div class="sourceCode" id="cb752"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb752-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">list</span>(x, y), sum))</a></code></pre></div>
+<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb765-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">list</span>(x, y), sum))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["t_sum"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"5"},{"1":"2","2":"5","3":"7"},{"1":"3","2":"6","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb753-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb753-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), sum))</a></code></pre></div>
+<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb766-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb766-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), sum))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["t_sum"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"5"},{"1":"2","2":"5","3":"7"},{"1":"3","2":"6","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>计算均值的时候， 然而报错了</p>
-<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb754-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), mean))</a></code></pre></div>
+<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb767-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), mean))</a></code></pre></div>
 <p>tidyverse 总会想出办法来解决，把<code>mean()</code> 变成 <code>lift_vd(mean)</code></p>
-<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb755-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb755-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">data =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(mean)))</a></code></pre></div>
+<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb768-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb768-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">data =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(mean)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["data"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.5"},{"1":"2","2":"5","3":"3.5"},{"1":"3","2":"6","3":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>同理</p>
-<div class="sourceCode" id="cb756"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb756-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_median =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(median)))</a></code></pre></div>
+<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb769-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_median =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(median)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["t_median"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.5"},{"1":"2","2":"5","3":"3.5"},{"1":"3","2":"6","3":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb757-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sd =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(sd)))</a></code></pre></div>
+<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb770-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">t_sd =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), <span class="kw">lift_vd</span>(sd)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["t_sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.121"},{"1":"2","2":"5","3":"2.121"},{"1":"3","2":"6","3":"2.121"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -597,43 +597,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tidy-" class="section level2">
 <h2><span class="header-section-number">22.5</span> tidy 的方案</h2>
 <p>我个人推荐的方法(Gather, group, summarize, left_join)</p>
-<div class="sourceCode" id="cb758"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb758-1" title="1">new_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb758-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw">row_number</span>()) </a>
-<a class="sourceLine" id="cb758-3" title="3"></a>
-<a class="sourceLine" id="cb758-4" title="4">s &lt;-<span class="st"> </span>new_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb758-5" title="5"><span class="st">  </span><span class="kw">gather</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;val&quot;</span>, <span class="op">-</span>id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb758-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb758-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(</a>
-<a class="sourceLine" id="cb758-8" title="8">    <span class="dt">t_avg =</span> <span class="kw">mean</span>(val),</a>
-<a class="sourceLine" id="cb758-9" title="9">    <span class="dt">t_sum =</span> <span class="kw">sum</span>(val)</a>
-<a class="sourceLine" id="cb758-10" title="10">  )</a>
-<a class="sourceLine" id="cb758-11" title="11"></a>
-<a class="sourceLine" id="cb758-12" title="12">s</a></code></pre></div>
+<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb771-1" title="1">new_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb771-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw">row_number</span>()) </a>
+<a class="sourceLine" id="cb771-3" title="3"></a>
+<a class="sourceLine" id="cb771-4" title="4">s &lt;-<span class="st"> </span>new_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb771-5" title="5"><span class="st">  </span><span class="kw">gather</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;val&quot;</span>, <span class="op">-</span>id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb771-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb771-7" title="7"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb771-8" title="8">    <span class="dt">t_avg =</span> <span class="kw">mean</span>(val),</a>
+<a class="sourceLine" id="cb771-9" title="9">    <span class="dt">t_sum =</span> <span class="kw">sum</span>(val)</a>
+<a class="sourceLine" id="cb771-10" title="10">  )</a>
+<a class="sourceLine" id="cb771-11" title="11"></a>
+<a class="sourceLine" id="cb771-12" title="12">s</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["t_avg"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["t_sum"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"2.5","3":"5"},{"1":"2","2":"3.5","3":"7"},{"1":"3","2":"4.5","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb759-1" title="1">new_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb759-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(s)</a></code></pre></div>
+<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb772-1" title="1">new_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb772-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(s)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["id"],"name":[3],"type":["int"],"align":["right"]},{"label":["t_avg"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_sum"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"1","4":"2.5","5":"5"},{"1":"2","2":"5","3":"2","4":"3.5","5":"7"},{"1":"3","2":"6","3":"3","4":"4.5","5":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>有点繁琐，但思路清晰</p>
-<div class="sourceCode" id="cb760"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb760-1" title="1">ss &lt;-<span class="st"> </span>new_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb760-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb760-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">t_avg =</span> <span class="kw">mean</span>(<span class="kw">c</span>(x, y)) )</a>
-<a class="sourceLine" id="cb760-4" title="4"></a>
-<a class="sourceLine" id="cb760-5" title="5">ss</a></code></pre></div>
+<div class="sourceCode" id="cb773"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb773-1" title="1">ss &lt;-<span class="st"> </span>new_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb773-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb773-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">t_avg =</span> <span class="kw">mean</span>(<span class="kw">c</span>(x, y)) )</a>
+<a class="sourceLine" id="cb773-4" title="4"></a>
+<a class="sourceLine" id="cb773-5" title="5">ss</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["t_avg"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"2.5"},{"1":"2","2":"3.5"},{"1":"3","2":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb761"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb761-1" title="1">new_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb761-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(ss)</a></code></pre></div>
+<div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb774-1" title="1">new_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb774-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(ss)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["int"],"align":["right"]},{"label":["y"],"name":[2],"type":["int"],"align":["right"]},{"label":["id"],"name":[3],"type":["int"],"align":["right"]},{"label":["t_avg"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"1","4":"2.5"},{"1":"2","2":"5","3":"2","4":"3.5"},{"1":"3","2":"6","3":"3","4":"4.5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -649,15 +649,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>与<code>purrr::map</code>不同，因为map把数据框看作列方向的向量， 然后迭代</li>
 <li>如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动</li>
 </ul>
-<div class="sourceCode" id="cb762"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb762-1" title="1"><span class="kw">library</span>(slide)</a>
-<a class="sourceLine" id="cb762-2" title="2"></a>
-<a class="sourceLine" id="cb762-3" title="3">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">a =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">b =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb762-4" title="4"></a>
-<a class="sourceLine" id="cb762-5" title="5"><span class="kw">slide</span>(</a>
-<a class="sourceLine" id="cb762-6" title="6">  <span class="kw">select_if</span>(df, is.numeric), </a>
-<a class="sourceLine" id="cb762-7" title="7">  <span class="op">~</span>.x, </a>
-<a class="sourceLine" id="cb762-8" title="8">  <span class="dt">.before =</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb762-9" title="9">)</a></code></pre></div>
+<div class="sourceCode" id="cb775"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb775-1" title="1"><span class="kw">library</span>(slide)</a>
+<a class="sourceLine" id="cb775-2" title="2"></a>
+<a class="sourceLine" id="cb775-3" title="3">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">a =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">b =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb775-4" title="4"></a>
+<a class="sourceLine" id="cb775-5" title="5"><span class="kw">slide</span>(</a>
+<a class="sourceLine" id="cb775-6" title="6">  <span class="kw">select_if</span>(df, is.numeric), </a>
+<a class="sourceLine" id="cb775-7" title="7">  <span class="op">~</span>.x, </a>
+<a class="sourceLine" id="cb775-8" title="8">  <span class="dt">.before =</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb775-9" title="9">)</a></code></pre></div>
 <pre><code>## [[1]]
 ## # A tibble: 1 x 2
 ##       a     b
@@ -677,14 +677,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   &lt;int&gt; &lt;int&gt;
 ## 1     2     5
 ## 2     3     6</code></pre>
-<div class="sourceCode" id="cb764"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb764-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb764-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb764-3" title="3">    <span class="dt">r_mean =</span> <span class="kw">slide_dbl</span>(</a>
-<a class="sourceLine" id="cb764-4" title="4">      <span class="kw">select_if</span>(df, is.numeric), </a>
-<a class="sourceLine" id="cb764-5" title="5">      <span class="op">~</span><span class="kw">mean</span>(<span class="kw">unlist</span>(.x)), </a>
-<a class="sourceLine" id="cb764-6" title="6">      <span class="dt">.before =</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb764-7" title="7">    )</a>
-<a class="sourceLine" id="cb764-8" title="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb777"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb777-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb777-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb777-3" title="3">    <span class="dt">r_mean =</span> <span class="kw">slide_dbl</span>(</a>
+<a class="sourceLine" id="cb777-4" title="4">      <span class="kw">select_if</span>(df, is.numeric), </a>
+<a class="sourceLine" id="cb777-5" title="5">      <span class="op">~</span><span class="kw">mean</span>(<span class="kw">unlist</span>(.x)), </a>
+<a class="sourceLine" id="cb777-6" title="6">      <span class="dt">.before =</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb777-7" title="7">    )</a>
+<a class="sourceLine" id="cb777-8" title="8">  )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["a"],"name":[1],"type":["int"],"align":["right"]},{"label":["b"],"name":[2],"type":["int"],"align":["right"]},{"label":["r_mean"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"4","3":"2.5"},{"1":"2","2":"5","3":"3.0"},{"1":"3","2":"6","3":"4.0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}

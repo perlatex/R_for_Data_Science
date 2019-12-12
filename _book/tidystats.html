@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-11" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -481,16 +481,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tidystats" class="section level1">
 <h1><span class="header-section-number">第 14 章</span> Tidy Statistics</h1>
 <p>本章介绍基本的方差分析内容</p>
-<div class="sourceCode" id="cb610"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb610-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb623"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb623-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <div id="section-120" class="section level2">
 <h2><span class="header-section-number">14.1</span> 从一个案例开始</h2>
 <p>从这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集，数据在课件首页下载。</p>
 <p>首先，我们下载后导入数据</p>
-<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb611-1" title="1">wages &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb611-2" title="2"></a>
-<a class="sourceLine" id="cb611-3" title="3">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb611-4" title="4"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb611-5" title="5"><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb624"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb624-1" title="1">wages &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb624-2" title="2"></a>
+<a class="sourceLine" id="cb624-3" title="3">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb624-4" title="4"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb624-5" title="5"><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -559,7 +559,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="section-121" class="section level2">
 <h2><span class="header-section-number">14.2</span> 单因素方差分析</h2>
-<div class="sourceCode" id="cb612"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb612-1" title="1"><span class="kw">t.test</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb625"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb625-1" title="1"><span class="kw">t.test</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a></code></pre></div>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
@@ -571,8 +571,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## sample estimates:
 ## mean in group female   mean in group male 
 ##                24246                45993</code></pre>
-<div class="sourceCode" id="cb614"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb614-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb614-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb627"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb627-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb627-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = earn ~ sex, data = wages)
@@ -592,8 +592,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 29400 on 1377 degrees of freedom
 ## Multiple R-squared:  0.114,  Adjusted R-squared:  0.113 
 ## F-statistic:  177 on 1 and 1377 DF,  p-value: &lt;2e-16</code></pre>
-<div class="sourceCode" id="cb616"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb616-1" title="1"><span class="kw">aov</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb616-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb629"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb629-1" title="1"><span class="kw">aov</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb629-2" title="2"><span class="st">  </span><span class="kw">summary</span>()</a></code></pre></div>
 <pre><code>##               Df   Sum Sq  Mean Sq F value Pr(&gt;F)    
 ## sex            1 1.53e+11 1.53e+11     177 &lt;2e-16 ***
 ## Residuals   1377 1.19e+12 8.66e+08                   
@@ -609,52 +609,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>supp : 两种喂食方法 (橙汁和维生素C)</li>
 <li>dose : 抗坏血酸剂量 (0.5, 1, and 2 mg)</li>
 </ul>
-<div class="sourceCode" id="cb618"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb618-1" title="1"><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>)</a>
-<a class="sourceLine" id="cb618-2" title="2">my_data &lt;-<span class="st"> </span>ToothGrowth <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb618-3" title="3"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(supp, dose), <span class="op">~</span><span class="st"> </span><span class="kw">as_factor</span>(.))</a>
-<a class="sourceLine" id="cb618-4" title="4"></a>
-<a class="sourceLine" id="cb618-5" title="5">my_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb631"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb631-1" title="1"><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>)</a>
+<a class="sourceLine" id="cb631-2" title="2">my_data &lt;-<span class="st"> </span>ToothGrowth <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb631-3" title="3"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(supp, dose), <span class="op">~</span><span class="st"> </span><span class="kw">as_factor</span>(.))</a>
+<a class="sourceLine" id="cb631-4" title="4"></a>
+<a class="sourceLine" id="cb631-5" title="5">my_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["len"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["supp"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["dose"],"name":[3],"type":["fctr"],"align":["left"]}],"data":[{"1":"4.2","2":"VC","3":"0.5","_rn_":"1"},{"1":"11.5","2":"VC","3":"0.5","_rn_":"2"},{"1":"7.3","2":"VC","3":"0.5","_rn_":"3"},{"1":"5.8","2":"VC","3":"0.5","_rn_":"4"},{"1":"6.4","2":"VC","3":"0.5","_rn_":"5"},{"1":"10.0","2":"VC","3":"0.5","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb619"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb619-1" title="1">my_data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb619-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> supp, <span class="dt">y =</span> len, <span class="dt">fill =</span> supp)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb619-3" title="3"><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb619-4" title="4"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(dose)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb619-5" title="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;VC剂量和摄入方式对豚鼠牙齿的影响&quot;</span>)</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-539-1.png" width="576" /></p>
+<div class="sourceCode" id="cb632"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb632-1" title="1">my_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb632-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> supp, <span class="dt">y =</span> len, <span class="dt">fill =</span> supp)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb632-3" title="3"><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb632-4" title="4"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(dose)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb632-5" title="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;VC剂量和摄入方式对豚鼠牙齿的影响&quot;</span>)</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-549-1.png" width="576" /></p>
 <p>问题：豚鼠牙齿的长度是否与药物的食用方法和剂量有关？</p>
 <p>线性回归时，我们是通过独立变量来<strong>预测</strong>响应变量，但现在我们关注的重点会从预测<strong>转向</strong>不同组别差异之间的分析，这即为方差分析（ANOVA）。</p>
 <p>这里是两个解释变量，所以问题需要双因素方差分析 (ANOVA)</p>
-<div class="sourceCode" id="cb620"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb620-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb620-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb633"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb633-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb633-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["df"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sumsq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["meansq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"supp","2":"1","3":"205.4","4":"205.35","5":"14.02","6":"4.293e-04"},{"1":"dose","2":"2","3":"2426.4","4":"1213.22","5":"82.81","6":"1.871e-17"},{"1":"Residuals","2":"56","3":"820.4","4":"14.65","5":"NA","6":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>检验表明不同类型之间存在显著差异，但是并没有告诉我们具体谁与谁之间的不同。需要多重比较帮助我们解决这个问题。使用<code>TurkeyHSD</code>函数</p>
-<div class="sourceCode" id="cb621"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb621-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb621-2" title="2"><span class="st">  </span><span class="kw">TukeyHSD</span>(<span class="dt">which =</span> <span class="st">&quot;dose&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb621-3" title="3"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb634"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb634-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb634-2" title="2"><span class="st">  </span><span class="kw">TukeyHSD</span>(<span class="dt">which =</span> <span class="st">&quot;dose&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb634-3" title="3"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["comparison"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["adj.p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"dose","2":"1-0.5","3":"9.130","4":"6.216","5":"12.044","6":"1.319e-09"},{"1":"dose","2":"2-0.5","3":"15.495","4":"12.581","5":"18.409","6":"7.308e-12"},{"1":"dose","2":"2-1","3":"6.365","4":"3.451","5":"9.279","6":"6.977e-06"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb622"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb622-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb622-2" title="2"><span class="st">  </span><span class="kw">TukeyHSD</span>(<span class="dt">which =</span> <span class="st">&quot;supp&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb622-3" title="3"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb635"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb635-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb635-2" title="2"><span class="st">  </span><span class="kw">TukeyHSD</span>(<span class="dt">which =</span> <span class="st">&quot;supp&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb635-3" title="3"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["comparison"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["adj.p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"supp","2":"VC-OJ","3":"-3.7","4":"-5.68","5":"-1.72","6":"0.0004293"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>思考：交互效应是否显著？</p>
-<div class="sourceCode" id="cb623"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb623-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">*</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb623-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb636-1" title="1"><span class="kw">aov</span>(len <span class="op">~</span><span class="st"> </span>supp <span class="op">*</span><span class="st"> </span>dose, <span class="dt">data =</span> my_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb636-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["df"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sumsq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["meansq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"supp","2":"1","3":"205.4","4":"205.35","5":"15.572","6":"2.312e-04"},{"1":"dose","2":"2","3":"2426.4","4":"1213.22","5":"92.000","6":"4.046e-18"},{"1":"supp:dose","2":"2","3":"108.3","4":"54.16","5":"4.107","6":"2.186e-02"},{"1":"Residuals","2":"54","3":"712.1","4":"13.19","5":"NA","6":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}

@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-11" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -481,15 +481,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="lm" class="section level1">
 <h1><span class="header-section-number">第 16 章</span> 线性回归</h1>
 <p>线性模型是数据分析中最常用的一种分析方法。最基础的往往最深刻。</p>
-<div class="sourceCode" id="cb625"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb625-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb638-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <div id="section-123" class="section level2">
 <h2><span class="header-section-number">16.1</span> 从一个案例开始</h2>
 <p>这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集。数据在课件首页提供了下载链接。</p>
 <p>首先，我们下载后导入数据</p>
-<div class="sourceCode" id="cb626"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb626-1" title="1">wages &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb626-2" title="2"></a>
-<a class="sourceLine" id="cb626-3" title="3">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb626-4" title="4"><span class="st">  </span><span class="kw">head</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb639"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb639-1" title="1">wages &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb639-2" title="2"></a>
+<a class="sourceLine" id="cb639-3" title="3">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb639-4" title="4"><span class="st">  </span><span class="kw">head</span>() </a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["earn"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["height"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sex"],"name":[3],"type":["chr"],"align":["left"]},{"label":["race"],"name":[4],"type":["chr"],"align":["left"]},{"label":["ed"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"79571","2":"73.89","3":"male","4":"white","5":"16","6":"49"},{"1":"96397","2":"66.23","3":"female","4":"white","5":"16","6":"62"},{"1":"48711","2":"63.77","3":"female","4":"white","5":"16","6":"33"},{"1":"80478","2":"63.22","3":"female","4":"other","5":"16","6":"95"},{"1":"82089","2":"63.08","3":"female","4":"white","5":"17","6":"43"},{"1":"15313","2":"64.53","3":"female","4":"white","5":"15","6":"30"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -498,38 +498,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="section-124" class="section level3">
 <h3><span class="header-section-number">16.1.1</span> 缺失值检查</h3>
 <p>一般情况下，拿到一份数据，首先要了解数据，知道每个变量的含义，</p>
-<div class="sourceCode" id="cb627"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb627-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">colnames</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb640"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb640-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">colnames</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;earn&quot;   &quot;height&quot; &quot;sex&quot;    &quot;race&quot;   &quot;ed&quot;    
 ## [6] &quot;age&quot;</code></pre>
 <p>同时检查数据是否有缺失值，这点很重要。在R中 NA（notavailable，不可用）表示缺失值, 比如可以这样检查是否有缺失值。</p>
-<div class="sourceCode" id="cb629"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb629-1" title="1"><span class="co"># 如何检查数据是否有缺失值？</span></a>
-<a class="sourceLine" id="cb629-2" title="2">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb629-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb629-4" title="4">     <span class="dt">earn_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(earn)),</a>
-<a class="sourceLine" id="cb629-5" title="5">     <span class="dt">height_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(height)),</a>
-<a class="sourceLine" id="cb629-6" title="6">     <span class="dt">sex_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(sex)),</a>
-<a class="sourceLine" id="cb629-7" title="7">     <span class="dt">race_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(race)),</a>
-<a class="sourceLine" id="cb629-8" title="8">     <span class="dt">ed_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(ed)),</a>
-<a class="sourceLine" id="cb629-9" title="9">     <span class="dt">age_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(age))</a>
-<a class="sourceLine" id="cb629-10" title="10">)</a></code></pre></div>
+<div class="sourceCode" id="cb642"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb642-1" title="1"><span class="co"># 如何检查数据是否有缺失值？</span></a>
+<a class="sourceLine" id="cb642-2" title="2">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb642-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb642-4" title="4">     <span class="dt">earn_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(earn)),</a>
+<a class="sourceLine" id="cb642-5" title="5">     <span class="dt">height_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(height)),</a>
+<a class="sourceLine" id="cb642-6" title="6">     <span class="dt">sex_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(sex)),</a>
+<a class="sourceLine" id="cb642-7" title="7">     <span class="dt">race_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(race)),</a>
+<a class="sourceLine" id="cb642-8" title="8">     <span class="dt">ed_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(ed)),</a>
+<a class="sourceLine" id="cb642-9" title="9">     <span class="dt">age_na =</span>  <span class="kw">sum</span>(<span class="kw">is.na</span>(age))</a>
+<a class="sourceLine" id="cb642-10" title="10">)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["earn_na"],"name":[1],"type":["int"],"align":["right"]},{"label":["height_na"],"name":[2],"type":["int"],"align":["right"]},{"label":["sex_na"],"name":[3],"type":["int"],"align":["right"]},{"label":["race_na"],"name":[4],"type":["int"],"align":["right"]},{"label":["ed_na"],"name":[5],"type":["int"],"align":["right"]},{"label":["age_na"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"0","6":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>程序员都是偷懒的，所以也可以写的简便一点。大家在学习的过程中，也会慢慢的发现tidyverse的函数很贴心，很周到。</p>
-<div class="sourceCode" id="cb630"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb630-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb630-2" title="2"><span class="st">  </span><span class="kw">summarise_all</span>(</a>
-<a class="sourceLine" id="cb630-3" title="3">     <span class="op">~</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(.))</a>
-<a class="sourceLine" id="cb630-4" title="4">)</a></code></pre></div>
+<div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb643-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb643-2" title="2"><span class="st">  </span><span class="kw">summarise_all</span>(</a>
+<a class="sourceLine" id="cb643-3" title="3">     <span class="op">~</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(.))</a>
+<a class="sourceLine" id="cb643-4" title="4">)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["earn"],"name":[1],"type":["int"],"align":["right"]},{"label":["height"],"name":[2],"type":["int"],"align":["right"]},{"label":["sex"],"name":[3],"type":["int"],"align":["right"]},{"label":["race"],"name":[4],"type":["int"],"align":["right"]},{"label":["ed"],"name":[5],"type":["int"],"align":["right"]},{"label":["age"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"0","6":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>当然，也可以用<code>purrr::map()</code>的方法。这部分我会在后面的章节中逐步介绍。</p>
-<div class="sourceCode" id="cb631"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb631-1" title="1">wages <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb631-2" title="2"><span class="st">  </span><span class="kw">map_df</span>(<span class="op">~</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(.)))</a></code></pre></div>
+<div class="sourceCode" id="cb644"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb644-1" title="1">wages <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb644-2" title="2"><span class="st">  </span><span class="kw">map_df</span>(<span class="op">~</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(.)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["earn"],"name":[1],"type":["int"],"align":["right"]},{"label":["height"],"name":[2],"type":["int"],"align":["right"]},{"label":["sex"],"name":[3],"type":["int"],"align":["right"]},{"label":["race"],"name":[4],"type":["int"],"align":["right"]},{"label":["ed"],"name":[5],"type":["int"],"align":["right"]},{"label":["age"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"0","6":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -539,30 +539,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="section-125" class="section level3">
 <h3><span class="header-section-number">16.1.2</span> 变量简单统计</h3>
 <p>然后探索下每个变量的分布。比如调研数据中男女的数量分别是多少？</p>
-<div class="sourceCode" id="cb632"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb632-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(sex)</a></code></pre></div>
+<div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb645-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(sex)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"female","2":"859"},{"1":"male","2":"520"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>男女这两组的身高均值分别是多少？收入的均值分别是多少？</p>
-<div class="sourceCode" id="cb633"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb633-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb633-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb633-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb633-4" title="4">    <span class="dt">n =</span> <span class="kw">n</span>(),</a>
-<a class="sourceLine" id="cb633-5" title="5">    <span class="dt">mean_height =</span> <span class="kw">mean</span>(height),</a>
-<a class="sourceLine" id="cb633-6" title="6">    <span class="dt">mean_earn =</span> <span class="kw">mean</span>(earn)</a>
-<a class="sourceLine" id="cb633-7" title="7">  )</a></code></pre></div>
+<div class="sourceCode" id="cb646"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb646-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb646-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb646-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb646-4" title="4">    <span class="dt">n =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb646-5" title="5">    <span class="dt">mean_height =</span> <span class="kw">mean</span>(height),</a>
+<a class="sourceLine" id="cb646-6" title="6">    <span class="dt">mean_earn =</span> <span class="kw">mean</span>(earn)</a>
+<a class="sourceLine" id="cb646-7" title="7">  )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mean_height"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean_earn"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"859","3":"64.50","4":"24246"},{"1":"male","2":"520","3":"70.04","4":"45993"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>也有可以用可视化的方法，呈现男女收入的分布情况</p>
-<div class="sourceCode" id="cb634"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb634-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb634-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb634-3" title="3"><span class="st">  </span><span class="kw">geom_density</span>()</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-553-1.png" width="576" /></p>
+<div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb647-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb647-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb647-3" title="3"><span class="st">  </span><span class="kw">geom_density</span>()</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-563-1.png" width="576" /></p>
 <p>大家可以自行探索其他变量的情况。现在提出几个问题，希望大家带着这些问题去探索：</p>
 <ol style="list-style-type: decimal">
 <li><p>长的越高的人挣钱越多？</p></li>
@@ -590,7 +590,7 @@ y &amp;= \alpha + \beta x + \epsilon \\
 <h2><span class="header-section-number">16.3</span> 使用<code>lm()</code> 函数</h2>
 <p>用R语言代码(建议大家先<code>?lm</code>看看帮助文档)，</p>
 <p><code>lm</code>参数很多, 但很多我们都用不上，所以我们只关注其中重要的两个参数</p>
-<div class="sourceCode" id="cb635"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb635-1" title="1"><span class="kw">lm</span>(<span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span>x, data)</a></code></pre></div>
+<div class="sourceCode" id="cb648"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb648-1" title="1"><span class="kw">lm</span>(<span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span>x, data)</a></code></pre></div>
 <p><code>lm(y ~ x, data)</code> 是最常用的线性模型函数(lm是linear model的缩写)。参数解释说明</p>
 <div class="danger">
 <ul>
@@ -617,21 +617,21 @@ data：代表数据框，数据框包含了响应变量和独立变量
 </ul>
 </div>
 <p>在运行<code>lm()</code>之前，先画出身高和收入的散点图(记在我们想干什么，寻找身高和收入的关系)</p>
-<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb636-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb636-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb636-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-556-1.png" width="576" /></p>
+<div class="sourceCode" id="cb649"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb649-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb649-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb649-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-566-1.png" width="576" /></p>
 <p>等不及了，就运行代码吧</p>
-<div class="sourceCode" id="cb637"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb637-1" title="1">mod1 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> earn <span class="op">~</span><span class="st"> </span>height, </a>
-<a class="sourceLine" id="cb637-2" title="2">          <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb650-1" title="1">mod1 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> earn <span class="op">~</span><span class="st"> </span>height, </a>
+<a class="sourceLine" id="cb650-2" title="2">          <span class="dt">data =</span> wages)</a></code></pre></div>
 <p>这里我们将<code>earn</code>作为响应变量，<code>height</code>为预测变量。<code>lm()</code>返回赋值给<code>mod1</code>. <code>mod1</code>现在是个什么东东呢？ mod1是一个叫<code>lm object</code>或者叫<code>类</code>的东西，</p>
-<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb638-1" title="1"><span class="kw">names</span>(mod1)</a></code></pre></div>
+<div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb651-1" title="1"><span class="kw">names</span>(mod1)</a></code></pre></div>
 <pre><code>##  [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;      
 ##  [4] &quot;rank&quot;          &quot;fitted.values&quot; &quot;assign&quot;       
 ##  [7] &quot;qr&quot;            &quot;df.residual&quot;   &quot;xlevels&quot;      
 ## [10] &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;</code></pre>
 <p>我们打印看看，会发生什么</p>
-<div class="sourceCode" id="cb640"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb640-1" title="1"><span class="kw">print</span>(mod1)</a></code></pre></div>
+<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb653-1" title="1"><span class="kw">print</span>(mod1)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = earn ~ height, data = wages)
@@ -660,11 +660,11 @@ data：代表数据框，数据框包含了响应变量和独立变量
 <li><p>对于斜率<span class="math inline">\(\beta = 2387\)</span>意味着，当一个人的身高是68英寸时，他的预期收入<span class="math inline">\(earn = -126532 + 2387 \times 68= 35806\)</span> 美元， 换个方式说，身高<span class="math inline">\(height\)</span>每增加一个1英寸, 收入<span class="math inline">\(earn\)</span>会增加2387美元。</p></li>
 <li><p>对于截距<span class="math inline">\(\alpha = -126532\)</span>，即当身高为0时，期望的收入值-126532。呵呵，人的身高不可能为0，所以这是一种极端的理论情况，现实不可能发生。</p></li>
 </ul>
-<div class="sourceCode" id="cb642"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb642-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb642-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb642-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb642-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-560-1.png" width="576" /></p>
+<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb655-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb655-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb655-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb655-4" title="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-570-1.png" width="576" /></p>
 <!-- $$ -->
 <!-- \begin{aligned} -->
 <!-- y &= \alpha + \beta x + \epsilon \\ -->
@@ -681,9 +681,9 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 \end{aligned}
 \]</span></p>
 <p>R语言代码实现也很简单，只需要把变量<code>ed</code>增加在公式的右边</p>
-<div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb643-1" title="1">mod2 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb656"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb656-1" title="1">mod2 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a></code></pre></div>
 <p>同样，我们打印<code>mod2</code>看看</p>
-<div class="sourceCode" id="cb644"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb644-1" title="1">mod2</a></code></pre></div>
+<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb657-1" title="1">mod2</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = earn ~ height + ed, data = wages)
@@ -695,30 +695,30 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 </div>
 <div id="section-129" class="section level2">
 <h2><span class="header-section-number">16.6</span> 更多模型</h2>
-<div class="sourceCode" id="cb646"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb646-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-4" title="4"></a>
-<a class="sourceLine" id="cb646-5" title="5"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-6" title="6"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-7" title="7"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-8" title="8"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-9" title="9"></a>
-<a class="sourceLine" id="cb646-10" title="10"></a>
-<a class="sourceLine" id="cb646-11" title="11"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-12" title="12"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-13" title="13"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-14" title="14"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-15" title="15"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-16" title="16"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-17" title="17"></a>
-<a class="sourceLine" id="cb646-18" title="18"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-19" title="19"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-20" title="20"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-21" title="21"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-22" title="22"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb646-23" title="23"></a>
-<a class="sourceLine" id="cb646-24" title="24"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb659-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-4" title="4"></a>
+<a class="sourceLine" id="cb659-5" title="5"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-6" title="6"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-7" title="7"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-8" title="8"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-9" title="9"></a>
+<a class="sourceLine" id="cb659-10" title="10"></a>
+<a class="sourceLine" id="cb659-11" title="11"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-12" title="12"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-13" title="13"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-14" title="14"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-15" title="15"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-16" title="16"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-17" title="17"></a>
+<a class="sourceLine" id="cb659-18" title="18"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-19" title="19"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-20" title="20"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-21" title="21"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-22" title="22"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb659-23" title="23"></a>
+<a class="sourceLine" id="cb659-24" title="24"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a></code></pre></div>
 </div>
 <div id="section-130" class="section level2">
 <h2><span class="header-section-number">16.7</span> 可能遇到的情形</h2>
@@ -726,17 +726,17 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 因此，这里再介绍几种线性回归中遇到的几种特殊情况</p>
 <div id="section-131" class="section level3">
 <h3><span class="header-section-number">16.7.1</span> 截距项</h3>
-<div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb647-1" title="1"><span class="co"># 包含截距，以下两者是等价的</span></a>
-<a class="sourceLine" id="cb647-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb647-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb647-4" title="4"></a>
-<a class="sourceLine" id="cb647-5" title="5"><span class="co"># 去掉截距，以下两者是等价的</span></a>
-<a class="sourceLine" id="cb647-6" title="6"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb647-7" title="7"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb660-1" title="1"><span class="co"># 包含截距，以下两者是等价的</span></a>
+<a class="sourceLine" id="cb660-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb660-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb660-4" title="4"></a>
+<a class="sourceLine" id="cb660-5" title="5"><span class="co"># 去掉截距，以下两者是等价的</span></a>
+<a class="sourceLine" id="cb660-6" title="6"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb660-7" title="7"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>height, <span class="dt">data =</span> wages)</a></code></pre></div>
 </div>
 <div id="section-132" class="section level3">
 <h3><span class="header-section-number">16.7.2</span> 只有截距</h3>
-<div class="sourceCode" id="cb648"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb648-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb661-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> wages)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = earn ~ 1, data = wages)
@@ -744,10 +744,10 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 ## Coefficients:
 ## (Intercept)  
 ##       32446</code></pre>
-<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb650-1" title="1">wages <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb650-2" title="2"><span class="st">  </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb650-3" title="3">    <span class="dt">mean_wages =</span> <span class="kw">mean</span>(earn)</a>
-<a class="sourceLine" id="cb650-4" title="4">  )</a></code></pre></div>
+<div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb663-1" title="1">wages <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb663-2" title="2"><span class="st">  </span><span class="kw">summarise</span>(</a>
+<a class="sourceLine" id="cb663-3" title="3">    <span class="dt">mean_wages =</span> <span class="kw">mean</span>(earn)</a>
+<a class="sourceLine" id="cb663-4" title="4">  )</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["mean_wages"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"32446"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -757,20 +757,20 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 <div id="section-133" class="section level3">
 <h3><span class="header-section-number">16.7.3</span> 分类变量</h3>
 <p>race变量就是数据框wages的一个分类变量，代表四个不同的种族。用分类变量做回归，本质上是各组之间的进行比较。</p>
-<div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb651-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(race)</a></code></pre></div>
+<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb664-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(race)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["race"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"white"},{"1":"other"},{"1":"hispanic"},{"1":"black"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb652"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb652-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb652-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> race, <span class="dt">y =</span> earn, <span class="dt">fill =</span> race)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb652-3" title="3"><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb652-4" title="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20000</span>))</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-568-1.png" width="576" /></p>
+<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb665-1" title="1">wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb665-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> race, <span class="dt">y =</span> earn, <span class="dt">fill =</span> race)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb665-3" title="3"><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb665-4" title="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20000</span>))</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-578-1.png" width="576" /></p>
 <p>以分类变量作为解释变量，做线性回归</p>
-<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb653-1" title="1">mod3 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb653-2" title="2">mod3</a></code></pre></div>
+<div class="sourceCode" id="cb666"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb666-1" title="1">mod3 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>race, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb666-2" title="2">mod3</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = earn ~ race, data = wages)
@@ -781,7 +781,7 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 ##    racewhite  
 ##         4993</code></pre>
 <p>tidyverse框架下，喜欢<strong>数据框</strong>的统计结果，因此，可用broom的<code>tidy()</code>函数将<strong>模型输出</strong>转换为数据框的形式</p>
-<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb655-1" title="1">broom<span class="op">::</span><span class="kw">tidy</span>(mod3)</a></code></pre></div>
+<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb668-1" title="1">broom<span class="op">::</span><span class="kw">tidy</span>(mod3)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"28372","3":"2781","4":"10.2036","5":"1.294e-23"},{"1":"racehispanic","2":"-2887","3":"4515","4":"-0.6394","5":"5.227e-01"},{"1":"raceother","2":"3905","3":"6428","4":"0.6075","5":"5.436e-01"},{"1":"racewhite","2":"4993","3":"2929","4":"1.7046","5":"8.850e-02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -807,19 +807,19 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 <div id="section-134" class="section level3">
 <h3><span class="header-section-number">16.7.4</span> 因子变量</h3>
 <p>hispanic组的估计最低，适合做基线，因此可以将race转换为因子变量，这样方便调整因子先后顺序</p>
-<div class="sourceCode" id="cb656"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb656-1" title="1">wages_fct &lt;-<span class="st"> </span>wages <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb656-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race =</span> <span class="kw">factor</span>(race, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;hispanic&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;other&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb656-3" title="3"><span class="st">  </span><span class="kw">select</span>(earn, race)</a>
-<a class="sourceLine" id="cb656-4" title="4"></a>
-<a class="sourceLine" id="cb656-5" title="5"><span class="kw">head</span>(wages_fct)</a></code></pre></div>
+<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb669-1" title="1">wages_fct &lt;-<span class="st"> </span>wages <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb669-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">race =</span> <span class="kw">factor</span>(race, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;hispanic&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;other&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb669-3" title="3"><span class="st">  </span><span class="kw">select</span>(earn, race)</a>
+<a class="sourceLine" id="cb669-4" title="4"></a>
+<a class="sourceLine" id="cb669-5" title="5"><span class="kw">head</span>(wages_fct)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["earn"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["race"],"name":[2],"type":["fctr"],"align":["left"]}],"data":[{"1":"79571","2":"white"},{"1":"96397","2":"white"},{"1":"48711","2":"white"},{"1":"80478","2":"other"},{"1":"82089","2":"white"},{"1":"15313","2":"white"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p><code>wages_fct</code>替换<code>wages</code>，然后建立线性模型</p>
-<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb657-1" title="1">mod4 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>race, <span class="dt">data =</span> wages_fct)</a>
-<a class="sourceLine" id="cb657-2" title="2">broom<span class="op">::</span><span class="kw">tidy</span>(mod4)</a></code></pre></div>
+<div class="sourceCode" id="cb670"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb670-1" title="1">mod4 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>race, <span class="dt">data =</span> wages_fct)</a>
+<a class="sourceLine" id="cb670-2" title="2">broom<span class="op">::</span><span class="kw">tidy</span>(mod4)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"25485","3":"3557","4":"7.1649","5":"1.265e-12"},{"1":"racewhite","2":"7880","3":"3674","4":"2.1446","5":"3.216e-02"},{"1":"raceblack","2":"2887","3":"4515","4":"0.6394","5":"5.227e-01"},{"1":"raceother","2":"6792","3":"6800","4":"0.9988","5":"3.181e-01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -827,45 +827,45 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 </div>
 <p>以hispanic组作为基线，各组系数也调整了，但加上截距后，实际值是没有变的。</p>
 <p>大家可以用sex变量试试看</p>
-<div class="sourceCode" id="cb658"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb658-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb671-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a></code></pre></div>
 </div>
 <div id="section-135" class="section level3">
 <h3><span class="header-section-number">16.7.5</span> 一个分类变量和一个连续变量</h3>
 <p>如果预测变量是一个分类变量和一个连续变量</p>
-<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb659-1" title="1">mod5 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb659-2" title="2"><span class="kw">coef</span>(mod5)</a></code></pre></div>
+<div class="sourceCode" id="cb672"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb672-1" title="1">mod5 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb672-2" title="2"><span class="kw">coef</span>(mod5)</a></code></pre></div>
 <pre><code>## (Intercept)      height     sexmale 
 ##    -32479.9       879.4     16874.2</code></pre>
 <ul>
 <li><code>height = 879.424</code> 当sex保持不变时，height变化引起的earn变化</li>
 <li><code>sexmale = 16874.158</code> 当height保持不变时，sex变化(female变为male)引起的earn变化</li>
 </ul>
-<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb661-1" title="1">wages <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb661-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb661-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb661-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">predict</span>(mod5))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb661-5" title="5"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>))</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-576-1.png" width="576" /></p>
+<div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb674-1" title="1">wages <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb674-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb674-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb674-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">predict</span>(mod5))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb674-5" title="5"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>))</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-586-1.png" width="576" /></p>
 </div>
 <div id="section-136" class="section level3">
 <h3><span class="header-section-number">16.7.6</span> 偷懒的写法</h3>
 <p>. is shorthand for “everything else.”</p>
-<div class="sourceCode" id="cb662"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb662-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb662-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb662-3" title="3"></a>
-<a class="sourceLine" id="cb662-4" title="4"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb662-5" title="5"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb675-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ed <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb675-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb675-3" title="3"></a>
+<a class="sourceLine" id="cb675-4" title="4"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>ed, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb675-5" title="5"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age, <span class="dt">data =</span> wages)</a></code></pre></div>
 <p>R 语言很多时候都出现了<code>.</code>，不同的场景，含义是不一样的。我会在后面第 <a href="dot.html#dot">23</a> 章专门讨论这个问题， 这是一个非常重要的问题</p>
 </div>
 <div id="section-137" class="section level3">
 <h3><span class="header-section-number">16.7.7</span> 交互项</h3>
-<div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb663-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb663-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb663-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>(height <span class="op">+</span><span class="st"> </span>sex)<span class="op">^</span><span class="dv">2</span>, <span class="dt">data =</span> wages)</a></code></pre></div>
-<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb664-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb664-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height<span class="op">:</span>sex<span class="op">:</span>race, <span class="dt">data =</span> wages)</a></code></pre></div>
-<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb665-1" title="1">mod6 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
-<a class="sourceLine" id="cb665-2" title="2"><span class="kw">coef</span>(mod6)</a></code></pre></div>
+<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb676-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb676-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">*</span><span class="st"> </span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb676-3" title="3"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>(height <span class="op">+</span><span class="st"> </span>sex)<span class="op">^</span><span class="dv">2</span>, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb677-1" title="1"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb677-2" title="2"><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height<span class="op">:</span>sex<span class="op">:</span>race, <span class="dt">data =</span> wages)</a></code></pre></div>
+<div class="sourceCode" id="cb678"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb678-1" title="1">mod6 &lt;-<span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>height <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>height<span class="op">:</span>sex, <span class="dt">data =</span> wages)</a>
+<a class="sourceLine" id="cb678-2" title="2"><span class="kw">coef</span>(mod6)</a></code></pre></div>
 <pre><code>##    (Intercept)         height        sexmale 
 ##       -12167.0          564.5       -30510.4 
 ## height:sexmale 
@@ -876,12 +876,12 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 <li>对于女性，height增长1个单位，引起earn的增长<code>564.5102</code></li>
 <li>对于男性，height增长1个单位，引起earn的增长<code>564.5102 + 701.4065 = 1265.92</code></li>
 </ul>
-<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb667-1" title="1">wages <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb667-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb667-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb667-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">predict</span>(mod6))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb667-5" title="5"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>))</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-581-1.png" width="576" /></p>
+<div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb680-1" title="1">wages <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb680-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> earn, <span class="dt">color =</span> sex)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb680-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb680-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">predict</span>(mod6))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb680-5" title="5"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>))</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-591-1.png" width="576" /></p>
 </div>
 <div id="predict-vs-fit" class="section level3">
 <h3><span class="header-section-number">16.7.8</span> predict vs fit</h3>
@@ -900,13 +900,13 @@ earn &amp;= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 </ul>
 <p>回归分析中，如果自变量只有一个<span class="math inline">\(x\)</span>，也就是模型<code>lm(y~x)</code>，那么回归和相关就有关联了。</p>
 <p>比如：计算身高和收入两者的Pearson相关系数的平方</p>
-<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb668-1" title="1">r &lt;-<span class="st"> </span><span class="kw">cor</span>(wages<span class="op">$</span>height, wages<span class="op">$</span>earn)  </a>
-<a class="sourceLine" id="cb668-2" title="2"><span class="kw">print</span>( r<span class="op">^</span><span class="dv">2</span> ) </a></code></pre></div>
+<div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb681-1" title="1">r &lt;-<span class="st"> </span><span class="kw">cor</span>(wages<span class="op">$</span>height, wages<span class="op">$</span>earn)  </a>
+<a class="sourceLine" id="cb681-2" title="2"><span class="kw">print</span>( r<span class="op">^</span><span class="dv">2</span> ) </a></code></pre></div>
 <pre><code>## [1] 0.08503</code></pre>
 <p>然后看看，身高和收入的线性模型</p>
-<div class="sourceCode" id="cb670"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb670-1" title="1"><span class="kw">lm</span>(<span class="dt">formula =</span> earn <span class="op">~</span><span class="st"> </span>height, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb670-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb670-3" title="3"><span class="st">  </span><span class="kw">pull</span>(r.squared)</a></code></pre></div>
+<div class="sourceCode" id="cb683"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb683-1" title="1"><span class="kw">lm</span>(<span class="dt">formula =</span> earn <span class="op">~</span><span class="st"> </span>height, <span class="dt">data =</span> wages) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb683-2" title="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb683-3" title="3"><span class="st">  </span><span class="kw">pull</span>(r.squared)</a></code></pre></div>
 <pre><code>## [1] 0.08503</code></pre>
 <p>相关系数的平方 和 线性模型的<span class="math inline">\(R^2\)</span>是相等的</p>
 </div>

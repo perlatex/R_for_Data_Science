@@ -3,13 +3,13 @@
 聊聊tidyverse中常用的一些小技巧
 
 > "most of data science is counting, and sometimes dividing"
->  --- ― Hadley Wickham
+>  --- Hadley Wickham
 
 
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
-library(patchwork)
+library(patchwork)  # install.packages("patchwork")
 ```
 
 
@@ -37,6 +37,8 @@ plant_heigt <- data.frame(
   A = c(0.7, 1.0, 1.5, 1.8, 2.2),
   B = c(0.5, 0.7, 0.9, 1.3, 1.8)
 )
+
+plant_heigt
 ```
 
 
@@ -69,7 +71,7 @@ knitr::include_graphics("images/make_data_tidy.png")
 ```
 
 
-```{r, eval=FALSE}
+```{r eval=FALSE, include=FALSE}
 melted <- gather(plant_heigt, variable, value, 2:3)
 
 ## Column names instead of indices
@@ -83,9 +85,7 @@ melted <- gather(plant_heigt, variable, value, -id)
 ```
 
 
-```{r out.width = '100%', fig.align='left', echo = FALSE}
-knitr::include_graphics("images/tidyr-fig.png")
-```
+
 
 从2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增了一组函数`pivot_longer()/pivot_wider()`，用来补充和完善原来的`gather()/spread()` 
 
@@ -93,6 +93,10 @@ knitr::include_graphics("images/tidyr-fig.png")
 * `gather()/pivot_longer `  it makes “wide” data longer.
 * `spread()/pivot_wider`  it makes “long” data wider.
 
+
+```{r out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/tidyr-fig.png")
+```
 
 所以现在使用`pivot_longer()`函数
 ```{r}
@@ -102,6 +106,19 @@ long <- pivot_longer(plant_heigt, 2:3,
 )
 long
 ```
+
+
+
+```{r}
+plant_heigt %>% 
+  pivot_longer(
+  cols = -Day,                 # A:B 或者 c(A, B) 或者 c("A", "B")
+  names_to = "plant",
+  values_to = "height"
+)
+
+```
+
 
 
 ```{r}
@@ -138,9 +155,15 @@ df
 df %>% count(name)
 ```
 
+如果用之前讲的`group_by() + summarise()`来写，
+```{r}
+df %>% 
+  group_by(name) %>% 
+  summarise( n = n())
+```
 
 
-
+`count()` 还有更多强大的参数， 比如
 ```{r}
 df %>% count(name,
   sort = TRUE,
@@ -150,7 +173,7 @@ df %>% count(name,
 ```
 
 
-如果不用`count()`，用`group_by() + summarisze()`写，
+如果不用`count()`，用`group_by() + summarise()`写，
 ```{r}
 df %>%
   group_by(name) %>%
@@ -160,6 +183,8 @@ df %>%
   ) %>%
   arrange(desc(total_score))
 ```
+
+当然，`count()`在特定场合下的简便写法，遇到复杂的分组统计，还是得用用`group_by() + summarise()`组合。
 
 
 ## 在 count() 中创建新变量
@@ -196,6 +221,18 @@ df %>% add_count(name)
 
 ## nth(), first(),  last()
 
+
+```{r}
+v <- c("a", "c", "d", "k")
+```
+
+
+```{r}
+v[1]
+v[length(v)]
+```
+
+
 ```{r}
 c("a", "c", "d", "k") %>% nth(3)
 ```
@@ -203,6 +240,7 @@ c("a", "c", "d", "k") %>% nth(3)
 
 ```{r}
 c("a", "c", "d", "k") %>% first()
+c("a", "c", "d", "k") %>% last()
 ```
 
 
@@ -303,6 +341,13 @@ dt <- tribble(
 dt %>% mutate(x = replace_na(x, 0))
 ```
 
+
+```{r}
+dt %>% mutate(
+  x = replace_na(x, mean(x, na.rm = TRUE))
+  )
+```
+
 之前讲正则表达式也有类似的函数`stringr::str_replace_na()`，
 
 
@@ -375,6 +420,22 @@ gapminder %>%
 ```
 
 
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarise(test = list(lm(lifeExp ~ gdpPercap))) %>% # 线性回归
+
+  mutate(tidied = map(test, broom::tidy, conf.int = TRUE)) %>%
+  unnest(tidied) %>%
+  filter(term != "(Intercept)") %>%
+  ggplot(aes(estimate, continent)) +
+  geom_point() +
+  geom_errorbarh(aes(
+    xmin = conf.low,
+    xmax = conf.high,
+    height = .3
+  ))
+```
 
 
 以下两种方法，同样完成上面的工作，具体方法会在第 \@ref(advR) 章介绍
@@ -418,6 +479,33 @@ gapminder %>%
   geom_col() +
   coord_flip()
 ```
+
+
+画图容易，但画出一张好图并不容易
+```{r eval=FALSE, include=FALSE}
+c("#b3b3b3a0", "#D55E00", "#0072B2") %>% scales::show_col()
+```
+
+```{r}
+gapminder %>%
+  distinct(continent, country) %>%
+  count(continent) %>% 
+  mutate(coll = if_else(continent == "Asia", "red", "gray")) %>% 
+
+
+  ggplot(aes(x = fct_reorder(continent, n), y = n)) +
+  geom_text(aes(label = n), hjust = -0.25) +
+  geom_col(width = 0.8, aes(fill = coll) ) +
+  coord_flip() +
+  theme_classic() +
+  scale_fill_manual(values = c("#b3b3b3a0", "#D55E00")) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 11)
+        ) +
+  labs(title = "我的标题", x = "")
+```
+
+
 
 ## scale_x/y_log10
 
@@ -523,6 +611,13 @@ df_united
 ```
 
 
+当然，简单的情况也可以用`mutate()`实现
+```{r}
+df %>% mutate(newcol = str_c(school, "_", class))
+```
+
+
+
 
 ## separate()
 
@@ -531,7 +626,12 @@ df_united %>% separate(school_plus_class, into = c("sch", "cls"), sep = "_", rem
 ```
 
 
-
+如果用mutate()来实现，语句就会比较复杂些
+```{r}
+df_united %>% 
+  mutate(sch = str_split(school_plus_class, "_") %>% map_chr(1)) %>% 
+  mutate(cls = str_split(school_plus_class, "_") %>% map_chr(2)) 
+```
 
 
 如果每行不是都恰好分隔成两部分呢？就需要`tidyr::extract()`, 使用方法和`tidyr::separate()`类似

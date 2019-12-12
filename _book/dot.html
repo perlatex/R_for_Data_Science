@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-11" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -481,18 +481,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dot" class="section level1">
 <h1><span class="header-section-number">第 23 章</span> tidyverse中的dot</h1>
 <p>本章介绍tidyverse的语法中经常遇到<code>.</code>， 不同的场景，含义不同。因此很有必要弄清楚各自的含义。</p>
-<div class="sourceCode" id="cb765"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb765-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode" id="cb778"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb778-1" title="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <div id="section-146" class="section level2">
 <h2><span class="header-section-number">23.1</span> 每一行的 <code>.</code> 各自代表什么意思呢?</h2>
-<div class="sourceCode" id="cb766"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb766-1" title="1"><span class="kw">read_csv</span>(<span class="st">&quot;./data/wages.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">letter =</span> <span class="kw">str_extract</span>(race, <span class="st">&quot;(?&lt;=h)(.)&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-3" title="3"><span class="st">  </span><span class="kw">select</span>(., <span class="op">-</span>letter) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-4" title="4"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(race), <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(.)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-5" title="5"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(sex), <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(. <span class="op">==</span><span class="st"> &quot;male&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-6" title="6"><span class="st">  </span><span class="kw">filter_if</span>(<span class="op">~</span><span class="st"> </span><span class="kw">is.numeric</span>(.), <span class="kw">all_vars</span>(. <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb766-7" title="7"><span class="st">  </span><span class="kw">split</span>(.<span class="op">$</span>sex) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-8" title="8"><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> .)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb766-9" title="9"><span class="st">  </span><span class="kw">map_dfr</span>(<span class="op">~</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(.), <span class="dt">.id =</span> <span class="st">&quot;sex&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb779"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb779-1" title="1"><span class="kw">read_csv</span>(<span class="st">&quot;./data/wages.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">letter =</span> <span class="kw">str_extract</span>(race, <span class="st">&quot;(?&lt;=h)(.)&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-3" title="3"><span class="st">  </span><span class="kw">select</span>(., <span class="op">-</span>letter) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-4" title="4"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(race), <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(.)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-5" title="5"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(sex), <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(. <span class="op">==</span><span class="st"> &quot;male&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-6" title="6"><span class="st">  </span><span class="kw">filter_if</span>(<span class="op">~</span><span class="st"> </span><span class="kw">is.numeric</span>(.), <span class="kw">all_vars</span>(. <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb779-7" title="7"><span class="st">  </span><span class="kw">split</span>(.<span class="op">$</span>sex) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-8" title="8"><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> .)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb779-9" title="9"><span class="st">  </span><span class="kw">map_dfr</span>(<span class="op">~</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(.), <span class="dt">.id =</span> <span class="st">&quot;sex&quot;</span>)</a></code></pre></div>
 <p>回答之前，我们先介绍一些相关知识点</p>
 </div>
 <div id="section-147" class="section level2">
@@ -504,18 +504,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><code>z %&gt;% f(x, y, arg = .)</code> is equivalent to <code>f(x, y, arg  = z)</code></p></li>
 </ul>
 <p>我们经常这样写</p>
-<div class="sourceCode" id="cb767"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb767-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb767-2" title="2"><span class="st">  </span><span class="kw">select</span>(cyl, disp, hp) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb767-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb780"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb780-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb780-2" title="2"><span class="st">  </span><span class="kw">select</span>(cyl, disp, hp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb780-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">2</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["cyl"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"6","2":"160","3":"110","_rn_":"Mazda RX4"},{"1":"6","2":"160","3":"110","_rn_":"Mazda RX4 Wag"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>实际上，这里是有占位符的</p>
-<div class="sourceCode" id="cb768"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb768-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb768-2" title="2"><span class="st">  </span><span class="kw">select</span>(., cyl, disp, hp) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb768-3" title="3"><span class="st">  </span><span class="kw">head</span>(., <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb781-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb781-2" title="2"><span class="st">  </span><span class="kw">select</span>(., cyl, disp, hp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb781-3" title="3"><span class="st">  </span><span class="kw">head</span>(., <span class="dv">2</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["cyl"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"6","2":"160","3":"110","_rn_":"Mazda RX4"},{"1":"6","2":"160","3":"110","_rn_":"Mazda RX4 Wag"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -525,18 +525,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="lambda" class="section level2">
 <h2><span class="header-section-number">23.3</span> Lambda函数</h2>
 <p><code>.</code>出现在函数<code>.f</code>的位置上， 就是 purrr 风格的Lambda函数<code>~ fun(.)</code>，</p>
-<div class="sourceCode" id="cb769"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb769-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb769-2" title="2"><span class="st">  </span><span class="kw">select_at</span>(<span class="kw">vars</span>(<span class="kw">contains</span>(<span class="st">&quot;ar&quot;</span>)), <span class="op">~</span><span class="kw">toupper</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb769-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb782"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb782-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb782-2" title="2"><span class="st">  </span><span class="kw">select_at</span>(<span class="kw">vars</span>(<span class="kw">contains</span>(<span class="st">&quot;ar&quot;</span>)), <span class="op">~</span><span class="kw">toupper</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb782-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["GEAR"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["CARB"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"4","_rn_":"Mazda RX4"},{"1":"4","2":"4","_rn_":"Mazda RX4 Wag"},{"1":"4","2":"1","_rn_":"Datsun 710"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>有时候程序员会将<code>~toupper(.)</code>简写成 <code>toupper</code></p>
-<div class="sourceCode" id="cb770"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb770-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb770-2" title="2"><span class="st">  </span><span class="kw">select_at</span>(<span class="kw">vars</span>(<span class="kw">contains</span>(<span class="st">&quot;ar&quot;</span>)), toupper) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb770-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb783-1" title="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb783-2" title="2"><span class="st">  </span><span class="kw">select_at</span>(<span class="kw">vars</span>(<span class="kw">contains</span>(<span class="st">&quot;ar&quot;</span>)), toupper) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb783-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["GEAR"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["CARB"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"4","_rn_":"Mazda RX4"},{"1":"4","2":"4","_rn_":"Mazda RX4 Wag"},{"1":"4","2":"1","_rn_":"Datsun 710"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -545,60 +545,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="section-148" class="section level2">
 <h2><span class="header-section-number">23.4</span> 正则表达式</h2>
-<div class="sourceCode" id="cb771"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb771-1" title="1">words &lt;-<span class="st"> &quot;the fattest cat.&quot;</span></a></code></pre></div>
-<div class="sourceCode" id="cb772"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb772-1" title="1">words <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_replace_all</span>(<span class="st">&quot;t.&quot;</span>, <span class="st">&quot;-&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb784"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb784-1" title="1">words &lt;-<span class="st"> &quot;the fattest cat.&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb785-1" title="1">words <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_replace_all</span>(<span class="st">&quot;t.&quot;</span>, <span class="st">&quot;-&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;-e fa-es-ca-&quot;</code></pre>
-<div class="sourceCode" id="cb774"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb774-1" title="1">words <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_replace_all</span>(<span class="st">&quot;t</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;-&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb787-1" title="1">words <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str_replace_all</span>(<span class="st">&quot;t</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;-&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;the fattest ca-&quot;</code></pre>
 </div>
 <div id="unary-funciton-" class="section level2">
 <h2><span class="header-section-number">23.5</span> Unary funciton (只带一个参数的函数)</h2>
 <!-- A pipeline with a dot (.) as LHS will create a unary function. -->
-<div class="sourceCode" id="cb776"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb776-1" title="1">mean_rm &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mean</span>(<span class="dt">na.rm =</span> T)</a>
-<a class="sourceLine" id="cb776-2" title="2"></a>
-<a class="sourceLine" id="cb776-3" title="3"><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st"> </span>mean_rm</a></code></pre></div>
+<div class="sourceCode" id="cb789"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb789-1" title="1">mean_rm &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mean</span>(<span class="dt">na.rm =</span> T)</a>
+<a class="sourceLine" id="cb789-2" title="2"></a>
+<a class="sourceLine" id="cb789-3" title="3"><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st"> </span>mean_rm</a></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>等价于</p>
-<div class="sourceCode" id="cb778"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb778-1" title="1"><span class="co"># is equivalent to</span></a>
-<a class="sourceLine" id="cb778-2" title="2"><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mean</span>(., <span class="dt">na.rm =</span> T)</a></code></pre></div>
+<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb791-1" title="1"><span class="co"># is equivalent to</span></a>
+<a class="sourceLine" id="cb791-2" title="2"><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mean</span>(., <span class="dt">na.rm =</span> T)</a></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="more-placeholder" class="section level2">
 <h2><span class="header-section-number">23.6</span> more placeholder</h2>
-<div class="sourceCode" id="cb780"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb780-1" title="1">iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">subset</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(.) <span class="op">%%</span><span class="st"> </span><span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb793"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb793-1" title="1">iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">subset</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(.) <span class="op">%%</span><span class="st"> </span><span class="dv">30</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fctr"],"align":["left"]}],"data":[{"1":"4.7","2":"3.2","3":"1.6","4":"0.2","5":"setosa","_rn_":"30"},{"1":"5.2","2":"2.7","3":"3.9","4":"1.4","5":"versicolor","_rn_":"60"},{"1":"5.5","2":"2.5","3":"4.0","4":"1.3","5":"versicolor","_rn_":"90"},{"1":"6.0","2":"2.2","3":"5.0","4":"1.5","5":"virginica","_rn_":"120"},{"1":"5.9","2":"3.0","3":"5.1","4":"1.8","5":"virginica","_rn_":"150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb781"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb781-1" title="1"><span class="dv">1</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span>{<span class="kw">c</span>(<span class="kw">min</span>(.), <span class="kw">max</span>(.))}</a></code></pre></div>
+<div class="sourceCode" id="cb794"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb794-1" title="1"><span class="dv">1</span><span class="op">:</span><span class="dv">10</span> <span class="op">%&gt;%</span><span class="st"> </span>{<span class="kw">c</span>(<span class="kw">min</span>(.), <span class="kw">max</span>(.))}</a></code></pre></div>
 <pre><code>## [1]  1 10</code></pre>
 </div>
 <div id="mutatemap" class="section level2">
 <h2><span class="header-section-number">23.7</span> 当mutate遇到map</h2>
 <p>当<code>dplyr::mutate</code>遇到<code>purrr::map</code>，情况就复杂很多了。然而，这种情况，tidyverse比比皆是。我就多说几句吧</p>
-<div class="sourceCode" id="cb783"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb783-1" title="1">iris <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb783-2" title="2"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb783-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(., <span class="dt">r_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), sum)) </a></code></pre></div>
+<div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb796-1" title="1">iris <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb796-2" title="2"><span class="st">  </span><span class="kw">head</span>(<span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb796-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(., <span class="dt">r_sum =</span> <span class="kw">pmap_dbl</span>(<span class="kw">select_if</span>(., is.numeric), sum)) </a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fctr"],"align":["left"]},{"label":["r_sum"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa","6":"10.2"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa","6":"9.5"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa","6":"9.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>这里<code>mutate()</code>行，有两个<code>.</code>, 实际这两个<code>.</code>都是等待<code>iris %&gt;% head(3)</code>传来的data.frame</p>
-<div class="sourceCode" id="cb784"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb784-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb784-2" title="2">  <span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb784-3" title="3">  <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb784-4" title="4">)</a>
-<a class="sourceLine" id="cb784-5" title="5">df</a></code></pre></div>
+<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb797-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb797-2" title="2">  <span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb797-3" title="3">  <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb797-4" title="4">)</a>
+<a class="sourceLine" id="cb797-5" title="5">df</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"2"},{"1":"2","2":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb785"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb785-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb785-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(., <span class="dt">rand  =</span> <span class="kw">map</span>(mean, <span class="op">~</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">5</span>, .))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb785-3" title="3"><span class="st">  </span><span class="kw">unnest_wider</span>(rand)</a></code></pre></div>
+<div class="sourceCode" id="cb798"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb798-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb798-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(., <span class="dt">rand  =</span> <span class="kw">map</span>(mean, <span class="op">~</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">5</span>, .))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb798-3" title="3"><span class="st">  </span><span class="kw">unnest_wider</span>(rand)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["...1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["...2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["...3"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["...4"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["...5"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"2","3":"-1.074","4":"2.3749","5":"0.5852","6":"-0.3761","7":"0.858"},{"1":"2","2":"4","3":"1.176","4":"0.7524","5":"3.1041","6":"1.3335","7":"1.020"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -608,9 +608,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>第一个 <code>.</code>， 是<code>df</code></li>
 <li>第二个 <code>.</code>， 是<code>df</code>中的<code>mean</code></li>
 </ul>
-<div class="sourceCode" id="cb786"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb786-1" title="1">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb786-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rand =</span> <span class="kw">map2</span>(mean, sd, <span class="op">~</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">5</span>, .x, .y))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb786-3" title="3"><span class="st">  </span><span class="kw">unnest_wider</span>(rand)</a></code></pre></div>
+<div class="sourceCode" id="cb799"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb799-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb799-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rand =</span> <span class="kw">map2</span>(mean, sd, <span class="op">~</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">5</span>, .x, .y))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb799-3" title="3"><span class="st">  </span><span class="kw">unnest_wider</span>(rand)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["...1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["...2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["...3"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["...4"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["...5"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"2","3":"2.347","4":"-2.328","5":"2.288","6":"0.07588","7":"2.993"},{"1":"2","2":"4","3":"8.447","4":"5.538","5":"2.257","6":"2.22172","7":"8.254"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -621,15 +621,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>sd</code>传给 <code>.y</code></li>
 </ul>
 <p>再来一个变态的。（我们不一定要这样写，但我们尽可能的要明白它的意思。）</p>
-<div class="sourceCode" id="cb787"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb787-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb787-2" title="2">  <span class="op">~</span><span class="st"> </span>a, <span class="op">~</span>b,</a>
-<a class="sourceLine" id="cb787-3" title="3">  <span class="dv">1</span>, <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb787-4" title="4">  <span class="dv">2</span>, <span class="dv">11</span></a>
-<a class="sourceLine" id="cb787-5" title="5">)</a>
-<a class="sourceLine" id="cb787-6" title="6"></a>
-<a class="sourceLine" id="cb787-7" title="7"></a>
-<a class="sourceLine" id="cb787-8" title="8">df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb787-9" title="9"><span class="st">   </span><span class="kw">mutate</span>(., <span class="dt">sum =</span> purrr<span class="op">::</span><span class="kw">pmap_dbl</span>(., <span class="op">~</span><span class="kw">sum</span>(...)))</a></code></pre></div>
+<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb800-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb800-2" title="2">  <span class="op">~</span><span class="st"> </span>a, <span class="op">~</span>b,</a>
+<a class="sourceLine" id="cb800-3" title="3">  <span class="dv">1</span>, <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb800-4" title="4">  <span class="dv">2</span>, <span class="dv">11</span></a>
+<a class="sourceLine" id="cb800-5" title="5">)</a>
+<a class="sourceLine" id="cb800-6" title="6"></a>
+<a class="sourceLine" id="cb800-7" title="7"></a>
+<a class="sourceLine" id="cb800-8" title="8">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb800-9" title="9"><span class="st">   </span><span class="kw">mutate</span>(., <span class="dt">sum =</span> purrr<span class="op">::</span><span class="kw">pmap_dbl</span>(., <span class="op">~</span><span class="kw">sum</span>(...)))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["a"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sum"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"10","3":"11"},{"1":"2","2":"11","3":"13"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -638,26 +638,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="dot-dot-dot" class="section level2">
 <h2><span class="header-section-number">23.8</span> Dot dot dot</h2>
-<div class="sourceCode" id="cb788"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb788-1" title="1">commas &lt;-<span class="st"> </span><span class="cf">function</span>(...) </a>
-<a class="sourceLine" id="cb788-2" title="2">  stringr<span class="op">::</span><span class="kw">str_c</span>(..., <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)</a>
-<a class="sourceLine" id="cb788-3" title="3"></a>
-<a class="sourceLine" id="cb788-4" title="4"></a>
-<a class="sourceLine" id="cb788-5" title="5"><span class="kw">commas</span>(letters[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb801"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb801-1" title="1">commas &lt;-<span class="st"> </span><span class="cf">function</span>(...) </a>
+<a class="sourceLine" id="cb801-2" title="2">  stringr<span class="op">::</span><span class="kw">str_c</span>(..., <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)</a>
+<a class="sourceLine" id="cb801-3" title="3"></a>
+<a class="sourceLine" id="cb801-4" title="4"></a>
+<a class="sourceLine" id="cb801-5" title="5"><span class="kw">commas</span>(letters[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</a></code></pre></div>
 <pre><code>## [1] &quot;a, b, c, d, e, f, g, h, i, j&quot;</code></pre>
 </div>
 <div id="dont-confuse" class="section level2">
 <h2><span class="header-section-number">23.9</span> Don’t confuse</h2>
 <!-- Don't confuse with many function arguments that are prefixed with a . -->
 <p>注意：有些函数的参数前缀是 .</p>
-<div class="sourceCode" id="cb790"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb790-1" title="1"><span class="kw">mutate_all</span>(.tbl, .funs, ...)</a>
-<a class="sourceLine" id="cb790-2" title="2"></a>
-<a class="sourceLine" id="cb790-3" title="3"><span class="kw">mutate_if</span>(.tbl, .predicate, .funs, ...)</a>
-<a class="sourceLine" id="cb790-4" title="4"></a>
-<a class="sourceLine" id="cb790-5" title="5"><span class="kw">mutate_at</span>(.tbl, .vars, .funs, ..., <span class="dt">.cols =</span> <span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb790-6" title="6"></a>
-<a class="sourceLine" id="cb790-7" title="7"><span class="kw">select_all</span>(.tbl, <span class="dt">.funs =</span> <span class="kw">list</span>(), ...)</a>
-<a class="sourceLine" id="cb790-8" title="8"></a>
-<a class="sourceLine" id="cb790-9" title="9"><span class="kw">rename_all</span>(.tbl, <span class="dt">.funs =</span> <span class="kw">list</span>(), ...)</a></code></pre></div>
+<div class="sourceCode" id="cb803"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb803-1" title="1"><span class="kw">mutate_all</span>(.tbl, .funs, ...)</a>
+<a class="sourceLine" id="cb803-2" title="2"></a>
+<a class="sourceLine" id="cb803-3" title="3"><span class="kw">mutate_if</span>(.tbl, .predicate, .funs, ...)</a>
+<a class="sourceLine" id="cb803-4" title="4"></a>
+<a class="sourceLine" id="cb803-5" title="5"><span class="kw">mutate_at</span>(.tbl, .vars, .funs, ..., <span class="dt">.cols =</span> <span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb803-6" title="6"></a>
+<a class="sourceLine" id="cb803-7" title="7"><span class="kw">select_all</span>(.tbl, <span class="dt">.funs =</span> <span class="kw">list</span>(), ...)</a>
+<a class="sourceLine" id="cb803-8" title="8"></a>
+<a class="sourceLine" id="cb803-9" title="9"><span class="kw">rename_all</span>(.tbl, <span class="dt">.funs =</span> <span class="kw">list</span>(), ...)</a></code></pre></div>
 </div>
 <div id="section-149" class="section level2">
 <h2><span class="header-section-number">23.10</span> 小结</h2>
@@ -682,15 +682,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="section-150" class="section level2">
 <h2><span class="header-section-number">23.11</span> 回答问题</h2>
 <p>现在回答本章开始的问题</p>
-<div class="sourceCode" id="cb791"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb791-1" title="1"><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">letter =</span> <span class="kw">str_extract</span>(race, <span class="st">&quot;(?&lt;=h)(.)&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-3" title="3"><span class="st">  </span><span class="kw">select</span>(., <span class="op">-</span>letter) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-4" title="4"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(race), <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(.)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-5" title="5"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(sex), <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(. <span class="op">==</span><span class="st"> &quot;male&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-6" title="6"><span class="st">  </span><span class="kw">filter_if</span>(<span class="op">~</span><span class="st"> </span><span class="kw">is.numeric</span>(.), <span class="kw">all_vars</span>(. <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb791-7" title="7"><span class="st">  </span><span class="kw">split</span>(.<span class="op">$</span>sex) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-8" title="8"><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> .)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb791-9" title="9"><span class="st">  </span><span class="kw">map_dfr</span>(., <span class="op">~</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(.), <span class="dt">.id =</span> <span class="st">&quot;sex&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb804-1" title="1"><span class="kw">read_csv</span>(<span class="st">&quot;./demo_data/wages.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">letter =</span> <span class="kw">str_extract</span>(race, <span class="st">&quot;(?&lt;=h)(.)&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-3" title="3"><span class="st">  </span><span class="kw">select</span>(., <span class="op">-</span>letter) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-4" title="4"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(race), <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(.)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-5" title="5"><span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(sex), <span class="op">~</span><span class="st"> </span><span class="kw">if_else</span>(. <span class="op">==</span><span class="st"> &quot;male&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-6" title="6"><span class="st">  </span><span class="kw">filter_if</span>(<span class="op">~</span><span class="st"> </span><span class="kw">is.numeric</span>(.), <span class="kw">all_vars</span>(. <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb804-7" title="7"><span class="st">  </span><span class="kw">split</span>(.<span class="op">$</span>sex) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-8" title="8"><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(earn <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> .)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb804-9" title="9"><span class="st">  </span><span class="kw">map_dfr</span>(., <span class="op">~</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(.), <span class="dt">.id =</span> <span class="st">&quot;sex&quot;</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["term"],"name":[2],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"(Intercept)","3":"-121845.9","4":"37449.17","5":"-3.25363","6":"1.214e-03"},{"1":"1","2":"height","3":"977.4","4":"515.20","5":"1.89711","6":"5.838e-02"},{"1":"1","2":"racehispanic","3":"577.9","4":"7934.15","5":"0.07284","6":"9.420e-01"},{"1":"1","2":"raceother","3":"-2035.3","4":"11514.31","5":"-0.17676","6":"8.598e-01"},{"1":"1","2":"racewhite","3":"12823.1","4":"5283.73","5":"2.42690","6":"1.557e-02"},{"1":"1","2":"ed","3":"5234.1","4":"601.15","5":"8.70675","6":"4.298e-17"},{"1":"1","2":"age","3":"405.9","4":"95.47","5":"4.25142","6":"2.524e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
