@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-12" />
+<meta name="date" content="2019-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -486,37 +486,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </blockquote>
 <div id="bayesian-new-statistics" class="section level2">
 <h2><span class="header-section-number">20.1</span> Bayesian New Statistics</h2>
-<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb688-1" title="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb688-2" title="2"><span class="kw">library</span>(here)</a>
-<a class="sourceLine" id="cb688-3" title="3"><span class="kw">library</span>(fs)</a>
-<a class="sourceLine" id="cb688-4" title="4"><span class="kw">library</span>(stringr)</a>
-<a class="sourceLine" id="cb688-5" title="5"><span class="kw">library</span>(purrr)</a></code></pre></div>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb689-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb689-2" title="2"><span class="kw">library</span>(here)</a>
+<a class="sourceLine" id="cb689-3" title="3"><span class="kw">library</span>(fs)</a>
+<a class="sourceLine" id="cb689-4" title="4"><span class="kw">library</span>(stringr)</a>
+<a class="sourceLine" id="cb689-5" title="5"><span class="kw">library</span>(purrr)</a></code></pre></div>
 </div>
 <div id="the-mechanics-of-mcmc." class="section level2">
 <h2><span class="header-section-number">20.2</span> The mechanics of MCMC.</h2>
 <p>这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse</p>
 <p><img src="images/pi.jpg" width="50%" style="display: block; margin: auto auto auto 0;" /></p>
-<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb689-1" title="1">n &lt;-<span class="st"> </span><span class="dv">50000</span></a>
-<a class="sourceLine" id="cb689-2" title="2"></a>
-<a class="sourceLine" id="cb689-3" title="3"><span class="kw">set.seed</span>(<span class="dv">2019</span>)</a>
-<a class="sourceLine" id="cb689-4" title="4">points &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="st">&quot;x&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n), <span class="st">&quot;y&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n))</a></code></pre></div>
-<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb690-1" title="1">points &lt;-<span class="st"> </span>points <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb690-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">inside =</span> <span class="kw">map2_dbl</span>(<span class="dt">.x =</span> x, <span class="dt">.y =</span> y, <span class="op">~</span><span class="kw">if_else</span>(.x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb690-3" title="3"><span class="st">    </span><span class="kw">rowid_to_column</span>(<span class="st">&quot;N&quot;</span>)</a></code></pre></div>
-<p>正方形的面积是1，圆的面积是<span class="math inline">\(\pi r^2 = \frac{1}{4} \pi\)</span>，如果知道两者的比例，就可以估算<span class="math inline">\(\pi\)</span></p>
+<div class="sourceCode" id="cb690"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb690-1" title="1">n &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb690-2" title="2"></a>
+<a class="sourceLine" id="cb690-3" title="3"><span class="kw">set.seed</span>(<span class="dv">2019</span>)</a>
+<a class="sourceLine" id="cb690-4" title="4">points &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="st">&quot;x&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n), <span class="st">&quot;y&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n))</a></code></pre></div>
 <div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb691-1" title="1">points &lt;-<span class="st"> </span>points <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb691-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">estimate =</span> <span class="dv">4</span><span class="op">*</span><span class="kw">cumsum</span>(inside)<span class="op">/</span>N)</a></code></pre></div>
-<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb692-1" title="1">points <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>()</a></code></pre></div>
+<a class="sourceLine" id="cb691-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">inside =</span> <span class="kw">map2_dbl</span>(<span class="dt">.x =</span> x, <span class="dt">.y =</span> y, <span class="op">~</span><span class="kw">if_else</span>(.x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb691-3" title="3"><span class="st">    </span><span class="kw">rowid_to_column</span>(<span class="st">&quot;N&quot;</span>)</a></code></pre></div>
+<p>正方形的面积是1，圆的面积是<span class="math inline">\(\pi r^2 = \frac{1}{4} \pi\)</span>，如果知道两者的比例，就可以估算<span class="math inline">\(\pi\)</span></p>
+<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb692-1" title="1">points &lt;-<span class="st"> </span>points <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb692-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">estimate =</span> <span class="dv">4</span><span class="op">*</span><span class="kw">cumsum</span>(inside)<span class="op">/</span>N)</a></code></pre></div>
+<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb693-1" title="1">points <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>()</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["N"],"name":[1],"type":["int"],"align":["right"]},{"label":["x"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["inside"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["estimate"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"49995","2":"0.590941","3":"0.04113","4":"1","5":"3.154"},{"1":"49996","2":"0.944844","3":"0.12664","4":"1","5":"3.154"},{"1":"49997","2":"0.653940","3":"0.15856","4":"1","5":"3.155"},{"1":"49998","2":"0.521017","3":"0.49110","4":"1","5":"3.155"},{"1":"49999","2":"0.811726","3":"0.20315","4":"1","5":"3.155"},{"1":"50000","2":"0.009348","3":"0.65669","4":"1","5":"3.155"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb693-1" title="1">points <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb693-2" title="2"><span class="st">    </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb693-3" title="3"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">x =</span> N), <span class="dt">colour =</span> <span class="st">&quot;#82518c&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb693-4" title="4"><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> pi) </a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-603-1.png" width="576" /></p>
+<div class="sourceCode" id="cb694"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb694-1" title="1">points <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb694-2" title="2"><span class="st">    </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb694-3" title="3"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">x =</span> N), <span class="dt">colour =</span> <span class="st">&quot;#82518c&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb694-4" title="4"><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> pi) </a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-604-1.png" width="576" /></p>
 </div>
 <div id="metropolis-hastings" class="section level2">
 <h2><span class="header-section-number">20.3</span> Metropolis-Hastings：</h2>

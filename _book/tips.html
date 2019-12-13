@@ -24,7 +24,7 @@
 <meta name="author" content="王敏杰" />
 
 
-<meta name="date" content="2019-12-12" />
+<meta name="date" content="2019-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -921,6 +921,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb523-15" title="15">        ) <span class="op">+</span></a>
 <a class="sourceLine" id="cb523-16" title="16"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;我的标题&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
 <p><img src="R4DS_files/figure-html/unnamed-chunk-449-1.png" width="576" /></p>
+<p>或者偷懒，将<code>continent == "Asia"</code>的结果直接赋值给<code>aes(fill = ___ )</code>， 效果与上面是一样的。</p>
+<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb524-1" title="1">gapminder <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb524-2" title="2"><span class="st">  </span><span class="kw">distinct</span>(continent, country) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb524-3" title="3"><span class="st">  </span><span class="kw">count</span>(continent) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb524-4" title="4"></a>
+<a class="sourceLine" id="cb524-5" title="5"></a>
+<a class="sourceLine" id="cb524-6" title="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">fct_reorder</span>(continent, n), <span class="dt">y =</span> n)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-7" title="7"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> n), <span class="dt">hjust =</span> <span class="fl">-0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-8" title="8"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">width =</span> <span class="fl">0.8</span>, <span class="kw">aes</span>(<span class="dt">fill =</span> continent <span class="op">==</span><span class="st"> &quot;Asia&quot;</span>) ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-9" title="9"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-10" title="10"><span class="st">  </span><span class="kw">theme_classic</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-11" title="11"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#b3b3b3a0&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-12" title="12"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>,</a>
+<a class="sourceLine" id="cb524-13" title="13">        <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">11</span>)</a>
+<a class="sourceLine" id="cb524-14" title="14">        ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb524-15" title="15"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;我的标题&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-450-1.png" width="576" /></p>
 </div>
 <div id="scale_xy_log10" class="section level2">
 <h2><span class="header-section-number">11.15</span> scale_x/y_log10</h2>
@@ -931,90 +948,90 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>不同人士的收入</li>
 <li>公司的营业额</li>
 </ul>
-<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb524-1" title="1">gapminder <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb524-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> gdpPercap, <span class="dt">y =</span> lifeExp)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb524-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-450-1.png" width="576" /></p>
 <div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb525-1" title="1">gapminder <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb525-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> gdpPercap, <span class="dt">y =</span> lifeExp)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb525-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb525-4" title="4"><span class="st">  </span><span class="kw">scale_x_log10</span>() <span class="co"># A better way to log transform</span></a></code></pre></div>
+<a class="sourceLine" id="cb525-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="R4DS_files/figure-html/unnamed-chunk-451-1.png" width="576" /></p>
+<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb526-1" title="1">gapminder <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb526-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> gdpPercap, <span class="dt">y =</span> lifeExp)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb526-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb526-4" title="4"><span class="st">  </span><span class="kw">scale_x_log10</span>() <span class="co"># A better way to log transform</span></a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-452-1.png" width="576" /></p>
 </div>
 <div id="fct_lump" class="section level2">
 <h2><span class="header-section-number">11.16</span> fct_lump</h2>
 <p>门诊病症的流水记录</p>
-<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb526-1" title="1">tb &lt;-<span class="st"> </span>tibble<span class="op">::</span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb526-2" title="2">  <span class="op">~</span>disease,  <span class="op">~</span>n,</a>
-<a class="sourceLine" id="cb526-3" title="3">      <span class="st">&quot;鼻塞&quot;</span>, <span class="dv">112</span>,</a>
-<a class="sourceLine" id="cb526-4" title="4">      <span class="st">&quot;流涕&quot;</span>, <span class="dv">130</span>,</a>
-<a class="sourceLine" id="cb526-5" title="5">      <span class="st">&quot;发热&quot;</span>,  <span class="dv">89</span>,</a>
-<a class="sourceLine" id="cb526-6" title="6">      <span class="st">&quot;腹泻&quot;</span>,   <span class="dv">5</span>,</a>
-<a class="sourceLine" id="cb526-7" title="7">      <span class="st">&quot;呕吐&quot;</span>,  <span class="dv">12</span>,</a>
-<a class="sourceLine" id="cb526-8" title="8">      <span class="st">&quot;咳嗽&quot;</span>, <span class="dv">102</span>,</a>
-<a class="sourceLine" id="cb526-9" title="9">      <span class="st">&quot;咽痛&quot;</span>,  <span class="dv">98</span>,</a>
-<a class="sourceLine" id="cb526-10" title="10">      <span class="st">&quot;乏力&quot;</span>,  <span class="dv">15</span>,</a>
-<a class="sourceLine" id="cb526-11" title="11">      <span class="st">&quot;腹痛&quot;</span>,   <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb526-12" title="12">      <span class="st">&quot;妄想&quot;</span>,   <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb526-13" title="13">      <span class="st">&quot;幻听&quot;</span>,   <span class="dv">6</span>,</a>
-<a class="sourceLine" id="cb526-14" title="14">      <span class="st">&quot;失眠&quot;</span>,   <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb526-15" title="15">      <span class="st">&quot;贫血&quot;</span>,   <span class="dv">8</span>,</a>
-<a class="sourceLine" id="cb526-16" title="16">      <span class="st">&quot;多动&quot;</span>,   <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb526-17" title="17">      <span class="st">&quot;胸痛&quot;</span>,   <span class="dv">4</span>,</a>
-<a class="sourceLine" id="cb526-18" title="18">      <span class="st">&quot;胸闷&quot;</span>,   <span class="dv">5</span></a>
-<a class="sourceLine" id="cb526-19" title="19">  )</a></code></pre></div>
-<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb527-1" title="1">p1 &lt;-<span class="st"> </span>tb <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb527-2" title="2"><span class="st">  </span><span class="kw">uncount</span>(n) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb527-3" title="3"></a>
-<a class="sourceLine" id="cb527-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> disease, <span class="dt">fill =</span> disease)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-5" title="5"><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-6" title="6"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-7" title="7"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</a>
-<a class="sourceLine" id="cb527-8" title="8"></a>
-<a class="sourceLine" id="cb527-9" title="9"></a>
-<a class="sourceLine" id="cb527-10" title="10"></a>
-<a class="sourceLine" id="cb527-11" title="11">p2 &lt;-<span class="st"> </span>tb <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb527-12" title="12"><span class="st">  </span><span class="kw">uncount</span>(n) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb527-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb527-14" title="14">    <span class="dt">disease =</span> forcats<span class="op">::</span><span class="kw">fct_lump</span>(disease, <span class="dv">5</span>),</a>
-<a class="sourceLine" id="cb527-15" title="15">    <span class="dt">disease =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(disease, <span class="dt">.x =</span> disease, <span class="dt">.fun =</span> length)</a>
-<a class="sourceLine" id="cb527-16" title="16">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb527-17" title="17"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> disease, <span class="dt">fill =</span> disease)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-18" title="18"><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-19" title="19"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb527-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb528"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb528-1" title="1">p1 <span class="op">+</span><span class="st"> </span>p2</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-454-1.png" width="576" /></p>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb527-1" title="1">tb &lt;-<span class="st"> </span>tibble<span class="op">::</span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb527-2" title="2">  <span class="op">~</span>disease,  <span class="op">~</span>n,</a>
+<a class="sourceLine" id="cb527-3" title="3">      <span class="st">&quot;鼻塞&quot;</span>, <span class="dv">112</span>,</a>
+<a class="sourceLine" id="cb527-4" title="4">      <span class="st">&quot;流涕&quot;</span>, <span class="dv">130</span>,</a>
+<a class="sourceLine" id="cb527-5" title="5">      <span class="st">&quot;发热&quot;</span>,  <span class="dv">89</span>,</a>
+<a class="sourceLine" id="cb527-6" title="6">      <span class="st">&quot;腹泻&quot;</span>,   <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb527-7" title="7">      <span class="st">&quot;呕吐&quot;</span>,  <span class="dv">12</span>,</a>
+<a class="sourceLine" id="cb527-8" title="8">      <span class="st">&quot;咳嗽&quot;</span>, <span class="dv">102</span>,</a>
+<a class="sourceLine" id="cb527-9" title="9">      <span class="st">&quot;咽痛&quot;</span>,  <span class="dv">98</span>,</a>
+<a class="sourceLine" id="cb527-10" title="10">      <span class="st">&quot;乏力&quot;</span>,  <span class="dv">15</span>,</a>
+<a class="sourceLine" id="cb527-11" title="11">      <span class="st">&quot;腹痛&quot;</span>,   <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb527-12" title="12">      <span class="st">&quot;妄想&quot;</span>,   <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb527-13" title="13">      <span class="st">&quot;幻听&quot;</span>,   <span class="dv">6</span>,</a>
+<a class="sourceLine" id="cb527-14" title="14">      <span class="st">&quot;失眠&quot;</span>,   <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb527-15" title="15">      <span class="st">&quot;贫血&quot;</span>,   <span class="dv">8</span>,</a>
+<a class="sourceLine" id="cb527-16" title="16">      <span class="st">&quot;多动&quot;</span>,   <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb527-17" title="17">      <span class="st">&quot;胸痛&quot;</span>,   <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb527-18" title="18">      <span class="st">&quot;胸闷&quot;</span>,   <span class="dv">5</span></a>
+<a class="sourceLine" id="cb527-19" title="19">  )</a></code></pre></div>
+<div class="sourceCode" id="cb528"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb528-1" title="1">p1 &lt;-<span class="st"> </span>tb <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-2" title="2"><span class="st">  </span><span class="kw">uncount</span>(n) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-3" title="3"></a>
+<a class="sourceLine" id="cb528-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> disease, <span class="dt">fill =</span> disease)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-5" title="5"><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-6" title="6"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-7" title="7"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</a>
+<a class="sourceLine" id="cb528-8" title="8"></a>
+<a class="sourceLine" id="cb528-9" title="9"></a>
+<a class="sourceLine" id="cb528-10" title="10"></a>
+<a class="sourceLine" id="cb528-11" title="11">p2 &lt;-<span class="st"> </span>tb <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-12" title="12"><span class="st">  </span><span class="kw">uncount</span>(n) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb528-14" title="14">    <span class="dt">disease =</span> forcats<span class="op">::</span><span class="kw">fct_lump</span>(disease, <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb528-15" title="15">    <span class="dt">disease =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(disease, <span class="dt">.x =</span> disease, <span class="dt">.fun =</span> length)</a>
+<a class="sourceLine" id="cb528-16" title="16">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb528-17" title="17"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> disease, <span class="dt">fill =</span> disease)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-18" title="18"><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-19" title="19"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb528-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb529-1" title="1">p1 <span class="op">+</span><span class="st"> </span>p2</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-455-1.png" width="576" /></p>
 </div>
 <div id="unite" class="section level2">
 <h2><span class="header-section-number">11.17</span> unite</h2>
-<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb529-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb529-2" title="2">   <span class="op">~</span>school, <span class="op">~</span>class,</a>
-<a class="sourceLine" id="cb529-3" title="3">  <span class="st">&quot;chuansi&quot;</span>, <span class="st">&quot;01&quot;</span>,</a>
-<a class="sourceLine" id="cb529-4" title="4">  <span class="st">&quot;chuansi&quot;</span>, <span class="st">&quot;02&quot;</span>,</a>
-<a class="sourceLine" id="cb529-5" title="5">  <span class="st">&quot;shude&quot;</span>, <span class="st">&quot;07&quot;</span>,</a>
-<a class="sourceLine" id="cb529-6" title="6">  <span class="st">&quot;shude&quot;</span>, <span class="st">&quot;08&quot;</span>,</a>
-<a class="sourceLine" id="cb529-7" title="7">  <span class="st">&quot;huapulu&quot;</span>, <span class="st">&quot;101&quot;</span>,</a>
-<a class="sourceLine" id="cb529-8" title="8">  <span class="st">&quot;huapulu&quot;</span>, <span class="st">&quot;103&quot;</span></a>
-<a class="sourceLine" id="cb529-9" title="9">)</a>
-<a class="sourceLine" id="cb529-10" title="10"></a>
-<a class="sourceLine" id="cb529-11" title="11">df</a></code></pre></div>
+<div class="sourceCode" id="cb530"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb530-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb530-2" title="2">   <span class="op">~</span>school, <span class="op">~</span>class,</a>
+<a class="sourceLine" id="cb530-3" title="3">  <span class="st">&quot;chuansi&quot;</span>, <span class="st">&quot;01&quot;</span>,</a>
+<a class="sourceLine" id="cb530-4" title="4">  <span class="st">&quot;chuansi&quot;</span>, <span class="st">&quot;02&quot;</span>,</a>
+<a class="sourceLine" id="cb530-5" title="5">  <span class="st">&quot;shude&quot;</span>, <span class="st">&quot;07&quot;</span>,</a>
+<a class="sourceLine" id="cb530-6" title="6">  <span class="st">&quot;shude&quot;</span>, <span class="st">&quot;08&quot;</span>,</a>
+<a class="sourceLine" id="cb530-7" title="7">  <span class="st">&quot;huapulu&quot;</span>, <span class="st">&quot;101&quot;</span>,</a>
+<a class="sourceLine" id="cb530-8" title="8">  <span class="st">&quot;huapulu&quot;</span>, <span class="st">&quot;103&quot;</span></a>
+<a class="sourceLine" id="cb530-9" title="9">)</a>
+<a class="sourceLine" id="cb530-10" title="10"></a>
+<a class="sourceLine" id="cb530-11" title="11">df</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi","2":"01"},{"1":"chuansi","2":"02"},{"1":"shude","2":"07"},{"1":"shude","2":"08"},{"1":"huapulu","2":"101"},{"1":"huapulu","2":"103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb530"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb530-1" title="1">df_united &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb530-2" title="2"><span class="st">   </span><span class="kw">unite</span>(school, class, <span class="dt">col =</span> <span class="st">&quot;school_plus_class&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb530-3" title="3"></a>
-<a class="sourceLine" id="cb530-4" title="4">df_united</a></code></pre></div>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb531-1" title="1">df_united &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb531-2" title="2"><span class="st">   </span><span class="kw">unite</span>(school, class, <span class="dt">col =</span> <span class="st">&quot;school_plus_class&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb531-3" title="3"></a>
+<a class="sourceLine" id="cb531-4" title="4">df_united</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school_plus_class"],"name":[1],"type":["chr"],"align":["left"]},{"label":["school"],"name":[2],"type":["chr"],"align":["left"]},{"label":["class"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi_01","2":"chuansi","3":"01"},{"1":"chuansi_02","2":"chuansi","3":"02"},{"1":"shude_07","2":"shude","3":"07"},{"1":"shude_08","2":"shude","3":"08"},{"1":"huapulu_101","2":"huapulu","3":"101"},{"1":"huapulu_103","2":"huapulu","3":"103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>当然，简单的情况也可以用<code>mutate()</code>实现</p>
-<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb531-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">newcol =</span> <span class="kw">str_c</span>(school, <span class="st">&quot;_&quot;</span>, class))</a></code></pre></div>
+<div class="sourceCode" id="cb532"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb532-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">newcol =</span> <span class="kw">str_c</span>(school, <span class="st">&quot;_&quot;</span>, class))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["newcol"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi","2":"01","3":"chuansi_01"},{"1":"chuansi","2":"02","3":"chuansi_02"},{"1":"shude","2":"07","3":"shude_07"},{"1":"shude","2":"08","3":"shude_08"},{"1":"huapulu","2":"101","3":"huapulu_101"},{"1":"huapulu","2":"103","3":"huapulu_103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1023,42 +1040,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="separate" class="section level2">
 <h2><span class="header-section-number">11.18</span> separate()</h2>
-<div class="sourceCode" id="cb532"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb532-1" title="1">df_united <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(school_plus_class, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sch&quot;</span>, <span class="st">&quot;cls&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">remove =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb533-1" title="1">df_united <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(school_plus_class, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sch&quot;</span>, <span class="st">&quot;cls&quot;</span>), <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">remove =</span> F)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school_plus_class"],"name":[1],"type":["chr"],"align":["left"]},{"label":["sch"],"name":[2],"type":["chr"],"align":["left"]},{"label":["cls"],"name":[3],"type":["chr"],"align":["left"]},{"label":["school"],"name":[4],"type":["chr"],"align":["left"]},{"label":["class"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi_01","2":"chuansi","3":"01","4":"chuansi","5":"01"},{"1":"chuansi_02","2":"chuansi","3":"02","4":"chuansi","5":"02"},{"1":"shude_07","2":"shude","3":"07","4":"shude","5":"07"},{"1":"shude_08","2":"shude","3":"08","4":"shude","5":"08"},{"1":"huapulu_101","2":"huapulu","3":"101","4":"huapulu","5":"101"},{"1":"huapulu_103","2":"huapulu","3":"103","4":"huapulu","5":"103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>如果用mutate()来实现，语句就会比较复杂些</p>
-<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb533-1" title="1">df_united <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb533-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sch =</span> <span class="kw">str_split</span>(school_plus_class, <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb533-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cls =</span> <span class="kw">str_split</span>(school_plus_class, <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="dv">2</span>)) </a></code></pre></div>
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb534-1" title="1">df_united <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb534-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sch =</span> <span class="kw">str_split</span>(school_plus_class, <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb534-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cls =</span> <span class="kw">str_split</span>(school_plus_class, <span class="st">&quot;_&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="dv">2</span>)) </a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school_plus_class"],"name":[1],"type":["chr"],"align":["left"]},{"label":["school"],"name":[2],"type":["chr"],"align":["left"]},{"label":["class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["sch"],"name":[4],"type":["chr"],"align":["left"]},{"label":["cls"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi_01","2":"chuansi","3":"01","4":"chuansi","5":"01"},{"1":"chuansi_02","2":"chuansi","3":"02","4":"chuansi","5":"02"},{"1":"shude_07","2":"shude","3":"07","4":"shude","5":"07"},{"1":"shude_08","2":"shude","3":"08","4":"shude","5":"08"},{"1":"huapulu_101","2":"huapulu","3":"101","4":"huapulu","5":"101"},{"1":"huapulu_103","2":"huapulu","3":"103","4":"huapulu","5":"103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>如果每行不是都恰好分隔成两部分呢？就需要<code>tidyr::extract()</code>, 使用方法和<code>tidyr::separate()</code>类似</p>
-<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb534-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb534-2" title="2">   <span class="op">~</span>school_class,</a>
-<a class="sourceLine" id="cb534-3" title="3">  <span class="st">&quot;chuansi_01&quot;</span>,</a>
-<a class="sourceLine" id="cb534-4" title="4">  <span class="st">&quot;chuansi_02_03&quot;</span>,</a>
-<a class="sourceLine" id="cb534-5" title="5">  <span class="st">&quot;shude_07_0&quot;</span>,</a>
-<a class="sourceLine" id="cb534-6" title="6">  <span class="st">&quot;shude_08_0&quot;</span>,</a>
-<a class="sourceLine" id="cb534-7" title="7">  <span class="st">&quot;huapulu_101_u&quot;</span>,</a>
-<a class="sourceLine" id="cb534-8" title="8">  <span class="st">&quot;huapulu_103__p&quot;</span></a>
-<a class="sourceLine" id="cb534-9" title="9">)</a>
-<a class="sourceLine" id="cb534-10" title="10">df</a></code></pre></div>
+<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb535-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb535-2" title="2">   <span class="op">~</span>school_class,</a>
+<a class="sourceLine" id="cb535-3" title="3">  <span class="st">&quot;chuansi_01&quot;</span>,</a>
+<a class="sourceLine" id="cb535-4" title="4">  <span class="st">&quot;chuansi_02_03&quot;</span>,</a>
+<a class="sourceLine" id="cb535-5" title="5">  <span class="st">&quot;shude_07_0&quot;</span>,</a>
+<a class="sourceLine" id="cb535-6" title="6">  <span class="st">&quot;shude_08_0&quot;</span>,</a>
+<a class="sourceLine" id="cb535-7" title="7">  <span class="st">&quot;huapulu_101_u&quot;</span>,</a>
+<a class="sourceLine" id="cb535-8" title="8">  <span class="st">&quot;huapulu_103__p&quot;</span></a>
+<a class="sourceLine" id="cb535-9" title="9">)</a>
+<a class="sourceLine" id="cb535-10" title="10">df</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school_class"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi_01"},{"1":"chuansi_02_03"},{"1":"shude_07_0"},{"1":"shude_08_0"},{"1":"huapulu_101_u"},{"1":"huapulu_103__p"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb535-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(school_class, </a>
-<a class="sourceLine" id="cb535-2" title="2">                <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sch&quot;</span>, <span class="st">&quot;cls&quot;</span>), </a>
-<a class="sourceLine" id="cb535-3" title="3">                <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, </a>
-<a class="sourceLine" id="cb535-4" title="4">                <span class="dt">extra =</span> <span class="st">&quot;drop&quot;</span>,</a>
-<a class="sourceLine" id="cb535-5" title="5">                <span class="dt">remove =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb536-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate</span>(school_class, </a>
+<a class="sourceLine" id="cb536-2" title="2">                <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sch&quot;</span>, <span class="st">&quot;cls&quot;</span>), </a>
+<a class="sourceLine" id="cb536-3" title="3">                <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, </a>
+<a class="sourceLine" id="cb536-4" title="4">                <span class="dt">extra =</span> <span class="st">&quot;drop&quot;</span>,</a>
+<a class="sourceLine" id="cb536-5" title="5">                <span class="dt">remove =</span> F)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["school_class"],"name":[1],"type":["chr"],"align":["left"]},{"label":["sch"],"name":[2],"type":["chr"],"align":["left"]},{"label":["cls"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"chuansi_01","2":"chuansi","3":"01"},{"1":"chuansi_02_03","2":"chuansi","3":"02"},{"1":"shude_07_0","2":"shude","3":"07"},{"1":"shude_08_0","2":"shude","3":"08"},{"1":"huapulu_101_u","2":"huapulu","3":"101"},{"1":"huapulu_103__p","2":"huapulu","3":"103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1068,18 +1085,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="extract" class="section level2">
 <h2><span class="header-section-number">11.19</span> extract()</h2>
 <p>有时候分隔符搞不定的，可以用正则表达式，讲捕获的每组弄成一列</p>
-<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb536-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;1-12week&quot;</span>, <span class="st">&quot;1-10wk&quot;</span>, <span class="st">&quot;5-12w&quot;</span>, <span class="st">&quot;01-05weeks&quot;</span>))</a>
-<a class="sourceLine" id="cb536-2" title="2">df</a></code></pre></div>
+<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb537-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;1-12week&quot;</span>, <span class="st">&quot;1-10wk&quot;</span>, <span class="st">&quot;5-12w&quot;</span>, <span class="st">&quot;01-05weeks&quot;</span>))</a>
+<a class="sourceLine" id="cb537-2" title="2">df</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"1-12week"},{"1":"1-10wk"},{"1":"5-12w"},{"1":"01-05weeks"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb537-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(</a>
-<a class="sourceLine" id="cb537-2" title="2">  x,</a>
-<a class="sourceLine" id="cb537-3" title="3">  <span class="kw">c</span>(<span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;letter&quot;</span>), <span class="st">&quot;(</span><span class="ch">\\</span><span class="st">d+)-(</span><span class="ch">\\</span><span class="st">d+)([a-z]+)&quot;</span>,</a>
-<a class="sourceLine" id="cb537-4" title="4">  <span class="dt">remove =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb537-5" title="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb538-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(</a>
+<a class="sourceLine" id="cb538-2" title="2">  x,</a>
+<a class="sourceLine" id="cb538-3" title="3">  <span class="kw">c</span>(<span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;letter&quot;</span>), <span class="st">&quot;(</span><span class="ch">\\</span><span class="st">d+)-(</span><span class="ch">\\</span><span class="st">d+)([a-z]+)&quot;</span>,</a>
+<a class="sourceLine" id="cb538-4" title="4">  <span class="dt">remove =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb538-5" title="5">)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["chr"],"align":["left"]},{"label":["end"],"name":[3],"type":["chr"],"align":["left"]},{"label":["letter"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"1-12week","2":"1","3":"12","4":"week"},{"1":"1-10wk","2":"1","3":"10","4":"wk"},{"1":"5-12w","2":"5","3":"12","4":"w"},{"1":"01-05weeks","2":"01","3":"05","4":"weeks"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1089,85 +1106,85 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="crossing" class="section level2">
 <h2><span class="header-section-number">11.20</span> crossing()</h2>
 <p>先看看效果</p>
-<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb538-1" title="1"><span class="kw">crossing</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>), <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>), <span class="dt">z =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb539-1" title="1"><span class="kw">crossing</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>), <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>), <span class="dt">z =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["chr"],"align":["left"]},{"label":["y"],"name":[2],"type":["chr"],"align":["left"]},{"label":["z"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"F","2":"a","3":"1"},{"1":"F","2":"a","3":"2"},{"1":"F","2":"b","3":"1"},{"1":"F","2":"b","3":"2"},{"1":"M","2":"a","3":"1"},{"1":"M","2":"a","3":"2"},{"1":"M","2":"b","3":"1"},{"1":"M","2":"b","3":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>这个函数在<strong>数据模拟</strong>的时候很方便，</p>
-<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb539-1" title="1"><span class="kw">crossing</span>(<span class="dt">trials =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">m =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb539-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(trials) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb539-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb539-4" title="4">    <span class="dt">guess =</span> <span class="kw">sample.int</span>(<span class="dv">5</span>, <span class="kw">n</span>()),</a>
-<a class="sourceLine" id="cb539-5" title="5">    <span class="dt">result =</span> m <span class="op">==</span><span class="st"> </span>guess</a>
-<a class="sourceLine" id="cb539-6" title="6">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb539-7" title="7"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">score =</span> <span class="kw">sum</span>(result) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb540-1" title="1"><span class="kw">crossing</span>(<span class="dt">trials =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">m =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb540-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(trials) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb540-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb540-4" title="4">    <span class="dt">guess =</span> <span class="kw">sample.int</span>(<span class="dv">5</span>, <span class="kw">n</span>()),</a>
+<a class="sourceLine" id="cb540-5" title="5">    <span class="dt">result =</span> m <span class="op">==</span><span class="st"> </span>guess</a>
+<a class="sourceLine" id="cb540-6" title="6">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb540-7" title="7"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">score =</span> <span class="kw">sum</span>(result) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["trials"],"name":[1],"type":["int"],"align":["right"]},{"label":["score"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0.4"},{"1":"2","2":"0.0"},{"1":"3","2":"0.2"},{"1":"4","2":"0.0"},{"1":"5","2":"0.2"},{"1":"6","2":"0.2"},{"1":"7","2":"0.2"},{"1":"8","2":"0.0"},{"1":"9","2":"0.6"},{"1":"10","2":"0.2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["trials"],"name":[1],"type":["int"],"align":["right"]},{"label":["score"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0.6"},{"1":"2","2":"0.0"},{"1":"3","2":"0.4"},{"1":"4","2":"0.2"},{"1":"5","2":"0.0"},{"1":"6","2":"0.4"},{"1":"7","2":"0.2"},{"1":"8","2":"0.2"},{"1":"9","2":"0.0"},{"1":"10","2":"0.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>再来一个例子</p>
-<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb540-1" title="1">sim &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb540-2" title="2">  <span class="op">~</span>f, <span class="op">~</span>params,</a>
-<a class="sourceLine" id="cb540-3" title="3">  <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb540-4" title="4">)</a>
-<a class="sourceLine" id="cb540-5" title="5">sim <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb540-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sim =</span> <span class="kw">invoke_map</span>(f, params))</a></code></pre></div>
+<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb541-1" title="1">sim &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb541-2" title="2">  <span class="op">~</span>f, <span class="op">~</span>params,</a>
+<a class="sourceLine" id="cb541-3" title="3">  <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb541-4" title="4">)</a>
+<a class="sourceLine" id="cb541-5" title="5">sim <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb541-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sim =</span> <span class="kw">invoke_map</span>(f, params))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["f"],"name":[1],"type":["chr"],"align":["left"]},{"label":["params"],"name":[2],"type":["list"],"align":["right"]},{"label":["sim"],"name":[3],"type":["list"],"align":["right"]}],"data":[{"1":"rbinom","2":"<list [3]>","3":"<int [10]>"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb541-1" title="1">rep_sim &lt;-<span class="st"> </span>sim <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb541-2" title="2"><span class="st">  </span><span class="kw">crossing</span>(<span class="dt">rep =</span> <span class="dv">1</span><span class="op">:</span><span class="fl">1e5</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb541-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sim =</span> <span class="kw">invoke_map</span>(f, params)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb541-4" title="4"><span class="st">  </span><span class="kw">unnest</span>(sim) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb541-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(rep) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb541-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_sim =</span> <span class="kw">mean</span>(sim))</a>
-<a class="sourceLine" id="cb541-7" title="7"></a>
-<a class="sourceLine" id="cb541-8" title="8"><span class="kw">head</span>(rep_sim)</a></code></pre></div>
+<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb542-1" title="1">rep_sim &lt;-<span class="st"> </span>sim <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb542-2" title="2"><span class="st">  </span><span class="kw">crossing</span>(<span class="dt">rep =</span> <span class="dv">1</span><span class="op">:</span><span class="fl">1e5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb542-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sim =</span> <span class="kw">invoke_map</span>(f, params)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb542-4" title="4"><span class="st">  </span><span class="kw">unnest</span>(sim) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb542-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(rep) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb542-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean_sim =</span> <span class="kw">mean</span>(sim))</a>
+<a class="sourceLine" id="cb542-7" title="7"></a>
+<a class="sourceLine" id="cb542-8" title="8"><span class="kw">head</span>(rep_sim)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["rep"],"name":[1],"type":["int"],"align":["right"]},{"label":["mean_sim"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0.5"},{"1":"2","2":"0.6"},{"1":"3","2":"0.6"},{"1":"4","2":"0.5"},{"1":"5","2":"0.5"},{"1":"6","2":"0.3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["rep"],"name":[1],"type":["int"],"align":["right"]},{"label":["mean_sim"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0.4"},{"1":"2","2":"0.4"},{"1":"3","2":"0.4"},{"1":"4","2":"0.3"},{"1":"5","2":"0.3"},{"1":"6","2":"0.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb542-1" title="1">rep_sim <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb542-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mean_sim)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb542-3" title="3"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.05</span>,  <span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb542-4" title="4"><span class="st">  </span><span class="kw">theme_classic</span>()</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-468-1.png" width="576" /></p>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb543-1" title="1">rep_sim <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb543-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mean_sim)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb543-3" title="3"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.05</span>,  <span class="dt">fill =</span> <span class="st">&quot;skyblue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb543-4" title="4"><span class="st">  </span><span class="kw">theme_classic</span>()</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-469-1.png" width="576" /></p>
 <p>也可用在较复杂的模拟，比如下面介绍的<strong>大数极限定理</strong>，</p>
-<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb543-1" title="1">sim &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb543-2" title="2">  <span class="op">~</span>n_tosses, <span class="op">~</span>f, <span class="op">~</span>params,</a>
-<a class="sourceLine" id="cb543-3" title="3">     <span class="dv">10</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">15</span>),</a>
-<a class="sourceLine" id="cb543-4" title="4">     <span class="dv">30</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">30</span>),</a>
-<a class="sourceLine" id="cb543-5" title="5">    <span class="dv">100</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">100</span>),</a>
-<a class="sourceLine" id="cb543-6" title="6">   <span class="dv">1000</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">1000</span>),</a>
-<a class="sourceLine" id="cb543-7" title="7">  <span class="dv">10000</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="fl">1e4</span>)</a>
-<a class="sourceLine" id="cb543-8" title="8">)</a>
-<a class="sourceLine" id="cb543-9" title="9">sim_rep &lt;-<span class="st"> </span>sim <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb543-10" title="10"><span class="st">  </span><span class="kw">crossing</span>(<span class="dt">replication =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb543-11" title="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sims =</span> <span class="kw">invoke_map</span>(f, params)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb543-12" title="12"><span class="st">  </span><span class="kw">unnest</span>(sims) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb543-13" title="13"><span class="st">  </span><span class="kw">group_by</span>(replication, n_tosses) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb543-14" title="14"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(sims))</a></code></pre></div>
-<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb544-1" title="1">sim_rep <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb544-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(n_tosses), <span class="dt">y =</span> avg)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb544-3" title="3"><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">color =</span> <span class="st">&quot;lightgrey&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb544-4" title="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb544-5" title="5"><span class="st">  </span><span class="kw">geom_hline</span>(</a>
-<a class="sourceLine" id="cb544-6" title="6">    <span class="dt">yintercept =</span> <span class="fl">0.5</span>,</a>
-<a class="sourceLine" id="cb544-7" title="7">    <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">alpha =</span> <span class="dv">3</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb544-8" title="8">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb544-9" title="9"><span class="st">  </span>ggthemes<span class="op">::</span><span class="kw">theme_pander</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb544-10" title="10"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb544-11" title="11">    <span class="dt">title =</span> <span class="st">&quot;50 Replicates Of Mean &#39;Heads&#39; As Number Of Tosses Increase&quot;</span>,</a>
-<a class="sourceLine" id="cb544-12" title="12">    <span class="dt">y =</span> <span class="st">&quot;mean&quot;</span>,</a>
-<a class="sourceLine" id="cb544-13" title="13">    <span class="dt">x =</span> <span class="st">&quot;Number Of Tosses&quot;</span></a>
-<a class="sourceLine" id="cb544-14" title="14">  )</a></code></pre></div>
-<p><img src="R4DS_files/figure-html/unnamed-chunk-470-1.png" width="768" /></p>
+<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb544-1" title="1">sim &lt;-<span class="st"> </span><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb544-2" title="2">  <span class="op">~</span>n_tosses, <span class="op">~</span>f, <span class="op">~</span>params,</a>
+<a class="sourceLine" id="cb544-3" title="3">     <span class="dv">10</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">15</span>),</a>
+<a class="sourceLine" id="cb544-4" title="4">     <span class="dv">30</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">30</span>),</a>
+<a class="sourceLine" id="cb544-5" title="5">    <span class="dv">100</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">100</span>),</a>
+<a class="sourceLine" id="cb544-6" title="6">   <span class="dv">1000</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">1000</span>),</a>
+<a class="sourceLine" id="cb544-7" title="7">  <span class="dv">10000</span>, <span class="st">&quot;rbinom&quot;</span>, <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="fl">1e4</span>)</a>
+<a class="sourceLine" id="cb544-8" title="8">)</a>
+<a class="sourceLine" id="cb544-9" title="9">sim_rep &lt;-<span class="st"> </span>sim <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb544-10" title="10"><span class="st">  </span><span class="kw">crossing</span>(<span class="dt">replication =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb544-11" title="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sims =</span> <span class="kw">invoke_map</span>(f, params)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb544-12" title="12"><span class="st">  </span><span class="kw">unnest</span>(sims) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb544-13" title="13"><span class="st">  </span><span class="kw">group_by</span>(replication, n_tosses) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb544-14" title="14"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(sims))</a></code></pre></div>
+<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb545-1" title="1">sim_rep <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb545-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(n_tosses), <span class="dt">y =</span> avg)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb545-3" title="3"><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">color =</span> <span class="st">&quot;lightgrey&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb545-4" title="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb545-5" title="5"><span class="st">  </span><span class="kw">geom_hline</span>(</a>
+<a class="sourceLine" id="cb545-6" title="6">    <span class="dt">yintercept =</span> <span class="fl">0.5</span>,</a>
+<a class="sourceLine" id="cb545-7" title="7">    <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">alpha =</span> <span class="dv">3</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb545-8" title="8">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb545-9" title="9"><span class="st">  </span>ggthemes<span class="op">::</span><span class="kw">theme_pander</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb545-10" title="10"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb545-11" title="11">    <span class="dt">title =</span> <span class="st">&quot;50 Replicates Of Mean &#39;Heads&#39; As Number Of Tosses Increase&quot;</span>,</a>
+<a class="sourceLine" id="cb545-12" title="12">    <span class="dt">y =</span> <span class="st">&quot;mean&quot;</span>,</a>
+<a class="sourceLine" id="cb545-13" title="13">    <span class="dt">x =</span> <span class="st">&quot;Number Of Tosses&quot;</span></a>
+<a class="sourceLine" id="cb545-14" title="14">  )</a></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-471-1.png" width="768" /></p>
 <p>数值模拟我们会在第 <a href="sampling.html#sampling">13</a> 章专门介绍。</p>
 
 </div>

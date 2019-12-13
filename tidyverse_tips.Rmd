@@ -507,6 +507,27 @@ gapminder %>%
 
 
 
+或者偷懒，将`continent == "Asia"`的结果直接赋值给`aes(fill = ___ )`， 效果与上面是一样的。
+```{r}
+gapminder %>%
+  distinct(continent, country) %>%
+  count(continent) %>% 
+
+
+  ggplot(aes(x = fct_reorder(continent, n), y = n)) +
+  geom_text(aes(label = n), hjust = -0.25) +
+  geom_col(width = 0.8, aes(fill = continent == "Asia") ) +
+  coord_flip() +
+  theme_classic() +
+  scale_fill_manual(values = c("#b3b3b3a0", "#D55E00")) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 11)
+        ) +
+  labs(title = "我的标题", x = "")
+```
+
+
+
 ## scale_x/y_log10
 
 现实世界很多满足对数规则
