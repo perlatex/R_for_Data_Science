@@ -7,7 +7,7 @@
 library(tidyverse)
 ```
 
-本章目的是在tidyverse的架构下，介绍一些基本统计的知识。先回顾下Hadley Wickham提出的数据科学tidy原则，tidy思想体现在:
+本章目的是在tidyverse的架构下，介绍一些模拟和抽样的知识。先回顾下Hadley Wickham提出的数据科学tidy原则，tidy思想体现在:
 
 - 任何数据都可以规整为数据框 
 - 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
@@ -34,10 +34,10 @@ rnorm(n = 5, mean = 0, sd = 1)
 
 如果大家查看帮助文档`?runif`，会发现每种**分布**都有对应的四个函数
 
-- d:density 
-- p:cumulative probability 
-- q:quantile 
-- r:random 
+- `d`:density 
+- `p`:cumulative probability 
+- `q`:quantile 
+- `r`:random 
 
 
 
@@ -74,34 +74,181 @@ tibble(
 
 $$ y_i  = 4 + 3.2\, x_i$$
 现实中，观察值往往会带入误差，假定误差服从正态分布，那么$x$和$y$的线性关系重新表述为
-$$ y_i  = 4 + 3.2\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) $$
+$$ y_i  = \beta_0 + \beta_1\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) $$
 
 ```{r}
+beta_0  <- 4
+beta_1  <- 3.2
+epsilon <- rnorm(n = 1000, mean = 0, sd = 1)
+
 sim_normal <- tibble(
-  x = seq(0, 1, length.out = 100),
-  yexp = 4 + 3.2 * x,
-  yobs = yexp + rnorm(100, mean = 0, sd = 1) # 误差服从高斯分布
+ # x_vals = runif(1000, 0, 10)
+  
+  x_vals = seq(from = 0, to = 5, length.out = 1000),
+  y_vals = beta_0 + beta_1 * x_vals + epsilon,
 )
 
 sim_normal %>% head()
 ```
 
 
+
+
 ```{r}
 sim_normal %>%
-  ggplot(aes(x = x, y = yexp)) +
-  geom_line(color = "red", size = 2) +
-  geom_point(aes(y = yobs))
+  ggplot(aes(x = x_vals, y = y_vals)) +
+  geom_point()
 ```
 
 
+有时候为了方便，可以写简练点
+```{r}
+tibble(
+  a = runif(1000, 0, 5),
+  b = 4 + rnorm(1000, mean = 3.2 * a, sd = 1) 
+) %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_point() 
+
+```
+
+
+
+## MASS::mvrnorm
+
+`MASS::mvrnorm(n = 1, mu,  Sigma)`产生多元高斯分布的随机数，每组随机变量高度相关。
+比如人的身高服从正态分布，人的体重也服从正态分布，同时身高和体重又存在强烈的关联。
+
+
+- `n`: 随机样本的大小
+- `mu`: 多元高斯分布的均值向量
+- `Sigma`: 协方差矩阵
+
+```{r}
+a <- 3.5 
+b <- -1 
+sigma_a <- 1 
+sigma_b <- 0.5 
+rho <- -0.7 
+
+mu <- c(a, b)
+cov_ab <- sigma_a * sigma_b * rho # 协方差
+```
+
+```{r}
+# 构建协方差矩阵
+sigma <- matrix(c(sigma_a^2, cov_ab,
+                  cov_ab, sigma_b^2), ncol = 2)
+```
+
+```{r}
+d <- MASS::mvrnorm(1000, mu = mu, Sigma = sigma) %>%
+  data.frame() %>%
+  set_names("group_a", "group_b")
+
+d
+```
+
+
+
+
+```{r}
+d %>% 
+  ggplot(aes(x = group_a)) +
+  geom_density(color = "transparent", 
+               fill = "dodgerblue3", 
+               alpha = 1/2) +
+  stat_function(fun = dnorm, 
+                args = list(mean = 3.5, sd = 1),
+                linetype = 2
+                ) 
+```
+
+
+```{r}
+d %>% 
+  ggplot(aes(x = group_b)) +
+  geom_density(color = "transparent", 
+               fill = "dodgerblue3", 
+               alpha = 1/2) +
+  stat_function(fun = dnorm, 
+                args = list(mean = -1, sd = 0.5),
+                linetype = 2
+                ) 
+```
+
+
+```{r}
+d %>% 
+  ggplot(aes(x = group_a, y = group_b)) +
+  geom_point() +
+  stat_ellipse(type = "norm", level = 0.95)
+```
+
+
+我们回头验算一下
+```{r}
+cor(d$group_a, d$group_b)
+```
+
+
+```{r}
+cov(d$group_a, d$group_b)
+```
+
+## 蒙特卡洛
+
+这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse
+
+
+```{r out.width = '50%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/pi.jpg")
+```
+
+
+
+```{r}
+set.seed(2019)
+
+n <- 50000
+points <- tibble("x" = runif(n), "y" = runif(n))
+```
+
+
+
+
+
+```{r}
+points <- points %>% 
+    mutate(inside = map2_dbl(.x = x, .y = y, ~if_else(.x**2 + .y**2 < 1, 1, 0))) %>% 
+    rowid_to_column("N")
+```
+
+正方形的面积是1，圆的面积是$\pi r^2 = \frac{1}{4} \pi$，如果知道两者的比例，就可以估算$\pi$
+
+```{r}
+points <- points %>% 
+    mutate(estimate = 4*cumsum(inside)/N)
+```
+
+```{r}
+points %>% tail()
+```
+
+
+```{r}
+points %>% 
+	ggplot() + 
+    geom_line(aes(y = estimate, x = N), colour = "#82518c") + 
+    geom_hline(yintercept = pi) 
+```
 
 
 ## 抽样与样本
 
 
 ### 总体分布
-假定一个事实，川师男生总体的平均身高和身高的方差分别为
+假定一个事实，川师男生总体的平均身高和身高的标准差分别为
 ```{r}
 true.mean <- 175.7
 true.sd <- 15.19
@@ -426,6 +573,13 @@ sampling.distn.sd.table
 
 
 
+
+
+
+
+
 ## 扩展阅读
+
+ - <https://learningstatisticswithr.com/book/>
 
 <!-- - <https://bookdown.org/content/922/> -->

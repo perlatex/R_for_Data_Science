@@ -5,74 +5,27 @@
 >
 > --- ― Yogi Bhajan
 
+贝叶斯分析的内容十分丰富，应用也非常广泛，尤其在心理学。下学期我们争取能揭开面纱的一角。
+欢迎大家继续选课<Bayesian New Statistics>。本章我尽可能的不去翻译，一方面我翻译水平有限，二是尽量保持原汁原味
 
 
-## Bayesian New Statistics 
+主要内容：
+
+- 什么是 bootstrapping?
+- 频率学派和贝叶斯数据分析的区别
+- 贝叶斯数据分析的优势
+- 什么是Markov Chain Monte Carlo
+- Posterior, prior, likelihood, sample size.
+
+
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
-library(here)
-library(fs)
-library(stringr)
-library(purrr)
+library(brms)
+library(tidybayes)
 ```
 
 
-## The mechanics of MCMC.
-
-这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse
-
-
-```{r out.width = '50%', fig.align='left', echo = FALSE}
-knitr::include_graphics(path = "images/pi.jpg")
-```
-
-
-
-```{r}
-n <- 50000
-
-set.seed(2019)
-points <- tibble("x" = runif(n), "y" = runif(n))
-```
-
-
-
-
-
-```{r}
-points <- points %>% 
-    mutate(inside = map2_dbl(.x = x, .y = y, ~if_else(.x**2 + .y**2 < 1, 1, 0))) %>% 
-    rowid_to_column("N")
-```
-
-正方形的面积是1，圆的面积是$\pi r^2 = \frac{1}{4} \pi$，如果知道两者的比例，就可以估算$\pi$
-
-```{r}
-points <- points %>% 
-    mutate(estimate = 4*cumsum(inside)/N)
-```
-
-```{r}
-points %>% tail()
-```
-
-
-```{r}
-points %>% 
-	ggplot() + 
-    geom_line(aes(y = estimate, x = N), colour = "#82518c") + 
-    geom_hline(yintercept = pi) 
-```
-
-
-## Metropolis-Hastings：
-
-neighbour of the current state
-
-
-## Hamiltonian Monte Carlo：
-冰球
 
 
 ## Frequentists vs Bayesians
@@ -81,3 +34,292 @@ neighbour of the current state
 Frequentists assume parameters are fixed and data is random.
 Bayesians assume parameters are random and data is fixed"
 
+
+## Markov Chain Monte Carlo
+coming soon
+
+
+## Steps of Bayesian Data Analysis
+
+一般来说。贝叶斯数据分析有如下五个步骤（摘自 Kruschke, J. K. (2015)）：
+
+
+- **Identify the data** relevant to the research questions. What are the measurement scales of the data? Which data variables are to be predicted, and which data variables are supposed to act as predictors?
+- **Define a descriptive model** for the relevant data. The mathematical form and its parameters should be meaningful and appropriate to the theoretical purposes of the analysis.
+- **Specify a prior distribution** on the parameters. The prior must pass muster with the audience of the analysis, such as skeptical scientists.
+- Use Bayesian inference to re-allocate credibility across parameter values. Interpret the **posterior distribution** with respect to theoretically meaningful issues (assuming that the model is a reasonable description of the data; see next step).
+- Check that the posterior predictions mimic the data with reasonable accuracy (i.e., conduct a **“posterior predictive check”**). If not, then consider a different descriptive model.
+
+
+下面通过具体的案例来演示贝叶斯数据分析流程
+
+## Real Data Example
+
+
+```{r}
+# boy:
+  HtMmu   <- 168.52
+  HtMsd   <- 6.87
+  WtMmu   <- 58.14
+  WtMsd   <- 3.17
+  Mrho    <- 0.42
+  Mmean   <- c(HtMmu, WtMmu)
+  Msigma  <- matrix(c(HtMsd^2, Mrho * HtMsd * WtMsd,
+                      Mrho * HtMsd * WtMsd, WtMsd^2), nrow = 2)
+  
+d1 <- 
+  MASS::mvrnorm(n = 100, mu = Mmean, Sigma = Msigma)  %>%
+  data.frame() %>%
+  purrr::set_names("height", "weight") %>% 
+  mutate(sex = "boy") %>% 
+  select(sex, everything())
+
+d1 %>% head()
+```
+
+
+```{r}
+# girl:
+  HtFmu   <- 161.11
+  HtFsd   <- 5.76
+  WtFmu   <- 48.06
+  WtFsd   <- 4.24
+  Frho    <- 0.41
+  prop    <- 0.46
+  Fmean   <- c(HtFmu, WtFmu)
+  Fsigma  <- matrix(c(HtFsd^2, Frho * HtFsd * WtFsd,
+                       Frho * HtFsd * WtFsd, WtFsd^2), nrow = 2)
+  
+d2 <- 
+  MASS::mvrnorm(n = 100, mu = Fmean, Sigma = Fsigma)  %>%
+  data.frame() %>%
+  purrr::set_names("height", "weight") %>% 
+  mutate(sex = "girl") %>% 
+  select(sex, everything())
+
+d2 %>% head()
+```
+
+
+
+
+
+```{r}
+d <- bind_rows(d1, d2) 
+
+d %>% 
+  head()
+```
+
+
+
+```{r, fig.width = 3.25, fig.height = 3}
+d %>% 
+  ggplot(aes(x = height, y = weight)) +
+  geom_point(alpha = 2/3) 
+```
+
+
+## Choosing a Model
+
+数学公式表示
+
+
+* $h_i \sim \text{Normal}(\mu_i, \sigma)$: `family = gaussian`
+* $\mu_i = \alpha + \beta x_i$: `height ~ 1 + weight`
+* $\alpha \sim \text{Normal}(166, 100)$: `prior(normal(166, 100), class = Intercept`
+* $\beta \sim \text{Normal}(0, 10)$: ` prior(normal(0, 10), class = b)`
+* $\sigma \sim \text{Uniform}(0, 50)$: `prior(uniform(0, 50), class = sigma)`
+
+
+## Specifying Priors
+
+各种先验概率分布
+
+```{r, fig.width = 3, fig.height = 2.5}
+ggplot(data = tibble(x = seq(from = 100, to = 230, by = .1)), 
+       aes(x = x, y = dnorm(x, mean = 166, sd = 20))) +
+  geom_line() +
+  ylab("density")
+```
+
+
+```{r, fig.width = 3, fig.height = 2.5}
+tibble(x = seq(from = -10, to = 60, by = .1)) %>%
+  
+  ggplot(aes(x = x, y = dunif(x, min = 0, max = 50))) +
+  geom_line() +
+  scale_y_continuous(NULL, breaks = NULL) +
+  theme(panel.grid = element_blank())
+```
+
+除了正态分布、均匀分布，还可以指定其它分布，比如柯西分布
+
+```{r, fig.width = 3, fig.height = 2.5}
+tibble(x = seq(from = -10, to = 10, by = .1)) %>%
+  
+  ggplot(aes(x = x, y = dcauchy(x))) +
+  geom_line() +
+  scale_y_continuous(NULL, breaks = NULL) +
+  theme(panel.grid = element_blank())
+```
+
+
+画在一起看看
+```{r, fig.width = 3, fig.height = 2.5}
+tibble(x = seq(from = -10, to = 10, by = .1)) %>%
+  
+  ggplot() +
+  geom_line(aes(x = x, y = dcauchy(x))) +
+  geom_line(aes(x = x, y = dnorm(x, mean = 0, sd = 2))) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  theme(panel.grid = element_blank())
+```
+
+
+## Obtain the Posterior Distributions
+
+我们使用[**brms** package](https://cran.r-project.org/web/packages/brms/index.html). 
+
+
+```{r, cache = T, message = F, warning = F}
+b1 <- 
+  brm(data = d, 
+      family = gaussian,
+      weight ~ 1 + height,
+      prior = c(prior(normal(0, 100), class = Intercept),
+                prior(normal(0, 100), class = b),
+                prior(cauchy(0, 10),  class = sigma)),
+      chains = 4, cores = 4, iter = 4000, warmup = 2000,
+      seed = 2)
+```
+
+忍不住向plot()下下
+
+```{r, fig.width = 6, fig.height = 3.5}
+plot(b1)
+```
+
+
+
+## Posterior Distribution
+
+```{r, fig.width = 3.25, fig.height = 3}
+# extract the posterior draws
+post <- posterior_samples(b1)
+
+# this will streamline some of the code, below
+n_lines <- 150
+
+# plot!
+d %>% 
+  ggplot(aes(x = height, y = weight)) +
+  geom_abline(intercept = post[1:n_lines, 1], 
+              slope     = post[1:n_lines, 2],
+              color = "grey50", size = 1/4, alpha = .3) +
+  geom_point(alpha = 2/3) +
+  labs(subtitle = glue::glue("Data with ", n_lines, " credible regression lines"),
+       x = "Height in cm",
+       y = "Weight in kg") +
+  theme(panel.grid = element_blank())
+```
+
+
+
+
+
+```{r, warning = F, message = F, fig.width = 3, fig.height = 3}
+library(tidybayes)
+
+post %>% 
+  ggplot(aes(x = b_height)) +
+  geom_histogram(color = "grey92", fill = "grey67",
+                 binwidth = .02, size = .2) +
+  stat_pointintervalh(aes(y = 0), 
+                      point_interval = mode_hdi, .width = .95) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "The posterior distribution",
+       subtitle = "The mode and 95% HPD intervals are\nthe dot and horizontal line at the bottom.",
+       x = expression(paste(beta[1], " (slope)"))) +
+  theme(panel.grid = element_blank())
+```
+
+
+
+```{r, fig.width = 4, fig.height = 4}
+nd <- tibble(height = seq(from = 145, to = 190, length.out = 60))
+
+b1 %>% 
+  predict(newdata = nd) %>%
+  as_tibble() %>%
+  bind_cols(nd) %>% 
+
+  ggplot(aes(x = height)) +
+  geom_pointrange(aes(y = Estimate, 
+                      ymin = Q2.5, 
+                      ymax = Q97.5),
+                  color = "grey67",
+                  shape = 20) +
+  geom_point(data =  d, 
+             aes(y = weight),
+             alpha = 2/3) +
+  labs(subtitle = "Data with the percentile-based 95% intervals and\nthe means of the posterior predictions",
+       x = "Height in inches",
+       y = "Weight in inches") +
+  theme(panel.grid = element_blank())
+```
+
+
+也可以这样画
+
+```{r, fig.width = 4, fig.height = 4}
+nd <- tibble(height = seq(from = 145, to = 190, length.out = 60))
+
+b1 %>% 
+  predict(newdata = nd) %>%
+  as_tibble() %>%
+  bind_cols(nd) %>% 
+
+  ggplot(aes(x = height)) +
+  geom_ribbon(aes(ymin = Q2.5, 
+                  ymax = Q97.5),
+                  fill = "grey75") +
+  geom_line(aes(y = Estimate),
+            color = "grey92") +
+  geom_point(data =  d, 
+             aes(y = weight),
+             alpha = 2/3) +
+  labs(subtitle = "Data with the percentile-based 95% intervals and\nthe means of the posterior predictions",
+       x = "Height in inches",
+       y = "Weight in inches") +
+  theme(panel.grid = element_blank())
+```
+
+
+### posterior predictive check
+
+```{r, fig.width = 4, fig.height = 3.5}
+pp_check(b1) + ggtitle("Outcome")
+```
+
+
+## 数据更新对后验概率的影响
+
+我写了一个动画，代码在[这里](https://gist.github.com/perlatex/b87520c90a04f6af043a107abab777c7)， 可以帮助大家理解---数据更新对后验概率的影响
+
+```{r out.width = '75%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/test.gif")
+```
+
+
+
+## 推荐阅读
+
+- [Kruschke, J. K. (2015). *Doing Bayesian data analysis, Second Edition: A tutorial with R, JAGS, and Stan.* Burlington, MA: Academic Press/Elsevier.](https://sites.google.com/site/doingbayesiandataanalysis/)
+
+- [McElreath, R. (2016). *Statistical rethinking: A Bayesian course with examples in R and Stan.* Chapman & Hall/CRC Press.](https://xcelab.net/rm/statistical-rethinking/)
+
+<!-- - A Solomon Kurz, <https://bookdown.org/connect/#/apps/1850/access> -->
+<!-- - A Solomon Kurz, <https://bookdown.org/ajkurz/DBDA_recoded/> -->
+
+<!-- - <https://psyc-bayes-notes.netlify.com/> -->

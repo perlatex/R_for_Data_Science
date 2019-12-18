@@ -104,6 +104,8 @@ knitr::include_graphics("images/rbook1.png")
 
 2、**课件源代码和数据**
 
+  我将持续改进课件，所以欢迎大家提出建议
+  
 - <https://github.com/perlatex/R_for_Data_Science>
 
 
