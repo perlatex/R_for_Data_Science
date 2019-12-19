@@ -40,6 +40,10 @@ rnorm(n = 5, mean = 0, sd = 1)
 - `r`:random 
 
 
+```{r}
+dnorm(seq(0.1, 0.5, length.out = 10), mean = 0, sd = 1)
+```
+
 
 在tidyverse的框架下，我们喜欢在数据框(data.frame)下运用这些函数，因为这样我们可以方便使用ggplot2来可视化，
 
@@ -135,11 +139,15 @@ mu <- c(a, b)
 cov_ab <- sigma_a * sigma_b * rho # 协方差
 ```
 
+
+
 ```{r}
 # 构建协方差矩阵
 sigma <- matrix(c(sigma_a^2, cov_ab,
                   cov_ab, sigma_b^2), ncol = 2)
 ```
+
+
 
 ```{r}
 d <- MASS::mvrnorm(1000, mu = mu, Sigma = sigma) %>%
@@ -187,14 +195,20 @@ d %>%
 
 
 我们回头验算一下
-```{r}
-cor(d$group_a, d$group_b)
-```
 
 
 ```{r}
-cov(d$group_a, d$group_b)
+d %>% summarise(
+  a_mean = mean(group_a),
+  b_mean = mean(group_b),
+  a_sd = sd(group_a),
+  b_sd = sd(group_b),
+  cor = cor(group_a,group_b),
+  cov = cov(group_a,group_b)
+  )
 ```
+
+
 
 ## 蒙特卡洛
 
