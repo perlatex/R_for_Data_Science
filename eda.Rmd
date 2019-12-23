@@ -38,6 +38,16 @@ library(lubridate)
 df <- read_csv("./demo_data/nobel_winners.csv")
 df 
 ```
+
+
+```{r, eval = FALSE}
+# 如果是xlsx格式  
+readxl::read_excel("myfile.xlsx")
+
+# 如果是csv格式   
+readr::read_csv("myfile.csv")
+```
+
 ## 数据结构
 
 一行就是一个诺奖获得者的记录? 确定？
