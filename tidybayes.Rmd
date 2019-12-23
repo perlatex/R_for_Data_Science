@@ -33,6 +33,14 @@ library(tidybayes)
 library(patchwork)
 ```
 
+## 贝叶斯应用场景
+
+我经常会去打车，比如滴滴，假定有两个司机
+
+1. 等级是5 颗星，历史成交量5
+2. 等级是4.68 颗星，历史成交量1000
+
+我们该如何选择？
 
 
 
@@ -67,7 +75,23 @@ Bayesians assume parameters are random and data is fixed"
 
 
 ## Markov Chain Monte Carlo
-coming soon
+
+MCMC的两个核心算法 
+
+### Metropolis-Hastings：
+
+
+- Has a proposal distribution (stochastic perturbation of initial state)
+- Sample from it
+- Calculate the acceptance probability
+- Accepts with that probability (correction; reject if too far from typical set)
+<!-- - 比如 neighbour of the current state -->
+
+### Hamiltonian Monte Carlo：
+
+- multivariate setting, sample from conditional probability with one
+parameter fixed
+<!-- - 比如冰球 -->
 
 
 ## Steps of Bayesian Data Analysis
