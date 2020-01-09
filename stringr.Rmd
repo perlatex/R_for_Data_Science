@@ -741,6 +741,25 @@ df %>%
   summarise(sum = sum(num))
 ```
 
+### 案例7
+```{r}
+text <- "Quantum entanglement is a physical phenomenon that occurs when pairs or groups of particles are generated, interact, or share spatial proximity in ways such that the quantum state of each particle cannot be described independently of the state of the others, even when the particles are separated by a large distance."
+
+
+pairs <-
+  tibble::tribble(
+    ~item, ~code,
+    "Quantum entanglement", "A01",
+    "physical phenomenon", "A02",
+    "quantum state", "A03",
+    "quantum mechanics", "A04"
+  ) %>%
+  tibble::deframe()
+
+
+
+text %>% str_replace_all(pairs)
+```
 
 
 

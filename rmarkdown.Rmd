@@ -44,9 +44,10 @@ remotes::install_github("hadley/emo")
 
 ## markdown 基本语法
 ```{markdown, eval = FALSE, echo = TRUE}
-
 # This is a title
 
+#  第一章   （注意   "#" 与 "第一章"之间有空格）
+##  第一节  （同上，"##" 与 "第一节"之间有空格）
 
 This is a sentence.
 

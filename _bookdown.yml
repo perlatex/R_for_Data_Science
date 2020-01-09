@@ -28,21 +28,25 @@ rmd_files: [
   
   "sampling.Rmd",
   "tidystats.Rmd",
-  "infer.Rmd",
   "lm.Rmd",
-  "glm.Rmd",
-  "lmm.Rmd",
-  "sem.Rmd",
-  "tidybayes.Rmd",
+
 
   "adv_dplyr.Rmd",
   "rowwise.Rmd",
   "dot.Rmd",
   "rvest.Rmd",
-  "tidymodels.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",
-  "r4psy.Rmd",
+  "tidyeval.Rmd",
+  
+  
+ # "infer.Rmd",
+ # "glm.Rmd",
+ # "lmm.Rmd",
+ # "sem.Rmd",
+ # "tidybayes.Rmd",
+ # "tidymodels.Rmd",
+ # "r4psy.Rmd",
 
 
   "Appendix.Rmd",

@@ -1342,6 +1342,17 @@ ggplot(data = mpg) +
 ```
 
 
+根据往年大家提交的作业，有同学用rmarkdown生成pdf，图片标题使用了中文字体，但中文字体无法显示
+。解决方案是R code chunks加上`fig.showtext=TRUE`
+
+````markdown
+`r ''````{r, fig.showtext=TRUE}
+````
+
+详细资料可参考[这里](https://bookdown.org/yihui/rmarkdown/r-code.html)
+
+
+
 
 ### latex公式
 

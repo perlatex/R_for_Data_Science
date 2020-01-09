@@ -1,8 +1,8 @@
-# 线性混合模型 {#lmm}
+# 非标准性评估 {#tidyeval}
 
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
-## 从一个案例开始
+

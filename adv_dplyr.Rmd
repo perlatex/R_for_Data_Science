@@ -318,8 +318,20 @@ iris %>%
   group_by(Species) %>%
   group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
-
 数据框进来，然后分组，依次处理成一个个数据框，最后以列表形式（a list of tibble）输出。
+
+
+
+事实上，`group_map()`是返回list形式，也就是说，可以是返回任何形式，（a list of tibble）是其中特殊形式。 可以看看下面这个
+```{r}
+iris %>%
+  group_by(Species) %>%
+  group_map(
+    ~ lm(Petal.Length ~ Sepal.Length, data = .x)
+    )
+```
+
+
 
 
 
@@ -344,13 +356,53 @@ iris %>%
 |----------|-------------|-------------------|------------------|---------|
 | map() | 列表进、列表出 | df %>% <br>group_split() %>% <br>map() | list |  |
 | map_df() | 列表进、数据框出 | df %>% <br>group_split() %>% <br>map_df() | df |  |
-| group_map() | 数据框进、列表出 | df %>% <br>group_by() %>% <br>group_map() | 返回list(df1, df2, ...) | .f返回df |
+| group_map() | 数据框进、列表出 | df %>% <br>group_by() %>% <br>group_map() | 返回list(list1, list2, ...) <br> 特例list(df1, df2, ...) |  |
 | group_modify() | 数据框进、数据框出 | df %>% <br>group_by() %>% <br>group_modify() | 返回grouped tibble | .f返回df |
 |  |  |  |  |  |
 | walk | 列表进 | df %>% <br>group_split() %>%<br>walk() | side effects |  |
 | group_walk() | 数据框进 | df %>% <br>group_by() %>% <br>group_walk() | side effects |  |
 
 
+
+我常用的批量出图的语句
+```{r, eval = FALSE}
+nobel_winners %>% 
+  group_split(category) %>%
+  map(
+    ~ ggplot(data = .x, aes(x = prize_age)) +
+      geom_density() +
+      ggtitle(.x$category)
+  )
+```
+
+
+```{r, eval = FALSE}
+nobel_winners %>% 
+  group_by(category) %>%
+  group_map(
+    ~ ggplot(data = .x, aes(x = prize_age)) +
+      geom_density() +
+      ggtitle(.y)
+  )
+```
+
+
+```{r, eval = FALSE}
+nobel_winners %>% 
+  group_by(category) %>%
+  group_walk(
+    ~ ggsave(
+      paste0(.y, '.png'), 
+      ggplot(data = .x, aes(x = prize_age) ) +
+      geom_density() +
+      ggtitle(.y), 
+      
+      device = 'png',
+      path = temp
+    )
+  ) %>% 
+  invisible()
+```
 
 ### 其他group函数
 

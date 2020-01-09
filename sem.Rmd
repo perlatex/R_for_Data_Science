@@ -1,9 +1,0 @@
-# 结构方程模型 {#sem}
-
-
-```{r message = FALSE, warning = FALSE}
-library(tidyverse)
-library(lavaan)
-```
-
-

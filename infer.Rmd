@@ -1,9 +1,0 @@
-# 统计推断 {#infer}
-
-
-```{r message = FALSE, warning = FALSE}
-library(tidyverse)
-library(infer)
-```
-
-

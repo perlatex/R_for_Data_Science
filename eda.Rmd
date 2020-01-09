@@ -48,6 +48,17 @@ readxl::read_excel("myfile.xlsx")
 readr::read_csv("myfile.csv")
 ```
 
+
+```{block, type="danger"}
+这里有个小小的提示：
+
+- 路径（包括文件名）， 不要用中文和空格
+- 数据框中变量，也不要有中文和空格（可用下划线代替空格）
+
+```
+
+
+
 ## 数据结构
 
 一行就是一个诺奖获得者的记录? 确定？
