@@ -461,10 +461,10 @@ tibble(x = more) %>%
   mutate(color = str_extract_all(x, colour_match))
 ```
 
-```{r, message=FALSE}
+```{r}
 tibble(x = more) %>%
   mutate(color = str_extract_all(x, colour_match)) %>% 
-  unnest_wider(color)
+  unnest(color)
 ```
 
 
@@ -779,3 +779,13 @@ infer_regex(s)$regex
 
 
 
+```{r, echo = F}
+# remove the objects
+#rm(colour_match, colours, df, dt, fields, ft, lines, more, pairs, tb, text, win, x)
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

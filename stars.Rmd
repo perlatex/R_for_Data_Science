@@ -1,9 +1,10 @@
-# 非标准性评估 {#tidyeval}
+# 地理数据处理 {#stars}
 
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(sf)
+library(stars)
 ```
-
 
 

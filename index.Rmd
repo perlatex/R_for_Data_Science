@@ -30,11 +30,6 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
                       fig.width = 6, 
                       fig.height = 4)
-
-# 填上你需要用到的包，如 c('ggplot2', 'dplyr')
-lapply(c(), function(pkg) {
-  if (system.file(package = pkg) == "") install.packages(pkg)
-})
 ```
 
 # 前言 {-}
@@ -86,6 +81,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(sampling) 章介绍模拟与抽样
    - 第 \@ref(tidystats) 章介绍方差分析
    - 第 \@ref(lm) 章介绍线性模型
+   - 第 \@ref(tidymodels) 章介绍机器学习
    - 第 \@ref(tidyeval) 章介绍非标准性评估
 - 应用篇
    - 第 \@ref(advR) 章介绍tidyverse进阶
@@ -94,6 +90,8 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘
+   - 第 \@ref(tibbletime) 章介绍时间序列分析
+   - 第 \@ref(stars) 章介绍地理数据处理
 
 
 

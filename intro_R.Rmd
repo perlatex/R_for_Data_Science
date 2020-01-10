@@ -409,12 +409,6 @@ R 语言社区非常友好，可以在这里找到你问题的答案
   - stackoverflow: <https://stackoverflow.com/questions/tagged/r>
   - rstudio: <https://community.rstudio.com/>
   
-## 本章代码
-
-```{r echo=FALSE}
-# a single file
-xfun::embed_file('./data/ch02_introR.R')
-```
 
 
 ## 延伸阅读 
@@ -425,3 +419,7 @@ xfun::embed_file('./data/ch02_introR.R')
 - R语言里可以构造哪些数据对象？
 - 数据框可以装载哪些数据类型的数据？
 - 数据框和列表区别在哪里？
+
+
+
+

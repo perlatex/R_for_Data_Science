@@ -154,7 +154,7 @@ d <- MASS::mvrnorm(1000, mu = mu, Sigma = sigma) %>%
   data.frame() %>%
   set_names("group_a", "group_b")
 
-d
+head(d)
 ```
 
 
@@ -597,3 +597,7 @@ sampling.distn.sd.table
  - <https://learningstatisticswithr.com/book/>
 
 <!-- - <https://bookdown.org/content/922/> -->
+
+
+
+

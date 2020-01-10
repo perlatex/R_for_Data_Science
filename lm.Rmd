@@ -490,3 +490,4 @@ lm(formula = earn ~ height, data = wages) %>%
 一篇极富思考性和启发性的文章[《常见统计检验的本质是线性模型》](https://lindeloev.github.io/tests-as-linear/)
 
 
+

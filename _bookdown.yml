@@ -25,10 +25,13 @@ rmd_files: [
   "ggplot2.Rmd",
   "tidyverse_tips.Rmd",
   "tibble.Rmd",
-  
+
+
   "sampling.Rmd",
   "tidystats.Rmd",
   "lm.Rmd",
+  "tidymodels.Rmd",
+  "tidyeval.Rmd",
 
 
   "adv_dplyr.Rmd",
@@ -37,16 +40,8 @@ rmd_files: [
   "rvest.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",
-  "tidyeval.Rmd",
-  
-  
- # "infer.Rmd",
- # "glm.Rmd",
- # "lmm.Rmd",
- # "sem.Rmd",
- # "tidybayes.Rmd",
- # "tidymodels.Rmd",
- # "r4psy.Rmd",
+  "slide.Rmd",
+  "stars.Rmd",
 
 
   "Appendix.Rmd",

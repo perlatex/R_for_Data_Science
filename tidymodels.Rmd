@@ -1,9 +1,9 @@
-# 非标准性评估 {#tidyeval}
+# 机器学习 {#tidymodels}
 
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(tidymodels)
 ```
-
 
 

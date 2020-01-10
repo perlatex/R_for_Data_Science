@@ -709,3 +709,14 @@ nobel_winners %>%
 
 - 有些图可以再美化下
 
+       
+
+```{r, echo = F}
+# remove the objects
+#rm(df, df1, df4, dt, global, nobel_winners, 
+#   nobel_winners_birth_country, nobel_winners_clean, topCountries)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

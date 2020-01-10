@@ -140,12 +140,12 @@ classoptions: "hyperref, 12pt, a4paper"
 ---
 ```
 
-## 本章代码
+<!-- ## 本章代码 -->
 
-```{r echo=FALSE}
-# a single file
-xfun::embed_file('./data/ch06_rmd_pdf.Rmd')
-```
+<!-- ```{r echo=FALSE} -->
+<!-- # a single file -->
+<!-- xfun::embed_file('./data/ch06_rmd_pdf.Rmd') -->
+<!-- ``` -->
 
 
 ## 延伸阅读

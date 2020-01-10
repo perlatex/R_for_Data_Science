@@ -152,7 +152,7 @@ new_df %>%
 
 
 
-## slide方案
+## 用slide方案
 
 [slide](https://github.com/DavisVaughan/slide)很强大，可以滚动喔
 
@@ -185,4 +185,7 @@ df %>%
     )
   )
 ```
+
+
+
 

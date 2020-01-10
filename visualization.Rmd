@@ -262,13 +262,15 @@ ggplot(mpg, aes(displ, hwy)) +
 ggsave("myfirst_plot.pdf", width = 6, height = 6, dpi = 300)
 ```
 
-## 本章代码
+<!-- ## 本章代码 -->
 
-```{r echo=FALSE}
-# a single file
-xfun::embed_file('./data/ch04_ggplot2.R')
-```
+<!-- ```{r echo=FALSE} -->
+<!-- # a single file -->
+<!-- xfun::embed_file('./data/ch04_ggplot2.R') -->
+<!-- ``` -->
 
 ## 延伸阅读 
 
 在第 \@ref(ggplot2) 章会再讲ggplot2
+
+

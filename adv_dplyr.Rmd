@@ -178,8 +178,9 @@ msleep %>%
 
 mtcars是 R内置数据集，记录了32种不同品牌的轿车的的11个属性
 
-```{r, layout = "l-body-outset"}
-mtcars %>% rmarkdown::paged_table()
+
+```{r}
+mtcars
 ```
 
 
@@ -585,5 +586,9 @@ funs <- list(
 iris %>% 
   mutate_if(is.numeric, funs) 
 ```
+
+
+
+
 
 

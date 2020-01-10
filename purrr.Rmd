@@ -279,3 +279,16 @@ mtcars %>% map_dbl(mean)
 ```
 
 
+
+
+```{r, echo = F}
+# remove the objects
+#rm(a_list, exams, lst, v, my_fun)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
+

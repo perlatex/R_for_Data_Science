@@ -192,12 +192,7 @@ tb[, "x"]
 除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)，我们会在第 \@ref(tibble) 章专门讲
 
 
-## 本章代码
 
-```{r echo=FALSE}
-# a single file
-xfun::embed_file('./data/ch03_subsetting.R')
-```
 
 ## 延伸阅读
 
@@ -206,3 +201,11 @@ xfun::embed_file('./data/ch03_subsetting.R')
 - 如果`x`是一个矩阵，请问 `x[] <- 0` 和`x <- 0` 有什么区别？
 
 
+```{r, echo = F}
+# remove the objects
+# rm(a, df, l, tb, x, y)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+# pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

@@ -12,10 +12,9 @@
 
 有几个新的宏包需要提前安装（不是必须的）
 ```{r, eval=FALSE}
-install.packages(c("sf", "cowplot"))
+install.packages(c("sf", "cowplot", "patchwork"))
 
 install.packages("devtools")
-devtools::install_github("thomasp85/patchwork")
 devtools::install_github("yutannihilation/gghighlight")
 ```
 
@@ -1389,3 +1388,8 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 * [R Graphics Cookbook](http://www.cookbook-r.com/Graphs/) by Winston Chang
 * [ggplot extensions](https://www.ggplot2-exts.org/)
 * [plotly](https://plot.ly/ggplot2/) for creating interactive graphs
+
+
+
+
+
