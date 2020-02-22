@@ -140,6 +140,68 @@ die %o% die
 
 
 
+## 数据类型
+
+
+```{r out.width = '65%', echo = FALSE}
+knitr::include_graphics("images/data_type.png")
+```
+
+- 数值型
+```{r}
+3
+5000
+3e+06
+class(0.0001)
+```
+
+- 字符串型
+```{r}
+"hello"
+"girl"
+"1"     # 1 vs "1"
+```
+
+```{r}
+class("1")
+```
+
+- 逻辑型
+```{r}
+TRUE
+FALSE
+3 < 4
+```
+
+
+```{r}
+class(T)
+```
+
+
+```{r}
+3 < 4
+```
+
+- 因子型
+```{r}
+fac <- factor(c("a", "b", "c"))
+fac
+```
+
+
+```{r}
+class(fac)
+```
+
+
+
+强制转换
+```{r}
+vec <- c("R", 1, TRUE)
+class(vec)
+```
+
 
 ## 数据结构
 

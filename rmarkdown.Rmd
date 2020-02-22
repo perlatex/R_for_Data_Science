@@ -4,6 +4,33 @@
 library(rmarkdown)
 ```
 
+## 什么是Rmarkdown
+```{r, echo=FALSE}
+knitr::include_graphics("images/rmarkdown.png")
+```
+
+## markdown 基本语法
+```{markdown, eval = FALSE, echo = TRUE}
+# This is a title
+
+#  第一章   （注意   "#" 与 "第一章"之间有空格）
+##  第一节  （同上，"##" 与 "第一节"之间有空格）
+
+This is a sentence.
+
+Now a list begins:
+  
+- no importance
+- again
+- repeat
+  
+A numbered list:
+  
+1. first
+2. second
+
+__bold__, _italic_, ~~strike through~~
+```
 
 
 ## Communicating with Data via R Markdown
@@ -42,28 +69,7 @@ remotes::install_github("hadley/emo")
 
 
 
-## markdown 基本语法
-```{markdown, eval = FALSE, echo = TRUE}
-# This is a title
 
-#  第一章   （注意   "#" 与 "第一章"之间有空格）
-##  第一节  （同上，"##" 与 "第一节"之间有空格）
-
-This is a sentence.
-
-Now a list begins:
-  
-- no importance
-- again
-- repeat
-  
-A numbered list:
-  
-1. first
-2. second
-
-__bold__, _italic_, ~~strike through~~
-```
 
 
 

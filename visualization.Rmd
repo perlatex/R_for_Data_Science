@@ -7,8 +7,8 @@
 
 
 ```{r message = FALSE, warning = FALSE}
-library(tidyverse)
-library(patchwork)
+library(tidyverse)  # install.packages("tidyverse")
+library(patchwork)  # install.packages("patchwork")
 ```
 
 
@@ -75,7 +75,16 @@ p + annotate("text",
 
 ## ggplot2 的图形语法
 
-ggplot2是R语言最流行的宏包，是RStudio首席科学家Hadley Wickham读博期间的作品，是R相比其他语言一个独领风骚的特点。包名中“gg”是grammar of graphics的简称，是一套优雅的绘图语法。
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/visualization-grammar-3.png")
+```
+
+ggplot2是R语言最流行的宏包，是RStudio首席科学家Hadley Wickham读博期间的作品，是R相比其他语言一个独领风骚的特点。
+
+包名中“gg”是grammar of graphics的简称，是一套优雅的绘图语法。
+
+
 ggplot的语法包括9个部件：
 
 - **数据 (data)**
@@ -88,14 +97,46 @@ ggplot的语法包括9个部件：
 - 主题 (theme)
 - 存储和输出 (output)
 
-其中前三个是必需的。Hadley Wickham将这套语法诠释为，一张统计图形就是从数据到几何对象（geometric object，缩写geom）的图形属性（aesthetic attribute，缩写aes）的一个映射。此外，图形中还可能包含数据的统计变换（statistical transformation，缩写stats），最后绘制在某个特定的坐标系（coordinate system，缩写coord）中，而分面（facet）则可以用来生成数据不同子集的图形。
+其中前三个是必需的。
+
+
+Hadley Wickham将这套语法诠释为，一张统计图形就是从数据到几何对象（geometric object，缩写geom）的图形属性（aesthetic attribute，缩写aes）的一个映射。此外，图形中还可能包含数据的统计变换（statistical transformation，缩写stats），最后绘制在某个特定的坐标系（coordinate system，缩写coord）中，而分面（facet）则可以用来生成数据不同子集的图形。
+
+
+### 语法模板
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/ggplot_template.png")
+```
 
 
 
-我们用ggplot2宏包内置的汽车测试数据（mpg）来演示，我们用到了四个变量
+
+
+先看一个简单的案例（1880-2014年温度变化和二氧化碳排放量）
+```{r, warning = FALSE, message = FALSE}
+d <- read_csv("./demo_data/temp_carbon.csv") 
+d
+```
+
 
 ```{r}
-mpg %>% select(displ, hwy, cyl, class)
+library(ggplot2)
+ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
+  geom_line() 
+
+
+  # xlab("Year") +
+  # ylab("Carbon emissions (metric tons)") +
+  # ggtitle("Annual global carbon emissions, 1880-2014")
+```
+
+
+## 映射
+我们用ggplot2宏包内置的汽车测试数据（mpg）来演示，用到mpg数据集其中的四个变量
+
+```{r}
+mpg[c("displ", "hwy", "cyl", "class")]
 ```
 
 - displ： 发动机排量
@@ -103,18 +144,24 @@ mpg %>% select(displ, hwy, cyl, class)
 - cyl：汽缸数目
 - class：汽车类型
 
-最简单的例子开始，绘制displ和hwy的散点图，
-```{r, eval = FALSE}
-ggplot(data = mpg, aes(x = displ, y = hwy)) + 
-  geom_point()
+我们想考察displ和hwy的关联，绘制这两个变量的散点图，
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/a-3.png")
 ```
 
-- `ggplot()`表示调用该函数画图，`data = mpg` 表示使用mpg数据框来画图。
-- `aes()`表示数据和视觉属性之间的映射，通俗来讲，不同的数值，转换成不同的位置、色彩或透明度等。
 
+  - `ggplot()`表示调用该函数画图，`data = mpg` 表示使用mpg这个**数据框**来画图。
+
+  - `aes()`表示数据和视觉属性之间的映射，
+  
 `aes(x = displ, y = hwy)`，意思是变量displ作为（映射为）x轴方向的**位置**，变量hwy作为（映射为）y轴方向的**位置**。
-- `+`表示添加图层。
-- `geom_point()`表示绘制散点图。
+
+  - `aes()`除了位置上映射，还可以实现色彩、形状或透明度等视觉属性的映射。
+
+  - `geom_point()`表示绘制散点图。
+
+  - `+`表示添加图层。
 
 
 运行脚本后生成图片：
@@ -124,13 +171,16 @@ ggplot(data = mpg, aes(x = displ, y = hwy)) +
   geom_point()
 ```
 
-刚才看到的是位置上的映射，ggplot还包含了颜色、形状以及透明度等图形属性的映射，可以来比较不同分组，比如我们在`aes()`里增加一个`color = class`
+刚才看到的是位置上的映射，ggplot还包含了颜色、形状以及透明度等图形属性的映射，比如我们在`aes()`里增加一个`color = class`, 具体来说，**不同的汽车类型**, 用**不同的颜色**来表现。
 ```{r}
 ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_point()
 ```
 
-此图绘制了displ和hwy的散点图， 其中不同的汽车类型，用不同的颜色显示。
+此图绘制了displ和hwy的散点图， 用颜色来实现分组。
+
+
+
 
 大家试试下面代码呢，
 ```{r, eval = FALSE}
@@ -142,6 +192,13 @@ ggplot(data = mpg, aes(x = displ, y = hwy, shape = class)) +
 
 ggplot(data = mpg, aes(x = displ, y = hwy, aphha = class)) + 
   geom_point()
+```
+
+
+
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/a-14.png")
 ```
 
 
@@ -162,9 +219,30 @@ ggplot(mpg, aes(displ, hwy)) + geom_point(alpha = 0.5)
 ```
 
 
+
+### 提问
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/a-21.png")
+```
+
 思考下`aes(color = "blue")`为什么会红色的点？
+
+
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy, color = "blue")) + 
+  geom_point()
+```
+
+
+
+
+```{r}
+mpg$col <- "blue"
+mpg[c("displ", "hwy", "cyl", "class", "col")]
+```
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = col)) + 
   geom_point()
 ```
 
@@ -215,20 +293,30 @@ ggplot(mpg) +
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_point()
 ```
-`x = displ, y = hwy, color = class` 为全局变量。如果映射关系`aes()` 写在几何对象`geom_point()`里, 就为局部变量, 比如。
+
+`x = displ, y = hwy, color = class` 为全局变量。
+
+
+如果映射关系`aes()` 写在几何对象`geom_point()`里, 就为局部变量, 比如。
+
 ```{r, eval=FALSE}
 ggplot(mpg) + 
-  geom_point(aes(displ, hwy, color = class))
+  geom_point(aes(x = displ, y = hwy, color = class))
 ```
 
 
 如果`geom_point()`中缺少所绘图所需要的映射关系，就会继承全局变量的映射关系`aes(x = displ, y = hwy, color = class)` 。
-```{r, eval=FALSE}
+
+```{r, eval=FALSE, warning=FALSE, message=FALSE}
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_point() +
   geom_smooth()
 ```
-这里的 `geom_point()` 和 `geom_smooth()` 都会从全局变量中继承映射关系。如果局部变量中的映射关系已经存在，那么就不会从全局变量中继承，沿用当前的映射关系。
+这里的 `geom_point()` 和 `geom_smooth()` 都会从全局变量中继承映射关系。
+
+
+
+如果局部变量中的映射关系已经存在，那么就不会从全局变量中继承，沿用当前的映射关系。
 
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
@@ -238,17 +326,16 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
 
 大家细细体会下，下面两段代码的区别
 ```{r}
-ggplot(mpg, aes(displ, hwy, color = class)) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_smooth(method = lm) +
   geom_point()
 ```
 
 
 ```{r}
-ggplot(mpg, aes(displ, hwy)) + 
+ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_smooth(method = lm) +
   geom_point(aes(color = class))
-
 ```
 
 
@@ -259,15 +346,18 @@ ggplot(mpg, aes(displ, hwy)) +
 可以使用ggsave()函数，将图片保存为所需要的格式，如".pdf", ".png"等
 
 ```{r, eval = FALSE}
-ggsave("myfirst_plot.pdf", width = 6, height = 6, dpi = 300)
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_smooth(method = lm) +
+  geom_point(aes(color = class)) +
+  ggtitle("This is my first plot")
+
+
+
+
+ggsave("myfirst_plot.pdf", width = 8, height = 6, dpi = 300)
 ```
 
-<!-- ## 本章代码 -->
 
-<!-- ```{r echo=FALSE} -->
-<!-- # a single file -->
-<!-- xfun::embed_file('./data/ch04_ggplot2.R') -->
-<!-- ``` -->
 
 ## 延伸阅读 
 
