@@ -12,10 +12,7 @@
 
 有几个新的宏包需要提前安装（不是必须的）
 ```{r, eval=FALSE}
-install.packages(c("sf", "cowplot", "patchwork"))
-
-install.packages("devtools")
-devtools::install_github("yutannihilation/gghighlight")
+install.packages(c("sf", "cowplot", "patchwork", "gghighlight"))
 ```
 
 如果安装不成功，请先update宏包，再执行上面安装命令

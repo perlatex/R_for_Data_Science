@@ -162,7 +162,7 @@ new_df %>%
 - 如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动
 
 ```{r, warning=FALSE, message=FALSE}
-library(slide)
+library(slider)
 
 df <- tibble(a = 1:3, b = 4:6)
 
@@ -186,6 +186,25 @@ df %>%
   )
 ```
 
+## 用lay方案
+[lay包](https://github.com/romainfrancois/lay)解决方案
+```{r, eval = FALSE}
+library(lay)
+library(dplyr, warn.conflicts = FALSE)
+
+iris <- as_tibble(iris)
+
+# apply mean to each "row"
+iris %>% 
+	mutate(sepal = lay(across(starts_with("Sepal")), mean))
+```
 
 
+```{r, echo = F}
+# remove the objects
+# rm(a, df, l, tb, x, y)
+```
 
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

@@ -296,7 +296,7 @@ iris %>%
 ```{r}
 iris %>%
   group_split(Species) %>%
-  map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+  purrr::map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
 
 
@@ -369,7 +369,7 @@ iris %>%
 ```{r, eval = FALSE}
 nobel_winners %>% 
   group_split(category) %>%
-  map(
+  purrr::map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
       geom_density() +
       ggtitle(.x$category)
@@ -447,13 +447,13 @@ glimpse(roster)
 ### purrr & dplyr 技巧
 ```{r message=FALSE, warning=FALSE}
 library(purrr)
-airquality %>% map(~ sum(is.na(.)))
+airquality %>% purrr::map(~ sum(is.na(.)))
 ```
 
 
 ```{r}
 airquality %>%
-  map_df(~ sum(is.na(.)))
+  purrr::map_df(~ sum(is.na(.)))
 ```
 
 
@@ -589,6 +589,16 @@ iris %>%
 
 
 
-
+## arcoss函数
+强大的`arcoss()`函数，估计要替代以上`scope`函数
+```{r, eval = FALSE}
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    across(starts_with("Sepal"), mean),
+    Area = mean(Petal.Length * Petal.Width),
+    across(starts_with("Petal"), min)
+  )
+```
 
 

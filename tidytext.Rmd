@@ -1,7 +1,7 @@
 # 文本挖掘 {#tidytext}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, eval = FALSE}
 library(tidyverse)
 library(tidytext)
 ```

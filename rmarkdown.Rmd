@@ -47,7 +47,7 @@ install.packages("tinytex")
 tinytex::install_tinytex()
 ```
 
-3. 安装如下宏包:
+3. 安装如下宏包（可选）:
 ```{r, eval = FALSE}
 install.packages(c("tidyverse", 
                  "rmarkdown", 

@@ -1,0 +1,257 @@
+# 懒人系列 {#lazyman}
+
+
+R社区上很多大神，贡献了很多非常优秀的工具，节省了我们的时间，也给我们的生活增添了无限乐趣。我平时逛github的时候时整理一些，现在分享出来供像我一样的懒人用，因此本文档叫“懒人系列”。欢迎大家补充。
+
+## 谁帮我敲模型的公式
+
+```{r}
+library(tidyverse)
+library(equatiomatic)
+## https://github.com/datalorax/equatiomatic
+```
+
+
+```{r}
+mod1 <- lm(mpg ~ cyl + disp, mtcars)
+```
+
+
+```{r, results="asis"}
+extract_eq(mod1)
+```
+
+
+```{r, results="asis"}
+extract_eq(mod1, use_coefs = TRUE)
+```
+
+## 模型有了，不知道怎么写论文？
+
+```{r}
+library(report)
+## 4https://github.com/easystats/report
+```
+
+
+```{r}
+model <- lm(Sepal.Length ~ Species, data = iris)
+report(model)
+```
+
+
+## 模型评估一步到位
+```{r}
+library(performance)
+
+model <- lm(mpg ~ wt * cyl + gear, data = mtcars)
+check_model(model)
+```
+
+
+
+## 统计描述不用愁
+```{r}
+library(gtsummary)
+## https://github.com/ddsjoberg/gtsummary
+
+
+trial %>% 
+  select(trt, age, grade, response) %>% 
+  tbl_summary(by = trt,
+              missing = "no") %>% 
+  add_p() %>% 
+  add_overall() %>% 
+  add_n() %>% 
+  bold_labels()
+  
+```
+
+
+## 列名太乱了
+```{r}
+library(janitor)
+## install.packages("janitor")
+## https://github.com/sfirke/janitor
+```
+
+```{r}
+fake_raw <- tibble::tribble(
+    ~id, ~`count/num`, ~W.t, ~Case, ~`time--d`, ~`%percent`,
+     1L,      "china",   3L,   "w",         5L,         25L,
+     2L,         "us",   4L,   "f",         6L,         34L,
+     3L,      "india",   5L,   "q",         8L,         78L
+    )
+fake_raw  
+```
+
+
+```{r}
+fake_raw %>% clean_names()
+```
+
+## 比count()更懂我的心
+```{r}
+mtcars %>% 
+  count(cyl)
+```
+```{r}
+mtcars %>% 
+  janitor::tabyl(cyl)
+```
+
+## 代码太乱了，谁帮我整理下
+
+```{r}
+## install.packages("styler")
+```
+
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/styler.png")
+```
+安装后，然后这两个地方点两下，就发现你的代码整齐很多了
+
+
+## 正则表达式太南了
+
+```{r}
+library(inferregex) 
+## remotes::install_github("daranzolin/inferregex")
+```
+
+
+```{r}
+s <- "abcd-9999-ab9"
+infer_regex(s)$regex
+```
+有了它，妈妈再也不担心我的正则表达式了
+
+## 颜控怎么配色？
+
+```{r}
+library(ggthemr) ## devtools::install_github('cttobin/ggthemr')
+ggthemr('dust')
+```
+
+
+
+```{r}
+mtcars %>% 
+  mutate(cyl = factor(cyl)) %>% 
+  ggplot(aes(x = mpg, fill = cyl, colour = cyl)) + 
+      geom_density(alpha = 0.75) + 
+      labs(fill = 'Cylinders', colour = 'Cylinders', x = 'MPG', y = 'Density') +
+      legend_top()
+```
+
+用完别忘了
+```{r}
+ggthemr_reset()
+```
+
+## 宏包太多
+```{r}
+library(pacman)
+##p_load(lattice, foreign, boot, rpart)
+```
+
+
+唉，这个`library()`都要偷懒，真服了你们了
+
+
+## 犹抱琵琶半遮面
+```{r}
+##https://github.com/EmilHvitfeldt/gganonymize
+library(ggplot2)
+library(gganonymize)
+
+ggg <- ggplot(mtcars, aes(as.factor(cyl))) +
+  geom_bar() +
+  labs(title = "Test title",
+       subtitle = "Test subtitle, this one have a lot lot lot lot lot more text then the rest",
+       caption = "Test caption",
+       tag = 1) +
+  facet_wrap(~vs)
+
+gganonomize(ggg)
+```
+
+你可以看我的图，但就不想告诉你图什么意思，因为我加密了
+
+## 整理Rmarkdown
+```{r}
+##devtools::install_github("tjmahr/WrapRmd")
+```
+
+
+
+## 如何有效的提问
+直接看官方网站，这里不举例了
+```{r}
+## install.packages("reprex")
+## https://reprex.tidyverse.org/
+```
+
+## 程序结束后记得提醒我
+```{r}
+## beepr::beep(sound = "mario")
+```
+
+你听到了声音吗?
+
+## 多张图摆放
+```{r}
+library(patchwork)
+p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
+p3 <- ggplot(mtcars) + geom_smooth(aes(disp, qsec))
+p1 + p2 + p3
+```
+
+## 缺失值处理
+```{r}
+library(naniar)
+##https://github.com/njtierney/naniar
+
+airquality %>%
+  group_by(Month) %>%
+  miss_var_summary()
+```
+
+
+## 看看数据什么情况
+```{r}
+library(visdat)
+
+vis_dat(airquality)
+```
+
+
+## 画图颜色好看不
+scales也是大神的作品，功能多多
+```{r}
+## https://github.com/r-lib/scales
+library(scales)
+
+show_col(viridis_pal()(10))
+```
+
+先看看颜色，再选择
+
+
+
+## 管道都不想
+管道都不想写， 写代码还有美感？
+```{r}
+## library(nakepipe)
+```
+
+
+## 各种插件，任君选取
+```{r}
+## https://github.com/daattali/addinslist
+```
+
+
+

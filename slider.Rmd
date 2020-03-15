@@ -1,10 +1,10 @@
 # 时间序列分析 {#tibbletime}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, eval = FALSE}
 library(tidyverse)
 library(tibbletime)
-library(slide)
+library(slider)
 ```
 
 

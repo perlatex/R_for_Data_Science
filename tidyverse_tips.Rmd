@@ -409,7 +409,7 @@ gapminder %>%
   group_by(continent) %>%
   summarise(test = list(t.test(gdpPercap))) %>% # 单样本的t检验
 
-  mutate(tidied = map(test, broom::tidy)) %>%
+  mutate(tidied = purrr::map(test, broom::tidy)) %>%
   unnest(tidied) %>%
   ggplot(aes(estimate, continent)) +
   geom_point() +
@@ -425,7 +425,7 @@ gapminder %>%
   group_by(continent) %>%
   summarise(test = list(lm(lifeExp ~ gdpPercap))) %>% # 线性回归
 
-  mutate(tidied = map(test, broom::tidy, conf.int = TRUE)) %>%
+  mutate(tidied = purrr::map(test, broom::tidy, conf.int = TRUE)) %>%
   unnest(tidied) %>%
   filter(term != "(Intercept)") %>%
   ggplot(aes(estimate, continent)) +
@@ -520,6 +520,12 @@ gapminder %>%
   coord_flip() +
   theme_classic() +
   scale_fill_manual(values = c("#b3b3b3a0", "#D55E00")) +
+  annotate("text", x = 3.8, y = 48, label = "this is important\ncase", 
+           color = "#D55E00", size = 5) +
+  annotate(
+    geom = "curve", x = 4.1, y = 48, xend = 4.1, yend = 35, 
+    curvature = .3, arrow = arrow(length = unit(2, "mm"))
+  ) +
   theme(legend.position = "none",
         axis.text = element_text(size = 11)
         ) +

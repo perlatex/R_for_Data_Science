@@ -134,8 +134,8 @@ df
 
 
 df %>%
-  mutate(., rand  = map(mean, ~ rnorm(5, .))) %>% 
-  unnest_wider(rand)
+  dplyr::mutate(., rand  = map(mean, ~ rnorm(5, .))) %>% 
+  tidyr::unnest_wider(rand)
 ```
 
 
@@ -146,8 +146,8 @@ df %>%
 
 ```{r, warning=FALSE, message=FALSE}
 df %>%
-  mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>% 
-  unnest_wider(rand)
+  dplyr::mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>% 
+  tidyr::unnest_wider(rand)
 ```
 
 - `mean`传给 `.x`
@@ -166,7 +166,7 @@ df <- tribble(
 
 
 df %>%
-   mutate(., sum = purrr::pmap_dbl(., ~sum(...)))
+   dplyr::mutate(., sum = purrr::pmap_dbl(., ~sum(...)))
 ```
 
 
@@ -227,14 +227,14 @@ rename_all(.tbl, .funs = list(), ...)
 
 ```{r, warning=FALSE, message=FALSE}
 read_csv("./demo_data/wages.csv") %>%
-  mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
-  select(., -letter) %>%
-  mutate_at(vars(race), ~ as.factor(.)) %>%
-  mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
-  filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
+  dplyr::mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
+  dplyr::select(., -letter) %>%
+  dplyr::mutate_at(vars(race), ~ as.factor(.)) %>%
+  dplyr::mutate_at(vars(sex), ~ if_else(. == "male", 1, 0)) %>%
+  dplyr::filter_if(~ is.numeric(.), all_vars(. != 0)) %>% 
   split(.$sex) %>%
-  map(~ lm(earn ~ ., data = .)) %>%
-  map_dfr(., ~ broom::tidy(.), .id = "sex")
+  purrr::map(~ lm(earn ~ ., data = .)) %>%
+  purrr::map_dfr(., ~ broom::tidy(.), .id = "sex")
 ```
 
 - 第1行：路径中`.`代表当前位置，如果是`..`表示上一级目录

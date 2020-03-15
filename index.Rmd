@@ -29,7 +29,9 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE, 
                       message = FALSE,
                       fig.width = 6, 
-                      fig.height = 4)
+                      fig.height = 4,
+                      fig.showtext = TRUE
+                      )
 ```
 
 # 前言 {-}
@@ -73,7 +75,9 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(dplyr) 章介绍数据规整与数据处理
    - 第 \@ref(stringr) 章介绍字符串处理
    - 第 \@ref(purrr) 章介绍函数式编程
-   - 第 \@ref(eda) 章介绍探索性数据分析   
+   - 第 \@ref(eda01) 章介绍探索性数据分析1   
+   - 第 \@ref(eda02) 章介绍探索性数据分析2   
+   - 第 \@ref(eda03) 章介绍探索性数据分析3   
    - 第 \@ref(ggplot2) 章再讲ggplot2
    - 第 \@ref(tips) 章介绍tidyverse中常用技巧
    - 第 \@ref(tibble) 章介绍简单数据框
@@ -92,6 +96,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidytext) 章介绍文本挖掘
    - 第 \@ref(tibbletime) 章介绍时间序列分析
    - 第 \@ref(stars) 章介绍地理数据处理
+   - 第 \@ref(lazyman) 章介绍我收集的一些有用和有趣的宏包
 
 
 
@@ -105,7 +110,7 @@ knitr::include_graphics("images/rbook1.png")
 
 3、**关于课程目标**
 
-- 课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用
+- 课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用，**不是 learning R，而是 learning with R**
 
 - 授课方式: 
   - 边写**代码**边讲

@@ -22,6 +22,8 @@ rmd_files: [
   "stringr.Rmd",
   "purrr.Rmd",
   "eda.Rmd",
+  "eda_olympics.Rmd",
+  "eda_covid2019.Rmd",
   "ggplot2.Rmd",
   "tidyverse_tips.Rmd",
   "tibble.Rmd",
@@ -40,8 +42,9 @@ rmd_files: [
   "rvest.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",
-  "slide.Rmd",
+  "slider.Rmd",
   "stars.Rmd",
+  "lazyman.Rmd",
 
 
   "Appendix.Rmd",

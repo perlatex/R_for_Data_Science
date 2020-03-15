@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>第 2 章 R语言基础 | 数据科学中的 R 语言</title>
+  <meta name="description" content="一个简单的中文书示例。" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="第 2 章 R语言基础 | 数据科学中的 R 语言" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="一个简单的中文书示例。" />
+  <meta name="github-repo" content="perlatex/r_for_data_science" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 2 章 R语言基础 | 数据科学中的 R 语言" />
+  
+  <meta name="twitter:description" content="一个简单的中文书示例。" />
+  
+
+<meta name="author" content="王敏杰" />
+
+
+<meta name="date" content="2020-03-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro-ds.html"/>
+<link rel="next" href="subsetting.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable/js/pagedtable.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/str_view/str_view.css" rel="stylesheet" />
+<script src="libs/str_view-binding/str_view.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css\psyteachr.css" type="text/css" />
+<link rel="stylesheet" href="css\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">数据科学中的R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>前言</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#关于课程"><i class="fa fa-check"></i>关于课程</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#ryouwithme"><i class="fa fa-check"></i>RYouWithMe</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#致谢"><i class="fa fa-check"></i>致谢</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="part"><span><b>I 基础篇</b></span></li>
+<li class="chapter" data-level="1" data-path="intro-ds.html"><a href="intro-ds.html"><i class="fa fa-check"></i><b>1</b> 数据科学与R语言</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro-ds.html"><a href="intro-ds.html#什么是数据科学"><i class="fa fa-check"></i><b>1.1</b> 什么是数据科学</a></li>
+<li class="chapter" data-level="1.2" data-path="intro-ds.html"><a href="intro-ds.html#数据科学流程"><i class="fa fa-check"></i><b>1.2</b> 数据科学流程</a></li>
+<li class="chapter" data-level="1.3" data-path="intro-ds.html"><a href="intro-ds.html#为什么选择-r"><i class="fa fa-check"></i><b>1.3</b> 为什么选择 R</a></li>
+<li class="chapter" data-level="1.4" data-path="intro-ds.html"><a href="intro-ds.html#r-vs-excel"><i class="fa fa-check"></i><b>1.4</b> R vs Excel</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro-R.html"><a href="intro-R.html"><i class="fa fa-check"></i><b>2</b> R语言基础</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro-R.html"><a href="intro-R.html#安装-r"><i class="fa fa-check"></i><b>2.1</b> 安装 R</a></li>
+<li class="chapter" data-level="2.2" data-path="intro-R.html"><a href="intro-R.html#安装-rstudio"><i class="fa fa-check"></i><b>2.2</b> 安装 RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="intro-R.html"><a href="intro-R.html#开始"><i class="fa fa-check"></i><b>2.3</b> 开始</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-R.html"><a href="intro-R.html#对象"><i class="fa fa-check"></i><b>2.4</b> 对象</a></li>
+<li class="chapter" data-level="2.5" data-path="intro-R.html"><a href="intro-R.html#数据类型"><i class="fa fa-check"></i><b>2.5</b> 数据类型</a></li>
+<li class="chapter" data-level="2.6" data-path="intro-R.html"><a href="intro-R.html#数据结构"><i class="fa fa-check"></i><b>2.6</b> 数据结构</a></li>
+<li class="chapter" data-level="2.7" data-path="intro-R.html"><a href="intro-R.html#函数"><i class="fa fa-check"></i><b>2.7</b> 函数</a></li>
+<li class="chapter" data-level="2.8" data-path="intro-R.html"><a href="intro-R.html#脚本"><i class="fa fa-check"></i><b>2.8</b> 脚本</a></li>
+<li class="chapter" data-level="2.9" data-path="intro-R.html"><a href="intro-R.html#宏包"><i class="fa fa-check"></i><b>2.9</b> 宏包</a></li>
+<li class="chapter" data-level="2.10" data-path="intro-R.html"><a href="intro-R.html#如何获取帮助"><i class="fa fa-check"></i><b>2.10</b> 如何获取帮助</a></li>
+<li class="chapter" data-level="2.11" data-path="intro-R.html"><a href="intro-R.html#r-语言社区"><i class="fa fa-check"></i><b>2.11</b> R 语言社区</a></li>
+<li class="chapter" data-level="2.12" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>2.12</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="subsetting.html"><a href="subsetting.html"><i class="fa fa-check"></i><b>3</b> 子集选取</a><ul>
+<li class="chapter" data-level="3.1" data-path="subsetting.html"><a href="subsetting.html#向量"><i class="fa fa-check"></i><b>3.1</b> 向量</a></li>
+<li class="chapter" data-level="3.2" data-path="subsetting.html"><a href="subsetting.html#列表"><i class="fa fa-check"></i><b>3.2</b> 列表</a></li>
+<li class="chapter" data-level="3.3" data-path="subsetting.html"><a href="subsetting.html#矩阵"><i class="fa fa-check"></i><b>3.3</b> 矩阵</a></li>
+<li class="chapter" data-level="3.4" data-path="subsetting.html"><a href="subsetting.html#数据框"><i class="fa fa-check"></i><b>3.4</b> 数据框</a></li>
+<li class="chapter" data-level="3.5" data-path="subsetting.html"><a href="subsetting.html#增强型数据框"><i class="fa fa-check"></i><b>3.5</b> 增强型数据框</a></li>
+<li class="chapter" data-level="3.6" data-path="subsetting.html"><a href="subsetting.html#延伸阅读-1"><i class="fa fa-check"></i><b>3.6</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="visual.html"><a href="visual.html"><i class="fa fa-check"></i><b>4</b> 数据可视化</a><ul>
+<li class="chapter" data-level="4.1" data-path="visual.html"><a href="visual.html#为什么要可视化"><i class="fa fa-check"></i><b>4.1</b> 为什么要可视化</a></li>
+<li class="chapter" data-level="4.2" data-path="visual.html"><a href="visual.html#宏包ggplot2"><i class="fa fa-check"></i><b>4.2</b> 宏包ggplot2</a></li>
+<li class="chapter" data-level="4.3" data-path="visual.html"><a href="visual.html#ggplot2-的图形语法"><i class="fa fa-check"></i><b>4.3</b> ggplot2 的图形语法</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="visual.html"><a href="visual.html#语法模板"><i class="fa fa-check"></i><b>4.3.1</b> 语法模板</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="visual.html"><a href="visual.html#映射"><i class="fa fa-check"></i><b>4.4</b> 映射</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="visual.html"><a href="visual.html#排量越大越耗油吗"><i class="fa fa-check"></i><b>4.4.1</b> 排量越大，越耗油吗？</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="visual.html"><a href="visual.html#映射-vs.设置"><i class="fa fa-check"></i><b>4.5</b> 映射 vs.设置</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="visual.html"><a href="visual.html#提问"><i class="fa fa-check"></i><b>4.5.1</b> 提问</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="visual.html"><a href="visual.html#几何对象"><i class="fa fa-check"></i><b>4.6</b> 几何对象</a></li>
+<li class="chapter" data-level="4.7" data-path="visual.html"><a href="visual.html#global-vs.-local"><i class="fa fa-check"></i><b>4.7</b> Global vs. Local</a></li>
+<li class="chapter" data-level="4.8" data-path="visual.html"><a href="visual.html#saving-plots"><i class="fa fa-check"></i><b>4.8</b> saving plots</a></li>
+<li class="chapter" data-level="4.9" data-path="visual.html"><a href="visual.html#延伸阅读-2"><i class="fa fa-check"></i><b>4.9</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="rmarkdown.html"><a href="rmarkdown.html"><i class="fa fa-check"></i><b>5</b> 可重复性研究</a><ul>
+<li class="chapter" data-level="5.1" data-path="rmarkdown.html"><a href="rmarkdown.html#什么是rmarkdown"><i class="fa fa-check"></i><b>5.1</b> 什么是Rmarkdown</a></li>
+<li class="chapter" data-level="5.2" data-path="rmarkdown.html"><a href="rmarkdown.html#markdown-基本语法"><i class="fa fa-check"></i><b>5.2</b> markdown 基本语法</a></li>
+<li class="chapter" data-level="5.3" data-path="rmarkdown.html"><a href="rmarkdown.html#communicating-with-data-via-r-markdown"><i class="fa fa-check"></i><b>5.3</b> Communicating with Data via R Markdown</a></li>
+<li class="chapter" data-level="5.4" data-path="rmarkdown.html"><a href="rmarkdown.html#hello-r-markdown"><i class="fa fa-check"></i><b>5.4</b> Hello R Markdown</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="rmarkdown.html"><a href="rmarkdown.html#插入公式"><i class="fa fa-check"></i><b>5.4.1</b> 插入公式</a></li>
+<li class="chapter" data-level="5.4.2" data-path="rmarkdown.html"><a href="rmarkdown.html#插入图片"><i class="fa fa-check"></i><b>5.4.2</b> 插入图片</a></li>
+<li class="chapter" data-level="5.4.3" data-path="rmarkdown.html"><a href="rmarkdown.html#表格"><i class="fa fa-check"></i><b>5.4.3</b> 表格</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="rmarkdown.html"><a href="rmarkdown.html#html_document"><i class="fa fa-check"></i><b>5.5</b> html_document</a></li>
+<li class="chapter" data-level="5.6" data-path="rmarkdown.html"><a href="rmarkdown.html#pdf_document"><i class="fa fa-check"></i><b>5.6</b> pdf_document</a></li>
+<li class="chapter" data-level="5.7" data-path="rmarkdown.html"><a href="rmarkdown.html#延伸阅读-3"><i class="fa fa-check"></i><b>5.7</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dplyr.html"><a href="dplyr.html"><i class="fa fa-check"></i><b>6</b> 数据处理</a><ul>
+<li class="chapter" data-level="6.1" data-path="dplyr.html"><a href="dplyr.html#mutate"><i class="fa fa-check"></i><b>6.1</b> <code>mutate()</code></a></li>
+<li class="chapter" data-level="6.2" data-path="dplyr.html"><a href="dplyr.html#管道"><i class="fa fa-check"></i><b>6.2</b> <code>管道</code> %&gt;%</a></li>
+<li class="chapter" data-level="6.3" data-path="dplyr.html"><a href="dplyr.html#select"><i class="fa fa-check"></i><b>6.3</b> <code>select()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="dplyr.html"><a href="dplyr.html#filter"><i class="fa fa-check"></i><b>6.4</b> <code>filter()</code></a></li>
+<li class="chapter" data-level="6.5" data-path="dplyr.html"><a href="dplyr.html#summarise统计"><i class="fa fa-check"></i><b>6.5</b> <code>summarise()</code>统计</a></li>
+<li class="chapter" data-level="6.6" data-path="dplyr.html"><a href="dplyr.html#group_by分组"><i class="fa fa-check"></i><b>6.6</b> <code>group_by()</code>分组</a></li>
+<li class="chapter" data-level="6.7" data-path="dplyr.html"><a href="dplyr.html#arrange排序"><i class="fa fa-check"></i><b>6.7</b> <code>arrange()</code>排序</a></li>
+<li class="chapter" data-level="6.8" data-path="dplyr.html"><a href="dplyr.html#left_join"><i class="fa fa-check"></i><b>6.8</b> <code>left_join</code></a></li>
+<li class="chapter" data-level="6.9" data-path="dplyr.html"><a href="dplyr.html#延伸阅读-4"><i class="fa fa-check"></i><b>6.9</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="stringr.html"><a href="stringr.html"><i class="fa fa-check"></i><b>7</b> 正则表达式</a><ul>
+<li class="chapter" data-level="7.1" data-path="stringr.html"><a href="stringr.html#什么是正则表达式"><i class="fa fa-check"></i><b>7.1</b> 什么是正则表达式</a></li>
+<li class="chapter" data-level="7.2" data-path="stringr.html"><a href="stringr.html#字符串基础"><i class="fa fa-check"></i><b>7.2</b> 字符串基础</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="stringr.html"><a href="stringr.html#字符串长度"><i class="fa fa-check"></i><b>7.2.1</b> 字符串长度</a></li>
+<li class="chapter" data-level="7.2.2" data-path="stringr.html"><a href="stringr.html#字符串组合"><i class="fa fa-check"></i><b>7.2.2</b> 字符串组合</a></li>
+<li class="chapter" data-level="7.2.3" data-path="stringr.html"><a href="stringr.html#字符串取子集"><i class="fa fa-check"></i><b>7.2.3</b> 字符串取子集</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="stringr.html"><a href="stringr.html#使用正则表达式进行模式匹配"><i class="fa fa-check"></i><b>7.3</b> 使用正则表达式进行模式匹配</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="stringr.html"><a href="stringr.html#基础匹配"><i class="fa fa-check"></i><b>7.3.1</b> 基础匹配</a></li>
+<li class="chapter" data-level="7.3.2" data-path="stringr.html"><a href="stringr.html#锚点"><i class="fa fa-check"></i><b>7.3.2</b> 锚点</a></li>
+<li class="chapter" data-level="7.3.3" data-path="stringr.html"><a href="stringr.html#字符类与字符选项"><i class="fa fa-check"></i><b>7.3.3</b> 字符类与字符选项</a></li>
+<li class="chapter" data-level="7.3.4" data-path="stringr.html"><a href="stringr.html#重复"><i class="fa fa-check"></i><b>7.3.4</b> 重复</a></li>
+<li class="chapter" data-level="7.3.5" data-path="stringr.html"><a href="stringr.html#分组与回溯引用"><i class="fa fa-check"></i><b>7.3.5</b> 分组与回溯引用</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="stringr.html"><a href="stringr.html#解决实际问题"><i class="fa fa-check"></i><b>7.4</b> 解决实际问题</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="stringr.html"><a href="stringr.html#确定一个字符向量是否匹配一种模式"><i class="fa fa-check"></i><b>7.4.1</b> 确定一个字符向量是否匹配一种模式</a></li>
+<li class="chapter" data-level="7.4.2" data-path="stringr.html"><a href="stringr.html#确定匹配的位置"><i class="fa fa-check"></i><b>7.4.2</b> 确定匹配的位置</a></li>
+<li class="chapter" data-level="7.4.3" data-path="stringr.html"><a href="stringr.html#提取匹配的内容"><i class="fa fa-check"></i><b>7.4.3</b> 提取匹配的内容</a></li>
+<li class="chapter" data-level="7.4.4" data-path="stringr.html"><a href="stringr.html#替换匹配内容"><i class="fa fa-check"></i><b>7.4.4</b> 替换匹配内容</a></li>
+<li class="chapter" data-level="7.4.5" data-path="stringr.html"><a href="stringr.html#拆分字符串"><i class="fa fa-check"></i><b>7.4.5</b> 拆分字符串</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="stringr.html"><a href="stringr.html#进阶部分"><i class="fa fa-check"></i><b>7.5</b> 进阶部分</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="stringr.html"><a href="stringr.html#look-ahead"><i class="fa fa-check"></i><b>7.5.1</b> look ahead</a></li>
+<li class="chapter" data-level="7.5.2" data-path="stringr.html"><a href="stringr.html#look-behind"><i class="fa fa-check"></i><b>7.5.2</b> look behind</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="stringr.html"><a href="stringr.html#案例分析"><i class="fa fa-check"></i><b>7.6</b> 案例分析</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="stringr.html"><a href="stringr.html#案例1"><i class="fa fa-check"></i><b>7.6.1</b> 案例1</a></li>
+<li class="chapter" data-level="7.6.2" data-path="stringr.html"><a href="stringr.html#案例2"><i class="fa fa-check"></i><b>7.6.2</b> 案例2</a></li>
+<li class="chapter" data-level="7.6.3" data-path="stringr.html"><a href="stringr.html#案例3"><i class="fa fa-check"></i><b>7.6.3</b> 案例3</a></li>
+<li class="chapter" data-level="7.6.4" data-path="stringr.html"><a href="stringr.html#案例4"><i class="fa fa-check"></i><b>7.6.4</b> 案例4</a></li>
+<li class="chapter" data-level="7.6.5" data-path="stringr.html"><a href="stringr.html#案例5"><i class="fa fa-check"></i><b>7.6.5</b> 案例5</a></li>
+<li class="chapter" data-level="7.6.6" data-path="stringr.html"><a href="stringr.html#案例6"><i class="fa fa-check"></i><b>7.6.6</b> 案例6</a></li>
+<li class="chapter" data-level="7.6.7" data-path="stringr.html"><a href="stringr.html#案例7"><i class="fa fa-check"></i><b>7.6.7</b> 案例7</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="stringr.html"><a href="stringr.html#一些有趣的正则表达式的宏包"><i class="fa fa-check"></i><b>7.7</b> 一些有趣的正则表达式的宏包</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="purrr.html"><a href="purrr.html"><i class="fa fa-check"></i><b>8</b> 函数式编程</a><ul>
+<li class="chapter" data-level="8.1" data-path="purrr.html"><a href="purrr.html#简单回顾"><i class="fa fa-check"></i><b>8.1</b> 简单回顾</a></li>
+<li class="chapter" data-level="8.2" data-path="purrr.html"><a href="purrr.html#多说说列表"><i class="fa fa-check"></i><b>8.2</b> 多说说列表</a></li>
+<li class="chapter" data-level="8.3" data-path="purrr.html"><a href="purrr.html#列表-vs-向量"><i class="fa fa-check"></i><b>8.3</b> 列表 vs 向量</a></li>
+<li class="chapter" data-level="8.4" data-path="purrr.html"><a href="purrr.html#purrr-1"><i class="fa fa-check"></i><b>8.4</b> purrr</a></li>
+<li class="chapter" data-level="8.5" data-path="purrr.html"><a href="purrr.html#自定义函数"><i class="fa fa-check"></i><b>8.5</b> 自定义函数</a></li>
+<li class="chapter" data-level="8.6" data-path="purrr.html"><a href="purrr.html#延伸阅读-5"><i class="fa fa-check"></i><b>8.6</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="eda01.html"><a href="eda01.html"><i class="fa fa-check"></i><b>9</b> 探索性数据分析</a><ul>
+<li class="chapter" data-level="9.1" data-path="eda01.html"><a href="eda01.html#探索性"><i class="fa fa-check"></i><b>9.1</b> 探索性</a></li>
+<li class="chapter" data-level="9.2" data-path="eda01.html"><a href="eda01.html#数据集"><i class="fa fa-check"></i><b>9.2</b> 数据集</a></li>
+<li class="chapter" data-level="9.3" data-path="eda01.html"><a href="eda01.html#导入数据"><i class="fa fa-check"></i><b>9.3</b> 导入数据</a></li>
+<li class="chapter" data-level="9.4" data-path="eda01.html"><a href="eda01.html#数据结构-1"><i class="fa fa-check"></i><b>9.4</b> 数据结构</a></li>
+<li class="chapter" data-level="9.5" data-path="eda01.html"><a href="eda01.html#我们想探索哪些问题"><i class="fa fa-check"></i><b>9.5</b> 我们想探索哪些问题？</a></li>
+<li class="chapter" data-level="9.6" data-path="eda01.html"><a href="eda01.html#每个学科颁过多少次奖"><i class="fa fa-check"></i><b>9.6</b> 每个学科颁过多少次奖</a></li>
+<li class="chapter" data-level="9.7" data-path="eda01.html"><a href="eda01.html#看看我们伟大的祖国"><i class="fa fa-check"></i><b>9.7</b> 看看我们伟大的祖国</a></li>
+<li class="chapter" data-level="9.8" data-path="eda01.html"><a href="eda01.html#哪些大神多次获得诺贝尔奖"><i class="fa fa-check"></i><b>9.8</b> 哪些大神多次获得诺贝尔奖</a></li>
+<li class="chapter" data-level="9.9" data-path="eda01.html"><a href="eda01.html#大神在得奖的时候是多大年龄"><i class="fa fa-check"></i><b>9.9</b> 大神在得奖的时候是多大年龄？</a></li>
+<li class="chapter" data-level="9.10" data-path="eda01.html"><a href="eda01.html#性别比例"><i class="fa fa-check"></i><b>9.10</b> 性别比例</a></li>
+<li class="chapter" data-level="9.11" data-path="eda01.html"><a href="eda01.html#这些大神都是哪个年代出生的人"><i class="fa fa-check"></i><b>9.11</b> 这些大神都是哪个年代出生的人？</a></li>
+<li class="chapter" data-level="9.12" data-path="eda01.html"><a href="eda01.html#最年轻的诺奖获得者"><i class="fa fa-check"></i><b>9.12</b> 最年轻的诺奖获得者？</a></li>
+<li class="chapter" data-level="9.13" data-path="eda01.html"><a href="eda01.html#平均年龄和获奖数量"><i class="fa fa-check"></i><b>9.13</b> 平均年龄和获奖数量</a></li>
+<li class="chapter" data-level="9.14" data-path="eda01.html"><a href="eda01.html#出生地与工作地分布"><i class="fa fa-check"></i><b>9.14</b> 出生地与工作地分布</a></li>
+<li class="chapter" data-level="9.15" data-path="eda01.html"><a href="eda01.html#迁移模式"><i class="fa fa-check"></i><b>9.15</b> 迁移模式</a></li>
+<li class="chapter" data-level="9.16" data-path="eda01.html"><a href="eda01.html#地图"><i class="fa fa-check"></i><b>9.16</b> 地图</a></li>
+<li class="chapter" data-level="9.17" data-path="eda01.html"><a href="eda01.html#出生地和工作地不一样的占比"><i class="fa fa-check"></i><b>9.17</b> 出生地和工作地不一样的占比</a></li>
+<li class="chapter" data-level="9.18" data-path="eda01.html"><a href="eda01.html#诺奖分享者"><i class="fa fa-check"></i><b>9.18</b> 诺奖分享者</a></li>
+<li class="chapter" data-level="9.19" data-path="eda01.html"><a href="eda01.html#其它"><i class="fa fa-check"></i><b>9.19</b> 其它</a></li>
+<li class="chapter" data-level="9.20" data-path="eda01.html"><a href="eda01.html#延伸阅读-6"><i class="fa fa-check"></i><b>9.20</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="eda02.html"><a href="eda02.html"><i class="fa fa-check"></i><b>10</b> 探索性数据分析2</a><ul>
+<li class="chapter" data-level="10.1" data-path="eda02.html"><a href="eda02.html#数据集-1"><i class="fa fa-check"></i><b>10.1</b> 数据集</a></li>
+<li class="chapter" data-level="10.2" data-path="eda02.html"><a href="eda02.html#导入数据-1"><i class="fa fa-check"></i><b>10.2</b> 导入数据</a></li>
+<li class="chapter" data-level="10.3" data-path="eda02.html"><a href="eda02.html#可视化"><i class="fa fa-check"></i><b>10.3</b> 可视化</a></li>
+<li class="chapter" data-level="10.4" data-path="eda02.html"><a href="eda02.html#回归分析"><i class="fa fa-check"></i><b>10.4</b> 回归分析</a></li>
+<li class="chapter" data-level="10.5" data-path="eda02.html"><a href="eda02.html#预测"><i class="fa fa-check"></i><b>10.5</b> 预测</a></li>
+<li class="chapter" data-level="10.6" data-path="eda02.html"><a href="eda02.html#可视化-1"><i class="fa fa-check"></i><b>10.6</b> 可视化</a></li>
+<li class="chapter" data-level="10.7" data-path="eda02.html"><a href="eda02.html#list_column"><i class="fa fa-check"></i><b>10.7</b> list_column</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="eda03.html"><a href="eda03.html"><i class="fa fa-check"></i><b>11</b> 探索性数据分析3</a><ul>
+<li class="chapter" data-level="11.1" data-path="eda03.html"><a href="eda03.html#数据集-2"><i class="fa fa-check"></i><b>11.1</b> 数据集</a></li>
+<li class="chapter" data-level="11.2" data-path="eda03.html"><a href="eda03.html#地图-1"><i class="fa fa-check"></i><b>11.2</b> 地图</a></li>
+</ul></li>
+<li class="part"><span><b>II tidyverse篇</b></span></li>
+<li class="chapter" data-level="12" data-path="ggplot2.html"><a href="ggplot2.html"><i class="fa fa-check"></i><b>12</b> ggplot2</a><ul>
+<li class="chapter" data-level="12.1" data-path="ggplot2.html"><a href="ggplot2.html#一个有趣的案例"><i class="fa fa-check"></i><b>12.1</b> 一个有趣的案例</a></li>
+<li class="chapter" data-level="12.2" data-path="ggplot2.html"><a href="ggplot2.html#学习目标"><i class="fa fa-check"></i><b>12.2</b> 学习目标</a></li>
+<li class="chapter" data-level="12.3" data-path="ggplot2.html"><a href="ggplot2.html#开始-1"><i class="fa fa-check"></i><b>12.3</b> 开始</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="ggplot2.html"><a href="ggplot2.html#导入数据-2"><i class="fa fa-check"></i><b>12.3.1</b> 导入数据</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ggplot2.html"><a href="ggplot2.html#检查数据"><i class="fa fa-check"></i><b>12.3.2</b> 检查数据</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ggplot2.html"><a href="ggplot2.html#基本绘图"><i class="fa fa-check"></i><b>12.4</b> 基本绘图</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="ggplot2.html"><a href="ggplot2.html#柱状图"><i class="fa fa-check"></i><b>12.4.1</b> 柱状图</a></li>
+<li class="chapter" data-level="12.4.2" data-path="ggplot2.html"><a href="ggplot2.html#直方图"><i class="fa fa-check"></i><b>12.4.2</b> 直方图</a></li>
+<li class="chapter" data-level="12.4.3" data-path="ggplot2.html"><a href="ggplot2.html#箱线图"><i class="fa fa-check"></i><b>12.4.3</b> 箱线图</a></li>
+<li class="chapter" data-level="12.4.4" data-path="ggplot2.html"><a href="ggplot2.html#抖散图"><i class="fa fa-check"></i><b>12.4.4</b> 抖散图</a></li>
+<li class="chapter" data-level="12.4.5" data-path="ggplot2.html"><a href="ggplot2.html#山峦图"><i class="fa fa-check"></i><b>12.4.5</b> 山峦图</a></li>
+<li class="chapter" data-level="12.4.6" data-path="ggplot2.html"><a href="ggplot2.html#散点图"><i class="fa fa-check"></i><b>12.4.6</b> 散点图</a></li>
+<li class="chapter" data-level="12.4.7" data-path="ggplot2.html"><a href="ggplot2.html#点线图"><i class="fa fa-check"></i><b>12.4.7</b> 点线图</a></li>
+<li class="chapter" data-level="12.4.8" data-path="ggplot2.html"><a href="ggplot2.html#文本标注"><i class="fa fa-check"></i><b>12.4.8</b> 文本标注</a></li>
+<li class="chapter" data-level="12.4.9" data-path="ggplot2.html"><a href="ggplot2.html#errorbar图"><i class="fa fa-check"></i><b>12.4.9</b> errorbar图</a></li>
+<li class="chapter" data-level="12.4.10" data-path="ggplot2.html"><a href="ggplot2.html#椭圆图"><i class="fa fa-check"></i><b>12.4.10</b> 椭圆图</a></li>
+<li class="chapter" data-level="12.4.11" data-path="ggplot2.html"><a href="ggplot2.html#d-密度图"><i class="fa fa-check"></i><b>12.4.11</b> 2D 密度图</a></li>
+<li class="chapter" data-level="12.4.12" data-path="ggplot2.html"><a href="ggplot2.html#马赛克图"><i class="fa fa-check"></i><b>12.4.12</b> 马赛克图</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="ggplot2.html"><a href="ggplot2.html#主题风格"><i class="fa fa-check"></i><b>12.5</b> 主题风格</a></li>
+<li class="chapter" data-level="12.6" data-path="ggplot2.html"><a href="ggplot2.html#定制"><i class="fa fa-check"></i><b>12.6</b> 定制</a><ul>
+<li class="chapter" data-level="12.6.1" data-path="ggplot2.html"><a href="ggplot2.html#labels"><i class="fa fa-check"></i><b>12.6.1</b> Labels</a></li>
+<li class="chapter" data-level="12.6.2" data-path="ggplot2.html"><a href="ggplot2.html#定制颜色"><i class="fa fa-check"></i><b>12.6.2</b> 定制颜色</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="ggplot2.html"><a href="ggplot2.html#组合图片"><i class="fa fa-check"></i><b>12.7</b> 组合图片</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="ggplot2.html"><a href="ggplot2.html#cowplot"><i class="fa fa-check"></i><b>12.7.1</b> cowplot</a></li>
+<li class="chapter" data-level="12.7.2" data-path="ggplot2.html"><a href="ggplot2.html#保存图片"><i class="fa fa-check"></i><b>12.7.2</b> 保存图片</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="ggplot2.html"><a href="ggplot2.html#中文字体"><i class="fa fa-check"></i><b>12.8</b> 中文字体</a></li>
+<li class="chapter" data-level="12.9" data-path="ggplot2.html"><a href="ggplot2.html#高亮某一组"><i class="fa fa-check"></i><b>12.9</b> 高亮某一组</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="ggplot2.html"><a href="ggplot2.html#ggplot2方法"><i class="fa fa-check"></i><b>12.9.1</b> ggplot2方法</a></li>
+<li class="chapter" data-level="12.9.2" data-path="ggplot2.html"><a href="ggplot2.html#gghighlight方法"><i class="fa fa-check"></i><b>12.9.2</b> gghighlight方法</a></li>
+</ul></li>
+<li class="chapter" data-level="12.10" data-path="ggplot2.html"><a href="ggplot2.html#函数图"><i class="fa fa-check"></i><b>12.10</b> 函数图</a></li>
+<li class="chapter" data-level="12.11" data-path="ggplot2.html"><a href="ggplot2.html#地图-2"><i class="fa fa-check"></i><b>12.11</b> 地图</a><ul>
+<li class="chapter" data-level="12.11.1" data-path="ggplot2.html"><a href="ggplot2.html#latex公式"><i class="fa fa-check"></i><b>12.11.1</b> latex公式</a></li>
+</ul></li>
+<li class="chapter" data-level="12.12" data-path="ggplot2.html"><a href="ggplot2.html#参考资料"><i class="fa fa-check"></i><b>12.12</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="tips.html"><a href="tips.html"><i class="fa fa-check"></i><b>13</b> tidyverse中的若干技巧</a><ul>
+<li class="chapter" data-level="13.1" data-path="tips.html"><a href="tips.html#from-gather-to-pivot"><i class="fa fa-check"></i><b>13.1</b> From <code>gather()</code> to <code>pivot()</code></a></li>
+<li class="chapter" data-level="13.2" data-path="tips.html"><a href="tips.html#count"><i class="fa fa-check"></i><b>13.2</b> count()</a></li>
+<li class="chapter" data-level="13.3" data-path="tips.html"><a href="tips.html#在-count-中创建新变量"><i class="fa fa-check"></i><b>13.3</b> 在 count() 中创建新变量</a></li>
+<li class="chapter" data-level="13.4" data-path="tips.html"><a href="tips.html#add_count"><i class="fa fa-check"></i><b>13.4</b> add_count()</a></li>
+<li class="chapter" data-level="13.5" data-path="tips.html"><a href="tips.html#nth-first-last"><i class="fa fa-check"></i><b>13.5</b> nth(), first(), last()</a></li>
+<li class="chapter" data-level="13.6" data-path="tips.html"><a href="tips.html#列变量重新排序"><i class="fa fa-check"></i><b>13.6</b> 列变量重新排序</a></li>
+<li class="chapter" data-level="13.7" data-path="tips.html"><a href="tips.html#if_else"><i class="fa fa-check"></i><b>13.7</b> if_else</a></li>
+<li class="chapter" data-level="13.8" data-path="tips.html"><a href="tips.html#case_when"><i class="fa fa-check"></i><b>13.8</b> case_when</a></li>
+<li class="chapter" data-level="13.9" data-path="tips.html"><a href="tips.html#找出前几名"><i class="fa fa-check"></i><b>13.9</b> 找出前几名</a></li>
+<li class="chapter" data-level="13.10" data-path="tips.html"><a href="tips.html#drop_na"><i class="fa fa-check"></i><b>13.10</b> drop_na()</a></li>
+<li class="chapter" data-level="13.11" data-path="tips.html"><a href="tips.html#replace_na"><i class="fa fa-check"></i><b>13.11</b> replace_na()</a></li>
+<li class="chapter" data-level="13.12" data-path="tips.html"><a href="tips.html#coalesce"><i class="fa fa-check"></i><b>13.12</b> coalesce</a></li>
+<li class="chapter" data-level="13.13" data-path="tips.html"><a href="tips.html#summarise-生成-list-column"><i class="fa fa-check"></i><b>13.13</b> summarise() 生成 list-column</a></li>
+<li class="chapter" data-level="13.14" data-path="tips.html"><a href="tips.html#count-fct_reorder-geom_col-coord_flip"><i class="fa fa-check"></i><b>13.14</b> count() + fct_reorder() + geom_col() + coord_flip()</a></li>
+<li class="chapter" data-level="13.15" data-path="tips.html"><a href="tips.html#scale_xy_log10"><i class="fa fa-check"></i><b>13.15</b> scale_x/y_log10</a></li>
+<li class="chapter" data-level="13.16" data-path="tips.html"><a href="tips.html#fct_lump"><i class="fa fa-check"></i><b>13.16</b> fct_lump</a></li>
+<li class="chapter" data-level="13.17" data-path="tips.html"><a href="tips.html#unite"><i class="fa fa-check"></i><b>13.17</b> unite</a></li>
+<li class="chapter" data-level="13.18" data-path="tips.html"><a href="tips.html#separate"><i class="fa fa-check"></i><b>13.18</b> separate()</a></li>
+<li class="chapter" data-level="13.19" data-path="tips.html"><a href="tips.html#extract"><i class="fa fa-check"></i><b>13.19</b> extract()</a></li>
+<li class="chapter" data-level="13.20" data-path="tips.html"><a href="tips.html#crossing"><i class="fa fa-check"></i><b>13.20</b> crossing()</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="tibble.html"><a href="tibble.html"><i class="fa fa-check"></i><b>14</b> 简单数据框</a><ul>
+<li class="chapter" data-level="14.1" data-path="tibble.html"><a href="tibble.html#tidyverse-家族"><i class="fa fa-check"></i><b>14.1</b> tidyverse 家族</a></li>
+<li class="chapter" data-level="14.2" data-path="tibble.html"><a href="tibble.html#人性化的tibble"><i class="fa fa-check"></i><b>14.2</b> 人性化的tibble</a></li>
+<li class="chapter" data-level="14.3" data-path="tibble.html"><a href="tibble.html#tibble-与-data.frame"><i class="fa fa-check"></i><b>14.3</b> tibble 与 data.frame</a></li>
+<li class="chapter" data-level="14.4" data-path="tibble.html"><a href="tibble.html#tibble数据操作"><i class="fa fa-check"></i><b>14.4</b> tibble数据操作</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="tibble.html"><a href="tibble.html#创建tibble"><i class="fa fa-check"></i><b>14.4.1</b> 创建tibble</a></li>
+<li class="chapter" data-level="14.4.2" data-path="tibble.html"><a href="tibble.html#转换成tibble类型"><i class="fa fa-check"></i><b>14.4.2</b> 转换成tibble类型</a></li>
+<li class="chapter" data-level="14.4.3" data-path="tibble.html"><a href="tibble.html#tibble简单操作"><i class="fa fa-check"></i><b>14.4.3</b> tibble简单操作</a></li>
+<li class="chapter" data-level="14.4.4" data-path="tibble.html"><a href="tibble.html#有用的函数lst"><i class="fa fa-check"></i><b>14.4.4</b> 有用的函数<code>lst</code></a></li>
+<li class="chapter" data-level="14.4.5" data-path="tibble.html"><a href="tibble.html#有用的函数enframe"><i class="fa fa-check"></i><b>14.4.5</b> 有用的函数<code>enframe</code></a></li>
+<li class="chapter" data-level="14.4.6" data-path="tibble.html"><a href="tibble.html#有用的函数deframe"><i class="fa fa-check"></i><b>14.4.6</b> 有用的函数<code>deframe</code></a></li>
+<li class="chapter" data-level="14.4.7" data-path="tibble.html"><a href="tibble.html#读取文件"><i class="fa fa-check"></i><b>14.4.7</b> 读取文件</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="tibble.html"><a href="tibble.html#关于行名"><i class="fa fa-check"></i><b>14.5</b> 关于行名</a></li>
+<li class="chapter" data-level="14.6" data-path="tibble.html"><a href="tibble.html#修复列名"><i class="fa fa-check"></i><b>14.6</b> 修复列名</a></li>
+<li class="chapter" data-level="14.7" data-path="tibble.html"><a href="tibble.html#nested-tibble"><i class="fa fa-check"></i><b>14.7</b> nested tibble</a></li>
+<li class="chapter" data-level="14.8" data-path="tibble.html"><a href="tibble.html#延伸阅读-7"><i class="fa fa-check"></i><b>14.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="part"><span><b>III 建模篇</b></span></li>
+<li class="chapter" data-level="15" data-path="sampling.html"><a href="sampling.html"><i class="fa fa-check"></i><b>15</b> 模拟与抽样</a><ul>
+<li class="chapter" data-level="15.1" data-path="sampling.html"><a href="sampling.html#模拟"><i class="fa fa-check"></i><b>15.1</b> 模拟</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="sampling.html"><a href="sampling.html#生成随机数"><i class="fa fa-check"></i><b>15.1.1</b> 生成随机数</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="sampling.html"><a href="sampling.html#massmvrnorm"><i class="fa fa-check"></i><b>15.2</b> MASS::mvrnorm</a></li>
+<li class="chapter" data-level="15.3" data-path="sampling.html"><a href="sampling.html#蒙特卡洛"><i class="fa fa-check"></i><b>15.3</b> 蒙特卡洛</a></li>
+<li class="chapter" data-level="15.4" data-path="sampling.html"><a href="sampling.html#抽样与样本"><i class="fa fa-check"></i><b>15.4</b> 抽样与样本</a><ul>
+<li class="chapter" data-level="15.4.1" data-path="sampling.html"><a href="sampling.html#总体分布"><i class="fa fa-check"></i><b>15.4.1</b> 总体分布</a></li>
+<li class="chapter" data-level="15.4.2" data-path="sampling.html"><a href="sampling.html#样本"><i class="fa fa-check"></i><b>15.4.2</b> 样本</a></li>
+</ul></li>
+<li class="chapter" data-level="15.5" data-path="sampling.html"><a href="sampling.html#扩展阅读"><i class="fa fa-check"></i><b>15.5</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="tidystats.html"><a href="tidystats.html"><i class="fa fa-check"></i><b>16</b> Tidy Statistics</a><ul>
+<li class="chapter" data-level="16.1" data-path="tidystats.html"><a href="tidystats.html#从一个案例开始"><i class="fa fa-check"></i><b>16.1</b> 从一个案例开始</a></li>
+<li class="chapter" data-level="16.2" data-path="tidystats.html"><a href="tidystats.html#单因素方差分析"><i class="fa fa-check"></i><b>16.2</b> 单因素方差分析</a></li>
+<li class="chapter" data-level="16.3" data-path="tidystats.html"><a href="tidystats.html#双因素方差分析"><i class="fa fa-check"></i><b>16.3</b> 双因素方差分析</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="lm.html"><a href="lm.html"><i class="fa fa-check"></i><b>17</b> 线性回归</a><ul>
+<li class="chapter" data-level="17.1" data-path="lm.html"><a href="lm.html#从一个案例开始-1"><i class="fa fa-check"></i><b>17.1</b> 从一个案例开始</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="lm.html"><a href="lm.html#缺失值检查"><i class="fa fa-check"></i><b>17.1.1</b> 缺失值检查</a></li>
+<li class="chapter" data-level="17.1.2" data-path="lm.html"><a href="lm.html#变量简单统计"><i class="fa fa-check"></i><b>17.1.2</b> 变量简单统计</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="lm.html"><a href="lm.html#线性回归模型"><i class="fa fa-check"></i><b>17.2</b> 线性回归模型</a></li>
+<li class="chapter" data-level="17.3" data-path="lm.html"><a href="lm.html#使用lm-函数"><i class="fa fa-check"></i><b>17.3</b> 使用<code>lm()</code> 函数</a></li>
+<li class="chapter" data-level="17.4" data-path="lm.html"><a href="lm.html#模型的解释"><i class="fa fa-check"></i><b>17.4</b> 模型的解释</a></li>
+<li class="chapter" data-level="17.5" data-path="lm.html"><a href="lm.html#多元线性回归"><i class="fa fa-check"></i><b>17.5</b> 多元线性回归</a></li>
+<li class="chapter" data-level="17.6" data-path="lm.html"><a href="lm.html#更多模型"><i class="fa fa-check"></i><b>17.6</b> 更多模型</a></li>
+<li class="chapter" data-level="17.7" data-path="lm.html"><a href="lm.html#可能遇到的情形"><i class="fa fa-check"></i><b>17.7</b> 可能遇到的情形</a><ul>
+<li class="chapter" data-level="17.7.1" data-path="lm.html"><a href="lm.html#截距项"><i class="fa fa-check"></i><b>17.7.1</b> 截距项</a></li>
+<li class="chapter" data-level="17.7.2" data-path="lm.html"><a href="lm.html#只有截距"><i class="fa fa-check"></i><b>17.7.2</b> 只有截距</a></li>
+<li class="chapter" data-level="17.7.3" data-path="lm.html"><a href="lm.html#分类变量"><i class="fa fa-check"></i><b>17.7.3</b> 分类变量</a></li>
+<li class="chapter" data-level="17.7.4" data-path="lm.html"><a href="lm.html#因子变量"><i class="fa fa-check"></i><b>17.7.4</b> 因子变量</a></li>
+<li class="chapter" data-level="17.7.5" data-path="lm.html"><a href="lm.html#一个分类变量和一个连续变量"><i class="fa fa-check"></i><b>17.7.5</b> 一个分类变量和一个连续变量</a></li>
+<li class="chapter" data-level="17.7.6" data-path="lm.html"><a href="lm.html#偷懒的写法"><i class="fa fa-check"></i><b>17.7.6</b> 偷懒的写法</a></li>
+<li class="chapter" data-level="17.7.7" data-path="lm.html"><a href="lm.html#交互项"><i class="fa fa-check"></i><b>17.7.7</b> 交互项</a></li>
+<li class="chapter" data-level="17.7.8" data-path="lm.html"><a href="lm.html#predict-vs-fit"><i class="fa fa-check"></i><b>17.7.8</b> predict vs fit</a></li>
+<li class="chapter" data-level="17.7.9" data-path="lm.html"><a href="lm.html#回归和相关的关系"><i class="fa fa-check"></i><b>17.7.9</b> 回归和相关的关系</a></li>
+</ul></li>
+<li class="chapter" data-level="17.8" data-path="lm.html"><a href="lm.html#延伸阅读-8"><i class="fa fa-check"></i><b>17.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="tidymodels.html"><a href="tidymodels.html"><i class="fa fa-check"></i><b>18</b> 机器学习</a></li>
+<li class="chapter" data-level="19" data-path="tidyeval.html"><a href="tidyeval.html"><i class="fa fa-check"></i><b>19</b> 非标准性评估</a></li>
+<li class="part"><span><b>IV 应用篇</b></span></li>
+<li class="chapter" data-level="20" data-path="advR.html"><a href="advR.html"><i class="fa fa-check"></i><b>20</b> tidyverse进阶</a><ul>
+<li class="chapter" data-level="20.1" data-path="advR.html"><a href="advR.html#scoped-函数"><i class="fa fa-check"></i><b>20.1</b> scoped 函数</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="advR.html"><a href="advR.html#mutate_if"><i class="fa fa-check"></i><b>20.1.1</b> mutate_if</a></li>
+<li class="chapter" data-level="20.1.2" data-path="advR.html"><a href="advR.html#select_if"><i class="fa fa-check"></i><b>20.1.2</b> select_if()</a></li>
+</ul></li>
+<li class="chapter" data-level="20.2" data-path="advR.html"><a href="advR.html#summarise_if"><i class="fa fa-check"></i><b>20.2</b> summarise_if</a></li>
+<li class="chapter" data-level="20.3" data-path="advR.html"><a href="advR.html#filter_if"><i class="fa fa-check"></i><b>20.3</b> filter_if()</a></li>
+<li class="chapter" data-level="20.4" data-path="advR.html"><a href="advR.html#group_by"><i class="fa fa-check"></i><b>20.4</b> group_by</a><ul>
+<li class="chapter" data-level="20.4.1" data-path="advR.html"><a href="advR.html#group_split-group_map-group_modify"><i class="fa fa-check"></i><b>20.4.1</b> group_split(), group_map(), group_modify()</a></li>
+<li class="chapter" data-level="20.4.2" data-path="advR.html"><a href="advR.html#其他group函数"><i class="fa fa-check"></i><b>20.4.2</b> 其他group函数</a></li>
+</ul></li>
+<li class="chapter" data-level="20.5" data-path="advR.html"><a href="advR.html#列名清理"><i class="fa fa-check"></i><b>20.5</b> 列名清理</a></li>
+<li class="chapter" data-level="20.6" data-path="advR.html"><a href="advR.html#缺失值检查与处理"><i class="fa fa-check"></i><b>20.6</b> 缺失值检查与处理</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="advR.html"><a href="advR.html#purrr-dplyr-技巧"><i class="fa fa-check"></i><b>20.6.1</b> purrr &amp; dplyr 技巧</a></li>
+<li class="chapter" data-level="20.6.2" data-path="advR.html"><a href="advR.html#缺失值替换"><i class="fa fa-check"></i><b>20.6.2</b> 缺失值替换</a></li>
+</ul></li>
+<li class="chapter" data-level="20.7" data-path="advR.html"><a href="advR.html#标准化"><i class="fa fa-check"></i><b>20.7</b> 标准化</a></li>
+<li class="chapter" data-level="20.8" data-path="advR.html"><a href="advR.html#arcoss函数"><i class="fa fa-check"></i><b>20.8</b> arcoss函数</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="rowwise.html"><a href="rowwise.html"><i class="fa fa-check"></i><b>21</b> tidyverse中行方向的操作</a><ul>
+<li class="chapter" data-level="21.1" data-path="rowwise.html"><a href="rowwise.html#问题"><i class="fa fa-check"></i><b>21.1</b> 问题</a></li>
+<li class="chapter" data-level="21.2" data-path="rowwise.html"><a href="rowwise.html#rowwise函数"><i class="fa fa-check"></i><b>21.2</b> rowwise函数</a></li>
+<li class="chapter" data-level="21.3" data-path="rowwise.html"><a href="rowwise.html#row-wise-summaries"><i class="fa fa-check"></i><b>21.3</b> Row-wise Summaries</a></li>
+<li class="chapter" data-level="21.4" data-path="rowwise.html"><a href="rowwise.html#purrrmap方案"><i class="fa fa-check"></i><b>21.4</b> purrr::map方案</a></li>
+<li class="chapter" data-level="21.5" data-path="rowwise.html"><a href="rowwise.html#tidy-的方案"><i class="fa fa-check"></i><b>21.5</b> tidy 的方案</a></li>
+<li class="chapter" data-level="21.6" data-path="rowwise.html"><a href="rowwise.html#用slide方案"><i class="fa fa-check"></i><b>21.6</b> 用slide方案</a></li>
+<li class="chapter" data-level="21.7" data-path="rowwise.html"><a href="rowwise.html#用lay方案"><i class="fa fa-check"></i><b>21.7</b> 用lay方案</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="dot.html"><a href="dot.html"><i class="fa fa-check"></i><b>22</b> tidyverse中的dot</a><ul>
+<li class="chapter" data-level="22.1" data-path="dot.html"><a href="dot.html#每一行的-.-各自代表什么意思呢"><i class="fa fa-check"></i><b>22.1</b> 每一行的 <code>.</code> 各自代表什么意思呢?</a></li>
+<li class="chapter" data-level="22.2" data-path="dot.html"><a href="dot.html#占位符"><i class="fa fa-check"></i><b>22.2</b> 占位符</a></li>
+<li class="chapter" data-level="22.3" data-path="dot.html"><a href="dot.html#lambda函数"><i class="fa fa-check"></i><b>22.3</b> Lambda函数</a></li>
+<li class="chapter" data-level="22.4" data-path="dot.html"><a href="dot.html#正则表达式"><i class="fa fa-check"></i><b>22.4</b> 正则表达式</a></li>
+<li class="chapter" data-level="22.5" data-path="dot.html"><a href="dot.html#unary-funciton-只带一个参数的函数"><i class="fa fa-check"></i><b>22.5</b> Unary funciton (只带一个参数的函数)</a></li>
+<li class="chapter" data-level="22.6" data-path="dot.html"><a href="dot.html#more-placeholder"><i class="fa fa-check"></i><b>22.6</b> more placeholder</a></li>
+<li class="chapter" data-level="22.7" data-path="dot.html"><a href="dot.html#当mutate遇到map"><i class="fa fa-check"></i><b>22.7</b> 当mutate遇到map</a></li>
+<li class="chapter" data-level="22.8" data-path="dot.html"><a href="dot.html#dot-dot-dot"><i class="fa fa-check"></i><b>22.8</b> Dot dot dot</a></li>
+<li class="chapter" data-level="22.9" data-path="dot.html"><a href="dot.html#dont-confuse"><i class="fa fa-check"></i><b>22.9</b> Don’t confuse</a></li>
+<li class="chapter" data-level="22.10" data-path="dot.html"><a href="dot.html#小结"><i class="fa fa-check"></i><b>22.10</b> 小结</a></li>
+<li class="chapter" data-level="22.11" data-path="dot.html"><a href="dot.html#回答问题"><i class="fa fa-check"></i><b>22.11</b> 回答问题</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="rvest.html"><a href="rvest.html"><i class="fa fa-check"></i><b>23</b> 网络爬虫</a><ul>
+<li class="chapter" data-level="23.1" data-path="rvest.html"><a href="rvest.html#链家网"><i class="fa fa-check"></i><b>23.1</b> 链家网</a></li>
+<li class="chapter" data-level="23.2" data-path="rvest.html"><a href="rvest.html#猪肉价格"><i class="fa fa-check"></i><b>23.2</b> 猪肉价格</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="tidygraph.html"><a href="tidygraph.html"><i class="fa fa-check"></i><b>24</b> 社会网络分析</a><ul>
+<li class="chapter" data-level="24.1" data-path="tidygraph.html"><a href="tidygraph.html#图论基本知识"><i class="fa fa-check"></i><b>24.1</b> 图论基本知识</a></li>
+<li class="chapter" data-level="24.2" data-path="tidygraph.html"><a href="tidygraph.html#网络分析"><i class="fa fa-check"></i><b>24.2</b> 网络分析</a><ul>
+<li class="chapter" data-level="24.2.1" data-path="tidygraph.html"><a href="tidygraph.html#tidygraph-a-tidy-api-for-graph-manipulation"><i class="fa fa-check"></i><b>24.2.1</b> tidygraph: A tidy API for graph manipulation</a></li>
+<li class="chapter" data-level="24.2.2" data-path="tidygraph.html"><a href="tidygraph.html#tidy-network-anaylsis"><i class="fa fa-check"></i><b>24.2.2</b> Tidy Network Anaylsis</a></li>
+<li class="chapter" data-level="24.2.3" data-path="tidygraph.html"><a href="tidygraph.html#create-network-objects"><i class="fa fa-check"></i><b>24.2.3</b> Create network objects</a></li>
+<li class="chapter" data-level="24.2.4" data-path="tidygraph.html"><a href="tidygraph.html#use-tbl_graph"><i class="fa fa-check"></i><b>24.2.4</b> Use <code>tbl_graph</code></a></li>
+<li class="chapter" data-level="24.2.5" data-path="tidygraph.html"><a href="tidygraph.html#use-as_tbl_graph"><i class="fa fa-check"></i><b>24.2.5</b> Use <code>as_tbl_graph</code></a></li>
+<li class="chapter" data-level="24.2.6" data-path="tidygraph.html"><a href="tidygraph.html#print-out-a-network-object"><i class="fa fa-check"></i><b>24.2.6</b> Print out a network object</a></li>
+<li class="chapter" data-level="24.2.7" data-path="tidygraph.html"><a href="tidygraph.html#extract-the-current-active-data"><i class="fa fa-check"></i><b>24.2.7</b> extract the current active data</a></li>
+</ul></li>
+<li class="chapter" data-level="24.3" data-path="tidygraph.html"><a href="tidygraph.html#network-graph-manipulation"><i class="fa fa-check"></i><b>24.3</b> Network graph manipulation</a><ul>
+<li class="chapter" data-level="24.3.1" data-path="tidygraph.html"><a href="tidygraph.html#car-groups-info-number-of-cylinders"><i class="fa fa-check"></i><b>24.3.1</b> Car groups info (Number of cylinders)</a></li>
+<li class="chapter" data-level="24.3.2" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-nodes-data"><i class="fa fa-check"></i><b>24.3.2</b> Modify the nodes data:</a></li>
+<li class="chapter" data-level="24.3.3" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-edge-data."><i class="fa fa-check"></i><b>24.3.3</b> Modify the edge data.</a></li>
+<li class="chapter" data-level="24.3.4" data-path="tidygraph.html"><a href="tidygraph.html#display-the-final-modified-graphs-object"><i class="fa fa-check"></i><b>24.3.4</b> Display the final modified graphs object:</a></li>
+<li class="chapter" data-level="24.3.5" data-path="tidygraph.html"><a href="tidygraph.html#visualize-the-correlation-network"><i class="fa fa-check"></i><b>24.3.5</b> Visualize the correlation network</a></li>
+</ul></li>
+<li class="chapter" data-level="24.4" data-path="tidygraph.html"><a href="tidygraph.html#network-analysis"><i class="fa fa-check"></i><b>24.4</b> Network analysis</a><ul>
+<li class="chapter" data-level="24.4.1" data-path="tidygraph.html"><a href="tidygraph.html#centrality"><i class="fa fa-check"></i><b>24.4.1</b> Centrality</a></li>
+<li class="chapter" data-level="24.4.2" data-path="tidygraph.html"><a href="tidygraph.html#clustering"><i class="fa fa-check"></i><b>24.4.2</b> Clustering</a></li>
+<li class="chapter" data-level="24.4.3" data-path="tidygraph.html"><a href="tidygraph.html#more-algorithms"><i class="fa fa-check"></i><b>24.4.3</b> More Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="24.5" data-path="tidygraph.html"><a href="tidygraph.html#小结-1"><i class="fa fa-check"></i><b>24.5</b> 小结</a></li>
+<li class="chapter" data-level="24.6" data-path="tidygraph.html"><a href="tidygraph.html#network-visualization"><i class="fa fa-check"></i><b>24.6</b> Network Visualization</a><ul>
+<li class="chapter" data-level="24.6.1" data-path="tidygraph.html"><a href="tidygraph.html#ggraph-a-grammar-of-graphics-for-relational-data"><i class="fa fa-check"></i><b>24.6.1</b> ggraph: A grammar of graphics for relational data</a></li>
+</ul></li>
+<li class="chapter" data-level="24.7" data-path="tidygraph.html"><a href="tidygraph.html#扩展阅读-1"><i class="fa fa-check"></i><b>24.7</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="tidytext.html"><a href="tidytext.html"><i class="fa fa-check"></i><b>25</b> 文本挖掘</a></li>
+<li class="chapter" data-level="26" data-path="tibbletime.html"><a href="tibbletime.html"><i class="fa fa-check"></i><b>26</b> 时间序列分析</a></li>
+<li class="chapter" data-level="27" data-path="stars.html"><a href="stars.html"><i class="fa fa-check"></i><b>27</b> 地理数据处理</a></li>
+<li class="chapter" data-level="28" data-path="lazyman.html"><a href="lazyman.html"><i class="fa fa-check"></i><b>28</b> 懒人系列</a><ul>
+<li class="chapter" data-level="28.1" data-path="lazyman.html"><a href="lazyman.html#谁帮我敲模型的公式"><i class="fa fa-check"></i><b>28.1</b> 谁帮我敲模型的公式</a></li>
+<li class="chapter" data-level="28.2" data-path="lazyman.html"><a href="lazyman.html#模型有了不知道怎么写论文"><i class="fa fa-check"></i><b>28.2</b> 模型有了，不知道怎么写论文？</a></li>
+<li class="chapter" data-level="28.3" data-path="lazyman.html"><a href="lazyman.html#模型评估一步到位"><i class="fa fa-check"></i><b>28.3</b> 模型评估一步到位</a></li>
+<li class="chapter" data-level="28.4" data-path="lazyman.html"><a href="lazyman.html#统计描述不用愁"><i class="fa fa-check"></i><b>28.4</b> 统计描述不用愁</a></li>
+<li class="chapter" data-level="28.5" data-path="lazyman.html"><a href="lazyman.html#列名太乱了"><i class="fa fa-check"></i><b>28.5</b> 列名太乱了</a></li>
+<li class="chapter" data-level="28.6" data-path="lazyman.html"><a href="lazyman.html#比count更懂我的心"><i class="fa fa-check"></i><b>28.6</b> 比count()更懂我的心</a></li>
+<li class="chapter" data-level="28.7" data-path="lazyman.html"><a href="lazyman.html#代码太乱了谁帮我整理下"><i class="fa fa-check"></i><b>28.7</b> 代码太乱了，谁帮我整理下</a></li>
+<li class="chapter" data-level="28.8" data-path="lazyman.html"><a href="lazyman.html#正则表达式太南了"><i class="fa fa-check"></i><b>28.8</b> 正则表达式太南了</a></li>
+<li class="chapter" data-level="28.9" data-path="lazyman.html"><a href="lazyman.html#颜控怎么配色"><i class="fa fa-check"></i><b>28.9</b> 颜控怎么配色？</a></li>
+<li class="chapter" data-level="28.10" data-path="lazyman.html"><a href="lazyman.html#宏包太多"><i class="fa fa-check"></i><b>28.10</b> 宏包太多</a></li>
+<li class="chapter" data-level="28.11" data-path="lazyman.html"><a href="lazyman.html#犹抱琵琶半遮面"><i class="fa fa-check"></i><b>28.11</b> 犹抱琵琶半遮面</a></li>
+<li class="chapter" data-level="28.12" data-path="lazyman.html"><a href="lazyman.html#整理rmarkdown"><i class="fa fa-check"></i><b>28.12</b> 整理Rmarkdown</a></li>
+<li class="chapter" data-level="28.13" data-path="lazyman.html"><a href="lazyman.html#如何有效的提问"><i class="fa fa-check"></i><b>28.13</b> 如何有效的提问</a></li>
+<li class="chapter" data-level="28.14" data-path="lazyman.html"><a href="lazyman.html#程序结束后记得提醒我"><i class="fa fa-check"></i><b>28.14</b> 程序结束后记得提醒我</a></li>
+<li class="chapter" data-level="28.15" data-path="lazyman.html"><a href="lazyman.html#多张图摆放"><i class="fa fa-check"></i><b>28.15</b> 多张图摆放</a></li>
+<li class="chapter" data-level="28.16" data-path="lazyman.html"><a href="lazyman.html#缺失值处理"><i class="fa fa-check"></i><b>28.16</b> 缺失值处理</a></li>
+<li class="chapter" data-level="28.17" data-path="lazyman.html"><a href="lazyman.html#看看数据什么情况"><i class="fa fa-check"></i><b>28.17</b> 看看数据什么情况</a></li>
+<li class="chapter" data-level="28.18" data-path="lazyman.html"><a href="lazyman.html#画图颜色好看不"><i class="fa fa-check"></i><b>28.18</b> 画图颜色好看不</a></li>
+<li class="chapter" data-level="28.19" data-path="lazyman.html"><a href="lazyman.html#管道都不想"><i class="fa fa-check"></i><b>28.19</b> 管道都不想</a></li>
+<li class="chapter" data-level="28.20" data-path="lazyman.html"><a href="lazyman.html#各种插件任君选取"><i class="fa fa-check"></i><b>28.20</b> 各种插件，任君选取</a></li>
+</ul></li>
+<li class="appendix"><span><b>附录</b></span></li>
+<li class="chapter" data-level="A" data-path="exams.html"><a href="exams.html"><i class="fa fa-check"></i><b>A</b> 期末考试</a><ul>
+<li class="chapter" data-level="A.1" data-path="exams.html"><a href="exams.html#方式"><i class="fa fa-check"></i><b>A.1</b> 方式</a></li>
+<li class="chapter" data-level="A.2" data-path="exams.html"><a href="exams.html#要求"><i class="fa fa-check"></i><b>A.2</b> 要求</a></li>
+<li class="chapter" data-level="A.3" data-path="exams.html"><a href="exams.html#数据集-3"><i class="fa fa-check"></i><b>A.3</b> 数据集</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">数据科学中的 R 语言</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="intro-R" class="section level1">
+<h1><span class="header-section-number">第 2 章</span> R语言基础</h1>
+<p>R 软件是一个自由、开源软件平台，具有统计分析、可视化和编程的强大功能。
+你可以从这里免费<a href="https://cloud.r-project.org">下载</a>。 为了更好的使用 R 软件，我推荐大家使用 <a href="https://www.rstudio.com/products/rstudio">RStudio</a>这个 IDE。这里有个<a href="https://www.rstudio.com/online-learning/">在线教程</a>帮助我们熟悉 R 和 RStudio。</p>
+<div id="安装-r" class="section level2">
+<h2><span class="header-section-number">2.1</span> 安装 R</h2>
+<p>我们从官方网站<a href="https://cloud.r-project.org">http://cran.r-project.org</a>下载, 网站界面感觉有点朴素:</p>
+<p><img src="images/Rinstall.png" /></p>
+</div>
+<div id="安装-rstudio" class="section level2">
+<h2><span class="header-section-number">2.2</span> 安装 RStudio</h2>
+<p>安装完R， 还需要安装RStudio。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。</p>
+<p><img src="images/engine.jpg" width="50%" /><img src="images/dashboard.jpg" width="50%" /></p>
+<p>同样，我们从官方网站下载并安装，苹果系统的用户，选择苹果系统对应的rstudio版本即可。</p>
+<ul>
+<li><a href="https://www.rstudio.com/download" class="uri">https://www.rstudio.com/download</a></li>
+<li>选择<code>RStudio Desktop</code></li>
+</ul>
+<p><img src="images/rstudio_install.png" width="85%" /></p>
+<div class="danger">
+<p>
+这里有个小小的提示：
+</p>
+<ul>
+<li>
+电脑不要用中文用户名，否则Rstudio会杠上中文用户名
+</li>
+<li>
+尽量安装在非系统盘，比如，可以选择安装在D盘
+</li>
+<li>
+安装路径不要有中文和空格。比如，这样就比较好
+<ul>
+<li>
+<code>D:/R</code>
+</li>
+<li>
+<code>D:/Rstudio</code>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="开始" class="section level2">
+<h2><span class="header-section-number">2.3</span> 开始</h2>
+<p>安装完毕后，从windos<code>开始菜单</code>，点开<code>rstudio</code>图标，就打开了rstudio的窗口，界面效果如下</p>
+<p><img src="images/rstudio-editor.png" width="75%" /></p>
+<p>RStudio 的用户界面十分友好，想要运行一段R代码，只需要在 RStudio 控制台面板最下面一行内键入R 代码，然后回车即可。比如我们键入<code>1 + 1</code> 并按回车后，RStudio 将显示如下结果</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro-R.html#cb2-1"></a><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span></code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="intro-R.html#cb4-1"></a><span class="kw">log</span>(<span class="dv">8</span>)</span></code></pre></div>
+<pre><code>## [1] 2.079</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="intro-R.html#cb6-1"></a><span class="dv">1</span><span class="op">:</span><span class="dv">15</span></span></code></pre></div>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15</code></pre>
+</div>
+<div id="对象" class="section level2">
+<h2><span class="header-section-number">2.4</span> 对象</h2>
+<p>在R中存储的数据称为<strong>对象</strong>， R语言数据处理实际上就是不断的创建和操控这些对象。创建一个R对象，首先确定一个名称，然后使用
+赋值操作符 <code>&lt;-</code>，将数据赋值给它。比如，如果想给变量 x 赋值为5，在命令行中可以这样写 <code>x &lt;- 5</code> ，然后回车.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="intro-R.html#cb8-1"></a>x &lt;-<span class="st"> </span><span class="dv">5</span></span></code></pre></div>
+<p>当键入<code>x</code> 然后回车，就打印出 x 的值。当然也可以使用命令<code>print(x)</code>，结果一样。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="intro-R.html#cb9-1"></a>x</span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="intro-R.html#cb11-1"></a>x <span class="op">+</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] 7</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="intro-R.html#cb13-1"></a>die &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">6</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="intro-R.html#cb14-1"></a>die</span></code></pre></div>
+<pre><code>## [1] 1 2 3 4 5 6</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="intro-R.html#cb16-1"></a>die <span class="op">/</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] 0.5 1.0 1.5 2.0 2.5 3.0</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="intro-R.html#cb18-1"></a>die <span class="op">*</span><span class="st"> </span>die</span></code></pre></div>
+<pre><code>## [1]  1  4  9 16 25 36</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="intro-R.html#cb20-1"></a>die <span class="op">%*%</span><span class="st"> </span>die</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]   91</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="intro-R.html#cb22-1"></a>die <span class="op">%o%</span><span class="st"> </span>die</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6]
+## [1,]    1    2    3    4    5    6
+## [2,]    2    4    6    8   10   12
+## [3,]    3    6    9   12   15   18
+## [4,]    4    8   12   16   20   24
+## [5,]    5   10   15   20   25   30
+## [6,]    6   12   18   24   30   36</code></pre>
+</div>
+<div id="数据类型" class="section level2">
+<h2><span class="header-section-number">2.5</span> 数据类型</h2>
+<p><img src="images/data_type.png" width="65%" /></p>
+<ul>
+<li>数值型</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="intro-R.html#cb24-1"></a><span class="dv">3</span></span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="intro-R.html#cb26-1"></a><span class="dv">5000</span></span></code></pre></div>
+<pre><code>## [1] 5000</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="intro-R.html#cb28-1"></a><span class="fl">3e+06</span></span></code></pre></div>
+<pre><code>## [1] 3e+06</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="intro-R.html#cb30-1"></a><span class="kw">class</span>(<span class="fl">0.0001</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<ul>
+<li>字符串型</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="intro-R.html#cb32-1"></a><span class="st">&quot;hello&quot;</span></span></code></pre></div>
+<pre><code>## [1] &quot;hello&quot;</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="intro-R.html#cb34-1"></a><span class="st">&quot;girl&quot;</span></span></code></pre></div>
+<pre><code>## [1] &quot;girl&quot;</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="intro-R.html#cb36-1"></a><span class="st">&quot;1&quot;</span>     <span class="co"># 1 vs &quot;1&quot;</span></span></code></pre></div>
+<pre><code>## [1] &quot;1&quot;</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="intro-R.html#cb38-1"></a><span class="kw">class</span>(<span class="st">&quot;1&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<ul>
+<li>逻辑型</li>
+</ul>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="intro-R.html#cb40-1"></a><span class="ot">TRUE</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="intro-R.html#cb42-1"></a><span class="ot">FALSE</span></span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="intro-R.html#cb44-1"></a><span class="dv">3</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">4</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="intro-R.html#cb46-1"></a><span class="kw">class</span>(T)</span></code></pre></div>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="intro-R.html#cb48-1"></a><span class="dv">3</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">4</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<ul>
+<li>因子型</li>
+</ul>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="intro-R.html#cb50-1"></a>fac &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>))</span>
+<span id="cb50-2"><a href="intro-R.html#cb50-2"></a>fac</span></code></pre></div>
+<pre><code>## [1] a b c
+## Levels: a b c</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="intro-R.html#cb52-1"></a><span class="kw">class</span>(fac)</span></code></pre></div>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+</div>
+<div id="数据结构" class="section level2">
+<h2><span class="header-section-number">2.6</span> 数据结构</h2>
+<ul>
+<li>大家前面看到<code>x &lt;- 1</code> 和 <code>x &lt;- c(1, 2, 3)</code>，这就是最简单的数据对象，叫<strong>原子型向量</strong>。</li>
+<li>用<code>c</code>函数将一组数据<strong>构造</strong>成向量</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="intro-R.html#cb54-1"></a>die &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span>
+<span id="cb54-2"><a href="intro-R.html#cb54-2"></a>die</span></code></pre></div>
+<pre><code>## [1] 2 4 3 1 5 7</code></pre>
+<p>长度为 1 的原子型向量</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="intro-R.html#cb56-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># or</span></span>
+<span id="cb56-2"><a href="intro-R.html#cb56-2"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>)</span></code></pre></div>
+<p>强制转换</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="intro-R.html#cb57-1"></a>vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;R&quot;</span>, <span class="dv">1</span>, <span class="ot">TRUE</span>)</span>
+<span id="cb57-2"><a href="intro-R.html#cb57-2"></a><span class="kw">class</span>(vec)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<ul>
+<li>大家看到前面<code>die %o% die</code> 是<strong>矩阵</strong>类型，矩阵就是二维数组</li>
+<li>可以用<code>matrix</code> 函数创建</li>
+</ul>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="intro-R.html#cb59-1"></a>m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">7</span>),</span>
+<span id="cb59-2"><a href="intro-R.html#cb59-2"></a>  <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span></span>
+<span id="cb59-3"><a href="intro-R.html#cb59-3"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="intro-R.html#cb60-1"></a>m</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    2    4    3
+## [2,]    1    5    7</code></pre>
+<ul>
+<li>数据对象：<strong>数组</strong></li>
+<li><code>array</code> 函数生成<code>n</code>维数组</li>
+</ul>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="intro-R.html#cb62-1"></a>ar &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">c</span>(<span class="dv">11</span><span class="op">:</span><span class="dv">14</span>, <span class="dv">21</span><span class="op">:</span><span class="dv">24</span>, <span class="dv">31</span><span class="op">:</span><span class="dv">34</span>), <span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb62-2"><a href="intro-R.html#cb62-2"></a>ar</span></code></pre></div>
+<pre><code>## , , 1
+## 
+##      [,1] [,2]
+## [1,]   11   13
+## [2,]   12   14
+## 
+## , , 2
+## 
+##      [,1] [,2]
+## [1,]   21   23
+## [2,]   22   24
+## 
+## , , 3
+## 
+##      [,1] [,2]
+## [1,]   31   33
+## [2,]   32   34</code></pre>
+<ul>
+<li>数据对象：<strong>列表</strong></li>
+<li>与<code>c</code>函数创建向量的方式相似，不同的元素用逗号分开。不同的是，列表允许不同的数据类型（数值型，字符型，逻辑型等）， 而向量要求每个元素的数据类型必须相同。</li>
+</ul>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="intro-R.html#cb64-1"></a>list1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">100</span><span class="op">:</span><span class="dv">110</span>, <span class="st">&quot;R&quot;</span>, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">7</span>))</span>
+<span id="cb64-2"><a href="intro-R.html#cb64-2"></a>list1</span></code></pre></div>
+<pre><code>## [[1]]
+##  [1] 100 101 102 103 104 105 106 107 108 109 110
+## 
+## [[2]]
+## [1] &quot;R&quot;
+## 
+## [[3]]
+## [1] 2 4 3 1 5 7</code></pre>
+<ul>
+<li>数据对象：<strong>数据框</strong></li>
+<li><code>data.frame</code>函数构建</li>
+</ul>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="intro-R.html#cb66-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb66-2"><a href="intro-R.html#cb66-2"></a>  <span class="dt">name =</span> <span class="kw">c</span>(<span class="st">&quot;ace&quot;</span>, <span class="st">&quot;bob&quot;</span>, <span class="st">&quot;carl&quot;</span>, <span class="st">&quot;kaite&quot;</span>),</span>
+<span id="cb66-3"><a href="intro-R.html#cb66-3"></a>  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">21</span>, <span class="dv">14</span>, <span class="dv">13</span>, <span class="dv">15</span>),</span>
+<span id="cb66-4"><a href="intro-R.html#cb66-4"></a>  <span class="dt">sex =</span> <span class="kw">c</span>(<span class="st">&quot;girl&quot;</span>, <span class="st">&quot;boy&quot;</span>, <span class="st">&quot;boy&quot;</span>, <span class="st">&quot;girl&quot;</span>)</span>
+<span id="cb66-5"><a href="intro-R.html#cb66-5"></a>)</span>
+<span id="cb66-6"><a href="intro-R.html#cb66-6"></a>df</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["age"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sex"],"name":[3],"type":["fctr"],"align":["left"]}],"data":[{"1":"ace","2":"21","3":"girl"},{"1":"bob","2":"14","3":"boy"},{"1":"carl","2":"13","3":"boy"},{"1":"kaite","2":"15","3":"girl"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>R 对象的数据结构(向量、矩阵、数组、列表和数据框)，总结如下</p>
+<p><img src="images/data_struction1.png" width="90%" /></p>
+<p>为了更好地理解相关概念，建议大家阅读Garrett Grolemund的
+<a href="https://rstudio-education.github.io/hopr/">hopr</a>这本书 <span class="citation">(Grolemund <a href="#ref-Garrett2014" role="doc-biblioref">2014</a>)</span>。</p>
+</div>
+<div id="函数" class="section level2">
+<h2><span class="header-section-number">2.7</span> 函数</h2>
+<p>R 语言的强大在于使用<strong>函数</strong>操控各种对象，你可以把对象看作是名词，而函数看作是动词。
+我们用一个简单的例子，<code>sum()</code>来演示函数如何工作的。这个函数的功能正如它的名字一样，对输入的各个对象求和，然后返回求和后的值，你可以在命令行中键入<code>?sum()</code>查看其官方文档。
+<code>sum()</code>后的结果可以直接显示出来，也可以赋名。比如下面代码，首先计算<code>x + 10</code>并赋以名字<code>y</code>， 然后第二行中打印出来这个新创建的对象<code>y</code></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="intro-R.html#cb67-1"></a>y &lt;-<span class="st"> </span><span class="kw">sum</span>(x, <span class="dv">10</span>)</span>
+<span id="cb67-2"><a href="intro-R.html#cb67-2"></a>y</span></code></pre></div>
+<pre><code>## [1] 11</code></pre>
+<p>因为代码的灵活性，可以不断地重新定义对象。只要数据发生改变，原来的代码就会返回新的值。比如，对<code>x</code>重新赋值为 15， 同样运行<code>sum()</code>函数，这次我们不赋值给对象<code>y</code>，而是让它直接显示</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="intro-R.html#cb69-1"></a>x &lt;-<span class="st"> </span><span class="dv">15</span></span>
+<span id="cb69-2"><a href="intro-R.html#cb69-2"></a><span class="kw">sum</span>(x, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## [1] 25</code></pre>
+<p>再比如</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="intro-R.html#cb71-1"></a><span class="kw">round</span>(<span class="fl">3.14159</span>)</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="intro-R.html#cb73-1"></a><span class="kw">mean</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)</span></code></pre></div>
+<pre><code>## [1] 3.5</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="intro-R.html#cb75-1"></a>n &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb75-2"><a href="intro-R.html#cb75-2"></a>x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, n)</span>
+<span id="cb75-3"><a href="intro-R.html#cb75-3"></a><span class="kw">sum</span>(x)</span></code></pre></div>
+<pre><code>## [1] 5050</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="intro-R.html#cb77-1"></a>dt &lt;-<span class="st"> </span>mtcars[, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]</span>
+<span id="cb77-2"><a href="intro-R.html#cb77-2"></a><span class="kw">head</span>(dt)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"21.0","2":"6","3":"160","4":"110","_rn_":"Mazda RX4"},{"1":"21.0","2":"6","3":"160","4":"110","_rn_":"Mazda RX4 Wag"},{"1":"22.8","2":"4","3":"108","4":"93","_rn_":"Datsun 710"},{"1":"21.4","2":"6","3":"258","4":"110","_rn_":"Hornet 4 Drive"},{"1":"18.7","2":"8","3":"360","4":"175","_rn_":"Hornet Sportabout"},{"1":"18.1","2":"6","3":"225","4":"105","_rn_":"Valiant"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="intro-R.html#cb78-1"></a><span class="kw">cor</span>(dt)</span></code></pre></div>
+<pre><code>##          mpg     cyl    disp      hp
+## mpg   1.0000 -0.8522 -0.8476 -0.7762
+## cyl  -0.8522  1.0000  0.9020  0.8324
+## disp -0.8476  0.9020  1.0000  0.7909
+## hp   -0.7762  0.8324  0.7909  1.0000</code></pre>
+</div>
+<div id="脚本" class="section level2">
+<h2><span class="header-section-number">2.8</span> 脚本</h2>
+<p>如果我们已经写好了一段R程序，我们可以保存为<strong>脚本</strong>文件，脚本文件通常以.R作为文件的后缀名。比如我们可以将刚才创建<code>x</code>和 <code>y</code>对象的命令，保存为脚本文件<code>my_script.R</code>。
+这样我们可以在其它时间修改和重新运行它。</p>
+<p>在RStudio中，你可以通过菜单栏依此点击<code>File &gt; New File &gt; R Script</code> 来创建一个新的脚本。
+强烈建议大家在运行代码之前，使用脚本的形式编写和编辑自己的程序，养成这样的习惯后，你今后所有的工作都有案可查，并且具有可重复性。</p>
+<p><img src="images/script1.png" width="75%" /></p>
+<ul>
+<li>点击 <code>Run</code> 或者 <code>Source</code> 运行脚本</li>
+</ul>
+<p><img src="images/script2.png" width="75%" /></p>
+</div>
+<div id="宏包" class="section level2">
+<h2><span class="header-section-number">2.9</span> 宏包</h2>
+<p>R 语言的强大还在于各种宏包，一般在<a href="https://cran.r-project.org">The Comprehensive R Archive Network (CRAN)</a>下载安装。宏包扩展了R语言本身的各种功能，也为解决问题提供了各种方案。截至撰写本书时止，CRAN上大约有1.4万个宏包可以使用。但由于各种包接口不统一，语法不一致，也带来一些困扰。为了解决这个问题，RStudio 公司的<a href="http://hadley.nz">Hadley Wickham</a> 与其带领的团队推出了<code>tidyverse</code>宏包， <a href="https://www.tidyverse.org">tidyverse</a>将常用的宏包整合在一起，并保持了语法的一致性。可以说，<code>tidyverse</code>宏包是R语言<a href="http://varianceexplained.org/r/teach-tidyverse/">入门</a> 学习的首选。
+本书正是基于<code>tidyverse</code>宏包而成的，本书也将通过一些例子不断地展示<code>tidyverse</code>在数据分析和可视化的应用。</p>
+<p>可以用如下命令安装 <code>ggplot2</code> 宏包:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="intro-R.html#cb80-1"></a><span class="co"># 安装单个包</span></span>
+<span id="cb80-2"><a href="intro-R.html#cb80-2"></a><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="intro-R.html#cb81-1"></a><span class="co"># 安装多个包</span></span>
+<span id="cb81-2"><a href="intro-R.html#cb81-2"></a><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;devtools&quot;</span>, <span class="st">&quot;dplyr&quot;</span>))</span></code></pre></div>
+<p>如果下载速度太慢，可以选择国内镜像
+<img src="images/mirror1.png" width="75%" /><img src="images/mirror2.png" width="75%" /></p>
+<p>如果安装宏包过程中出错，可以试试这样</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="intro-R.html#cb82-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="dt">repos =</span> <span class="st">&quot;http://cran.rstudio.com&quot;</span>)</span>
+<span id="cb82-2"><a href="intro-R.html#cb82-2"></a><span class="co"># 或者</span></span>
+<span id="cb82-3"><a href="intro-R.html#cb82-3"></a><span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="dt">repos =</span> <span class="st">&quot;https://CRAN.R-project.org&quot;</span>)</span></code></pre></div>
+<p>如果遇到如下报错信息</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="intro-R.html#cb83-1"></a>Warning <span class="cf">in</span> install.packages <span class="op">:</span></span>
+<span id="cb83-2"><a href="intro-R.html#cb83-2"></a><span class="st">  </span>unable to access index <span class="cf">for</span> repository http<span class="op">:</span><span class="er">//</span>cran.rstudio.com<span class="op">/</span>src<span class="op">/</span>contrib<span class="op">:</span></span>
+<span id="cb83-3"><a href="intro-R.html#cb83-3"></a><span class="st">  </span>cannot open URL <span class="st">&#39;http://cran.rstudio.com/src/contrib/PACKAGES&#39;</span></span></code></pre></div>
+<p>输入下面命令后，再试试</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="intro-R.html#cb84-1"></a><span class="kw">options</span>(<span class="dt">download.file.method=</span><span class="st">&quot;libcurl&quot;</span>)</span></code></pre></div>
+<p>或者打开<code>D:\R\etc\Rprofile.site</code>，添加以下内容：</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="intro-R.html#cb85-1"></a><span class="kw">local</span>({r &lt;-<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)</span>
+<span id="cb85-2"><a href="intro-R.html#cb85-2"></a>       r[<span class="st">&quot;CRAN&quot;</span>] &lt;-<span class="st"> &quot;http://mirrors.tuna.tsinghua.edu.cn/CRAN&quot;</span></span>
+<span id="cb85-3"><a href="intro-R.html#cb85-3"></a>       <span class="kw">options</span>(<span class="dt">repos=</span>r)})</span>
+<span id="cb85-4"><a href="intro-R.html#cb85-4"></a></span>
+<span id="cb85-5"><a href="intro-R.html#cb85-5"></a><span class="kw">options</span>(<span class="dt">download.file.method=</span><span class="st">&quot;libcurl&quot;</span>)</span></code></pre></div>
+<p>如果打开代码是乱码，可以试试修改如下设置</p>
+<p><img src="images/code_utf_8.png" width="75%" /></p>
+</div>
+<div id="如何获取帮助" class="section level2">
+<h2><span class="header-section-number">2.10</span> 如何获取帮助</h2>
+<ul>
+<li>记住和学习所有的函数几乎是不可能的</li>
+<li>打开函数的帮助页面(<code>Rstudio</code>右下面板的<code>Help</code>选项卡)</li>
+</ul>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="intro-R.html#cb86-1"></a>?sqrt</span>
+<span id="cb86-2"><a href="intro-R.html#cb86-2"></a>?gather</span>
+<span id="cb86-3"><a href="intro-R.html#cb86-3"></a>?spread</span>
+<span id="cb86-4"><a href="intro-R.html#cb86-4"></a>?ggplot2</span>
+<span id="cb86-5"><a href="intro-R.html#cb86-5"></a>?scale</span>
+<span id="cb86-6"><a href="intro-R.html#cb86-6"></a>?map_dfr</span></code></pre></div>
+<p>比如：</p>
+<p><img src="images/Rhelp.png" width="90%" /></p>
+</div>
+<div id="r-语言社区" class="section level2">
+<h2><span class="header-section-number">2.11</span> R 语言社区</h2>
+<p>R 语言社区非常友好，可以在这里找到你问题的答案</p>
+<ul>
+<li>twitter: <a href="https://twitter.com/" class="uri">https://twitter.com/</a></li>
+<li>R-Bloggers: <a href="https://www.r-bloggers.com/" class="uri">https://www.r-bloggers.com/</a></li>
+<li>kaggle: <a href="https://www.kaggle.com/" class="uri">https://www.kaggle.com/</a></li>
+<li>stackoverflow: <a href="https://stackoverflow.com/questions/tagged/r" class="uri">https://stackoverflow.com/questions/tagged/r</a></li>
+<li>rstudio: <a href="https://community.rstudio.com/" class="uri">https://community.rstudio.com/</a></li>
+</ul>
+</div>
+<div id="延伸阅读" class="section level2">
+<h2><span class="header-section-number">2.12</span> 延伸阅读</h2>
+<ul>
+<li>如何获取向量<code>a &lt;- c("a", "c", "e")</code>的第二个元素？矩阵和列表的时候，又该如何?</li>
+<li>试试 <code>c(1, FALSE)</code> 与 <code>c("a", TRUE)</code> 会是什么？</li>
+<li><code>1 == "1"</code> 和 <code>-1 &lt; FALSE</code> 为什么为真？ <code>"one" &lt; 2</code> 为什么为假？</li>
+<li>R语言里可以构造哪些数据对象？</li>
+<li>数据框可以装载哪些数据类型的数据？</li>
+<li>数据框和列表区别在哪里？</li>
+<li>()与[]区别？</li>
+</ul>
+
+</div>
+</div>
+<h3>参考文献</h3>
+<div id="refs" class="references">
+<div id="ref-Garrett2014">
+<p>Grolemund, Garrett. 2014. <em>Hands-on Programming with R</em>. 1 edition. Houston: O’Reilly Media. <a href="https://rstudio-education.github.io/hopr/">https://rstudio-education.github.io/hopr/</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro-ds.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="subsetting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-chinese/edit/master/intro_R.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R4DS.pdf", "R4DS.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

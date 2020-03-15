@@ -2,9 +2,13 @@
 
 Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
 
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/import_datatype01.png")
+```
+
 - 一切都是数据框，任何数据都可以规整
 - 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
-- 函数处理数据时，数据框进数据框出
+- 函数处理数据时，数据框进数据框出（函数的第一个参数始终为**数据框**）
 
 
 本章我们介绍tidyverse里数据处理的神器dplyr宏包。首先，我们加载该宏包
@@ -24,12 +28,13 @@ dplyr 定义了数据处理的规范语法，其中主要包含以下七个主�
 
 我们依次介绍
 
+
 ## `mutate() `
 
 假定我们有一数据框，包含三位学生的英语和数学
 
 ```{r}
-df <- tibble(
+df <- data.frame(
       name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
       type = c("english", "math", "english", "math", "english", "math")
 )
@@ -39,54 +44,116 @@ df
 
 这里有他们的考试成绩， 我们想增加到数据框里去
 ```{r}
-s <- c(80.2, 90.5, 92.2, 90.8, 82.5, 84.6)
-s 
-```
-语法这样写
-```{r}
-mutate(df, score = s)
+score2020 <- c(80.2, 90.5, 92.2, 90.8, 82.5, 84.6)
+score2020
 ```
 
-`mutate()` 函数第一参数是我们要处理的数据框，比如这里的`df`，紧跟着的是`score = s`，等号左边的`score`是我们打算创建一个新列，而取的列名；等号右边是装着学生成绩的向量（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
+
+
+```{r}
+df$score <- score2020
+df
+```
+
+
+
+
+dplyr语法这样写
+
+
+```{r}
+mutate(.data = df, score4 = score2020)
+```
+
+
+
+`mutate()` 函数第一参数是我们要处理的数据框，比如这里的`df`，
+第二个参数是`score = score2020`，
+
+等号左边的`score`是我们打算创建一个新列，而取的列名；
+等号右边是装着学生成绩的**向量**（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
+
+
+
 
 ## `管道` %>%
 
-这里有必要介绍下管道操作符 `%>%` .
+这里有必要介绍下管道操作符 `%>%` .(https://magrittr.tidyverse.org/)
 
+```{r}
+c(1:10)
+```
 
 ```{r}
 sum(c(1:10))
 ```
+
+
 与下面的写法是等价的,
 ```{r}
 c(1:10) %>% sum()
 ```
-这条语句的意思，向量`c(1:10)` 通过管道操作符 `%>%` ，传递到函数`sum()`的第一个参数位置，即`sum(c(1:10))`， 这个`%>%`管道操作符还是很形象的， 且对执行多个函数操作的时候，就显得格外方便，代码可读性更强。
+
+这条语句的意思，向量`c(1:10)` 通过管道操作符 `%>%` ，传递到函数`sum()`的第一个参数位置，即`sum(c(1:10))`， 这个`%>%`管道操作符还是很形象的，
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/pipe1.png")
+```
+
+
+
+当对执行多个函数操作的时候，就显得格外方便，代码可读性更强。
+
+```{r}
+sqrt(sum(abs(c(-10:10))))
+```
+
+
 ```{r}
 # sqrt(sum(abs(c(-10:10)))) 
 c(-10:10) %>% abs() %>% sum() %>% sqrt()
 ```
 
 
-那么，上面增加学生成绩的语句`mutate(df, score = s)`就可以写为
+
+
+
+
+那么，上面增加学生成绩的语句`mutate(df, score = score2020)`就可以使用管道
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/pipe2.png")
+```
+
+
 
 ```{r}
 # 等价于
-df %>% mutate(score = s)
+df %>% mutate(score = score2020)
 ```
 是不是很赞？
+
+
+```{r}
+df <- df %>% mutate(score = score2020)
+df
+```
+
+
+
 
 
 ## `select() `
 
 `select() `顾名思义`选择`，就是选择数据框的某一列，我们还是以学生成绩的数据框为例
-```{r}
-df <- df %>% mutate(score = s)
-df
-```
 
 我们可以选择`name`列, 结果是只有一列的数据框（仍然数据框喔）
 ```{r}
+df["name"]
+```
+
+```{r}
+# df["name"]
 df %>% select(name)
 ```
 
@@ -95,11 +162,16 @@ df %>% select(name)
 ```{r}
 df %>% select(name, score)
 ```
-如果不想要某列， 可以在变量前面加`-`， 结果与上面的一样
 
+
+如果不想要某列， 可以在变量前面加`-`， 结果与上面的一样
 ```{r}
 df %>% select(-type)
 ```
+
+
+
+
 
 
 ## `filter() `
@@ -110,10 +182,20 @@ df %>% select(-type)
 df %>% filter(score >= 90)
 ```
 
+
+
 也可以限定多个条件进行筛选, 英语成绩高于90分的筛选出来
 ```{r}
 df %>% filter(type == "english", score >= 90)
 ```
+
+
+
+
+```{r}
+df
+```
+
 
 ## `summarise() `统计
 
@@ -121,12 +203,21 @@ df %>% filter(type == "english", score >= 90)
 ```{r}
 df %>% summarise( mean_score = mean(score))
 ```
+
+
+
 还同时完成多个统计
 ```{r}
-df %>% summarise( mean_score = mean(score),
-                  median_score = median(score)
-                  )
+df %>% summarise(
+  mean_score = mean(score),
+  median_score = median(score),
+  n = n(),
+  sum = sum(score)
+)
 ```
+
+
+
 
 
 ## `group_by()`分组
@@ -135,18 +226,29 @@ df %>% summarise( mean_score = mean(score),
 ```{r}
 df %>% 
   group_by(name) %>% 
-  summarise( mean_score = mean(score)  )
+  summarise( 
+    mean_score = mean(score),
+   sd_score = sd(score)
+  )
 ```
+
+
+
+
 
 ## `arrange() `排序
 这个很好理解的。比如我们按照考试成绩从低到高排序，然后输出
 ```{r}
 df %>% arrange(score)
 ```
+
+
 如果从高到低排序呢，有两种方法:
 ```{r}
 df %>% arrange(-score)
 ```
+
+
 
 写成下面这种形式也是降序排列，但可读性更强些
 ```{r}
@@ -157,8 +259,11 @@ df %>% arrange(desc(score))
 也可对多个变量先后排序。先按学科排，然后按照成绩从高到底排序
 ```{r}
 df %>% 
-  arrange(type, -score)
+  arrange(type, desc(score))
 ```
+
+
+
 
 
 ## `left_join`
@@ -172,6 +277,8 @@ df1 <- df %>%
 df1
 ```
 
+
+
 我们有新一个数据框`df2`，包含同学们的年龄信息
 ```{r}
 df2 <- tibble(
@@ -182,13 +289,29 @@ df2 <- tibble(
 df2
 ```
 
+
+
+
 可以用 `left_join`把两个数据框`df1`和`df2`，合并连接再一起, 两个数据框是通过姓名`name`连接的，因此需要指定`by = "name"`
 
+
+```{r}
+left_join(df1, df2, by = "name")
+```
+
+
+
+
 ```{r, message=FALSE}
+# 
 df1 %>% left_join(df2, by = "name")
 ```
 
 大家注意到最后一行Carol的年龄是`NA`， 大家想想为什么呢？
+
+
+
+
 
 我们再试试`right_join()`
 
@@ -204,9 +327,12 @@ Carol同学的信息没有了？ 大家想想又为什么呢？
 
 
 
+
+
 ## 延伸阅读
 
 - 推荐[https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/).
+- [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
 - 作业：读懂并运行下面的代码
 
 ```{r echo=FALSE}
