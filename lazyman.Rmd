@@ -177,7 +177,9 @@ ggg <- ggplot(mtcars, aes(as.factor(cyl))) +
 gganonomize(ggg)
 ```
 
+
 你可以看我的图，但就不想告诉你图什么意思，因为我加密了
+
 
 ## 整理Rmarkdown
 ```{r}

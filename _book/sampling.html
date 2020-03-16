@@ -561,7 +561,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">15.1.1</span> 生成随机数</h3>
 <p>比如生成5个高斯分布的随机数，高斯分布就是正态分布，R语言里我们用<code>rnorm()</code>函数产生正态分布的随机数</p>
 <div class="sourceCode" id="cb681"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb681-1"><a href="sampling.html#cb681-1"></a><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## [1] -1.255892  0.004201  0.241129  1.504288  0.254243</code></pre>
+<pre><code>## [1] -0.4366  0.2465  0.3470 -0.5612 -0.5685</code></pre>
 <p>事实上，R内置了很多随机数产生的函数</p>
 <table>
 <thead>
@@ -652,7 +652,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb687-12"><a href="sampling.html#cb687-12"></a>sim_normal <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["x_vals"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y_vals"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.000000","2":"4.736"},{"1":"0.005005","2":"3.289"},{"1":"0.010010","2":"3.183"},{"1":"0.015015","2":"4.525"},{"1":"0.020020","2":"3.417"},{"1":"0.025025","2":"5.096"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["x_vals"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y_vals"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.000000","2":"3.967"},{"1":"0.005005","2":"6.105"},{"1":"0.010010","2":"3.744"},{"1":"0.015015","2":"5.078"},{"1":"0.020020","2":"1.782"},{"1":"0.025025","2":"4.717"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="sampling.html#cb688-1"></a>sim_normal <span class="op">%&gt;%</span></span>
@@ -696,7 +696,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb692-5"><a href="sampling.html#cb692-5"></a><span class="kw">head</span>(d)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["group_a"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["group_b"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.657","2":"-1.6271","_rn_":"1"},{"1":"4.119","2":"-1.2504","_rn_":"2"},{"1":"2.673","2":"-0.6973","_rn_":"3"},{"1":"3.537","2":"-0.9711","_rn_":"4"},{"1":"2.753","2":"-0.6203","_rn_":"5"},{"1":"3.218","2":"-1.2649","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["group_a"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["group_b"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4.321","2":"-1.3639","_rn_":"1"},{"1":"2.745","2":"-0.3254","_rn_":"2"},{"1":"3.922","2":"-1.1436","_rn_":"3"},{"1":"3.203","2":"-1.0550","_rn_":"4"},{"1":"2.144","2":"-0.5569","_rn_":"5"},{"1":"4.182","2":"-0.8796","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb693-1"><a href="sampling.html#cb693-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -735,7 +735,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb696-8"><a href="sampling.html#cb696-8"></a>  )</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["a_mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["a_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["b_sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cor"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cov"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.545","2":"-1.013","3":"0.9889","4":"0.4952","5":"-0.6777","6":"-0.3318"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["a_mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["a_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["b_sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cor"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cov"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.498","2":"-0.9972","3":"1.044","4":"0.5136","5":"-0.7092","6":"-0.3804"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
