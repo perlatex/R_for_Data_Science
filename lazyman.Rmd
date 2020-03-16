@@ -30,7 +30,7 @@ extract_eq(mod1, use_coefs = TRUE)
 
 ```{r}
 library(report)
-## 4https://github.com/easystats/report
+## https://github.com/easystats/report
 ```
 
 
@@ -67,6 +67,24 @@ trial %>%
   
 ```
 
+
+直接复制到论文即可
+```{r}
+t1 <- 
+  glm(response ~ trt + age + grade, trial, family = binomial) %>%
+  tbl_regression(exponentiate = TRUE)
+
+t2 <-
+  survival::coxph(survival::Surv(ttdeath, death) ~ trt + grade + age, trial) %>%
+  tbl_regression(exponentiate = TRUE)
+
+
+
+tbl_merge(
+    tbls = list(t1, t2),
+    tab_spanner = c("**Tumor Response**", "**Time to Death**")
+  )
+```
 
 ## 列名太乱了
 ```{r}
@@ -110,6 +128,7 @@ mtcars %>%
 ```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/styler.png")
 ```
+
 安装后，然后这两个地方点两下，就发现你的代码整齐很多了
 
 
@@ -125,6 +144,7 @@ library(inferregex)
 s <- "abcd-9999-ab9"
 infer_regex(s)$regex
 ```
+
 有了它，妈妈再也不担心我的正则表达式了
 
 ## 颜控怎么配色？
@@ -183,7 +203,9 @@ gganonomize(ggg)
 
 ## 整理Rmarkdown
 ```{r}
-##devtools::install_github("tjmahr/WrapRmd")
+# remotes::install_github("tjmahr/WrapRmd")
+# remotes::install_github("fkeck/quickview")
+# remotes::install_github("mwip/beautifyR")
 ```
 
 

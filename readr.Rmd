@@ -1,0 +1,78 @@
+# 读取数据 {#readr}
+
+本章介绍如何读取数据到 **R**。事实上，R语言提供了很多读取数据的函数。
+
+
+## 常见格式
+
+下表列出了常见文件格式的读取方法
+
+
+文件格式                       |       **R** 函数 
+:---------------------------   |       :----------------------
+.txt                           |       read.table()
+.csv                           |       read.csv() and readr::read_csv()
+.xls and .xlsx                 |       readxl::read_excel() and openxlsx::read.xlsx()
+.sav                           |       foreign::read.spss()
+.Rdata or rda                  |       load()
+.rds                           |       readRDS() and readr::read_rds() 
+.dta                           |       haven::read_dta() and haven::read_stata()
+Internet                       |       download.file()
+
+
+
+## 范例
+
+
+```{r, eval=FALSE, warning=FALSE}
+d <- read.table(file= "./data/txt_file.txt", header = TRUE)
+```
+
+
+```{r, eval=FALSE, warning=FALSE}
+load(file = "./data/rda_file.rda")
+```
+
+
+```{r, eval=FALSE, warning=FALSE}
+d <- readRDS(file = "./data/rds_file.rds")
+```
+
+
+
+```{r, eval=FALSE, warning=FALSE}
+library(readr)
+d <- read_csv(file = "./data/csv_file.csv") 
+```
+
+
+
+```{r, eval=FALSE, warning=FALSE}
+url <- "https://raw.githubusercontent.com/perlatex/R_for_Data_Science/master/demo_data/wages.csv"
+d <- read_csv(url)
+```
+
+
+```{r, eval=FALSE, warning=FALSE}
+library(readxl)
+d <- read_excel("./data/vowel_data.xlsx")
+```
+
+
+
+```{r, eval=FALSE, warning=FALSE}
+library(haven)
+d <- read_excel("./data/cfps2010.dta")
+```
+
+
+## 乱码情形
+
+```{block, type="danger"}
+遇到乱码的情况，这里有个小小的提示：
+
+- 可以先用记事本转换成"UTF-8"编码，
+- 或者指定编码格式，比如`read.table(..., fileEncoding = "UTF-8")`，再试试。
+
+```
+

@@ -16,9 +16,10 @@ rmd_files: [
   "intro_R.Rmd",
   "subsetting.Rmd",
 
-  "visualization.Rmd",
   "rmarkdown.Rmd",
+  "readr.Rmd",
   "dplyr.Rmd",
+  "visualization.Rmd",
   "stringr.Rmd",
   "purrr.Rmd",
   "eda.Rmd",

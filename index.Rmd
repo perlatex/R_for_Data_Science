@@ -70,9 +70,10 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(intro-R) 章介绍R语言基本概念
    - 第 \@ref(subsetting) 章介绍R语言中的子集选取
 - tidyverse篇
-   - 第 \@ref(visual) 章介绍数据可视化
    - 第 \@ref(rmarkdown) 章介绍可重复性研究
+   - 第 \@ref(readr) 章介绍数据读入
    - 第 \@ref(dplyr) 章介绍数据规整与数据处理
+   - 第 \@ref(visual) 章介绍数据可视化
    - 第 \@ref(stringr) 章介绍字符串处理
    - 第 \@ref(purrr) 章介绍函数式编程
    - 第 \@ref(eda01) 章介绍探索性数据分析1   

@@ -305,7 +305,7 @@ ggplot(mpg, aes(displ, hwy)) + geom_point(alpha = 0.5)
 
 
 ### 提问
-```{r out.width = '50%', echo = FALSE}
+```{r out.width = '95%', echo = FALSE}
 knitr::include_graphics("images/a-21.png")
 ```
 

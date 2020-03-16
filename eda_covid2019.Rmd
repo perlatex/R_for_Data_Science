@@ -1,31 +1,23 @@
 # 探索性数据分析3 {#eda03}
 
-探索性数据分析（exporatory data analysis）是各种知识的综合运用。本章通过一个案例，讲解探索性数据分析的基本思路，也算是对前面几章内容的一次总结复习。
+
+新型冠状病毒肺炎（俗称武汉肺炎）疫情在多国蔓延，本章通过分析[数据](https://github.com/CSSEGISandData/COVID-19)，了解疫情发展
 
 
-
-
-
-
-
+## 读取数据
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(maps)
 library(viridis)
+library(shadowtext)
 library(showtext)
 showtext_auto()
 ```
 
 
-## 数据集
-
-(数据来源)[https://github.com/CSSEGISandData/COVID-19]
-
-
-
 ```{r}
-d <- read_csv("./demo_data/time_series_19-covid-Confirmed.csv") 
+d <- read_csv("./demo_data/time_series_19-covid-Confirmed.csv")
 ```
 
 ```{r}
@@ -59,6 +51,55 @@ d1 %>%
   scale_x_date(date_breaks = "1 week", date_labels = "%m-%d")
 ```
 
+## 可视化探索
+```{r, out.width = "100%"}
+d %>%
+  gather(date, cases, 5:ncol(.)) %>%
+  mutate(date = as.Date(date, "%m/%d/%y")) %>%
+  group_by(country = `Country/Region`, date) %>%
+  summarise(cases = sum(cases)) %>%
+  filter(country != "Others" & country != "Mainland China") %>%
+  bind_rows(
+    tibble(country = "Republic of Korea", date = as.Date("2020-03-11"), cases = 7755)
+  ) %>%
+  group_by(country) %>%
+  mutate(days_since_100 = as.numeric(date - min(date[cases >= 100]))) %>%
+  ungroup() %>%
+  filter(is.finite(days_since_100)) %>%
+  group_by(country) %>%
+  mutate(new_cases = cases - cases[days_since_100 == 0]) %>%
+  filter(sum(cases >= 100) >= 5) %>%
+  filter(cases >= 100) %>%
+  bind_rows(
+    tibble(country = "33% daily rise", days_since_100 = 0:18) %>%
+      mutate(cases = 100 * 1.33^days_since_100)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    country = country %>% str_replace_all("( SAR)|( \\(.+)|(Republic of )", "")
+  ) %>%
+  # filter(days_since_100 <= 10) %>%
+  ggplot(aes(days_since_100, cases, col = country)) +
+  geom_hline(yintercept = 100) +
+  geom_vline(xintercept = 0) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 21, size = 1) +
+  scale_y_log10(expand = expand_scale(add = c(0, 0.1)), breaks = c(100, 200, 500, 1000, 2000, 5000, 10000)) +
+  # scale_y_continuous(expand = expand_scale(add = c(0,100))) +
+  scale_x_continuous(expand = expand_scale(add = c(0, 1))) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    legend.position = "none",
+    plot.margin = margin(3, 15, 3, 3, "mm")
+  ) +
+  coord_cartesian(clip = "off") +
+  geom_shadowtext(aes(label = paste0(" ", country)), hjust = 0, vjust = 0, data = . %>% group_by(country) %>% top_n(1, days_since_100), bg.color = "white") +
+  labs(x = "Number of days since 100th case", y = "", subtitle = "Total number of cases")
+```
+
+
+
 
 ## 地图 
 
@@ -74,7 +115,7 @@ ggplot() +
   scale_size_continuous(name = "Cases", trans = "log", range = c(1, 7), breaks = mybreaks, labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")) +
   # scale_alpha_continuous(name="Cases", trans="log", range=c(0.1, 0.9),breaks=mybreaks) +
   scale_color_viridis_c(option = "inferno", name = "Cases", trans = "log", breaks = mybreaks, labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")) +
-theme_void() +
+  theme_void() +
   guides(colour = guide_legend()) +
   labs(caption = "Data Repository provided by Johns Hopkins CSSE. Visualization by DataScience+ ") +
   theme(
@@ -85,3 +126,5 @@ theme_void() +
     legend.background = element_rect(fill = "#ffffff", color = NA)
   )
 ```
+
+## 更多

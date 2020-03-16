@@ -78,7 +78,7 @@ mutate(.data = df, score4 = score2020)
 
 ## `管道` %>%
 
-这里有必要介绍下管道操作符 `%>%` .(https://magrittr.tidyverse.org/)
+这里有必要介绍下管道操作符[ `%>%` ](https://magrittr.tidyverse.org/).
 
 ```{r}
 c(1:10)
