@@ -1,0 +1,116 @@
+---
+title: "在Rmarkdown里如何生成pdf文档"
+author: "王敏杰"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    extra_dependencies:
+      ctex: UTF8
+    number_sections: yes
+    toc: yes
+classoptions: "hyperref, 12pt, a4paper"
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      fig.width = 6, 
+                      fig.height = 4,
+                      fig.showtext = TRUE
+                      )
+```
+
+
+
+
+# 必要的配置
+
+* 确保已经安装`rmarkdown`宏包
+  + `install.packages("rmarkdown")`
+  + `Rstudio` 菜单： `File -> New File -> R Markdown`
+  
+  
+  
+* 安装pdf查看器
+  +  [sumatrapdf网站](https://www.sumatrapdfreader.org/download-free-pdf-viewer.html)
+ 
+ 
+ 
+* 文档中使用 latex 公式和中文
+  +  `install.packages("tinytex")`
+  +  `tinytex::install_tinytex()`
+
+
+
+
+# 使用方法
+## 插入公式
+
+我相信你已经熟悉了latex语法，那么我们在rmd里输入
+`$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$`，那么实际输出:
+
+$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$
+
+也可以使用latex的等式环境， 
+$$\Theta = \begin{pmatrix}\alpha & \beta\\
+\gamma & \delta
+\end{pmatrix}$$
+
+
+
+
+
+
+
+## 插入表格
+
+```{r tables-mtcars}
+knitr::kable(iris[1:5, ], caption = 'A caption')
+```
+
+
+## 插入图片
+
+
+```{r, out.width='20%', fig.align='center', fig.cap='this is caption', echo = F}
+knitr::include_graphics("images/girl.jpg")
+```
+
+
+
+## 运行代码
+
+```{r cars}
+summary(cars)
+```
+
+
+## 生成图片
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(showtext)
+showtext_auto()
+
+flights %>%
+  group_by(dest) %>%
+  summarize(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  filter(delay, count > 20, dest != "HNL") %>%
+  ggplot(mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1 / 3) +
+  geom_smooth(se = FALSE) +
+  ggtitle("这是我的标题")
+```
+
+
+
+

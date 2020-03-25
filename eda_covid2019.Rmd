@@ -1,13 +1,9 @@
 # 探索性数据分析3 {#eda03}
 
 
-新型冠状病毒肺炎（俗称武汉肺炎）疫情在多国蔓延，本章通过分析[数据](https://github.com/CSSEGISandData/COVID-19)，了解疫情发展
-
-
-## 读取数据
-
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(lubridate)
 library(maps)
 library(viridis)
 library(shadowtext)
@@ -16,9 +12,152 @@ showtext_auto()
 ```
 
 
-```{r}
-d <- read_csv("./demo_data/time_series_19-covid-Confirmed.csv")
+
+新型冠状病毒（俗称武汉肺炎）疫情在多国蔓延，本章通过分析[疫情数据](https://github.com/CSSEGISandData/COVID-19)，了解疫情发展，祝愿人类早日会战胜病毒！
+
+
+
+```{r, out.width='50%', fig.align='left', fig.cap='电影《传染病》海报', echo=FALSE}
+knitr::include_graphics("images/movie_contagion.jpg")
 ```
+
+## 数据来源
+
+我们打开链接[https://github.com/CSSEGISandData/COVID-19](https://github.com/CSSEGISandData/COVID-19)，
+
+```{r, out.width='85%', fig.align='left', echo = F}
+knitr::include_graphics("images/github_COVID-19_download.png")
+```
+
+
+找到疫情时间序列数据，你可以通过点击该网页`Clone or download`直接下载的方式获取数据。
+
+```{r, out.width='85%', fig.align='left', echo = F}
+knitr::include_graphics("images/github_COVID-19_files.png")
+```
+
+
+## 读取数据
+
+假定你已经下载了数据，比如`time_series_covid19_confirmed_global.csv`， 那么我们可以用`readr::read_csv()`函数直接读取, 关于R语言中文件读取的方法可以参考第 \@ref(readr) 章。
+
+
+
+
+```{r}
+d <- read_csv("./demo_data/time_series_covid19_confirmed_global.csv")
+d
+```
+
+## 数据集结构
+
+探索数据之前，我们一定要对数据**存储结构、数据变量名及其含义**要非常清楚，重要的事情说三遍。
+
+
+```{r}
+glimpse(d)
+```
+
+
+
+
+## 数据清洗规整
+
+
+### 必要的预备知识之`select()`
+
+```{r, eval = FALSE}
+d %>% select(-c(1:4))
+d %>% select(5:ncol(.))
+d %>% select(matches("/20"))
+d %>% select(ends_with("/20"))
+
+# 应该还有其他的方法
+```
+
+
+
+### 必要的预备知识之`pivot_longer()`
+
+**宽表格**变**长表格**，需要用到`pivot_longer()` 和 `pivot_wider()`， 比如
+
+
+```{r}
+table4a
+```
+
+
+```{r}
+longer <- table4a %>%
+  pivot_longer(
+    cols = `1999`:`2000`,
+    names_to = "year",
+    values_to = "cases"
+  )
+
+longer
+```
+
+
+### 必要的预备知识之`pivot_wider()`
+
+有时候我们想折腾下，比如把**长表格**再变回**宽表格**
+
+```{r}
+longer %>%
+  pivot_wider(
+    names_from = year,
+    values_from = cases
+  )
+```
+
+### 必要的预备知识之日期格式
+
+有时候，我会遇到日期`date`这种数据类型，我推荐使用`lubridate`包来处理，比如
+
+```{r}
+c("2020-3-25", "20200325", "20-03-25", "2020 03 25") %>% lubridate::ymd()
+```
+
+
+```{r}
+c("3/25/20", "03-25-20", "3-25/2020") %>% lubridate::mdy()
+```
+
+遇到这种`010210`日期的，请把输入数据的人扁一顿，他会告诉你的
+
+```{r, eval=FALSE}
+lubridate::dmy(010210)
+lubridate::dym(010210)
+lubridate::mdy(010210)
+lubridate::myd(010210)
+lubridate::ymd(010210)
+lubridate::ydm(010210)
+```
+
+
+### 必要的预备知识之时间差
+
+```{r}
+difftime(ymd("2020-03-24"),
+  ymd("2020-03-23"),
+  units = "days"
+)
+```
+
+或者更直观的表述
+```{r}
+ymd("2020-03-24") - ymd("2020-03-23")
+```
+
+
+转换为天数
+```{r}
+(ymd("2020-03-24") - ymd("2020-03-23")) %>% as.numeric()
+```
+
+
+### 数据清洗规整
 
 ```{r}
 d1 <- d %>%
@@ -27,97 +166,293 @@ d1 <- d %>%
     names_to = "date",
     values_to = "cases"
   ) %>%
-  # mutate(date = as.Date(date, "%m/%d/%y")) #%>%
   mutate(date = lubridate::mdy(date)) %>%
   janitor::clean_names() %>%
   group_by(country_region, date) %>%
-  summarise(cases = sum(cases))
+  summarise(cases = sum(cases)) %>%
+  ungroup()
 
 d1
 ```
 
+
 ```{r}
+d1 %>%
+  group_by(date) %>%
+  summarise(confirmed = sum(cases))
+```
+
+【WHO：2019冠状病毒全球大流行正在“加速”】世界卫生组织（WHO）昨日发出警告，指2019冠状病毒全球感染者已超过30万人，全球大流行正在“加速”。世卫组织指，从首例病例报告到感染者达到10万人用了67天；感染人数增至20万用了11天；从20万到突破30万则只用了4天。
+
+```{r, out.width = '100%'}
+d1 %>%
+  group_by(date) %>%
+  summarise(confirmed = sum(cases)) %>%
+  ggplot(aes(x = date, y = confirmed)) +
+  geom_point() +
+  scale_x_date(
+    date_labels = "%m-%d",
+    date_breaks = "1 week"
+  ) +
+   scale_y_continuous(
+    breaks = c(0, 10000, 50000, 100000, 200000, 300000),
+    labels = scales::comma
+    )
+```
+
+
+```{r}
+# d1 %>% distinct(country_region) %>% pull(country_region)
 d1 %>% distinct(country_region)
 ```
+
+
+
 
 ```{r}
 d1 %>%
   filter(country_region == "China")
+```
 
+
+```{r, out.width = '100%'}
 d1 %>%
   filter(country_region == "China") %>%
   ggplot(aes(x = date, y = cases)) +
   geom_point() +
-  scale_x_date(date_breaks = "1 week", date_labels = "%m-%d")
+  scale_x_date(date_breaks = "1 week", date_labels = "%m-%d") +
+  scale_y_log10()
 ```
 
+
+
+
+
+```{r, out.width = '100%'}
+d1 %>%
+  group_by(country_region) %>%
+  filter(max(cases) >= 10000) %>%
+  ungroup() %>%
+  ggplot(aes(x = date, y = cases, color = country_region)) +
+  geom_point() +
+  scale_x_date(date_breaks = "1 week", date_labels = "%m-%d") +
+  scale_y_log10() +
+  facet_wrap(vars(country_region), ncol = 2) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+
+
 ## 可视化探索
-```{r, out.width = "100%"}
-d %>%
-  gather(date, cases, 5:ncol(.)) %>%
-  mutate(date = as.Date(date, "%m/%d/%y")) %>%
-  group_by(country = `Country/Region`, date) %>%
-  summarise(cases = sum(cases)) %>%
-  filter(country != "Others" & country != "Mainland China") %>%
-  bind_rows(
-    tibble(country = "Republic of Korea", date = as.Date("2020-03-11"), cases = 7755)
-  ) %>%
-  group_by(country) %>%
-  mutate(days_since_100 = as.numeric(date - min(date[cases >= 100]))) %>%
-  ungroup() %>%
-  filter(is.finite(days_since_100)) %>%
-  group_by(country) %>%
-  mutate(new_cases = cases - cases[days_since_100 == 0]) %>%
-  filter(sum(cases >= 100) >= 5) %>%
-  filter(cases >= 100) %>%
-  bind_rows(
-    tibble(country = "33% daily rise", days_since_100 = 0:18) %>%
-      mutate(cases = 100 * 1.33^days_since_100)
-  ) %>%
-  ungroup() %>%
+
+我觉得下面这张图很漂亮，[https://www.ft.com/coronavirus-latest](https://www.ft.com/coronavirus-latest) ，于是打算重复
+
+
+```{r, out.width='85%', fig.align='left', fig.cap='图片来源www.ft.com', echo=FALSE}
+knitr::include_graphics("images/ft_coronavirus.jpg")
+```
+
+
+这张图想表达的是，出现100个案例后，各国确诊人数的爆发趋势
+
+- 横坐标是天数，即在出现100个案例后的第几天
+- 纵坐标是累积确诊人数
+
+那么，我们需要对数据的**时间轴**做相应的变形
+
+- 首先按照国家分组
+- 筛选，累积确诊人数超过`100`的国家
+- 找到所有`case >= 100`的日期，`date[cases >= 100]`
+- 最早的日期，就说我们要找的**第 0 day**， `min(date[cases >= 100])`
+- 构建新的一列`mutate( days_since_100 = date - min(date[cases >= 100])`
+- 将`days_since_100`转换成数值型`as.numeric()`
+
+```{r}
+d2 <- d1 %>%
+  group_by(country_region) %>%
+  filter(max(cases) >= 100) %>%
   mutate(
-    country = country %>% str_replace_all("( SAR)|( \\(.+)|(Republic of )", "")
+    days_since_100 = date - min(date[cases >= 100])
   ) %>%
-  # filter(days_since_100 <= 10) %>%
-  ggplot(aes(days_since_100, cases, col = country)) +
+  mutate(days_since_100 = as.numeric(days_since_100)) %>%
+  filter(days_since_100 >= 0) %>%
+  ungroup()
+d2
+```
+
+
+
+```{r}
+d2_newest <- d2 %>%
+  group_by(country_region) %>%
+  top_n(1, days_since_100) %>%
+  filter(cases >= 500)
+d2_newest
+```
+
+
+
+```{r, out.width = "100%"}
+d2 %>%
+  ggplot(aes(days_since_100, cases, color = country_region)) +
   geom_hline(yintercept = 100) +
   geom_vline(xintercept = 0) +
   geom_line(size = 0.8) +
   geom_point(pch = 21, size = 1) +
-  scale_y_log10(expand = expand_scale(add = c(0, 0.1)), breaks = c(100, 200, 500, 1000, 2000, 5000, 10000)) +
-  # scale_y_continuous(expand = expand_scale(add = c(0,100))) +
-  scale_x_continuous(expand = expand_scale(add = c(0, 1))) +
+  geom_shadowtext(
+    data = d2_newest, aes(label = paste0(" ", country_region)),
+    bg.color = "white"
+  ) +
+  scale_y_log10(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000)
+  ) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(0, 5, 10, 15, 20, 25, 30)
+  ) +
   theme_minimal() +
   theme(
     panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#FFF1E6"),
     legend.position = "none",
-    plot.margin = margin(3, 15, 3, 3, "mm")
+    panel.spacing = margin(3, 15, 3, 15, "mm")
   ) +
-  coord_cartesian(clip = "off") +
-  geom_shadowtext(aes(label = paste0(" ", country)), hjust = 0, vjust = 0, data = . %>% group_by(country) %>% top_n(1, days_since_100), bg.color = "white") +
-  labs(x = "Number of days since 100th case", y = "", subtitle = "Total number of cases")
+  labs(
+    x = "Number of days since 100th case",
+    y = "",
+    title = "Country by country: how coronavirus case trajectories compare",
+    subtitle = "Cumulative number of cases, by Number of days since 100th case",
+    caption = "data source from @www.ft.com"
+  )
 ```
 
+还有很多细节没有实现，学习再弄了
+
+
+
+### 简便的方法
+
+```{r}
+d2a <- d1 %>%
+  filter(cases >= 100) %>%
+  group_by(country_region) %>%
+  mutate(days_since_100 = 0:(n() - 1))
+
+d2a
+```
+
+这里的`d2a` 和`d2`是一样的.
+
+
+
+## 每个国家的情况
+```{r}
+d2 %>%
+  group_by(country_region) %>%
+  filter(max(cases) >= 1000) %>%
+  ungroup()
+```
+
+
+
+```{r, out.width = '100%'}
+d2 %>%
+  group_by(country_region) %>%
+  filter(max(cases) >= 1000) %>%
+  ungroup() %>%
+  ggplot(aes(days_since_100, cases)) +
+  geom_line(size = 0.8) +
+  geom_line(
+    data = d2 %>% rename(country = country_region),
+    aes(days_since_100, cases, group = country),
+    color = "grey"
+  ) +
+  geom_point(pch = 21, size = 1, color = "red") +
+  scale_y_log10(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(100, 1000, 10000, 50000)
+  ) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, 0)),
+    breaks = c(0, 5, 10, 20, 30, 50)
+  ) +
+  facet_wrap(vars(country_region), scales = "free_x") +
+  theme(
+    panel.background = element_rect(fill = "#FFF1E6"),
+    plot.background = element_rect(fill = "#FFF1E6")
+  ) +
+  labs(
+    x = "Number of days since 100th case",
+    y = "",
+    title = "Outbreak are now underway in dozens of other countries, with some on the same trajectory as Italy",
+    subtitle = "Cumulative number of cases, by Number of days since 100th case",
+    caption = "data source from @www.ft.com"
+  )
+```
 
 
 
 ## 地图 
 
-Map Visualization of COVID-19 Across the World with R
+```{r, eval=FALSE}
+library(countrycode)
+# countrycode('Albania', 'country.name', 'iso3c')
+
+d2_newest %>%
+  mutate(ISO3 = countrycode(country_region,
+    origin = "country.name", destination = "iso3c"
+  ))
+```
+
+
+
+我们选取最新的日期
 ```{r}
+d_newest <- d %>%
+  select(Long, Lat, last_col()) %>%
+  set_names("Long", "Lat", "newest_date")
+d_newest
+```
+
+
+```{r, out.width = '100%'}
 world <- map_data("world")
 
-# cutoffs based on the number of cases
-mybreaks <- c(1, 20, 100, 1000, 50000)
+
 ggplot() +
-  geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "grey", alpha = 0.3) +
-  geom_point(data = d, aes(x = Long, y = Lat, size = `3/3/20`, color = `3/3/20`), stroke = F, alpha = 0.7) +
-  scale_size_continuous(name = "Cases", trans = "log", range = c(1, 7), breaks = mybreaks, labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")) +
-  # scale_alpha_continuous(name="Cases", trans="log", range=c(0.1, 0.9),breaks=mybreaks) +
-  scale_color_viridis_c(option = "inferno", name = "Cases", trans = "log", breaks = mybreaks, labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")) +
+  geom_polygon(
+    data = world,
+    aes(x = long, y = lat, group = group),
+    fill = "grey", alpha = 0.3
+  ) +
+  
+  geom_point(
+    data = d_newest,
+    aes(x = Long, y = Lat, size = newest_date, color = newest_date),
+    stroke = F, alpha = 0.7
+  ) +
+  scale_size_continuous(
+    name = "Cases", trans = "log",
+    range = c(1, 7),
+    breaks = c(1, 20, 100, 1000, 50000),
+    labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")
+  ) +
+  scale_color_viridis_c(
+    option = "inferno",
+    name = "Cases",
+    trans = "log",
+    breaks = c(1, 20, 100, 1000, 50000),
+    labels = c("1-19", "20-99", "100-999", "1,000-49,999", "50,000+")
+  ) +
   theme_void() +
   guides(colour = guide_legend()) +
-  labs(caption = "Data Repository provided by Johns Hopkins CSSE. Visualization by DataScience+ ") +
+  labs(
+    title = "Mapping the coronavirus outbreak",
+    subtitle = "",
+    caption = "Source: JHU Unviersity, CSSE; FT research @www.FT.com"
+  ) +
   theme(
     legend.position = "bottom",
     text = element_text(color = "#22211d"),
@@ -128,3 +463,5 @@ ggplot() +
 ```
 
 ## 更多
+
+- 参考 (https://www.ft.com/coronavirus-latest)

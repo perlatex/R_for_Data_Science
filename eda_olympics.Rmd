@@ -7,7 +7,9 @@
 knitr::include_graphics(path = "images/ukmss-36386-f0001.jpg")
 ```
 
-在文章补充材料里，我们找到了文章使用的数据，现在的任务是，重复这张图和文章的分析过程
+虽然觉得这个结论不太严谨，但我却无力反驳。
+
+于是在文章补充材料里，我找到了文章使用的数据，现在的任务是，重复这张图和文章的分析过程。
 
 
 ## 导入数据
@@ -42,7 +44,7 @@ d1
 ```
 
 
-```{r}
+```{r, out.width = '100%'}
 d1 %>%
   mutate_at(vars(Olympic_year), as.character) %>%
   mutate(
@@ -127,7 +129,7 @@ tb1
 ```
 
 
-```{r}
+```{r, out.width = '100%'}
 tb1 %>%
   ggplot(aes(
     x = Olympic_year,
@@ -155,7 +157,8 @@ tb1 %>%
 ## list_column
 
 这里是另外的一种方法
-```{r}
+
+```{r, out.width = '100%'}
 d1 <- d %>%
   pivot_longer(
     cols = -Olympic_year,
@@ -170,7 +173,6 @@ d2 <- d1 %>%
   mutate(
     mod = map(data, fit_model)
   )
-d2
 
 
 

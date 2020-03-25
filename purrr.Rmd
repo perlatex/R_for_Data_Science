@@ -26,6 +26,45 @@ knitr::include_graphics("images/data_struction1.png")
       tibble(a = 1, b = 2)     # 增强型数据框
 ```
 
+## 向量化运算
+
+```{r}
+a <- c(2, 4, 3, 1, 5, 7)
+```
+
+用`for()`循环，让向量的每个元素乘以2
+```{r}
+for (i in 1:length(a)) {
+  print(a[i] * 2)
+}
+```
+
+事实上，R语言是支持**向量化**（将运算符或者函数作用在向量的每一个元素上），可以用向量化代替循环
+
+```{r}
+a * 2
+```
+达到同样的效果。
+
+
+再比如，找出向量a中元素大于2的所有值
+
+```{r}
+for (i in 1:length(a)) {
+  if (a[i] > 2)
+  print(a[i])
+}
+```
+用向量化的运算，可以轻松实现
+```{r}
+a[a > 2]
+```
+
+向量是R中最基础的一种数据结构，有种说法是“一切都是向量”，R中的矩阵、数组甚至是列表都可以看成是某种意义上的向量。因此，使用**向量化操作**可以大大提高代码的运行效率。
+
+
+
+
 ## 多说说列表
 
 我们构造一个列表
@@ -166,7 +205,7 @@ knitr::include_graphics("images/map_function1.png")
 
 - 第一个参数是向量或列表（数据框是列表的一种特殊形式，因此数据框也是可以的）
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/map_fun.png")
 ```
 

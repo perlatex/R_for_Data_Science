@@ -38,43 +38,6 @@ __bold__, _italic_, ~~strike through~~
 ```
 
 
-## Communicating with Data via R Markdown
-
-*Instructions*
-
-1. 安装最新版本 [R](https://cran.r-project.org/mirrors.html) (>3.5) 和 [RStudio Desktop](https://rstudio.com/products/rstudio/) (>1.2).
-2. 安装 [LaTeX](https://www.latex-project.org/get/). 然而这个软件会比较大
-   (e.g. MacTeX is approximate 3.9G). 如果你之前没有安装过
-   LaTeX，我推荐你安装轻量级的 `tinytex`. 安装方法如下，打开R，然后再命令行输入:
-
-```{r, eval = FALSE}
-install.packages("tinytex")
-tinytex::install_tinytex()
-```
-
-3. 安装如下宏包（可选）:
-```{r, eval = FALSE}
-install.packages(c("tidyverse", 
-                 "rmarkdown", 
-                 "knitr",
-                 "xaringan", 
-                 "usethis",
-                 "rmdformats", 
-                 "prettydoc",
-                 "rticles",
-                 "linl",
-                 "shiny",
-                 "bookdown",
-                 "pagedown",
-                 "remotes"))
-# the following is not on CRAN 
-remotes::install_github("gadenbuie/xaringanthemer")
-remotes::install_github("hadley/emo")
-```
-
-
-
-
 
 
 
@@ -84,41 +47,22 @@ remotes::install_github("hadley/emo")
 `Rstudio` create Rmd file ： `File -> New File -> R Markdown`.
 
 
-基本构成
+基本构成（图中绿色括号地方）
 
 - metadata
 - text
 - code
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/rstudio-markdown.png")
+``` 
    
-
-### 插入公式
-
-
-```{r comment=NA,echo=FALSE}
-cat("$$\\frac{\\sum (\\bar{x} - x_i)^2}{n-1}$$")
-```
+点击knit（图中红色地方），选择想要输出的文档格式即可。
 
 
+## 生成html文档
 
-$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$
-
-
-### 插入图片
-
-```{r out.width = '35%', fig.align='left', echo = TRUE}
-knitr::include_graphics("images/R_logo.png")
-```
-
-
-### 表格
-
-```{r tables-mtcars,  echo = TRUE}
-knitr::kable(iris[1:5, ], caption = "A caption")
-```
-
-需要更优美的表格，可参考[这里](https://haozhu233.github.io/kableExtra/)
-
-## html_document
+希望html文档有章节号、目录或者更好显示表格，可以修改头文件（用下面的内容替换Rmarkdown的头文件）
 
 ```yaml
 ---
@@ -133,13 +77,31 @@ output:
 ---
 ```
 
-## pdf_document
+
+## 生成pdf文档
+
+pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受同学们的喜欢。但往往我们写中文的时候，编译不成功。这里就来讲讲如何解决这些问题，推荐阅读[这里](https://bookdown.org/yihui/rmarkdown/)。
+
+*Instructions*
+
+1. 安装最新版本 [R](https://cran.r-project.org/mirrors.html) (>3.5) 和 [RStudio Desktop](https://rstudio.com/products/rstudio/) (>1.2).
+2. 安装pdf查看器，[sumatrapdf网站](https://www.sumatrapdfreader.org/download-free-pdf-viewer.html)
+3. 安装 [LaTeX](https://www.latex-project.org/get/). 然而这个软件会比较大
+   (e.g. MacTeX is approximate 3.9G). 如果你之前没有安装过
+   LaTeX，我推荐你安装轻量级的 `tinytex`. 安装方法如下，打开R，然后再命令行输入:
+
+```{r, eval = FALSE}
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+4. 修改头文件，用下面的内容替换Rmarkdown的头文件, 不要修改缩进
 
 ```yaml
 ---
 title: 'Going deeper with dplyr'
 author: "王小二"
-date: 2018-09-27
+date: "`r "\x60r Sys.Date()\x60"`"
 output:
   pdf_document: 
     latex_engine: xelatex
@@ -151,12 +113,96 @@ classoptions: "hyperref, 12pt, a4paper"
 ---
 ```
 
-<!-- ## 本章代码 -->
 
-<!-- ```{r echo=FALSE} -->
-<!-- # a single file -->
-<!-- xfun::embed_file('./data/ch06_rmd_pdf.Rmd') -->
-<!-- ``` -->
+
+## 使用方法
+
+### 插入公式
+
+我相信你已经熟悉了latex语法，那么我们在Rmarkdwon里输入
+`$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$`，那么实际输出:
+
+$$\frac{\sum (\bar{x} - x_i)^2}{n-1}$$
+
+也可以使用latex的等式环境， 比如
+
+
+```latex
+$$\Theta = \begin{pmatrix}\alpha & \beta\\
+\gamma & \delta
+\end{pmatrix}$$
+```
+输出
+
+$$\Theta = \begin{pmatrix}\alpha & \beta\\
+\gamma & \delta
+\end{pmatrix}$$
+
+
+
+### 插入图片
+
+
+````markdown
+`r ''````{r, out.width='35%', fig.align='left', fig.cap='this is caption'}
+knitr::include_graphics("images/R_logo.png")
+```
+````
+
+
+```{r out.width = '35%', fig.align='left', fig.cap='this is caption', echo = F}
+knitr::include_graphics("images/R_logo.png")
+```
+
+
+
+### 运行代码
+
+```{r, echo = T}
+summary(cars)
+```
+
+
+### 表格
+
+```{r tables-mtcars,  echo = TRUE}
+knitr::kable(iris[1:5, ], caption = "A caption")
+```
+
+需要更优美的表格，可参考[这里](https://haozhu233.github.io/kableExtra/)
+
+
+### 生成图片
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(showtext)
+showtext_auto()
+
+flights %>%
+  group_by(dest) %>%
+  summarize(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  filter(delay, count > 20, dest != "HNL") %>%
+  ggplot(mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1 / 3) +
+  geom_smooth(se = FALSE) +
+  ggtitle("这是我的标题")
+```
+
+
+
+
+
+
+```{r echo=FALSE}
+# pdf文档模板
+xfun::embed_file('./data/my_pdf_document.Rmd')
+```
 
 
 ## 延伸阅读

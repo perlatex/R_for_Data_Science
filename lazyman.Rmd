@@ -86,6 +86,26 @@ tbl_merge(
   )
 ```
 
+
+
+## 统计结果写图上
+```{r, out.width='99%'}
+library(ggplot2)
+library(statsExpressions) 
+# https://github.com/IndrajeetPatil/statsExpressions
+
+
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+  title = "Spearman's rank correlation coefficient",
+  subtitle = expr_corr_test(mtcars, mpg, wt, type = "nonparametric")
+)
+```
+
+
+
 ## 列名太乱了
 ```{r}
 library(janitor)
@@ -118,6 +138,29 @@ mtcars %>%
   janitor::tabyl(cyl)
 ```
 
+
+## 比distinct()更懂我的心
+
+```{r}
+df <- tribble(
+  ~id, ~date, ~store_id, ~sales,
+  1, "2020-03-01", 1, 100,
+  2, "2020-03-01", 2, 100,
+  3, "2020-03-01", 3, 150,
+  4, "2020-03-02", 1, 110,
+  5, "2020-03-02", 3, 101
+)
+
+df %>%
+  get_dupes(store_id)
+
+df %>%
+  get_dupes(date)
+```
+
+
+
+
 ## 代码太乱了，谁帮我整理下
 
 ```{r}
@@ -129,7 +172,12 @@ mtcars %>%
 knitr::include_graphics("images/styler.png")
 ```
 
-安装后，然后这两个地方点两下，就发现你的代码整齐很多了
+安装后，然后这两个地方点两下，就发现你的代码整齐很多了。或者直接输入
+
+```{r, eval=FALSE}
+styler:::style_active_file()
+```
+
 
 
 ## 正则表达式太南了
@@ -169,6 +217,10 @@ mtcars %>%
 ```{r}
 ggthemr_reset()
 ```
+
+
+
+
 
 ## 宏包太多
 ```{r}

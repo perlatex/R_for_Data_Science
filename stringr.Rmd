@@ -448,6 +448,7 @@ tibble(sentence = sentences) %>%
 ```
 
 `str_extract()`提取匹配, 谁先匹配就提取谁
+
 ```{r}
 tibble(x = more) %>%
   mutate(color = str_extract(x, colour_match))

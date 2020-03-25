@@ -303,6 +303,39 @@ df %>%
 ```
 
 
+## 去除多余的空白
+
+```{r}
+library(stringr)
+
+str_trim(" excess    whitespace in a string be gone!")
+```
+
+
+```{r}
+# Use str_squish() to remove any leading, trailing, or excess whitespace
+str_squish(" excess    whitespace in a string be gone!")
+```
+
+## 取反操作
+```{r}
+3:10 %in% c(1:5)
+```
+
+有时候需要一个**不属于**的操作符
+```{r}
+# 自定义一个不属于操作符
+`%nin%` <- Negate(`%in%`)
+3:10 %nin% c(1:5)
+```
+
+```{r}
+# 使用purrr::negate()自定义反向操作符
+`%nin%` <- purrr::negate(`%in%`)
+3:10 %nin% c(1:5)
+```
+
+
 
 ## drop_na()
 
@@ -349,6 +382,8 @@ dt %>% mutate(
 ```
 
 之前讲正则表达式也有类似的函数`stringr::str_replace_na()`，
+
+
 
 
 
