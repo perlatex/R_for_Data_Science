@@ -186,6 +186,35 @@ df %>%
   )
 ```
 
+
+##  rowwise() + c_across()
+
+```{r, eval=FALSE}
+df <- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+df
+
+df %>% 
+  rowwise(id) %>% 
+  summarise(mean = mean(c(w, x, y, z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(mean = mean(c(w, x, y, z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(total = mean(c_across(w:z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(mean = mean(c_across(is.numeric)))
+
+# across()
+df %>% mutate(mean = rowMeans(across(is.numeric & -id)))
+
+```
+
+
 ## 用lay方案
 [lay包](https://github.com/romainfrancois/lay)解决方案
 ```{r, eval = FALSE}

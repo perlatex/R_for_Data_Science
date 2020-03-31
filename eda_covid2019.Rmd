@@ -17,8 +17,8 @@ showtext_auto()
 
 
 
-```{r, out.width='50%', fig.align='left', fig.cap='电影《传染病》海报', echo=FALSE}
-knitr::include_graphics("images/movie_contagion.jpg")
+```{r, out.width='80%', fig.align='left', fig.cap='电影《传染病》海报', echo=FALSE}
+knitr::include_graphics(c("images/movie_contagion.jpg", "images/movie_flu.png"))
 ```
 
 ## 数据来源
@@ -80,6 +80,10 @@ d %>% select(ends_with("/20"))
 ### 必要的预备知识之`pivot_longer()`
 
 **宽表格**变**长表格**，需要用到`pivot_longer()` 和 `pivot_wider()`， 比如
+
+```{r, out.width='99%', fig.align='left', echo = F}
+knitr::include_graphics("images/pivot.png")
+```
 
 
 ```{r}
