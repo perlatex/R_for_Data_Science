@@ -234,7 +234,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 
 刚才看到的是位置上的映射，ggplot还包含了颜色、形状以及透明度等图形属性的映射，
 
-比如我们在`aes()`里增加一个`color = class`, 具体来说，**不同的汽车类型**, 用**不同的颜色**来表现。
+比如我们在`aes()`里增加一个颜色映射`color = class`, 这样做就是希望，**不同的汽车类型**, 用**不同的颜色**来表现。这里，汽车类型有七组，那么就用七种不同的颜色来表示
 
 
 ```{r}
@@ -242,7 +242,7 @@ ggplot(data = mpg, aes(x = displ, y = hwy, color = class)   ) +
   geom_point()
 ```
 
-此图绘制不同类型的车，displ和hwy的散点图， 用颜色来实现分组。
+此图绘制不同类型的车，displ和hwy的散点图， 并用颜色来实现了分组。
 
 
 

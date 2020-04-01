@@ -39,7 +39,7 @@ knitr::include_graphics("images/github_COVID-19_files.png")
 
 ## 读取数据
 
-假定你已经下载了数据，比如`time_series_covid19_confirmed_global.csv`， 那么我们可以用`readr::read_csv()`函数直接读取, 关于R语言中文件读取的方法可以参考第 \@ref(readr) 章。
+假定你已经下载了数据，比如`time_series_covid19_confirmed_global.csv`， 那么我们可以用`readr::read_csv()`函数直接读取, 关于在R语言里文件读取的方法可以参考第 \@ref(readr) 章。
 
 
 
@@ -160,6 +160,35 @@ ymd("2020-03-24") - ymd("2020-03-23")
 (ymd("2020-03-24") - ymd("2020-03-23")) %>% as.numeric()
 ```
 
+### 有时候需要log10_scale
+
+```{r}
+tb <- tibble(
+  days_since_100 = 0:18,
+  cases = 100 * 1.33^days_since_100
+)
+
+
+p1 <- tb %>%
+  ggplot(aes(days_since_100, cases)) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 21, size = 1)
+
+p2 <- tb %>%
+  ggplot(aes(days_since_100, log10(cases))) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 21, size = 1)
+
+
+p3 <- tb %>%
+  ggplot(aes(days_since_100, cases)) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 21, size = 1) +
+  scale_y_log10()
+
+library(patchwork)
+p1 + p2 + p3
+```
 
 ### 数据清洗规整
 
@@ -198,10 +227,10 @@ d1 %>%
     date_labels = "%m-%d",
     date_breaks = "1 week"
   ) +
-   scale_y_continuous(
-    breaks = c(0, 10000, 50000, 100000, 200000, 300000),
+  scale_y_continuous(
+    breaks = c(0, 50000, 100000, 200000, 300000, 500000, 900000),
     labels = scales::comma
-    )
+  )
 ```
 
 
@@ -225,7 +254,7 @@ d1 %>%
   ggplot(aes(x = date, y = cases)) +
   geom_point() +
   scale_x_date(date_breaks = "1 week", date_labels = "%m-%d") +
-  scale_y_log10()
+  scale_y_log10(labels = scales::comma)
 ```
 
 
@@ -235,7 +264,7 @@ d1 %>%
 ```{r, out.width = '100%'}
 d1 %>%
   group_by(country_region) %>%
-  filter(max(cases) >= 10000) %>%
+  filter(max(cases) >= 20000) %>%
   ungroup() %>%
   ggplot(aes(x = date, y = cases, color = country_region)) +
   geom_point() +
@@ -244,7 +273,8 @@ d1 %>%
   facet_wrap(vars(country_region), ncol = 2) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+  ) +
+  theme(legend.position = "none")
 ```
 
 
@@ -288,29 +318,73 @@ d2
 
 
 ```{r}
-d2_newest <- d2 %>%
+d2_most <- d2 %>%
   group_by(country_region) %>%
   top_n(1, days_since_100) %>%
-  filter(cases >= 500)
-d2_newest
+  filter(cases >= 10000) %>% 
+  ungroup() %>% 
+  arrange(desc(cases))
+d2_most
 ```
+
 
 
 
 ```{r, out.width = "100%"}
 d2 %>%
+  bind_rows(
+    tibble(country = "33% daily rise", days_since_100 = 0:30) %>%
+      mutate(cases = 100 * 1.33^days_since_100)
+  ) %>%
+  
   ggplot(aes(days_since_100, cases, color = country_region)) +
   geom_hline(yintercept = 100) +
   geom_vline(xintercept = 0) +
   geom_line(size = 0.8) +
   geom_point(pch = 21, size = 1) +
+#   scale_colour_manual(
+#    values = c(
+#     "US" = "#EB5E8D",
+#     "Italy" = "black", 
+#     "Spain" = "#c2b7af",
+#     "China" = "red",
+#     "Germany" = "#c2b7af",
+#     "France" = "#c2b7af",
+#     "Iran" = "#9dbf57",
+#     "United Kingdom" = "#ce3140",
+#     "Korea, South" = "#208fce",
+#     "Japan" = "#208fce",
+#     "Singapore" = "#1E8FCC",
+#      "33% daily rise" = "#D9CCC3",
+#     "Switzerland" = "#c2b7af",
+#     "Turkey" = "#208fce",
+#     "Belgium" = "#c2b7af",
+#     "Netherlands" = "#c2b7af",
+#     "Austria" = "#c2b7af",
+#     "Hong Kong" = "#1E8FCC",
+#     # gray
+#     "India" = "#c2b7af",
+#     "Switzerland" = "#c2b7af",
+#     "Belgium" = "#c2b7af",
+#     "Norway" = "#c2b7af",
+#      "Sweden" = "#c2b7af",
+#     "Austria" = "#c2b7af",
+#     "Australia" = "#c2b7af",
+#     "Denmark" = "#c2b7af",
+#     "Canada" = "#c2b7af",
+#     "Brazil" = "#c2b7af",
+#     "Portugal" = "#c2b7af"
+#   )
+# ) +
+  
   geom_shadowtext(
-    data = d2_newest, aes(label = paste0(" ", country_region)),
+    data = d2_most, aes(label = paste0("  ", country_region)),
     bg.color = "white"
   ) +
   scale_y_log10(
     expand = expansion(mult = c(0, .1)),
-    breaks = c(100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000)
+    breaks = c(100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000),
+    labels = scales::comma
   ) +
   scale_x_continuous(
     expand = expansion(mult = c(0, .1)),
@@ -332,7 +406,7 @@ d2 %>%
   )
 ```
 
-还有很多细节没有实现，学习再弄了
+有点乱，还有很多细节没有实现，后面再弄弄了
 
 
 
@@ -340,14 +414,193 @@ d2 %>%
 
 ```{r}
 d2a <- d1 %>%
-  filter(cases >= 100) %>%
   group_by(country_region) %>%
-  mutate(days_since_100 = 0:(n() - 1))
-
+  filter(cases >= 100) %>%
+  mutate(days_since_100 = 0:(n() - 1)) %>%
+  # same as
+  # mutate(edate = as.numeric(date - min(date)))
+  ungroup()
 d2a
 ```
 
-这里的`d2a` 和`d2`是一样的.
+这里的`d2a` 和`d2`是一样的了，但方法简单很多。
+
+
+
+### 疫情持续时间最久的国家
+
+
+```{r}
+d3 <- d2a %>%
+  group_by(country_region) %>%
+  filter(days_since_100 == max(days_since_100)) %>%
+  # same as
+  # top_n(1, days_since_100) %>%
+  ungroup() %>%
+  arrange(desc(days_since_100))
+d3
+```
+
+```{r}
+highlight <- d3 %>%
+  top_n(10, days_since_100) %>%
+  pull(country_region)
+highlight
+```
+
+
+```{r}
+d2a %>%
+  bind_rows(
+    tibble(country = "33% daily rise", days_since_100 = 0:30) %>%
+      mutate(cases = 100 * 1.33^days_since_100)
+  ) %>%
+  ggplot(aes(days_since_100, cases, color = country_region)) +
+  geom_hline(yintercept = 100) +
+  geom_vline(xintercept = 0) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 21, size = 1) +
+  scale_y_log10(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000),
+    labels = scales::comma
+  ) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(0, 5, 10, 15, 20, 25, 30, 40, 50, 60)
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#FFF1E6"),
+    legend.position = "none",
+    panel.spacing = margin(3, 15, 3, 15, "mm")
+  ) +
+  labs(
+    x = "Number of days since 100th case",
+    y = "",
+    title = "Country by country: how coronavirus case trajectories compare",
+    subtitle = "Cumulative number of cases, by Number of days since 100th case",
+    caption = "data source from @www.ft.com"
+  ) +
+  gghighlight::gghighlight(country_region %in% highlight,
+    label_key = country_region, use_direct_label = TRUE,
+    label_params = list(segment.color = NA, nudge_x = 1),
+    use_group_by = FALSE
+  )
+```
+灰色线条的国家名，有点不好弄，在想办法
+
+
+
+### 笨办法吧
+
+笨办法 用三个张表
+
+```{r}
+highlight <- c(
+  "China", "Spain", "US", "United Kingdom", "Korea, South",
+  "Italy", "Japan", "Singapore", "Germany", "France", "Iran"
+)
+
+gray <- c(
+  "India", "Switzerland", "Belgium", "Netherlands",
+  "Sweden", "Austria", "Australia", "Denmark",
+  "Canada", "Brazil", "Portugal"
+)
+
+d3_highlight <- d2a %>% filter(country_region %in% highlight)
+
+d3_gray <- d2a %>% filter(country_region %in% gray)
+```
+
+  
+```{r}
+d2a %>%
+  ggplot(aes(days_since_100, cases, group = country_region)) +
+  geom_hline(yintercept = 100) +
+  geom_vline(xintercept = 0) +
+  geom_line(size = 0.8, color = "gray70") +
+  geom_point(pch = 21, size = 1, color = "gray70") +
+
+  # highlight country
+  geom_line(data = d3_highlight, aes(color = country_region)) +
+  geom_point(data = d3_highlight, aes(color = country_region)) +
+  geom_text(
+    data = d3_highlight %>%
+      group_by(country_region) %>%
+      top_n(1, days_since_100) %>%
+      ungroup(),
+    aes(color = country_region, label = country_region),
+    hjust = 0,
+    vjust = 0,
+    nudge_x = 0.5
+  ) +
+
+
+  # gray country
+  geom_text(
+    data = d3_gray %>%
+      group_by(country_region) %>%
+      top_n(1, days_since_100) %>%
+      ungroup(),
+    aes(label = country_region),
+    color = "gray50",
+    hjust = 0,
+    vjust = 0,
+    nudge_x = 0.5
+  ) +
+  geom_point(
+    data = d3_gray %>%
+      group_by(country_region) %>%
+      top_n(1, days_since_100) %>%
+      ungroup(),
+    size = 2,
+    color = "gray50"
+  ) +
+  scale_y_log10(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(100, 200, 500, 2000, 5000, 10000, 20000, 50000, 100000, 150000),
+    labels = scales::comma
+  ) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0, .1)),
+    breaks = c(0, 5, 10, 15, 20, 25, 30, 40, 50, 60)
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "#FFF1E6"),
+    legend.position = "none",
+    panel.spacing = margin(3, 15, 3, 15, "mm")
+  ) +
+  labs(
+    x = "Number of days since 100th case",
+    y = "",
+    title = "Country by country: how coronavirus case trajectories compare",
+    subtitle = "Cumulative number of cases, by Number of days since 100th case",
+    caption = "data source from @www.ft.com"
+  )
+```
+
+差强人意，再想想有没有好的办法
+
+
+
+### 用因子来弄
+
+```{r}
+d4 <- d2a %>%
+  mutate(country_label = case_when(
+    country_region %in% highlight ~ country_region,
+    country_region %in% gray ~ "gray",
+    TRUE ~ NA_character_
+  ))
+
+d4
+```
+感觉这样还是不好弄
+
 
 
 
@@ -431,7 +684,6 @@ ggplot() +
     aes(x = long, y = lat, group = group),
     fill = "grey", alpha = 0.3
   ) +
-  
   geom_point(
     data = d_newest,
     aes(x = Long, y = Lat, size = newest_date, color = newest_date),
