@@ -17,7 +17,7 @@ showtext_auto()
 
 
 
-```{r, out.width='80%', fig.align='left', fig.cap='电影《传染病》海报', echo=FALSE}
+```{r, out.width='45%', fig.align='left', fig.cap='电影《传染病》,《流感》海报', echo=FALSE}
 knitr::include_graphics(c("images/movie_contagion.jpg", "images/movie_flu.png"))
 ```
 
@@ -162,7 +162,7 @@ ymd("2020-03-24") - ymd("2020-03-23")
 
 ### 有时候需要log10_scale
 
-```{r}
+```{r, out.width = '100%'}
 tb <- tibble(
   days_since_100 = 0:18,
   cases = 100 * 1.33^days_since_100
@@ -280,7 +280,7 @@ d1 %>%
 
 ## 可视化探索
 
-我觉得下面这张图很漂亮，[https://www.ft.com/coronavirus-latest](https://www.ft.com/coronavirus-latest) ，于是打算重复
+网站[https://www.ft.com/coronavirus-latest](https://www.ft.com/coronavirus-latest) 这张图很受关注，于是打算重复
 
 
 ```{r, out.width='85%', fig.align='left', fig.cap='图片来源www.ft.com', echo=FALSE}
@@ -449,7 +449,7 @@ highlight
 ```
 
 
-```{r}
+```{r, out.width = '100%'}
 d2a %>%
   bind_rows(
     tibble(country = "33% daily rise", days_since_100 = 0:30) %>%
@@ -489,13 +489,14 @@ d2a %>%
     use_group_by = FALSE
   )
 ```
+
 灰色线条的国家名，有点不好弄，在想办法
 
 
 
 ### 笨办法吧
 
-笨办法 用三个张表
+笨办法，实际上是4张表共同完成
 
 ```{r}
 highlight <- c(
@@ -515,7 +516,7 @@ d3_gray <- d2a %>% filter(country_region %in% gray)
 ```
 
   
-```{r}
+```{r, out.width = '100%'}
 d2a %>%
   ggplot(aes(days_since_100, cases, group = country_region)) +
   geom_hline(yintercept = 100) +
@@ -589,6 +590,8 @@ d2a %>%
 
 ### 用因子来弄
 
+对数据框d2a增加两列属性(有无标签，有无颜色)，然后手动改颜色
+
 ```{r}
 d4 <- d2a %>%
   mutate(country_label = case_when(
@@ -599,7 +602,7 @@ d4 <- d2a %>%
 
 d4
 ```
-感觉这样还是不好弄
+感觉这样还是有点折腾。
 
 
 

@@ -16,9 +16,6 @@ knitr::include_graphics(path = "images/ukmss-36386-f0001.jpg")
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(readxl)
-library(lubridate)
-library(broom)
-library(modelr)
 ```
 
 
@@ -30,10 +27,23 @@ d
 
 ## 可视化
 
+我们先画图看看
+
+```{r, out.width = '100%'}
+d %>% 
+  ggplot() +
+  geom_point(aes(x = Olympic_year, y = Men_score), color = "blue") +
+  geom_point(aes(x = Olympic_year, y = Women_score), color = "red") 
+  
+```
+这样写也是可以的，只不过最好先tidy数据
+
+```{r out.width = '80%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/pivot.png")
+```
+
 ```{r}
 d1 <- d %>%
-  # mutate_at(
-  #  vars(Olympic_year), as.character) %>%
   pivot_longer(
     cols = -Olympic_year,
     names_to = "sex",
@@ -43,55 +53,70 @@ d1 <- d %>%
 d1
 ```
 
+然后在画图
 
 ```{r, out.width = '100%'}
-d1 %>%
-  mutate_at(vars(Olympic_year), as.character) %>%
-  mutate(
-    sex = factor(sex, levels = c("Women", "Men"))
-  ) %>%
-  ggplot(aes(
-    x = Olympic_year,
-    y = winning_time,
-    group = sex,
-    color = sex
-  )) +
+d1 %>% 
+  ggplot(aes(x = Olympic_year, y = winning_time, color = sex)) +
   geom_point() +
+  #geom_smooth(method = "lm") +
+  scale_color_manual(
+    values = c("Men_score" = "blue", "Women_score" = "red")
+  ) +
+  scale_x_continuous(
+    breaks = seq(1900, 2004, by = 4),
+    labels = seq(1900, 2004, by = 4)
+  )  +
   theme(axis.text.x = element_text(
     size = 10, angle = 45, colour = "black",
     vjust = 1, hjust = 1
   ))
 ```
 
+
 ## 回归分析
-```{r}
-lm(Men ~ Olympic_year, data = d) %>%
-  summary()
-```
+
+建立时间与成绩的线性关系
+$$ 
+\text{score}_i = \alpha + \beta \times \text{year}_i + \epsilon_i; \qquad \epsilon_i\in \text{Normal}(\mu, \sigma)
+$$
+
+我们需要求出其中系数$\alpha$和$\beta$，写R语言代码如下
 
 
 ```{r}
-lm(Women ~ Olympic_year, data = d) %>%
-  summary()
+fit_1 <- lm(Men_score ~ 1 + Olympic_year, data = d)
+
+summary(fit_1)
 ```
-
-
-```{r, results="asis"}
-library(equatiomatic)
-mod <- lm(Women ~ Olympic_year, data = d)
-extract_eq(mod, use_coefs = TRUE)
-```
-
 
 
 
 ```{r}
-library(report)
-report(mod)
+fit_2 <- lm(Women_score ~ 1 + Olympic_year, data = d)
+
+summary(fit_2)
 ```
+
+
+
+
 
 
 ## 预测
+
+使用`predict()`完成预测
+
+```{r}
+df <- data.frame(Olympic_year = 2020)
+
+predict(fit_1, newdata = df)
+```
+
+
+
+为了图片中的一致，我们使用`seq(1900, 2252, by = 4)`建立预测项，并整理到数据框里
+
 ```{r}
 grid <- tibble(
   Olympic_year = as.numeric(seq(1900, 2252, by = 4))
@@ -100,46 +125,50 @@ grid
 ```
 
 
-
-
-
 ```{r}
-fit_1 <- lm(Men ~ Olympic_year, data = d)
-# predict(fit_1, newdata = grid)
-
-fit_2 <- lm(Women ~ Olympic_year, data = d)
-# predict(fit_2, newdata = grid)
-
-tb <- grid %>% mutate(
-  Men = predict(fit_1, newdata = grid),
-  Women = predict(fit_2, newdata = grid)
-)
+tb <- grid %>% 
+  mutate(
+     Predict_Men = predict(fit_1, newdata = grid),
+   Predict_Women = predict(fit_2, newdata = grid)
+  )
 tb
 ```
 
+
+
+
 ## 再次可视化
+
 ```{r}
-tb1 <- tb %>%
+tb1 <- tb %>%  
   pivot_longer(
     cols = -Olympic_year,
     names_to = "sex",
     values_to = "winning_time"
-  )
+  ) 
 tb1
 ```
 
 
 ```{r, out.width = '100%'}
 tb1 %>%
-  ggplot(aes(
-    x = Olympic_year,
-    y = winning_time,
-    group = sex,
-    color = sex
-  )) +
-  geom_point() +
+  ggplot(aes(x = Olympic_year, 
+             y = winning_time, 
+             color = sex)
+  ) +
   geom_line(size = 2) +
-  geom_point(data = d1) +
+  geom_point(data = d1) + 
+  scale_color_manual(
+    name = "标记",
+    values = c("Men_score" = "blue", 
+               "Women_score" = "red",
+               "Predict_Men" = "#588B8B", 
+               "Predict_Women" = "#C8553D"), 
+    labels = c("Men_score" = "男性历史成绩", 
+               "Women_score" = "女性历史成绩", 
+               "Predict_Men" = "男性预测成绩", 
+               "Predict_Women" = "女性预测成绩")
+    ) +
   scale_x_continuous(
     breaks = seq(1900, 2252, by = 16),
     labels = as.character(seq(1900, 2252, by = 16))
@@ -149,67 +178,66 @@ tb1 %>%
     vjust = 1, hjust = 1
   ))
 ```
-
-早知道nature文章这么简单，10年前我也可以写啊
+早知道nature文章这么简单，10年前我也可以写啊！
 
 
 
 ## list_column
 
 这里是另外的一种方法
+```{r}
+library(modelr) 
+```
 
 ```{r, out.width = '100%'}
-d1 <- d %>%
+d1 <- d %>%  
   pivot_longer(
     cols = -Olympic_year,
     names_to = "sex",
     values_to = "winning_time"
-  )
+  ) 
 
 fit_model <- function(df) lm(winning_time ~ Olympic_year, data = df)
 
-d2 <- d1 %>%
-  group_nest(sex) %>%
+d2 <- d1 %>%  
+  group_nest(sex) %>% 
   mutate(
     mod = map(data, fit_model)
-  )
+    ) 
+d2
 
 
 
 # d2 %>% mutate(p = list(grid, grid))
 # d3 <- d2 %>% mutate(p = list(grid, grid))
 # d3
-# d3 %>%
-#   mutate(
+# d3 %>%  
+#   mutate( 
 #     predictions = map2(p, mod, add_predictions),
 #   )
 
 # or
-tb4 <- d2 %>%
-  mutate(
+tb4 <- d2 %>%  
+  mutate( 
     predictions = map(mod, ~ add_predictions(grid, .))
-  ) %>%
-  select(sex, predictions) %>%
+  ) %>% 
+  select(sex, predictions) %>% 
   unnest(predictions)
 
-tb4 %>%
-  ggplot(aes(
-    x = Olympic_year,
-    y = pred,
-    group = sex,
-    color = sex
-  )) +
+tb4 %>% 
+  ggplot(aes(x = Olympic_year, 
+             y = pred, 
+             group = sex, 
+             color = sex)
+  ) +
   geom_point() +
   geom_line(size = 2) +
-  geom_point(
-    data = d1,
-    aes(
-      x = Olympic_year,
-      y = winning_time,
-      group = sex,
-      color = sex
-    )
-  ) +
+  geom_point(data = d1, 
+             aes(x = Olympic_year, 
+                 y = winning_time, 
+                group = sex, 
+                color = sex)
+             ) + 
   scale_x_continuous(
     breaks = seq(1900, 2252, by = 16),
     labels = as.character(seq(1900, 2252, by = 16))
@@ -219,3 +247,4 @@ tb4 %>%
     vjust = 1, hjust = 1
   ))
 ```
+

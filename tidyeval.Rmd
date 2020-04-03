@@ -35,7 +35,7 @@ grouped_mean <- function(data, group_var, summary_var) {
 
 当我们试图运行这段代码的时候，却发现报错了
 
-```{r, error = grouped_mean}
+```{r, error = TRUE}
 grouped_mean(mtcars, cyl, mpg)
 ```
 
@@ -109,6 +109,7 @@ qq_show(!!var)
 
 
 再看看`grouped_mean()`的代码
+
 ```{r}
   group_var <-  quote(cyl)
 summary_var <-  quote(mpg)
@@ -335,8 +336,8 @@ my_summarise <- function(data, expr) {
     "n_{{expr}}" := n()
   )
 }
-mtcars %>% my_summarise(mpg)
 
+mtcars %>% my_summarise(mpg)
 ```
 
 
@@ -348,23 +349,22 @@ mtcars %>% my_summarise(mpg)
 ### 形成依次下滑的列
 
 ```{r}
-d <- data_frame(x = seq_len(100))
+d <- tibble(x = seq_len(10))
 
 
-jetlag <- function(data, variable, n=10){
+jetlag <- function(data, variable, n = 10){
   variable <- enquo(variable)
   
   indices <- seq_len(n)
-  quosures <- map( indices, ~quo(lag(!!variable, !!.x)) ) %>%
-     set_names(nm = purrr::map_chr(indices, ~paste0("lag_", .x)))
+  quosures <- purrr::map( indices, ~quo(lag(!!variable, !!.x)) ) %>%
+      purrr::set_names(nm = purrr::map_chr(indices, ~paste0("lag_", .x)))
   
-  mutate( data, !!!quosures )
+  dplyr::mutate(data, !!!quosures)
   
 }
 
 
 d %>% jetlag(x, 3)
-
 ```
 
 
