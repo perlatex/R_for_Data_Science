@@ -589,8 +589,18 @@ iris %>%
 
 
 
-## arcoss函数
-强大的`arcoss()`函数，估计要替代以上`scope`函数
+## across函数
+
+
+数据框中向量de方向，事实上可以看做有两个方向，横着看是row-vector，竖着看是col-vector。
+- colwise:  `group_by() %>% summarise/mutate  +  across()`
+- rowwise:  `rowwise()/nest_by() %>%  summarise/mutate + c_across()`
+
+- https://dplyr.tidyverse.org/dev/articles/rowwise.html
+- https://dplyr.tidyverse.org/dev/articles/colwise.html
+
+比如
+
 ```{r, eval = FALSE}
 iris %>%
   group_by(Species) %>%
@@ -598,6 +608,63 @@ iris %>%
     across(starts_with("Sepal"), mean),
     Area = mean(Petal.Length * Petal.Width),
     across(starts_with("Petal"), min)
+  )
+```
+
+
+
+### across函数替代scope函数
+
+强大的`across()`函数，替代以上`scope`函数(_if, _at, 和 _all函数), 同时`slice_max()`, `slice_min()`, `slice_n()` 将替代 `top_n()`函数。
+
+```{r, eval = FALSE}
+df %>% mutate_if(is.numeric, mean, na.rm = TRUE)
+# ->
+df %>% mutate(across(is.numeric, mean, na.rm = TRUE))
+
+df %>% mutate_at(vars(x, starts_with("y")), mean, na.rm = TRUE)
+# ->
+df %>% mutate(across(c(x, starts_with("y")), mean, na.rm = TRUE))
+
+df %>% mutate_all(mean, na.rm = TRUE)
+# ->
+df %>% mutate(across(everything(), mean, na.rm = TRUE))
+```
+
+
+
+### 更方便的colwise操作
+
+```{r, eval = FALSE}
+# multiple
+df <- tibble(x = 1:3, y = 3:5, z = 5:7)
+mult <- list(x = 1, y = 10, z = 100)
+
+df %>% mutate(across(all_of(names(mult)), ~ .x * mult[[cur_column()]]))
+
+
+
+# weights
+df <- tibble(x = 1:3, y = 3:5, z = 5:7)
+df
+weights <- list(x = 0.2, y = 0.3, z = 0.5)
+
+df %>% mutate(
+  across(all_of(names(weights)),
+         list(wt = ~ .x * weights[[cur_column()]]), 
+         .names = "{col}.{fn}")
+)
+
+
+
+# cutoffs
+df <- tibble(x = 1:3, y = 3:5, z = 5:7)
+df
+
+cutoffs <- list(x = 2, y = 3, z = 7)
+
+df %>% mutate(
+  across(all_of(names(cutoffs)), ~ if_else(.x > cutoffs[[cur_column()]], 1, 0))
   )
 ```
 

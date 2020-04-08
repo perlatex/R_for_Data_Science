@@ -6,6 +6,8 @@ library(tidyverse)
 library(lubridate)
 library(maps)
 library(viridis)
+library(ggrepel)
+library(paletteer)
 library(shadowtext)
 library(showtext)
 showtext_auto()
@@ -315,6 +317,10 @@ d2 <- d1 %>%
 d2
 ```
 
+```{block, type="danger"}
+大家都谈过恋爱，也有可能失恋。大家失恋时间是不同的，若把失恋的当天作为第 0 day, 就可以比较失恋若干天后每个人精神波动情况。参照《失恋33天》
+```
+
 
 
 ```{r}
@@ -588,21 +594,68 @@ d2a %>%
 
 
 
-### 用因子来弄
+### 比较tidy的方法
 
 对数据框d2a增加两列属性(有无标签，有无颜色)，然后手动改颜色
 
-```{r}
-d4 <- d2a %>%
-  mutate(country_label = case_when(
-    country_region %in% highlight ~ country_region,
-    country_region %in% gray ~ "gray",
-    TRUE ~ NA_character_
-  ))
 
-d4
+```{r}
+highlight_country <- d2a %>%
+  group_by(country_region) %>%
+  filter(days_since_100 == max(days_since_100)) %>%
+  ungroup() %>%
+  arrange(desc(days_since_100)) %>% 
+  top_n(10, days_since_100) %>%
+  pull(country_region)
+
+highlight_country
 ```
-感觉这样还是有点折腾。
+
+
+吸取了[Kieran Healy大神的配色方案](https://github.com/kjhealy/covid) 
+```{r}
+## Colors
+cgroup_cols <- c(prismatic::clr_darken(paletteer_d("ggsci::category20_d3"), 0.2)[1:length(highlight_country)], "gray70")
+scales::show_col(cgroup_cols)
+```
+
+
+
+```{r}
+d2a %>% 
+  group_by(country_region) %>% 
+  filter(max(days_since_100) > 9) %>%
+  mutate(
+    end_label = ifelse(days_since_100 == max(days_since_100), country_region, NA_character_)
+  ) %>% 
+  mutate(end_label = case_when(country_region %in% highlight_country ~ end_label,
+                               TRUE ~ NA_character_), 
+         cgroup = case_when(country_region %in% highlight_country ~ country_region, 
+                            TRUE ~ "ZZOTHER")) %>% # length(highlight_country) + gray
+
+  
+  ggplot(aes(x = days_since_100, y = cases, 
+         color = cgroup, label = end_label, 
+         group = country_region)) + 
+  geom_line(size = 0.8) + 
+  geom_text_repel(nudge_x = 1.1,
+                  nudge_y = 0.1, 
+                  segment.color = NA) + 
+  guides(color = FALSE) + 
+  scale_color_manual(values = cgroup_cols) +
+  scale_y_continuous(labels = scales::comma_format(accuracy = 1), 
+                     breaks = 10^seq(2, 8),
+                     trans = "log10"
+                     ) + 
+  labs(x = "Days Since 100 Confirmed Death", 
+       y = "Cumulative Number of Deaths (log10 scale)", 
+       title = "Cumulative Number of Reported Deaths from COVID-19, Selected Countries", 
+    subtitle = "Cumulative number of cases, by Number of days since 100th case",
+    caption = "data source from @www.ft.com") 
+```
+
+感觉这样是最好的方案。
+
 
 
 
