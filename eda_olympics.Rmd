@@ -76,12 +76,13 @@ d1 %>%
 
 ## 回归分析
 
-建立时间与成绩的线性关系
+建立年份与成绩的线性关系
 $$ 
 \text{score}_i = \alpha + \beta \times \text{year}_i + \epsilon_i; \qquad \epsilon_i\in \text{Normal}(\mu, \sigma)
 $$
 
 我们需要求出其中系数$\alpha$和$\beta$，写R语言代码如下
+(`lm(y ~ 1 + x,data = d)`, 要求得 $\alpha$和$\beta$，就是对应 1 和 x 前的系数)
 
 
 ```{r}
@@ -115,7 +116,7 @@ predict(fit_1, newdata = df)
 
 
 
-为了图片中的一致，我们使用`seq(1900, 2252, by = 4)`建立预测项，并整理到数据框里
+为了图片中的一致，我们使用1900年到2252年(`seq(1900, 2252, by = 4)`)建立预测项，并整理到数据框里
 
 ```{r}
 grid <- tibble(
@@ -135,6 +136,13 @@ tb
 ```
 
 
+有时候我喜欢用`modelr::add_predictions()`函数实现相同的功能
+```{r}
+library(modelr)
+grid %>%  
+	add_predictions(fit_1, var = "Predict_Men") %>% 
+	add_predictions(fit_2, var = "Predict_Women") 
+```
 
 
 ## 再次可视化

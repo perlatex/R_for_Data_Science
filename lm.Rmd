@@ -29,7 +29,7 @@ wages %>%
 wages %>% colnames()
 ```
 
-同时检查数据是否有缺失值，这点很重要。在R中 NA（notavailable，不可用）表示缺失值, 比如可以这样检查是否有缺失值。
+同时检查数据是否有缺失值，这点很重要。在R中 NA（not available，不可用）表示缺失值, 比如可以这样检查是否有缺失值。
 
 
 ```{r}
@@ -113,9 +113,17 @@ y &= \alpha + \beta x + \epsilon \\
 \end{aligned}
 $$
 
-$ \epslion$ 代表误差项，它与$x$ 无关，且服从正态分布。
+$\epsilon$ 代表误差项，它与$x$ 无关，且服从正态分布。
 建立线性模型，就是要估计这里的系数$\hat\alpha$和$\hat\beta$，即截距项和斜率项。常用的方法是最小二乘法（ordinary least squares (OLS) regression）：
-就是我们估算的$\hat\alpha$和$\hat\beta$, 要使得残差的平方和最小，即$\sum_i(y_i - \hat y_i)^2$或者叫$\sum_i \epsilon_i^2$最小。当然，数据量很大，手算是不现实的，我们借助R语言代码吧
+就是我们估算的$\hat\alpha$和$\hat\beta$, 要使得残差的平方和最小，即$\sum_i(y_i - \hat y_i)^2$或者叫$\sum_i \epsilon_i^2$最小。
+
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/best_fit.png")
+```
+
+
+当然，数据量很大，手算是不现实的，我们借助R语言代码吧
 
 
 ## 使用`lm()` 函数
@@ -176,17 +184,34 @@ $$
 \hat y = -126532 + 2387 \; x 
 $$
 
+查看详细信息
+```{r}
+summary(mod1)
+```
 
+查看拟合值
+```{r}
+# predict(mod1) # predictions at original x values
+wages %>% modelr::add_predictions(mod1)
+```
+
+查看残差值
+```{r}
+# resid(mod1) 
+wages %>% 
+  modelr::add_predictions(mod1) %>% 
+  modelr::add_residuals(mod1)
+```
 
 
 <!-- tidyverse框架下，喜欢**数据框**的统计结果，因此，可用broom的`tidy()`函数将系数转换为数据框的形式 -->
 <!-- ```{r} -->
-<!-- broom::tidy(mod) -->
+<!-- broom::tidy(mod1) -->
 <!-- ``` -->
 
 <!-- 也可以用broom的`glance()`函数**规整**模型的信息 -->
 <!-- ```{r} -->
-<!-- broom::glance(mod) -->
+<!-- broom::glance(mod1) -->
 <!-- ``` -->
 
 ## 模型的解释
@@ -272,6 +297,32 @@ lm(earn ~ height + sex + ed + age + race, data = wages)
 
 
 
+
+## 变量重要性
+
+哪个变量对收入的影响最大？
+```{r, eval=FALSE}
+lm(earn ~ height + ed + age, data = wages) 
+```
+
+- 方法一，变量都做**标准化处理**后，再放到模型中计算，然后对比系数的绝对值
+
+```{r}
+fit <- wages %>% 
+  mutate_at(vars(earn, height, ed, age), scale) %>% 
+  lm(earn ~ 1 + height + ed + age, data = .) 
+
+summary(fit)
+```
+
+
+- 方法二，通过比较模型参数的t-statistic的绝对值，可以考察[参数的重要程度](https://topepo.github.io/caret/variable-importance.html)
+```{r}
+caret::varImp(fit)
+```
+
+
+
 ## 可能遇到的情形
 
 根据同学们的建议，模型中涉及统计知识，留给统计老师讲，我们这里是R语言课，应该讲代码。
@@ -290,13 +341,17 @@ lm(earn ~ height - 1, data = wages)
 lm(earn ~ 0 + height, data = wages)
 ```
 
+不包含截距项，实际上就是强制通过原点(0,0)，这样做很大程度上影响了斜率。
 
-### 只有截距
+
+### 只有截距项
 
 ```{r}
 lm(earn ~ 1, data = wages)
 ```
 
+
+只有截距项，实质上就是计算y变量的均值
 ```{r}
 wages %>%
   summarise(
@@ -394,11 +449,12 @@ coef(mod5)
 
 
 ```{r}
-wages %>%
+p1 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict(mod5))) +
   scale_y_continuous(limits = c(0, 100000))
+p1
 ```
 
 ### 偷懒的写法
@@ -443,12 +499,24 @@ coef(mod6)
 
 
 ```{r}
-wages %>%
+p2 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict(mod6))) +
   scale_y_continuous(limits = c(0, 100000))
+p2
 ```
+
+
+注意，没有相互项和有相互项的区别
+```{r, out.width= "100%"}
+library(patchwork)
+
+combined <- p1 + p2 & theme(legend.position = "bottom")
+combined + plot_layout(guides = "collect")
+```
+
+
 
 ### predict vs fit
 
