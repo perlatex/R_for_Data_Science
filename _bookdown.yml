@@ -19,6 +19,7 @@ rmd_files: [
   "rmarkdown.Rmd",
   "readr.Rmd",
   "dplyr.Rmd",
+  "colwise.Rmd",
   "visualization.Rmd",
   "stringr.Rmd",
   "purrr.Rmd",

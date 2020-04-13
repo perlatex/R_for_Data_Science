@@ -1,0 +1,75 @@
+# 列方向和行方向 {#colwise}
+
+等dplyr1.0发布，欢呼
+
+```{r message = FALSE, warning = FALSE}
+library(dplyr)
+```
+
+
+## 强大的across函数
+
+
+数据框中向量de方向，事实上可以看做有两个方向，横着看是row-vector，竖着看是col-vector。
+
+- colwise:  `group_by() %>% summarise/mutate  +  across()`
+- rowwise:  `rowwise()/nest_by() %>%  summarise/mutate + c_across()`
+
+
+
+比如
+
+```{r, eval = FALSE}
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    across(starts_with("Sepal"), mean),
+    Area = mean(Petal.Length * Petal.Width),
+    across(starts_with("Petal"), min)
+  )
+```
+
+
+
+```{r, eval = FALSE}
+df %>% mutate(across(is.numeric, mean, na.rm = TRUE))
+
+
+df %>% mutate(across(c(x, starts_with("y")), mean, na.rm = TRUE))
+
+
+df %>% mutate(across(everything(), mean, na.rm = TRUE))
+```
+
+
+## 行方向
+
+```{r, eval=FALSE}
+df <- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+df
+
+df %>% 
+  rowwise(id) %>% 
+  summarise(mean = mean(c(w, x, y, z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(mean = mean(c(w, x, y, z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(total = mean(c_across(w:z)))
+
+df %>% 
+  rowwise(id) %>% 
+  mutate(mean = mean(c_across(is.numeric)))
+```
+
+
+
+
+
+## 参考资料
+
+- https://dplyr.tidyverse.org/dev/articles/rowwise.html
+- https://dplyr.tidyverse.org/dev/articles/colwise.html
