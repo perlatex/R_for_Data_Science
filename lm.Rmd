@@ -517,6 +517,121 @@ combined + plot_layout(guides = "collect")
 ```
 
 
+### 虚拟变量
+
+相互项，有点不好理解？我们再细致说一遍
+```{r, eval = F}
+earn ~ height + sex + height:sex
+```
+
+对应的数学表达式
+$$
+\begin{aligned}
+\text{earn} &= \alpha + \beta_1 \text{height} + \beta_2 \text{sex} +\beta_3 \text{(height*sex)}+ \epsilon \\
+\end{aligned}
+$$
+
+我们要求出其中的$\alpha, \beta_1,  \beta_2, \beta_3$，事实上，分类变量在R语言代码里，会转换成0和1这种**虚拟变量**，然后再计算。类似
+```{r}
+wages %>% mutate(sexmale = if_else(sex == "female", 0, 1))
+```
+那么上面的公式变为
+$$
+\begin{aligned}
+\text{earn} &= \alpha + \beta_1 \text{height} + \beta_2 \text{sexmale} +\beta_3 \text{(height*sexmale)}+ \epsilon \\
+\end{aligned}
+$$
+
+
+于是，可以将上面的公式里男性(sexmale = 1)和女性(sexmale = 0)分别表示
+
+$$
+\begin{aligned}
+\text{female}\qquad earn &= \alpha + \beta_1 \text{height}  +\epsilon \\
+\text{male}\qquad earn &= \alpha + \beta_1 \text{height} + \beta_2 *1 +\beta_3 \text{(height*1)}+ \epsilon \\
+&= \alpha + \beta_1 \text{height} + \beta_2 +\beta_3 \text{height}+ \epsilon \\
+& = (\alpha + \beta_2) + (\beta_1 +  \beta_3)\text{height}  + \epsilon \\
+\end{aligned}
+$$
+我们再对比`mod6`结果中的系数$\alpha, \beta_1,  \beta_2, \beta_3$
+```{r}
+mod6
+```
+
+是不是更容易理解呢？
+
+
+事实上，对于男性和女性，截距和系数都不同，因此这种情形**等价于**，按照sex分成两组，男性算男性的斜率，女性算女性的斜率
+```{r}
+wages %>% 
+  group_by(sex) %>% 
+  group_modify(
+    ~ broom::tidy(lm(earn ~ height, data = .))
+  )
+```
+
+
+
+
+
+```{r}
+wages %>%
+  ggplot(aes(x = height, y = earn, color = sex)) +
+  geom_smooth(method = lm, se = F) 
+```
+
+```{r}
+wages %>%
+  ggplot(aes(x = height, y = earn, color = sex)) +
+  geom_line(aes(y = predict(mod6)))
+```
+
+
+如果再特殊一点的模型（有点过分了）
+
+```{r}
+mod7 <- lm(earn ~ height + height:sex, data = wages)
+coef(mod7)
+```
+这又怎么理解呢？
+
+
+我们还是按照数学模型来理解，这里对应的数学表达式
+$$
+\begin{aligned}
+\text{earn} &= \alpha + \beta_1 \text{height} + \beta_4 \text{(height*sex)}+ \epsilon \\
+\end{aligned}
+$$
+
+引入虚拟变量
+
+$$
+\begin{aligned}
+\text{earn} &= \alpha + \beta_1 \text{height} + \beta_4 \text{(height*sexmale)}+ \epsilon \\
+\end{aligned}
+$$
+
+
+同样假定男性(sexmale = 1)和女性(sexmale = 0)，那么
+$$
+\begin{aligned}
+\text{female}\qquad earn &= \alpha + \beta_1 \text{height}  +\epsilon \\
+\text{male}\qquad earn &= \alpha + \beta_1 \text{height} + \beta_4 \text{(height*1)}+ \epsilon \\
+&= \alpha + \beta_1 \text{height} + \beta_4 \text{height}+ \epsilon \\
+& = \alpha  + (\beta_1 + \beta_4)\text{height}  + \epsilon \\
+\end{aligned}
+$$
+
+对照模型mod7的结果，我们可以理解：
+
+- 对于女性，height增长1个单位，引起earn的增长`757.4661`
+- 对于男性，height增长1个单位，引起earn的增长`757.4661 + 251.2915 = 1008.758` 
+- 注意到，mod6和mod7是两个不同的模型, 
+  - mod7中男女拟合曲线在y轴的截距是相同的，而mod6在y轴的截距是不同的
+
+
+
+
 
 ### predict vs fit
 

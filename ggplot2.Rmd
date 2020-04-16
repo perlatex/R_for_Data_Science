@@ -12,7 +12,7 @@
 
 有几个新的宏包需要提前安装（不是必须的）
 ```{r, eval=FALSE}
-install.packages(c("sf", "cowplot", "patchwork", "gghighlight"))
+install.packages(c("sf", "cowplot", "patchwork", "gghighlight", "ggforce"))
 ```
 
 如果安装不成功，请先update宏包，再执行上面安装命令
@@ -29,6 +29,7 @@ library(tidyverse)
 library(gghighlight)
 library(cowplot)
 library(patchwork)
+library(ggforce)
 ```
 
 
@@ -430,6 +431,10 @@ gapdata %>%
   stat_summary(fun.y = median, colour = "red", geom = "point", size = 5)
 ```
 
+注意到我们已经提到过 **stat_count / stat_bin / stat_summary **
+
+
+
 ```{r}
 gapdata %>%
   ggplot(aes(x = continent, y = lifeExp)) +
@@ -459,6 +464,29 @@ gapdata %>%
              y = continent,
              fill = continent)) +
   ggridges::geom_density_ridges() 
+```
+```{r}
+# https://learnui.design/tools/data-color-picker.html#palette
+gapdata %>%
+  ggplot(aes(x = lifeExp,
+             y = continent,
+             fill = continent)) +
+  ggridges::geom_density_ridges() +
+  scale_fill_manual(
+    values = c("#003f5c","#58508d","#bc5090","#ff6361","#ffa600")
+  )
+```
+
+
+```{r}
+gapdata %>%
+  ggplot(aes(x = lifeExp,
+             y = continent,
+             fill = continent)) +
+  ggridges::geom_density_ridges() +
+  scale_fill_manual(
+    values = colorspace::sequential_hcl(5, palette = "Peach")
+  )
 ```
 
 
@@ -565,6 +593,44 @@ gapdata %>%
   geom_point()
 ```
 
+
+这是一种技巧，但我更推荐以下方法
+
+```{r}
+d1 <- gapdata %>%
+  filter(country %in% jCountries) %>% 
+  group_by(country) %>% 
+  mutate(end_label = if_else(year == max(year), country, NA_character_))
+
+d1 
+```
+
+
+```{r}
+d1 %>%  ggplot(aes(
+    x = year, y = lifeExp, color = country
+  )) +
+  geom_line() +
+  geom_point() +
+  geom_label(aes(label = end_label)) +
+  theme(legend.position = "none")
+```
+
+
+如果觉得麻烦，就用`gghighlight`宏包吧
+
+```{r}
+gapdata %>%
+  filter(country %in% jCountries) %>%
+  
+  ggplot(aes(
+    x = year, y = lifeExp,  color = country
+  )) +
+  geom_line() +
+  geom_point() +
+  gghighlight::gghighlight()
+```
+
 ###  点线图
 ```{r}
 gapdata %>%
@@ -607,6 +673,17 @@ gapdata %>%
 ### 文本标注
 
 ```{r}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  ggforce::geom_mark_ellipse(aes(filter = gdpPercap > 70000,
+                             label = "有钱的国家",
+                             description = "他们是什么国家?"))
+```
+
+
+
+```{r}
 ten_countries <- gapdata %>%
   distinct(country) %>%
   pull() %>%
@@ -647,6 +724,7 @@ gapdata %>%
     y = "life expectancy"
   )
 ```
+
 
 
 ### errorbar图
