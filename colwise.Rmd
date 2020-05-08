@@ -1,70 +1,399 @@
 # 列方向和行方向 {#colwise}
 
-等dplyr1.0发布，欢呼
+dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley Wickham大神说将会在5月15日发布dplyr 1.0版本，欢呼。
 
-```{r message = FALSE, warning = FALSE}
-library(dplyr)
+为迎接新时代的到来，我在线上同大家一起分享dplyr 1.0版本新的特点和功能，以及这些功能会给我们带来哪些惊喜？
+
+
+## 体验新版本
+```{r, eval=FALSE}
+devtools::install_github("tidyverse/dplyr")
 ```
 
+
+```{r message = FALSE, warning = FALSE}
+library(dplyr, warn.conflicts = FALSE)
+library(tidyr)
+```
+
+## 简单回顾
+```{r, eval=FALSE}
+mutate()
+select()
+filter()
+group_by()
+summarise()
+arrange()
+rename()
+left_join()
+```
+
+
+
+
+## summarise()更强大了
+
+在dplyr1.0之前，summarise()统计结果整理成一行 (one row, one column)，现在可以根据函数返回的结果，整理成多行。
+
+```{r}
+df <- tibble(
+  grp = rep(c("a","b"), each = 5), 
+  x = c(rnorm(5, -0.25, 1), rnorm(5, 0, 1.5)),
+  y = c(rnorm(5, 0.25, 1), rnorm(5, 0, 0.5))
+)
+df
+```
+
+
+```{r}
+df %>% 
+  group_by(grp) %>% 
+  summarise(rng = mean(x))
+```
+
+当统计函数返回多个值的时候，比如`range()`返回是最小值和最大值，因此`summarise()`很贴心地将结果整理成多行，这样符合tidy的格式。
+```{r}
+df %>% 
+  group_by(grp) %>% 
+  summarise(rng = range(x))
+```
+
+类似的还有`quantile`函数，`quantile()`也是返回多个值
+```{r}
+df %>% 
+  group_by(grp) %>% 
+  summarise(
+    rng = quantile(x, probs = c(0.05, 0.5, 0.95))
+    )
+```
+
+```{r}
+df %>% 
+  group_by(grp) %>% 
+  summarise(x = quantile(x, c(0.25, 0.5, 0.75)), 
+            q = c(0.25, 0.5, 0.75)
+            )
+```
+## 选择某列
+
+- 通过位置索引进行选取
+```{r}
+df %>% select(1, 3)
+df %>% select(2:3)
+```
+
+- 通过列名
+```{r}
+df %>% select(grp, x, y)
+df %>% select(x:y)
+```
+
+- 通过函数选取
+```{r}
+df %>% select(starts_with("x"))
+df %>% select(ends_with("p"))
+df %>% select(contains("x"))
+df %>% select(matches("x"))
+```
+
+- 通过类型
+```{r}
+df %>% select(is.character)
+df %>% select(is.numeric)
+```
+
+
+
+- 通过各种组合
+```{r}
+df %>% select(!is.character)
+df %>% select(is.numeric & starts_with("x"))
+df %>% select(starts_with("g") | ends_with("y"))
+```
+
+```{r}
+# 注意any_of和all_of的区别
+
+vars <- c("x", "y", "z")
+df %>% select(all_of(vars))
+df %>% select(any_of(vars))
+```
+
+
+
+## 重命名某列
+```{r}
+df %>% rename(group = grp)
+```
+
+
+```{r}
+df %>% rename_with(toupper)
+df %>% rename_with(toupper, is.numeric)
+df %>% rename_with(toupper, starts_with("x"))
+```
+
+## 调整列的位置
+
+我们前面讲过arrange()排序，这是行方向的排序
+比如，我们调整数据框的三列的位置,让`grp`列放在`x`列的后面
+```{r}
+df %>% select(x, grp, y)
+```
+如果列很多的时候，上面的方法就不太好用，因此推荐大家使用`relocate()`
+```{r}
+df %>% relocate(grp, .after = y)
+df %>% relocate(x, .before = grp)
+```
+
+还有
+```{r}
+df %>% relocate(grp, .after = last_col() )
+```
 
 ## 强大的across函数
 
 
-数据框中向量de方向，事实上可以看做有两个方向，横着看是row-vector，竖着看是col-vector。
 
-- colwise:  `group_by() %>% summarise/mutate  +  across()`
-- rowwise:  `rowwise()/nest_by() %>%  summarise/mutate + c_across()`
+我们经常对数据框的多列执行相同的操作。比如
+
+```{r}
+iris
+```
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(
+    mean_Sepal_Length = mean(Sepal.Length),
+    mean_Sepal_Width  = mean(Sepal.Width),
+    mean_Petal_Length = mean(Petal.Length),
+    mean_Petal_Width  = mean(Petal.Width)
+    )
+  
+```
+
+使用`across()`函数异常简练
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(
+    across(everything(), mean)
+  )
+```
+
+或者更科学的
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(
+    across(is.numeric, mean)
+  )
+```
+
+可以看到，以往是一列一列的处理，现在对**多列同时操作**，这主要得益于`across()`函数，它有两个主要的参数：
+
+- 第一个参数.cols，选取我们要需要的若干列，选取多列的语法与select()的语法一致
+- 第二个参数.fns，我们要执行的函数（或者多个函数），函数的语法可以使用purrr风格的语法
 
 
+再看看这个案例
 
-比如
 
-```{r, eval = FALSE}
+```{r}
+std <- function(x){
+ ( x - mean(x) ) / sd(x)
+}
+
 iris %>%
   group_by(Species) %>%
   summarise(
-    across(starts_with("Sepal"), mean),
-    Area = mean(Petal.Length * Petal.Width),
-    across(starts_with("Petal"), min)
+    across(starts_with("Sepal"), std)
+  )
+
+# purrr style
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    across(starts_with("Sepal"), ~ (.x - mean(.x))/sd(.x) )
   )
 ```
 
 
 
-```{r, eval = FALSE}
-df %>% mutate(across(is.numeric, mean, na.rm = TRUE))
-
-
-df %>% mutate(across(c(x, starts_with("y")), mean, na.rm = TRUE))
-
-
-df %>% mutate(across(everything(), mean, na.rm = TRUE))
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    across(starts_with("Petal"), list(min = min, max = max))
+   # across(starts_with("Petal"), list(min = min, max = max), .names = "{fn}_{col}")
+  )
 ```
 
 
-## 行方向
 
-```{r, eval=FALSE}
-df <- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    across(starts_with("Sepal"), mean),
+    Area = mean(Petal.Length * Petal.Width),
+    across(c(Petal.Width), min),
+    n = n()
+  )
+```
+
+
+处理summarise里可以使用外，再其它函数也是可以使用的
+```{r}
+iris %>% mutate(across(is.numeric, mean))
+iris %>% mutate(across(starts_with("Sepal"), mean))
+
+iris %>% mutate(across(is.numeric, std))  # std function has defined before
+
+iris %>% mutate(
+  across(is.numeric, ~.x / 2),
+  across(is.factor, stringr::str_to_upper)
+  )  
+```
+
+
+
+
+
+
+## 行方向操作
+
+数据框中向量de方向，事实上可以看做有两个方向，横着看是row-vector，竖着看是col-vector。
+```{r out.width = '80%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/vctr.png")
+```
+
+在dplyr 1.0之前，tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观察。
+这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不同友好。比如
+
+
+```{r}
+df <- tibble(id = letters[1:6], w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 df
+```
+计算每行的均值，
+```{r}
+df %>% mutate(avg = mean(c(w, x, y, z)))
+```
+好像不对？为什么呢？
 
+
+
+
+- 按照tidy的方法
+```{r}
 df %>% 
-  rowwise(id) %>% 
-  summarise(mean = mean(c(w, x, y, z)))
+   pivot_longer(
+     cols = -id,
+     names_to = "variable",
+     values_to = "value"
+   )%>%
+  group_by(id) %>%
+  summarize(
+    r_mean = mean(value)
+  )
+```
+如果保留原始数据，就还需要再`left_join()`一次，虽然思路清晰，但还是挺周转的。
 
+
+- 按照Jenny Bryan的方案，使用purrr宏包的pmap_dbl函数，需要学习新的语法，代价也很高。
+```{r}
+library(purrr)
+df %>%
+	mutate(r_mean = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
+```
+
+
+- rowwise()
+
+```{r}
 df %>% 
-  rowwise(id) %>% 
-  mutate(mean = mean(c(w, x, y, z)))
+  rowwise() %>% 
+  mutate(avg = mean(c(w, x, y, z)))
+```
+变量名要是很多的话，又变了体力活了，怎么才能变的轻巧一点呢？
 
+
+
+- rowwise() + c_across()，现在dplyr 1.0终于给出了一个很好的解决方案
+
+```{r}
+df %>% 
+  rowwise() %>% 
+  mutate(
+    avg = mean(c_across(w:z))
+    )
+```
+
+这个很好的解决方案中，`rowwise()`工作原理类似与`group_by()`，是按每一行进行分组，然后按行（行方向）统计
+
+```{r}
 df %>% 
   rowwise(id) %>% 
   mutate(total = mean(c_across(w:z)))
 
+
 df %>% 
   rowwise(id) %>% 
   mutate(mean = mean(c_across(is.numeric)))
+
+
+df %>% 
+  rowwise(id) %>% 
+  summarise(
+   m = mean(c_across(is.numeric))
+  )
 ```
 
+
+因此，我们可以总结成下面这张图
+
+```{r out.width = '80%', fig.align='left', echo = FALSE}
+knitr::include_graphics(path = "images/colwise_vs_rowwise.jpg")
+```
+
+
+
+
+## summarise()后的分组信息是去是留？
+
+当 group_by()与summarise()配合使用的时候，summarise()默认会抵消掉一次分组信息，比如下面按照`homeworld`和`species`分组，但`summarise()`后，就只剩下`homeworld`的分组信息了。
+
+```{r}
+starwars %>% 
+  group_by(homeworld, species) %>% 
+  summarise(n = n())
+```
+
+如果想保留species的分组信息，就需要设置`.groups = keep`参数
+```{r}
+ starwars %>% 
+  group_by(homeworld, species) %>% 
+  summarise(n = n(), .groups = "keep")
+```
+
+
+当然也可以控制其它形式的分组结果的输出
+
+- 丢弃所有的分组信息
+```{r}
+starwars %>% 
+  group_by(homeworld, species) %>% 
+  summarise(n = n(), .groups = "drop")
+```
+
+- 行方向分组，每行是一个分组
+```{r}
+starwars %>% 
+  group_by(homeworld, species) %>% 
+  summarise(n = n(), .groups = "rowwise")
+```
 
 
 
