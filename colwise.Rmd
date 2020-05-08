@@ -33,7 +33,14 @@ left_join()
 
 ## summarise()更强大了
 
-在dplyr1.0之前，summarise()统计结果整理成一行 (one row, one column)，现在可以根据函数返回的结果，整理成多行。
+在dplyr1.0之前，summarise()会把统计结果整理成一行 (one row, one column)，现在可以根据函数返回的结果，整理成多行。
+
+The value can be:
+
+- A vector of length 1, e.g. min(x), n(), or sum(is.na(y)).
+- A vector of length n, e.g. quantile().
+- A data frame, to add multiple columns from a single expression.
+
 
 ```{r}
 df <- tibble(
@@ -74,6 +81,86 @@ df %>%
             q = c(0.25, 0.5, 0.75)
             )
 ```
+
+
+
+`summarise()`可以输出数据框
+比如
+```{r}
+my_quantile <- function(x, probs) {
+  tibble(x = quantile(x, probs), probs = probs)
+}
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(my_quantile(disp, c(0.25, 0.75)))
+```
+
+
+再比如：
+
+```{r}
+mtcars %>% 
+  group_by(cyl) %>% 
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = .))
+    )
+```
+
+
+dplyr 1.0 之前是需要group_modify()来实现`数据框进，数据框出`
+```{r}
+mtcars %>% 
+  group_by(cyl) %>% 
+  group_modify(
+    broom::tidy(lm(mpg ~ wt, data = .))
+    )
+```
+
+## summarise()后的分组信息是去是留？
+
+当 group_by()与summarise()配合使用的时候，summarise()默认会抵消掉一次分组信息，比如下面按照`homeworld`和`species`分组，但`summarise()`后，就只剩下`homeworld`的分组信息了。
+
+```{r}
+mtcars %>%
+  group_by(cyl, vs) %>%
+  summarise(cyl_n = n()) 
+```
+
+
+```{r}
+mtcars %>%
+  group_by(cyl, vs) %>%
+  summarise(cyl_n = n()) %>%
+  group_vars()
+```
+
+如果想保留species的分组信息，就需要设置`.groups = keep`参数
+```{r}
+mtcars %>%
+  group_by(cyl, vs) %>%
+  summarise(cyl_n = n(), .groups = "keep")
+```
+
+
+当然也可以控制其它形式的分组结果的输出
+
+- 丢弃所有的分组信息
+```{r}
+mtcars %>%
+  group_by(cyl, vs) %>%
+  summarise(cyl_n = n(), .groups = "drop")
+```
+
+- 行方向分组，每行是一个分组
+```{r}
+mtcars %>%
+  group_by(cyl, vs) %>%
+  summarise(cyl_n = n(), .groups = "rowwise")
+```
+
+
+
+
 ## 选择某列
 
 - 通过位置索引进行选取
@@ -272,7 +359,7 @@ knitr::include_graphics(path = "images/vctr.png")
 在dplyr 1.0之前，tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观察。
 这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不同友好。比如
 
-
+### 行方向上的统计
 ```{r}
 df <- tibble(id = letters[1:6], w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 df
@@ -358,45 +445,92 @@ df %>%
 knitr::include_graphics(path = "images/colwise_vs_rowwise.jpg")
 ```
 
+### 行方向处理与列表列是天然一对
 
-
-
-## summarise()后的分组信息是去是留？
-
-当 group_by()与summarise()配合使用的时候，summarise()默认会抵消掉一次分组信息，比如下面按照`homeworld`和`species`分组，但`summarise()`后，就只剩下`homeworld`的分组信息了。
+rowwise()不仅仅是计算行方向的简单统计，而是当rowwise处理列表列时，方才显示出它与`purrr::map`一样的强大。那么，什么是**列表列**？**列表列**指的是数据框的一列是一个列表， 比如
 
 ```{r}
-starwars %>% 
-  group_by(homeworld, species) %>% 
-  summarise(n = n())
+tb <- tibble(
+  x = list(1, 2:3, 4:6)
+)
 ```
 
-如果想保留species的分组信息，就需要设置`.groups = keep`参数
+如果想显示列表中每个元素的长度，
 ```{r}
- starwars %>% 
-  group_by(homeworld, species) %>% 
-  summarise(n = n(), .groups = "keep")
+df %>% mutate(l = purrr::map_int(x, length))
 ```
 
-
-当然也可以控制其它形式的分组结果的输出
-
-- 丢弃所有的分组信息
+如果从行方向的角度理解，其实很简练
 ```{r}
-starwars %>% 
-  group_by(homeworld, species) %>% 
-  summarise(n = n(), .groups = "drop")
-```
-
-- 行方向分组，每行是一个分组
-```{r}
-starwars %>% 
-  group_by(homeworld, species) %>% 
-  summarise(n = n(), .groups = "rowwise")
+df %>%
+  rowwise() %>%
+  mutate(l = length(x))
 ```
 
 
 
+
+### 行方向上的建模
+```{r}
+mtcars
+```
+
+以cyl分组，计算每组中mpg ~ wt的线性模型的系数.
+
+```{r}
+mtcars %>% 
+  group_by(cyl) %>%  
+  nest()
+```
+
+
+#### 列方向的做法
+
+分组建模后，形成**列表列**，此时列表中的每个元素对应一个模型，我们需要依次提取每次模型的系数，列方向的做法是，借用purrr::map完成列表中每个模型的迭代，因此从数据框的角度来看，实质上就是一行一行的处理。所以，尽管purrr很强大，但需要一定学习成本，从解决问题的路径上也比较周折。
+```{r}
+mtcars %>% 
+  group_by(cyl) %>%  
+  nest() %>% 
+  mutate(model = purrr::map(data, ~lm(mpg ~ wt, data = .)) ) %>% 
+  mutate(result = purrr::map(model, ~broom::tidy(.)) ) %>% 
+  unnest(result)
+```
+
+
+
+
+#### 行方向的做法
+
+事实上，分组建模后，形成**列表列**，这种存储格式，天然地符合**行处理的范式**，因此一开始就转向行方向处理，这里`nest_by()` 类似 `group_by()`
+
+
+```{r}
+mtcars %>% 
+  nest_by(cyl) %>% 
+  mutate(model = list(lm(mpg ~ wt, data = data)) ) %>% 
+  summarise(broom::tidy(model))
+```
+
+```{r}
+mtcars %>% 
+  nest_by(cyl) %>% 
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = data))
+   )
+```
+
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(head(cur_data(), 1))
+```
+
+```{r}
+mtcars %>%
+  nest_by(cyl) %>%
+  summarise(head(cur_data(), 1))
+```
 
 ## 参考资料
 
