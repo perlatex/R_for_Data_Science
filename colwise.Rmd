@@ -2,10 +2,22 @@
 
 dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley  Wickham大神说将会在5月15日发布dplyr 1.0版本，欢呼。
 
-为迎接新时代的到来，我在线上同大家一起分享dplyr 1.0版本新的特点和功能，以及这些功能会给我们带来哪些惊喜？
+为迎接新时代的到来，我在线上同大家一起分享dplyr 1.0版本新的特点和功能，看看都为我们带来哪些惊喜？
 
 
 ## 体验新版本
+
+New dplyr - 7 things to know:
+
+1) Built in tidyselect 
+2) relocate() 
+3) Superpowered summarise() 
+4) colwise using across() 
+5) new rowwise() grammar 
+6) easy modeling inside dataframes 
+7) nest_by()  
+
+
 ```{r, eval=FALSE}
 devtools::install_github("tidyverse/dplyr")
 ```
@@ -15,6 +27,7 @@ devtools::install_github("tidyverse/dplyr")
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 ```
+
 
 ## 简单回顾
 ```{r, eval=FALSE}
