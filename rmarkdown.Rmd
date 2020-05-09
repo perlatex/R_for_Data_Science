@@ -92,7 +92,7 @@ pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受�
 
 ```{r, eval = FALSE}
 install.packages("tinytex")
-tinytex::install_tinytex()
+tinytex::install_tinytex(dir = "D:\\Tinytex", force = T)
 ```
 
 4. 修改头文件，用下面的内容替换Rmarkdown的头文件, 不要修改缩进
@@ -134,9 +134,11 @@ $$\Theta = \begin{pmatrix}\alpha & \beta\\
 ```
 输出
 
-$$\Theta = \begin{pmatrix}\alpha & \beta\\
+$$
+\Theta = \begin{pmatrix}\alpha & \beta\\
 \gamma & \delta
-\end{pmatrix}$$
+\end{pmatrix}
+$$
 
 
 
@@ -187,7 +189,7 @@ flights %>%
     dist = mean(distance, na.rm = TRUE),
     delay = mean(arr_delay, na.rm = TRUE)
   ) %>%
-  filter(delay, count > 20, dest != "HNL") %>%
+  dplyr::filter(delay > 0, count > 20, dest != "HNL") %>%
   ggplot(mapping = aes(x = dist, y = delay)) +
   geom_point(aes(size = count), alpha = 1 / 3) +
   geom_smooth(se = FALSE) +
