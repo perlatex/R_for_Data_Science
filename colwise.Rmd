@@ -7,15 +7,16 @@ dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley  Wickham
 
 ## 体验新版本
 
-New dplyr - 7 things to know:
+New dplyr - 8 things to know:
 
 1) Built in tidyselect 
 2) relocate() 
 3) Superpowered summarise() 
 4) colwise using across() 
-5) new rowwise() grammar 
-6) easy modeling inside dataframes 
-7) nest_by()  
+5) cur_data() and cur_column()
+6) new rowwise() grammar 
+7) easy modeling inside dataframes 
+8) nest_by()  
 
 
 ```{r, eval=FALSE}
@@ -46,7 +47,7 @@ left_join()
 
 ## summarise()更强大了
 
-在dplyr1.0之前，`summarise()`会把统计结果整理成一行一列，现在可以根据函数返回的结果，可以有多种可能：
+在dplyr 1.0之前，`summarise()`会把统计结果整理成一行一列，现在可以根据函数返回的结果，可以有多种形式：
 
 - 长度为 1 的向量，比如，`min(x), n(), or sum(is.na(y))`
 - **长度为 n 的向量**，比如，`quantile()`
@@ -96,8 +97,8 @@ df %>%
 
 
 
-`summarise()`可以输出数据框
-比如
+`summarise()`可以输出数据框，比如
+
 ```{r}
 my_quantile <- function(x, probs) {
   tibble(x = quantile(x, probs), probs = probs)
@@ -110,15 +111,6 @@ mtcars %>%
 
 再比如：
 
-```{r}
-mtcars %>%
-  group_by(cyl) %>%
-  summarise(
-    broom::tidy(lm(mpg ~ wt, data = .))
-  )
-```
-
-
 dplyr 1.0 之前是需要`group_modify()`来实现`数据框进，数据框出`
 ```{r}
 mtcars %>%
@@ -128,9 +120,25 @@ mtcars %>%
   )
 ```
 
+
+dplyr 1.0 之后，有了新的方案
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt))
+  )
+```
+
+
+
+
+
+
 ## summarise()后的分组信息是去是留？
 
-当 group_by()与summarise()配合使用的时候，summarise()默认会抵消掉一次分组信息，比如下面按照`cyl`和`vs`分组，但`summarise()`后，就只剩下`cyl`的分组信息了。
+当 `group_by()`与`summarise()`配合使用的时候，`summarise()`默认会**抵消掉**最近一次的分组信息，比如下面按照`cyl`和`vs`分组，但`summarise()`后，就只剩下`cyl`的分组信息了。
 
 ```{r}
 mtcars %>%
@@ -154,7 +162,7 @@ mtcars %>%
 ```
 
 
-当然也可以控制其它形式的分组结果输出
+当然`summarise()`可以控制输出的更多形式
 
 - 丢弃所有的分组信息
 ```{r}
@@ -163,7 +171,7 @@ mtcars %>%
   summarise(cyl_n = n(), .groups = "drop")
 ```
 
-- 行方向分组，每行是一个分组
+- 变成行方向分组，即，每行是一个分组
 ```{r}
 mtcars %>%
   group_by(cyl, vs) %>%
@@ -234,13 +242,13 @@ df %>% rename_with(toupper, starts_with("x"))
 
 ## 调整列的位置
 
-我们前面讲过`arrange()`排序，这是行方向的排序， 比如按照x变量绝对值的大小从高到低排序。
+我们前面一章讲过`arrange()`排序，这是行方向的排序， 比如按照x变量绝对值的大小从高到低排序。
 ```{r}
 df %>% arrange(desc(abs(x)))
 ```
 
 
-我们现在调整的列的位置，比如，这里调整数据框三列的位置,让`grp`列放在`x`列的后面
+我们现在想调整**列的位置**，比如，这里调整数据框三列的位置，让`grp`列放在`x`列的后面
 ```{r}
 df %>% select(x, grp, y)
 ```
@@ -260,9 +268,9 @@ df %>% relocate(grp, .after = last_col())
 
 ## 强大的across函数
 
-我们必须为这个函数点赞。
+我们必须为这个函数点赞。大爱Hadley Wickham !!!
 
-我们经常对数据框的多列执行相同的操作。比如
+我们经常需要对数据框的**多列**执行相同的操作。比如
 
 ```{r}
 iris
@@ -279,7 +287,7 @@ iris %>%
   )
 ```
 
-使用`across()`函数异常简练
+dplyr 1.0之后，使用`across()`函数异常简练
 ```{r}
 iris %>%
   group_by(Species) %>%
@@ -303,7 +311,7 @@ across(.cols = , .fns = )
 ```
 
 - 第一个参数.cols，选取我们要需要的若干列，选取多列的语法与`select()`的语法一致
-- 第二个参数.fns，我们要执行的函数（或者多个函数），函数的语法可以使用purrr风格的语法
+- 第二个参数.fns，我们要执行的函数（或者多个函数），函数的语法有三种形式可选：
   - A function, e.g. mean.
   - A purrr-style lambda, e.g. ~ mean(.x, na.rm = TRUE)
   - A list of functions/lambdas, e.g. list(mean = mean, n_miss = ~ sum(is.na(.x))
@@ -371,8 +379,80 @@ iris %>% mutate(
 
 
 
+## "current" group or "current" variable
+
+- `n()`, 返回当前分组的多少行
+- `cur_data()`, 返回当前分组的数据内容（不包含分组变量）
+- `cur_group()`, 返回当前分组的分组变量（一行一列的数据框）
+- `across(cur_column())`, 返回当前列的列名
+
+这些函数**返回当前分组的信息**，因此只能在特定函数内部使用，比如`summarise()` and `mutate()`
 
 
+```{r}
+df <- tibble(
+  g = sample(rep(letters[1:3], 1:3)),
+  x = runif(6),
+  y = runif(6)
+)
+df
+```
+
+
+```{r}
+df %>% 
+  group_by(g) %>% 
+  summarise(
+    n = n()
+    )
+```
+
+
+```{r}
+df %>% 
+  group_by(g) %>% 
+  summarise(
+    data = list(cur_group())
+    )
+```
+
+
+
+```{r}
+df %>% 
+  group_by(g) %>% 
+  summarise(
+    data = list(cur_data())
+    )
+```
+
+
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = cur_data()))
+  )
+```
+
+
+
+```{r}
+df %>% 
+  group_by(g) %>% 
+  mutate(across(everything(), ~ paste(cur_column(), round(.x, 2))))
+```
+
+
+
+```{r}
+wt <- c(x = 0.2, y = 0.8)
+
+df %>% 
+  mutate(
+    across(c(x, y), ~ .x * wt[cur_column()])
+    )
+```
 
 ## 行方向操作
 
@@ -381,7 +461,7 @@ iris %>% mutate(
 knitr::include_graphics(path = "images/vctr.png")
 ```
 
-在dplyr 1.0之前，tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观察。
+tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观察。
 这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不同友好。比如
 
 ### 行方向上的统计
@@ -415,12 +495,14 @@ df %>%
 如果保留原始数据，就还需要再`left_join()`一次，虽然思路清晰，但还是挺周转的。
 
 
-- 按照Jenny Bryan的方案，使用purrr宏包的pmap_dbl函数，需要学习新的语法，代价也很高。
+- 按照Jenny Bryan的方案，使用`purrr`宏包的`pmap_dbl`函数
 ```{r}
 library(purrr)
 df %>%
   mutate(r_mean = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
 ```
+但需要学习新的语法，代价也很高。
+
 
 
 - `rowwise()`
@@ -473,7 +555,7 @@ knitr::include_graphics(path = "images/colwise_vs_rowwise.jpg")
 
 ### 行方向处理与列表列是天然一对
 
-`rowwise()`不仅仅是计算行方向均值这样的简单统计，而是当处理**列表列**时，方才显示出`rowwise()`与`purrr::map`一样的强大。那么，什么是**列表列**？
+`rowwise()`不仅仅用于计算行方向均值这样的简单统计，而是当处理**列表列**时，方才显示出`rowwise()`与`purrr::map`一样的强大。那么，什么是**列表列**？
 **列表列**指的是数据框的一列是一个列表， 比如
 
 ```{r}
@@ -502,7 +584,7 @@ df %>%
 mtcars
 ```
 
-以cyl分组，计算每组中mpg ~ wt的线性模型的系数.
+以cyl分组，计算每组中`mpg ~ wt`的线性模型的系数.
 
 ```{r}
 mtcars %>%
@@ -513,7 +595,8 @@ mtcars %>%
 
 #### 列方向的做法
 
-分组建模后，形成**列表列**，此时列表中的每个元素对应一个模型，我们需要依次提取每次模型的系数，列方向的做法是，借用purrr::map完成列表中每个模型的迭代，因此从数据框的角度来看，实质上就是一行一行的处理。所以，尽管purrr很强大，但需要一定学习成本，从解决问题的路径上也比较周折。
+分组建模后，形成**列表列**，此时列表中的每个元素对应一个模型，我们需要依次提取每次模型的系数，列方向的做法是，借用`purrr::map`完成列表中每个模型的迭代，
+
 ```{r}
 mtcars %>%
   group_by(cyl) %>%
@@ -522,6 +605,8 @@ mtcars %>%
   mutate(result = purrr::map(model, ~ broom::tidy(.))) %>%
   unnest(result)
 ```
+
+从数据框的角度来看，实质上就是一行一行的处理。所以，尽管purrr很强大，但需要一定学习成本，从解决问题的路径上也比较周折。
 
 
 
@@ -538,13 +623,53 @@ mtcars %>%
   summarise(broom::tidy(model))
 ```
 
+
 ```{r}
+# or
 mtcars %>%
   nest_by(cyl) %>%
   summarise(
     broom::tidy(lm(mpg ~ wt, data = data))
   )
 ```
+
+
+至此，tidyverse框架下，实现分组统计中的`数据框进，数据框输出`， 现在有四种方法了
+```{r,eval = FALSE}
+mtcars %>%
+  group_nest(cyl) %>%
+  mutate(model = purrr::map(data, ~ lm(mpg ~ wt, data = .))) %>%
+  mutate(result = purrr::map(model, ~ broom::tidy(.))) %>%
+  tidyr::unnest(result)
+
+
+mtcars %>%
+  group_by(cyl) %>%
+  group_modify(
+    ~ broom::tidy(lm(mpg ~ wt, data = .))
+  )
+
+
+mtcars %>%
+  nest_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = data))
+  )
+
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = cur_data()))
+  )
+
+# or 
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(broom::tidy(lm(mpg ~ wt)))
+```
+
+
 
 
 
