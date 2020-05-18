@@ -1,0 +1,51 @@
+# ggplot2之标度 {#ggplot2-scales}
+
+这一章我们一起学习ggplot2中的scales语法，如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)
+
+## 标度
+映射是数据转化到图形属性，图形属性是视觉可以感知的东西，比如大小，形状，颜色和位置。而标度（scale）控制着数据到图形属性的映射。
+
+每一种图形属性都拥有一个默认的标度，也许你对这个默认的标度不满意，可以就需要学习如何修改默认的标度。
+
+每一种标度都是从数据空间的某个区域（标度的定义域）到图形属性空间的某个区域（标度的值域）的一个函数。
+
+标度可以粗略的分为四类：位置标度、颜色标度、手动离散型标度以及同一性标度：
+- 位置标度，用于将连续性、离散型和日期-时间型变量映射到绘图区域以及坐标轴
+- 颜色标度，用于将连续性、离散型映射到颜色
+- 手动标度，用于讲离散型变量映射到我们指定符号的大小、类型、形状或者颜色，以及创建的图例。
+- 同一型标度，这里没有映射关系了，就是设置。
+
+## 图形属性和变量类型
+
+还是用我们熟悉的ggplot2::mpg
+```{r}
+library(tidyverse)
+mpg %>% 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point(aes(colour = class)) 
+```
+根据映射关系和变量名，我们将标度写完整，应该是这样的
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(aes(colour = class)) +
+  scale_x_continuous() + 
+  scale_y_continuous() + 
+  scale_colour_discrete()
+```
+
+如果每次都要手动设置一次标度函数，那将是比较繁琐的事情。因此ggplot2使用了默认了设置，如果不满意ggplot2的默认值，可以手动调整或者改写标度，比如
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(aes(colour = class)) +
+  scale_x_continuous(name = "这是我的x坐标") + 
+  scale_y_continuous(name = "这是我的y坐标") + 
+  scale_colour_brewer()
+```
+
+注意到，这个函数由"_"分割的三个部分构成
+- scale
+- 视觉属性名 (e.g., colour, shape or x)
+- 标度名 (e.g., continuous, discrete, brewer).
+
+晚点再写

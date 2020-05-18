@@ -1,0 +1,218 @@
+# ggplot2之主题设置 {#ggplot2-theme}
+
+这一章我们一起学习ggplot2中的theme elements
+语法，感谢[Henry Wang](https://henrywang.nl/ggplot2-theme-elements-demonstration/)提供了很好的思路。如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)，最推荐的是[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
+
+
+```{r, eval=FALSE}
+theme(element_name = element_function())
+```
+
+这里`element_function()`有四个
+
+```{r, eval=FALSE}
+element_text()
+element_line()
+element_rect()
+element_blank()
+```
+
+望文生义吧，内置元素函数有四个基础类型：
+- element_text(),  文本，一般用于控制标签和标题的字体风格
+- element_line(), 线条，一般用于控制线条或线段的颜色或线条类型
+- element_rect(), 矩形，一般用于控制背景矩形的颜色或者边界线条类型
+- element_blank() , 空白，就是不分配相应的绘图空间，即删去这个地方的绘图元素。
+
+
+每个元素函数都有一系列控制外观的参数，下面我们通过具体的案例来一一介绍吧。
+
+```{r}
+library(tidyverse)
+```
+
+还是用让人生厌的`ggplot2::mpg`数据包吧，具体介绍请见\@ref(visual) 章。
+
+```{r}
+glimpse(mpg)
+```
+
+
+稍微做点数据整理
+```{r}
+df <- mpg %>%
+   filter(class != "2seater", manufacturer %in% c("toyota", "volkswagen"))
+df
+```
+我相信这种图你们已经会画了吧
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy")
+```
+想让这张图，符合你的想法？如何**控制**呢？come on
+
+## 绘图整体元素
+绘图整体元素包括:
+|描述   |      主题元素   |      类型|
+|---|---|---|
+|整个图形背景 |plot.background |element_rect()|
+|图形标题 | plot.title   |element_text()|
+|图形边距 |plot.margin  | margin()|
+
+
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    plot.background = element_rect(fill = "orange", color ="black", size = 10),
+    plot.title = element_text(hjust = 1, color = "red", face = "italic"), 
+    plot.margin = margin(t = 20, r = 20, b = 20, l = 20, unit ="pt")
+ )
+```
+
+## 坐标轴元素
+坐标轴元素包括:
+|描述   |      主题元素   |      类型|
+|---|---|---|
+|坐标轴刻度| axis.ticks |  element_line()|
+|坐标轴标题| axis.title|   element_text()|
+|坐标轴标签| axis.text | element_text()|
+|直线和坐标轴| axis.line | element_line()|
+
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    axis.line = element_line(color = "orange", size = 2),
+    axis.title = element_text(color = "red", face = "italic"), 
+    axis.ticks = element_line(color = "purple", size = 3),
+    axis.text = element_text(color = "blue"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+ )
+```
+
+
+
+## 面板元素
+面板元素包括:
+|描述   |      主题元素   |      类型|
+|---|---|---|
+|面板背景 |panel.background  | element_rect()|
+|面板网格线 |panel.grid  | element_line()|
+|面板边界 |panel.border  |element_rect()|
+
+
+
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    panel.background = element_rect(fill = "orange", color = "red"),
+    panel.grid = element_line(color = "grey80", size = 0.5)
+ )
+```
+
+或者
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    panel.background = element_rect(fill = "orange"),
+    panel.grid = element_line(color = "grey80", size = 0.5), 
+    panel.border = element_rect(color = "red", fill = NA)
+ )
+```
+
+
+
+
+
+## 图例元素
+图例元素包括:
+|描述   |      主题元素   |      类型|
+|---|---|---|
+|图例背景 |legend.background |  element_rect() |
+|图例符号 |legend.key |  element_rect() |
+|图例标签 |legend.text | element_text()|
+|图例标题 |legend.title  |element_text()|
+|图例边距 |legend.margin  |margin|
+|图例位置 |legend.postion  |"top", "bottom", "left", "right"|
+
+
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    legend.background = element_rect(fill = "orange"),
+    legend.title = element_text(color = "blue", size = 10),
+    legend.key = element_rect(fill = "grey80"), 
+    legend.text = element_text(color = "red"),
+    legend.margin = margin(t = 20, r = 20, b = 20, l = 20, unit ="pt"),
+    legend.position = "bottom"
+ )
+```
+
+
+## 分面元素
+分面元素包括:
+|描述   |      主题元素   |      类型|
+|---|---|---|
+|分面标签背景 |strip.background  | element_rect() |
+|条状文本 |strip.text  | element_text() |
+|分面间隔 |panel.spacing | unit |
+
+
+
+```{r}
+df %>% 
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  facet_grid(vars(manufacturer), vars(class)) +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  
+  theme(
+    strip.background = element_rect(fill = "orange"),
+    strip.text = element_text(color = "red"),
+    panel.spacing = unit(0.3, "inch")#,
+    #strip.switch.pad.grid = 
+ )
+```
+
+
+## 小结
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("images/ggplot2-themes.png")
+```
+
+## 提问
+- ggplot2中 plot 与 panel 有区别？
