@@ -270,9 +270,7 @@ exams %>% map_df(~ . - mean(.))
 
 - 直接传递 
 ```{r, eval=FALSE}
-map(.x, 
-    mean, 
-    na.rm = TRUE
+map(.x, mean, na.rm = TRUE
   )
 ```
 
@@ -281,8 +279,7 @@ map(.x,
 ```{r, eval=FALSE}
 map(.x, 
     funciton(.x) {
-      mean(.x, 
-           na.rm = TRUE)
+      mean(.x, na.rm = TRUE)
       }
     )
 ```
@@ -290,9 +287,16 @@ map(.x,
 - 使用 `~`  
 
 ```{r, eval=FALSE}
+function(.x) { 
+  .x *2
+}
+# 程序员偷懒了
+~ .x * 2
+```
+
+```{r, eval=FALSE}
 map(.x, 
-    ~ mean(.x, 
-           na.rm = TRUE)
+    ~ mean(.x, na.rm = TRUE)
     )
 ```
 
@@ -306,8 +310,18 @@ map(.x,
 
 2、看手册`?purrr::modify()`， 思考下它与`map()`的区别
 ```{r, eval=FALSE}
+exams %>% map(~ . - mean(.))
+
 exams %>% modify(~ . - mean(.))
 ```
+
+```{r, eval=FALSE}
+exams %>% as_tibble() %>% map(~ . - mean(.))
+
+exams %>% as_tibble() %>% modify(~ . - mean(.))
+```
+
+
 
 3、他们的区别哪里？函数能否互换？
 ```{r, eval=FALSE}
