@@ -3,7 +3,8 @@
 这一章我们一起学习ggplot2中的scales语法，如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)
 
 ## 标度
-映射是数据转化到图形属性，图形属性是视觉可以感知的东西，比如大小，形状，颜色和位置。而标度（scale）控制着数据到图形属性的映射。
+映射是数据转化到图形属性，图形属性是视觉可以感知的东西，比如大小，形状，颜色和位置。而标度（scale）控制着数据到图形属性的映射，调整数据映射的图形属性。
+（比如，c("a", "b")两个符号默认对应红色和蓝色， 我们想让"a"对应紫色，"b"对应橙色）
 
 每一种图形属性都拥有一个默认的标度，也许你对这个默认的标度不满意，可以就需要学习如何修改默认的标度。
 
@@ -49,3 +50,131 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 - 标度名 (e.g., continuous, discrete, brewer).
 
 晚点再写
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point(aes(colour = class)) +
+  scale_x_continuous(name = "这是我的x坐标") + 
+  scale_y_continuous(name = "这是我的y坐标") + 
+  scale_colour_manual(
+    
+  )
+```
+
+## axis legend
+```{r}
+?scale_x_discrete
+?scale_x_continuous
+
+?scale_color_discrete
+?scale_color_manual
+
+?scale_color_continuous
+?scale_color_gradient
+
+
+?scale_fill_discrete
+?scale_fill_continuous
+?scale_fill_gradient
+?scale_fill_manual
+```
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/ggplot2-scales.png")
+```
+
+
+value 位置  颜色 形状 视觉属性  成对（ 数据标签 =   视觉属性）
+It will take experience to know when you change the scale and when the theme. Rule of thumb: themes don't add words and change ranges of variables; they change the font, size, color, etc.
+
+```{r}
+p <- ggplot(mtcars, aes(mpg, wt)) + 
+  geom_point(aes(colour = factor(cyl)))
+
+p + scale_colour_grey()
+```
+
+```{r}
+my_pal <- usecol(c("steelblue", "gold", "#ea4335",
+                 rgb(red = 52, green = 168, blue = 83, maxColorValue = 255)))
+
+# Use color palette in ggplot: 
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, color = factor(cyl)), 
+             size = 4, 
+             alpha = .6) +
+  scale_color_manual(values = my_pal) + 
+  theme_bw()
+```
+
+```{r}
+gapdata <- read_csv("./demo_data/gapminder.csv")
+gapdata
+```
+```{r}
+gapdata %>% 
+  group_by(continent, country) %>% 
+  summarise(
+    across(c(lifeExp, gdpPercap), mean)
+  )
+```
+
+```{r}
+newgapdata <- gapdata %>% 
+  group_by(continent, country) %>% 
+  summarise(
+    across(c(lifeExp, gdpPercap, pop), mean)
+  )
+newgapdata
+```
+
+把scale理解make,使得x坐标连续型的
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = log10(gdpPercap), y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) 
+```
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10()
+```
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10() +
+    scale_color_viridis_d()
+```
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10() +
+    scale_color_manual(
+      name = "五大洲",
+      values = c("Africa" = "red", "Americas" = "blue", "Asia" = "orange",
+                 "Europe" = "black", "Oceania" = "gray"),
+      breaks = c("Africa", "Americas", "Asia", "Europe", "Oceania"),
+      labels = c("非洲", "美洲", "亚洲", "欧洲", "大洋洲")
+    ) +
+   scale_size_manual(name = "人口数量",
+                     breaks = c("2e8", "5e8", "7e8"),
+                     labels = c("2亿", "5亿", "7亿")
+   )
+```
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10(breaks = c(500, 1000, 3000, 10000, 30000),
+                  labels = scales::unit_format(unit = "美元"))
+```
+
+
+

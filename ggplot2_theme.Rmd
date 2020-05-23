@@ -20,7 +20,7 @@ element_blank()
 望文生义吧，内置元素函数有四个基础类型：
 - element_text(),  文本，一般用于控制标签和标题的字体风格
 - element_line(), 线条，一般用于控制线条或线段的颜色或线条类型
-- element_rect(), 矩形，一般用于控制背景矩形的颜色或者边界线条类型
+- element_rect(), 矩形区域，一般用于控制背景矩形的颜色或者边界线条类型
 - element_blank() , 空白，就是不分配相应的绘图空间，即删去这个地方的绘图元素。
 
 
@@ -54,8 +54,8 @@ df %>%
 ```
 想让这张图，符合你的想法？如何**控制**呢？come on
 
-## 绘图整体元素
-绘图整体元素包括:
+## 图表整体元素
+图表整体元素包括:
 |描述   |      主题元素   |      类型|
 |---|---|---|
 |整个图形背景 |plot.background |element_rect()|
@@ -211,7 +211,7 @@ df %>%
 ## 小结
 
 ```{r out.width = '50%', echo = FALSE}
-knitr::include_graphics("images/ggplot2-themes.png")
+knitr::include_graphics("images/ggplot2-themes.jpg")
 ```
 
 ## 提问
