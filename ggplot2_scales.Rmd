@@ -49,7 +49,6 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 - 视觉属性名 (e.g., colour, shape or x)
 - 标度名 (e.g., continuous, discrete, brewer).
 
-晚点再写
 
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
@@ -61,7 +60,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
   )
 ```
 
-## axis legend
+## 坐标和图例
 ```{r}
 ?scale_x_discrete
 ?scale_x_continuous
@@ -83,10 +82,48 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 knitr::include_graphics("images/ggplot2-scales.png")
 ```
 
+## 函数库
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/ggplot2-scales.png")
+```
+
+## 标度详解
 
 value 位置  颜色 形状 视觉属性  成对（ 数据标签 =   视觉属性）
 It will take experience to know when you change the scale and when the theme. Rule of thumb: themes don't add words and change ranges of variables; they change the font, size, color, etc.
+```{r, eval=FALSE}
+scale_colour_manual(
+  palette: function(), 
+  limits = NULL,
+  name = waiver(),
+  labels = waiver(),
+  breaks = waiver(),
+  minor_breaks = waiver(),
+  values = waiver(),
+  ...
+)
+```
 
+- 参数`name`，坐标和图例的名字，如果不想要图例的名字，就可以 `name = NULL`
+
+- 参数`limits`, 坐标或图例的范围区间。连续性c(n,m)，离散型从c("a","b","c",……）
+
+- 参数`breaks`, 控制显示在坐标轴或者图例上的值（元素）
+
+- 参数`labels`, 坐标和图例的间隔标签
+  - 一般情况下，内置函数会自动完成
+  - 也可人工指定一个字符型向量，与`breaks`提供的字符型向量一一对应
+  - 也可以是函数，把`breaks`提供的字符型向量当做函数的输入
+  - NULL，就是去掉标签
+
+- 参数`values` 指的是（颜色、形状等）视觉属性值, 
+  - 要么，与数值的顺序一致；
+  - 要么，与`breaks`提供的一致
+  - 要么，用命名向量（数据标签 = 视觉属性）提供
+
+- 参数`expand`, 控制参数溢出量
+
+- 参数`range`, 设置尺寸大小范围，range设置纯粹针对点的相对大小
 ```{r}
 p <- ggplot(mtcars, aes(mpg, wt)) + 
   geom_point(aes(colour = factor(cyl)))
@@ -111,6 +148,8 @@ ggplot(mpg) +
 gapdata <- read_csv("./demo_data/gapminder.csv")
 gapdata
 ```
+
+
 ```{r}
 gapdata %>% 
   group_by(continent, country) %>% 
@@ -162,9 +201,10 @@ newgapdata %>%
       breaks = c("Africa", "Americas", "Asia", "Europe", "Oceania"),
       labels = c("非洲", "美洲", "亚洲", "欧洲", "大洋洲")
     ) +
-   scale_size_manual(name = "人口数量",
-                     breaks = c("2e8", "5e8", "7e8"),
-                     labels = c("2亿", "5亿", "7亿")
+   scale_size(
+     name = "人口数量",
+     breaks = c(2e8, 5e8, 7e8),
+     labels = c("2亿", "5亿", "7亿")
    )
 ```
 
