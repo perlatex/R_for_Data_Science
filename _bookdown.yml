@@ -27,8 +27,8 @@ rmd_files: [
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",
   "ggplot2.Rmd",
-  "ggplot2-scales.Rmd",
-  "ggplot2-theme.Rmd",
+  "ggplot2_theme.Rmd",
+  "ggplot2_scales.Rmd",
   "tidyverse_tips.Rmd",
   "tibble.Rmd",
 

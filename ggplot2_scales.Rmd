@@ -1,31 +1,29 @@
 # ggplot2之标度 {#ggplot2-scales}
 
-这一章我们一起学习ggplot2中的scales语法，如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)
+这一章我们一起学习ggplot2中的scales语法，推荐大家阅读Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)，但如果需要详细了解**标度**参数体系，还是要看[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
+
 
 ## 标度
-映射是数据转化到图形属性，图形属性是视觉可以感知的东西，比如大小，形状，颜色和位置。而标度（scale）控制着数据到图形属性的映射，调整数据映射的图形属性。
-（比如，c("a", "b")两个符号默认对应红色和蓝色， 我们想让"a"对应紫色，"b"对应橙色）
+在 \@ref(ggplot2)章，我们了解到ggplot2中，映射是数据转化到图形属性，这里的图形属性是指视觉可以感知的东西，比如大小，形状，颜色和位置等。我们今天讨论的标度（scale）是控制着数据到图形属性映射的函数，每一种标度都是从数据空间的某个区域（标度的定义域）到图形属性空间的某个区域（标度的值域）的一个函数。
 
-每一种图形属性都拥有一个默认的标度，也许你对这个默认的标度不满意，可以就需要学习如何修改默认的标度。
+简单点来说，**标度是用于调整数据映射的图形属性**。
+在ggplot2中，每一种图形属性都拥有一个默认的标度，也许你对这个默认的标度不满意，可以就需要学习如何修改默认的标度。比如，
+系统默认`"a"`对应红色，`"b"`对应蓝色，我们想让`"a"`对应紫色，`"b"`对应橙色。
 
-每一种标度都是从数据空间的某个区域（标度的定义域）到图形属性空间的某个区域（标度的值域）的一个函数。
 
-标度可以粗略的分为四类：位置标度、颜色标度、手动离散型标度以及同一性标度：
-- 位置标度，用于将连续性、离散型和日期-时间型变量映射到绘图区域以及坐标轴
-- 颜色标度，用于将连续性、离散型映射到颜色
-- 手动标度，用于讲离散型变量映射到我们指定符号的大小、类型、形状或者颜色，以及创建的图例。
-- 同一型标度，这里没有映射关系了，就是设置。
 
 ## 图形属性和变量类型
 
-还是用我们熟悉的ggplot2::mpg
+还是用我们熟悉的`ggplot2::mpg`，可能有同学说，我画图没接触到`scale`啊，比如
 ```{r}
 library(tidyverse)
 mpg %>% 
   ggplot(aes(x = displ, y = hwy)) + 
   geom_point(aes(colour = class)) 
 ```
-根据映射关系和变量名，我们将标度写完整，应该是这样的
+能画个很漂亮的图，那是因为ggplot2默认缺省条件下，已经很美观了。（据说Hadley Wickham很后悔使用了这么漂亮的缺省值，因为很漂亮了大家都不认真学画图了。马云好像也说后悔创立了阿里巴巴？）
+
+事实上，根据映射关系和变量名，我们将标度写完整，应该是这样的
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(aes(colour = class)) +
@@ -44,56 +42,31 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
   scale_colour_brewer()
 ```
 
-注意到，这个函数由"_"分割的三个部分构成
+## 坐标轴和图例是同样的东西
+
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/ggplot2-scales.png")
+```
+
+
+## 丰富的标度体系
+
+注意到，标度函数是由"_"分割的三个部分构成的
 - scale
 - 视觉属性名 (e.g., colour, shape or x)
 - 标度名 (e.g., continuous, discrete, brewer).
 
 
-```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) + 
-  geom_point(aes(colour = class)) +
-  scale_x_continuous(name = "这是我的x坐标") + 
-  scale_y_continuous(name = "这是我的y坐标") + 
-  scale_colour_manual(
-    
-  )
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/ggplot2_scales_cheat.jpg")
 ```
 
-## 坐标和图例
-```{r}
-?scale_x_discrete
-?scale_x_continuous
-
-?scale_color_discrete
-?scale_color_manual
-
-?scale_color_continuous
-?scale_color_gradient
-
-
-?scale_fill_discrete
-?scale_fill_continuous
-?scale_fill_gradient
-?scale_fill_manual
-```
-
-```{r out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/ggplot2-scales.png")
-```
-
-## 函数库
-```{r out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/ggplot2-scales.png")
-```
-
-## 标度详解
-
-value 位置  颜色 形状 视觉属性  成对（ 数据标签 =   视觉属性）
-It will take experience to know when you change the scale and when the theme. Rule of thumb: themes don't add words and change ranges of variables; they change the font, size, color, etc.
+每个标度函数内部都有丰富的参数系统
 ```{r, eval=FALSE}
 scale_colour_manual(
-  palette: function(), 
+  palette = function(), 
   limits = NULL,
   name = waiver(),
   labels = waiver(),
@@ -106,7 +79,7 @@ scale_colour_manual(
 
 - 参数`name`，坐标和图例的名字，如果不想要图例的名字，就可以 `name = NULL`
 
-- 参数`limits`, 坐标或图例的范围区间。连续性c(n,m)，离散型从c("a","b","c",……）
+- 参数`limits`, 坐标或图例的范围区间。连续性`c(n, m)`，离散型`c("a", "b", "c")`
 
 - 参数`breaks`, 控制显示在坐标轴或者图例上的值（元素）
 
@@ -114,49 +87,32 @@ scale_colour_manual(
   - 一般情况下，内置函数会自动完成
   - 也可人工指定一个字符型向量，与`breaks`提供的字符型向量一一对应
   - 也可以是函数，把`breaks`提供的字符型向量当做函数的输入
-  - NULL，就是去掉标签
+  - `NULL`，就是去掉标签
 
 - 参数`values` 指的是（颜色、形状等）视觉属性值, 
   - 要么，与数值的顺序一致；
-  - 要么，与`breaks`提供的一致
-  - 要么，用命名向量（数据标签 = 视觉属性）提供
+  - 要么，与`breaks`提供的字符型向量长度一致
+  - 要么，用命名向量`c("数据标签" = "视觉属性")`提供
 
 - 参数`expand`, 控制参数溢出量
 
-- 参数`range`, 设置尺寸大小范围，range设置纯粹针对点的相对大小
-```{r}
-p <- ggplot(mtcars, aes(mpg, wt)) + 
-  geom_point(aes(colour = factor(cyl)))
+- 参数`range`, 设置尺寸大小范围，比如针对点的相对大小
 
-p + scale_colour_grey()
-```
 
-```{r}
-my_pal <- usecol(c("steelblue", "gold", "#ea4335",
-                 rgb(red = 52, green = 168, blue = 83, maxColorValue = 255)))
+<!-- 把scale理解make,使得x坐标连续型的 -->
 
-# Use color palette in ggplot: 
-ggplot(mpg) +
-  geom_point(aes(x = displ, y = hwy, color = factor(cyl)), 
-             size = 4, 
-             alpha = .6) +
-  scale_color_manual(values = my_pal) + 
-  theme_bw()
-```
+下面，我们通过具体的案例讲解如何使用参数，把图形变成我们想要的模样。
 
+
+## 案例详解
+
+先导入一个数据
 ```{r}
 gapdata <- read_csv("./demo_data/gapminder.csv")
 gapdata
 ```
 
 
-```{r}
-gapdata %>% 
-  group_by(continent, country) %>% 
-  summarise(
-    across(c(lifeExp, gdpPercap), mean)
-  )
-```
 
 ```{r}
 newgapdata <- gapdata %>% 
@@ -167,12 +123,13 @@ newgapdata <- gapdata %>%
 newgapdata
 ```
 
-把scale理解make,使得x坐标连续型的
 ```{r}
 newgapdata %>% 
-  ggplot(aes(x = log10(gdpPercap), y = lifeExp)) +
-    geom_point(aes(color = continent, size = pop)) 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_continuous()
 ```
+
 
 ```{r}
 newgapdata %>% 
@@ -181,6 +138,30 @@ newgapdata %>%
     scale_x_log10()
 ```
 
+
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10(breaks = c(500, 1000, 3000, 10000, 30000),
+                  labels = scales::dollar)
+```
+
+
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10(
+      name = "人均GDP",
+      breaks = c(500, 1000, 3000, 10000, 30000),
+      labels = scales::unit_format(unit = "美元"))
+```
+
+
+
 ```{r}
 newgapdata %>% 
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
@@ -188,6 +169,18 @@ newgapdata %>%
     scale_x_log10() +
     scale_color_viridis_d()
 ```
+
+
+离散变量映射到色彩的情形，可以使用[ColorBrewer](https://colorbrewer2.org)色彩。
+
+```{r}
+newgapdata %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+    geom_point(aes(color = continent, size = pop)) +
+    scale_x_log10() +
+    scale_color_brewer(type = "qual", palette = "Set1")
+```
+
 
 ```{r}
 newgapdata %>% 
@@ -208,13 +201,8 @@ newgapdata %>%
    )
 ```
 
-```{r}
-newgapdata %>% 
-  ggplot(aes(x = gdpPercap, y = lifeExp)) +
-    geom_point(aes(color = continent, size = pop)) +
-    scale_x_log10(breaks = c(500, 1000, 3000, 10000, 30000),
-                  labels = scales::unit_format(unit = "美元"))
-```
 
 
+## 用标度还是主题？
 
+那什么时候用标度，什么时候用主题？这里有个原则：主题风格不会增加标签，也不会改变变量的范围，主题只会改变字体、大小、颜色等等
