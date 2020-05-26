@@ -1,0 +1,96 @@
+# ggplot2之图例系统 {#ggplot2-guides}
+
+这一章，我们一起学习ggplot2中的图例系统，内容相对简单，但还是推荐大家阅读[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
+
+
+## 图例系统
+
+为了方便演示，我们还是用熟悉的配方`ggplot2::mpg`
+
+```{r}
+library(tidyverse)
+
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point()  
+```
+
+如果想调整图例的样式，可以使用`guides()`函数，用法类似上节课中的`theme`函数, 具体参数为：
+
+- 要么是`字符串` (i.e. `"color = colorbar"` or `"color = legend"`), 
+- 要么是`特定的函数` (i.e. `color = guide_colourbar()` or `color = guide_legend()`) 
+
+
+
+
+```{r out.width = '99%', echo = FALSE}
+knitr::include_graphics("images/ggplot2_guides.jpg")
+```
+
+
+
+## 案例详解
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  guides(color = "legend")
+```
+
+
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  guides(color = guide_bins(
+                 title = "my title",
+                 label.hjust = 1
+                 )
+         )
+```
+
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  guides(color = guide_legend(
+                   ncol = 4
+                 )
+  )
+```
+
+
+
+
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
+  geom_point() +
+  ggtitle("这是我的标题") +
+  labs(x = "x_displ", y = "y_hwy") +
+  guides(color = guide_legend(
+    title = "标题好像有点高",
+    title.position = "top",
+    title.vjust = 5,
+    label.position = "left",
+    label.hjust = 1,
+    label.theme = element_text(size = 15,
+                               face = "italic",
+                               colour = "red",
+                               angle = 0),
+    keywidth = 5,
+    reverse = TRUE
+   )
+  )
+```
+
+
+
+
+
