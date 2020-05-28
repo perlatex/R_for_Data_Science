@@ -6,7 +6,7 @@
 >
 
 
-根据大家投票，觉得`ggplot2`是最想掌握的技能，我想这就是R语言中最有质感的部分吧。所以，这里专门拿出一节课讲`ggplot2`，也算是补上之前第 \@ref(visual) 章数据可视化没讲的内容。
+根据大家投票，觉得`ggplot2`是最想掌握的技能，我想这就是R语言中最有**质感**的部分吧。所以，这里专门拿出一节课讲`ggplot2`，也算是补上之前第 \@ref(visual) 章数据可视化没讲的内容。
 
 
 
@@ -46,8 +46,12 @@ df
 ```{r}
 df %>%
   group_by(dataset) %>%
-  summarise_all(list(mean, sd)) %>%
-  mutate_if(is.numeric, round, 3)
+  summarise(
+    across(everything(), list(mean = mean, sd = sd), .names = "{fn}_{col}") 
+  ) %>% 
+  mutate(
+    across(is.numeric, round, 3)
+  )
 ```
 
 如果上面代码不熟悉，可以用第 \@ref(dplyr) 章的代码重新表达，也是一样的
@@ -86,9 +90,14 @@ knitr::include_graphics("images/ggplot_template.png")
 ```
 
 
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/how_to_plot.png")
+```
+
+
 2. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
 
-3. `aes`: 数据框中的变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
+3. `aes`: 数据框中的数据变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
     + x（x轴方向的位置）
     + y（y轴方向的位置）
     + color（点或者线等元素的颜色）
@@ -125,6 +134,11 @@ knitr::include_graphics("images/ggplot_template.png")
 11. `save`:    保存图片
 
 
+ggplot2图层语法框架
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/ggplot2_system.png")
+```
 
 
 ## 开始
@@ -154,15 +168,19 @@ gapdata
 ### 检查数据
 ```{r}
 # 是否有缺失值
+
 gapdata %>%
-  summarise_all(~ any(is.na(.)))
+  summarise(
+    across(everything(), ~ sum(is.na(.)))
+  )
 ```
 
-* `country` 代表国家
+
+* `country`   代表国家
 * `countinet` 表示所在的洲
-* `year` 时间
-* `lifeExp` 平均寿命
-* `pop` 人口数量
+* `year`      时间
+* `lifeExp`   平均寿命
+* `pop`       人口数量
 * `gdpPercap` 人均GDP
 
 
@@ -211,7 +229,7 @@ gapdata %>%
 ```{r}
 gapdata %>% count(continent)
 ```
-可见，geom_bar() 自动完成了这个统计，更多geom与stat对应关系见[这里]()
+可见，geom_bar() 自动完成了这个统计，更多geom与stat对应关系见[这里](https://ggplot2.tidyverse.org/reference/index.html#section-layer-stats)
 
 
 

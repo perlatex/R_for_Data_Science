@@ -27,6 +27,7 @@ mpg %>%
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(aes(colour = class)) +
+  
   scale_x_continuous() + 
   scale_y_continuous() + 
   scale_colour_discrete()
@@ -37,6 +38,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(aes(colour = class)) +
+  
   scale_x_continuous(name = "这是我的x坐标") + 
   scale_y_continuous(name = "这是我的y坐标") + 
   scale_colour_brewer()
@@ -99,7 +101,7 @@ scale_colour_manual(
 - 参数`range`, 设置尺寸大小范围，比如针对点的相对大小
 
 
-<!-- 把scale理解make,使得x坐标连续型的 -->
+<!-- 把scale理解make, scale_x_continuous() == 使得x坐标连续型的 -->
 
 下面，我们通过具体的案例讲解如何使用参数，把图形变成我们想要的模样。
 
@@ -109,7 +111,6 @@ scale_colour_manual(
 先导入一个数据
 ```{r}
 gapdata <- read_csv("./demo_data/gapminder.csv")
-gapdata
 ```
 
 
