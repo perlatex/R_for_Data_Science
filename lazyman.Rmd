@@ -3,10 +3,86 @@
 
 R社区上很多大神，贡献了很多非常优秀的工具，节省了我们的时间，也给我们的生活增添了无限乐趣。我平时逛github的时候时整理一些，现在分享出来供像我一样的懒人用，因此本文档叫“懒人系列”。欢迎大家补充。
 
+## 列名太乱了
+```{r}
+library(tidyverse)
+library(janitor)
+## install.packages("janitor")
+## https://github.com/sfirke/janitor
+```
+
+```{r}
+fake_raw <- tibble::tribble(
+    ~id, ~`count/num`, ~W.t, ~Case, ~`time--d`, ~`%percent`,
+     1L,      "china",   3L,   "w",         5L,         25L,
+     2L,         "us",   4L,   "f",         6L,         34L,
+     3L,      "india",   5L,   "q",         8L,         78L
+    )
+fake_raw  
+```
+
+
+```{r}
+fake_raw %>% janitor::clean_names()
+```
+
+
+## 比count()更懂我的心
+```{r}
+mtcars %>% 
+  count(cyl)
+```
+
+```{r}
+mtcars %>% 
+  janitor::tabyl(cyl)
+```
+
+
+## 比distinct()更知我心
+
+```{r}
+df <- tribble(
+  ~id, ~date, ~store_id, ~sales,
+  1, "2020-03-01", 1, 100,
+  2, "2020-03-01", 2, 100,
+  3, "2020-03-01", 3, 150,
+  4, "2020-03-02", 1, 110,
+  5, "2020-03-02", 3, 101
+)
+
+df %>%
+  janitor::get_dupes(store_id)
+
+df %>%
+  janitor::get_dupes(date)
+```
+
+
+
+
+## 代码太乱了，谁帮我整理下
+
+```{r}
+## install.packages("styler")
+```
+
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/styler.png")
+```
+
+安装后，然后这两个地方点两下，就发现你的代码整齐很多了。或者直接输入
+
+```{r, eval=FALSE}
+styler:::style_active_file()
+```
+
+
+
 ## 谁帮我敲模型的公式
 
 ```{r}
-library(tidyverse)
 library(equatiomatic)
 ## https://github.com/datalorax/equatiomatic
 ```
@@ -45,13 +121,13 @@ report(model)
 library(performance)
 
 model <- lm(mpg ~ wt * cyl + gear, data = mtcars)
-check_model(model)
+performance::check_model(model)
 ```
 
 
 
-## 统计描述不用愁
-```{r, results="asis"}
+## 统计表格不用愁
+```{r, results="asis", eval=FALSE, include=TRUE}
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
@@ -68,7 +144,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r, results="asis"}
+```{r, results="asis", eval=FALSE, include=TRUE}
 t1 <- 
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -104,80 +180,6 @@ ggplot(mtcars, aes(x = mpg, y = wt)) +
 )
 ```
 
-
-
-## 列名太乱了
-```{r}
-library(janitor)
-## install.packages("janitor")
-## https://github.com/sfirke/janitor
-```
-
-```{r}
-fake_raw <- tibble::tribble(
-    ~id, ~`count/num`, ~W.t, ~Case, ~`time--d`, ~`%percent`,
-     1L,      "china",   3L,   "w",         5L,         25L,
-     2L,         "us",   4L,   "f",         6L,         34L,
-     3L,      "india",   5L,   "q",         8L,         78L
-    )
-fake_raw  
-```
-
-
-```{r}
-fake_raw %>% clean_names()
-```
-
-## 比count()更懂我的心
-```{r}
-mtcars %>% 
-  count(cyl)
-```
-
-```{r}
-mtcars %>% 
-  janitor::tabyl(cyl)
-```
-
-
-## 比distinct()更懂我的心
-
-```{r}
-df <- tribble(
-  ~id, ~date, ~store_id, ~sales,
-  1, "2020-03-01", 1, 100,
-  2, "2020-03-01", 2, 100,
-  3, "2020-03-01", 3, 150,
-  4, "2020-03-02", 1, 110,
-  5, "2020-03-02", 3, 101
-)
-
-df %>%
-  janitor::get_dupes(store_id)
-
-df %>%
-  janitor::get_dupes(date)
-```
-
-
-
-
-## 代码太乱了，谁帮我整理下
-
-```{r}
-## install.packages("styler")
-```
-
-
-```{r out.width = '100%', echo = FALSE}
-knitr::include_graphics("images/styler.png")
-```
-
-安装后，然后这两个地方点两下，就发现你的代码整齐很多了。或者直接输入
-
-```{r, eval=FALSE}
-styler:::style_active_file()
-```
 
 
 
@@ -220,7 +222,19 @@ ggthemr_reset()
 ```
 
 
+## 画图颜色好看不
+scales也是大神的作品，功能多多
+```{r}
+## https://github.com/r-lib/scales
+library(scales)
 
+show_col(viridis_pal()(10))
+```
+
+不推荐个人配色，因为我们不专业。直接用专业的配色网站
+[colorbrewer](https://colorbrewer2.org/)
+
+先看看颜色，再选择
 
 
 ## 宏包太多
@@ -306,16 +320,7 @@ vis_dat(airquality)
 ```
 
 
-## 画图颜色好看不
-scales也是大神的作品，功能多多
-```{r}
-## https://github.com/r-lib/scales
-library(scales)
 
-show_col(viridis_pal()(10))
-```
-
-先看看颜色，再选择
 
 
 
