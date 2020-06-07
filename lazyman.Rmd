@@ -34,7 +34,7 @@ library(report)
 ```
 
 
-```{r}
+```{r, results="asis"}
 model <- lm(Sepal.Length ~ Species, data = iris)
 report(model)
 ```
@@ -51,7 +51,7 @@ check_model(model)
 
 
 ## 统计描述不用愁
-```{r}
+```{r, results="asis"}
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
@@ -68,7 +68,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r}
+```{r, results="asis"}
 t1 <- 
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -153,10 +153,10 @@ df <- tribble(
 )
 
 df %>%
-  get_dupes(store_id)
+  janitor::get_dupes(store_id)
 
 df %>%
-  get_dupes(date)
+  janitor::get_dupes(date)
 ```
 
 
@@ -239,7 +239,8 @@ library(pacman)
 library(ggplot2)
 library(gganonymize)
 
-ggg <- ggplot(mtcars, aes(as.factor(cyl))) +
+ggg <- 
+  ggplot(mtcars, aes(as.factor(cyl))) +
   geom_bar() +
   labs(title = "Test title",
        subtitle = "Test subtitle, this one have a lot lot lot lot lot more text then the rest",
@@ -293,7 +294,7 @@ library(naniar)
 
 airquality %>%
   group_by(Month) %>%
-  miss_var_summary()
+  naniar::miss_var_summary()
 ```
 
 
