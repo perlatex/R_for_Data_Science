@@ -80,6 +80,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda01) 章介绍探索性数据分析1   
    - 第 \@ref(eda02) 章介绍探索性数据分析2   
    - 第 \@ref(eda03) 章介绍探索性数据分析3   
+   - 第 \@ref(eda04) 章介绍探索性数据分析4   
    - 第 \@ref(ggplot2) 章再讲ggplot2
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度

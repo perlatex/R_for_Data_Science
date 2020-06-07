@@ -1,0 +1,212 @@
+# 探索性数据分析4 {#eda04}
+
+
+在可视化章节，我们提到 Anscombe’s quartet这个数据集，
+```{r, eval=FALSE}
+?datasets::anscombe
+```
+在其官方文档，我们可看到它是这样描述的：
+
+> Four x-y datasets which have the same traditional statistical properties (mean, variance, correlation, regression line, etc.), yet are quite different.
+
+
+
+```{r message=FALSE, warning=FALSE}
+d <- datasets::anscombe
+head(d)
+```
+
+
+## 探索anscombe
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+本节课的内容，就是用tidyverse的方法去探索下这个数据集：
+
+- 规整数据
+- 分组统计
+- 建模
+- 可视化
+
+
+## 规整数据
+
+我们再看看数据
+```{r}
+head(d)
+```
+
+实际上，这是四组`(x1, y1), (x2, y2), (x3, y3), (x4, y4)`。那要怎么样规整数据，
+或者说怎么样把数据弄成tidy呢。这里有个技巧，你可以想象，数据能`ggplot()`可视化的基本上就是tidy的。
+
+```{r, eval=FALSE}
+d %>% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point() + 
+  facet_wrap(~set)
+```
+
+那么，我们希望我们的数据是这样的格式
+| set | x  | y    |
+|-----|----|------|
+| 1   | 10 | 8.04 |
+| 1   | 8  | 6.95 |
+| ... |    |      |
+| 2   | 10 | 9.14 |
+| 2   | 8  | 8.14 |
+| ... |    |      |
+
+### 小小的回顾
+我们之前讲过，数据变形中，**宽表格**变成**长表格**，
+需要用到`tidyr::pivot_longer()`函数
+```{r, out.width='99%', fig.align='left', echo = F}
+knitr::include_graphics("images/pivot.png")
+```
+
+比如
+```{r}
+dt <- tibble(id = c("a", "b"), x_1 = 1:2, x_2 = 3:4, y_1 = 5:6, y_2 = 8:9)
+dt
+dt %>% pivot_longer(-id,
+                    names_to = "name",
+                    values_to = "vaules")
+```
+
+有时候，我们不想要下划线后面的编号，只想保留前面的第一个字母
+```{r}
+dt %>% pivot_longer(
+       cols = -id, 
+       names_to = "name",
+       names_pattern = "(.)_.",
+       values_to = "vaules"
+       )
+```
+
+
+有时候人的需求是多样的，比如不想要前面的第一个字母，只要下划线后面的编号
+```{r}
+dt %>% pivot_longer(
+       cols = -id, 
+       names_to = "name",
+       names_pattern = "._(.)",
+       values_to = "vaules"
+       )
+```
+
+
+有时候我们都想要呢？
+```{r}
+dt %>% pivot_longer(
+       cols = -id, 
+       names_to = c("name", "group"),
+       names_pattern = "(.)_(.)",
+       values_to = "vaules"
+       )
+```
+
+
+有时候，我们希望`"x", "y"`保留在列名，那么匹配出来的第一个字母，就不能给`"name"`，而是传给特殊的符号`".value"`，它会收集匹配出来的字符，然后放在列名中
+
+```{r}
+dt %>% pivot_longer(
+       cols = -id, 
+       names_to = c(".value", "group"),
+       names_pattern = "(.)_(.)",
+       values_to = "vaules"
+       )
+```
+是不是觉得很强大？
+
+
+### 回到案例
+
+具体来说，我们希望 `x1` 按照指定的正则表达式分成了两个部分 `x`和 `1`，那么`1`放在`set`下，而 `x` 传给了`.value` 当作变型后的**列名**.
+
+```{r, out.width='90%', fig.align='left'}
+knitr::include_graphics("images/pivot_longer_values.jpg")
+```
+
+
+那么和上面的情况一样，使用`tidyr::pivot_longer()`函数
+
+```{r}
+tidy_d <- d %>% 
+  pivot_longer(
+    cols = everything(),
+    names_to = c(".value", "set"),
+    names_pattern = "(.)(.)"
+  )
+tidy_d
+```
+
+再啰嗦下参数的含义：
+- `cols = everything()` 表示选择所有列
+- `names_to = c(".value", "set")`  希望变型后的列名是`c(".value", "set")`, 这里 `".value"` 是个特殊的符号，代表着`names_pattern`匹配过来的值，一般情况下，是多个值，如果传给`".value"`的`"x, y, z"`，那么列名就会变成`c("x", "y", "z", "set")`
+-  `names_pattern = "(.)(.)"` 将变换前的**列名**按照指定的**正则表达式**匹配，并且传递给`names_to`的对应的参数，比如这里第一个`(.)`传递给`.value`；第二个`(.)`传递给`set`.
+
+
+
+
+
+## 统计
+
+数据规整了，统计就很简单了
+```{r}
+tidy_d_summary <- tidy_d %>%
+  group_by(set) %>%
+  summarise(across(.cols = everything(),
+                   .fns = lst(mean, sd, var),
+                   .names = "{col}_{fn}")
+            )
+tidy_d_summary
+```
+
+## 建模
+
+具体参考第 \@ref(colwise) 章整理的四种方法
+
+
+```{r, eval=FALSE}
+tidy_d %>% 
+  group_nest(set) %>% 
+  mutate(fit = map(data, ~lm(y ~ x, data = .x)),
+         tidy = map(fit, broom::tidy),
+         glance = map(fit, broom::glance)
+         ) %>% 
+  unnest(tidy)
+
+```
+
+
+感觉大家更喜欢这种
+```{r}
+tidy_d %>% 
+  group_by(set) %>% 
+  group_modify(
+    ~ broom::tidy(lm(y ~ x, data = .))
+  )
+```
+
+
+```{r}
+tidy_d %>%
+  group_by(set) %>%
+  summarise(
+    broom::tidy(lm(y ~ x, data = cur_data()))
+  )
+```
+
+
+## 可视化看看
+
+```{r}
+tidy_d %>% 
+  ggplot(aes(x = x, y = y, colour = set)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme(legend.position = "none") +
+  facet_wrap(~set)
+```
+
