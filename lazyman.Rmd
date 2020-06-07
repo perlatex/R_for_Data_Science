@@ -56,15 +56,14 @@ library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
 
-trial %>% 
-  select(trt, age, grade, response) %>% 
-  tbl_summary(by = trt,
+gtsummary::trial %>% 
+  dplyr::select(trt, age, grade, response) %>% 
+  gtsummary::tbl_summary(by = trt,
               missing = "no") %>% 
-  add_p() %>% 
-  add_overall() %>% 
-  add_n() %>% 
-  bold_labels()
-  
+  gtsummary::add_p() %>% 
+  gtsummary::add_overall() %>% 
+  gtsummary::add_n() %>% 
+  gtsummary::bold_labels()
 ```
 
 
@@ -72,15 +71,15 @@ trial %>%
 ```{r}
 t1 <- 
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
-  tbl_regression(exponentiate = TRUE)
+  gtsummary::tbl_regression(exponentiate = TRUE)
 
 t2 <-
   survival::coxph(survival::Surv(ttdeath, death) ~ trt + grade + age, trial) %>%
-  tbl_regression(exponentiate = TRUE)
+  gtsummary::tbl_regression(exponentiate = TRUE)
 
 
 
-tbl_merge(
+gtsummary::tbl_merge(
     tbls = list(t1, t2),
     tab_spanner = c("**Tumor Response**", "**Time to Death**")
   )
@@ -89,6 +88,7 @@ tbl_merge(
 
 
 ## 统计结果写图上
+
 ```{r, out.width='99%'}
 library(ggplot2)
 library(statsExpressions) 
@@ -133,6 +133,7 @@ fake_raw %>% clean_names()
 mtcars %>% 
   count(cyl)
 ```
+
 ```{r}
 mtcars %>% 
   janitor::tabyl(cyl)
