@@ -27,6 +27,7 @@ rmd_files: [
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",
   "eda_anscombe.Rmd",
+  "eda_height.Rmd",
   "ggplot2_geom.Rmd",
   "ggplot2_theme.Rmd",
   "ggplot2_scales.Rmd",
@@ -38,6 +39,9 @@ rmd_files: [
   "sampling.Rmd",
   "tidystats.Rmd",
   "lm.Rmd",
+  "lmm.Rmd",
+  "glm.Rmd",
+  "ordinal.Rmd",
   "tidymodels.Rmd",
   "tidyeval.Rmd",
 

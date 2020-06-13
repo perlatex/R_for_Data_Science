@@ -133,17 +133,17 @@ df %>% select_if(to_want)
 ```{r, message=FALSE, warning=FALSE}
 msleep <- ggplot2::msleep
 msleep %>%
-  group_by(vore) %>%
-  summarise_all(~ mean(., na.rm = TRUE))
+  dplyr::group_by(vore) %>%
+  dplyr::summarise_all(~ mean(., na.rm = TRUE))
 ```
 
 
 ```{r}
 msleep <- ggplot2::msleep
 msleep %>%
-  group_by(vore) %>%
+  dplyr::group_by(vore) %>%
   # summarise_if(is.numeric, ~mean(., na.rm = TRUE))
-  summarise_if(is.numeric, mean, na.rm = TRUE)
+  dplyr::summarise_if(is.numeric, mean, na.rm = TRUE)
 ```
 
 
@@ -156,23 +156,23 @@ msleep %>%
 ```{r}
 msleep <- ggplot2::msleep
 msleep %>%
-  select(name, sleep_total) %>%
-  filter(sleep_total > 18)
+  dplyr::select(name, sleep_total) %>%
+  dplyr::filter(sleep_total > 18)
 ```
 
 
 ```{r}
 msleep %>%
-  select(name, sleep_total) %>%
-  filter(between(sleep_total, 16, 18))
+  dplyr::select(name, sleep_total) %>%
+  dplyr::filter(between(sleep_total, 16, 18))
 ```
 
 
 ```{r}
 msleep %>%
-  select(name, sleep_total) %>%
+  dplyr::select(name, sleep_total) %>%
   # filter(near(sleep_total, 17,  tol=sd(sleep_total)))
-  filter(near(sleep_total, mean(sleep_total), tol = 0.5 * sd(sleep_total)))
+  dplyr::filter(near(sleep_total, mean(sleep_total), tol = 0.5 * sd(sleep_total)))
 ```
 
 
@@ -240,7 +240,7 @@ mtcars %>% filter_if(~ all(floor(.) == .), all_vars(. != 0))
 `group_by()` 用的很多，所以要多讲讲
 
 ```{r}
-mtcars %>% group_by(cyl)
+mtcars %>% dplyr::group_by(cyl)
 ```
 
 
@@ -269,14 +269,14 @@ iris %>% group_by_if(is.factor)
 
 ```{r}
 iris %>%
-  group_by(Species) %>%
-  group_split()
+  dplyr::group_by(Species) %>%
+  dplyr::group_split()
 ```
 
 简单点写，就是
 ```{r}
 iris %>%
-  group_split(Species)
+  dplyr::group_split(Species)
 ```
 
 
@@ -288,14 +288,14 @@ iris %>%
 如果使用`group_split()`, 注意分组后，返回的是列表
 ```{r}
 iris %>%
-  group_split(Species)
+  dplyr::group_split(Species)
 ```
 
 
 既然是列表，当然想到用前面讲到的`purrr::map()`家族
 ```{r}
 iris %>%
-  group_split(Species) %>%
+  dplyr::group_split(Species) %>%
   purrr::map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
 
@@ -304,8 +304,8 @@ iris %>%
 
 ```{r}
 iris %>%
-  group_split(Species) %>%
-  map_df(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+  dplyr::group_split(Species) %>%
+  purrr::map_df(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
 
 
@@ -316,8 +316,8 @@ tidyverse不会让我们失望的，先看看`group_map()`
 ## The result of .f should be a data frame(.f 必须返回数据框)
 ## `group_map()` return a list of tibble(返回元素均为df的一个列表list(df1,df2,df3))
 iris %>%
-  group_by(Species) %>%
-  group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+  dplyr::group_by(Species) %>%
+  dplyr::group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
 数据框进来，然后分组，依次处理成一个个数据框，最后以列表形式（a list of tibble）输出。
 
@@ -326,8 +326,8 @@ iris %>%
 事实上，`group_map()`是返回list形式，也就是说，可以是返回任何形式，（a list of tibble）是其中特殊形式。 可以看看下面这个
 ```{r}
 iris %>%
-  group_by(Species) %>%
-  group_map(
+  dplyr::group_by(Species) %>%
+  dplyr::group_map(
     ~ lm(Petal.Length ~ Sepal.Length, data = .x)
     )
 ```
@@ -340,8 +340,8 @@ iris %>%
 
 ```{r}
 iris %>%
-  group_by(Species) %>%
-  group_modify(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
+  dplyr::group_by(Species) %>%
+  dplyr::group_modify(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
 
 
@@ -368,7 +368,7 @@ iris %>%
 我常用的批量出图的语句
 ```{r, eval = FALSE}
 nobel_winners %>% 
-  group_split(category) %>%
+  dplyr::group_split(category) %>%
   purrr::map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
       geom_density() +
@@ -379,8 +379,8 @@ nobel_winners %>%
 
 ```{r, eval = FALSE}
 nobel_winners %>% 
-  group_by(category) %>%
-  group_map(
+  dplyr::group_by(category) %>%
+  dplyr::group_map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
       geom_density() +
       ggtitle(.y)
@@ -390,8 +390,8 @@ nobel_winners %>%
 
 ```{r, eval = FALSE}
 nobel_winners %>% 
-  group_by(category) %>%
-  group_walk(
+  dplyr::group_by(category) %>%
+  dplyr::group_walk(
     ~ ggsave(
       paste0(.y, '.png'), 
       ggplot(data = .x, aes(x = prize_age) ) +
@@ -431,7 +431,7 @@ glimpse(roster_raw)
 
 ```{r}
 roster <- roster_raw %>%
-  clean_names()
+  janitor::clean_names()
 
 glimpse(roster)
 ```
@@ -459,7 +459,7 @@ airquality %>%
 
 ```{r}
 airquality %>%
-  summarise_at(2:3, ~ sum(is.na(.)))
+  dplyr::summarise_at(2:3, ~ sum(is.na(.)))
 ```
 
 
@@ -507,15 +507,15 @@ tibble(
 
 ```{r include=FALSE}
 df_mtcars <- mtcars %>%
-  rownames_to_column(var = "rowname") %>%
-  mutate(
+  tibble::rownames_to_column(var = "rowname") %>%
+  dplyr::mutate(
     cyl = factor(cyl),
     vs = factor(vs),
     am = factor(am),
     gear = factor(gear),
     carb = factor(carb)
   ) %>%
-  as_tibble()
+  tibble::as_tibble()
 ```
 
 
@@ -603,8 +603,8 @@ iris %>%
 
 ```{r, eval = FALSE}
 iris %>%
-  group_by(Species) %>%
-  summarise(
+  dplyr::group_by(Species) %>%
+  dplyr::summarise(
     across(starts_with("Sepal"), mean),
     Area = mean(Petal.Length * Petal.Width),
     across(starts_with("Petal"), min)
@@ -649,7 +649,7 @@ df <- tibble(x = 1:3, y = 3:5, z = 5:7)
 df
 weights <- list(x = 0.2, y = 0.3, z = 0.5)
 
-df %>% mutate(
+df %>% dplyr::mutate(
   across(all_of(names(weights)),
          list(wt = ~ .x * weights[[cur_column()]]), 
          .names = "{col}.{fn}")
@@ -663,7 +663,7 @@ df
 
 cutoffs <- list(x = 2, y = 3, z = 7)
 
-df %>% mutate(
+df %>% dplyr::mutate(
   across(all_of(names(cutoffs)), ~ if_else(.x > cutoffs[[cur_column()]], 1, 0))
   )
 ```

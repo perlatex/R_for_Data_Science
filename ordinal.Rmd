@@ -1,0 +1,455 @@
+# 有序logistic回归 {#ordinal}
+
+本节课，是广义线性模型的延续
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+## logistic回归
+
+- **二元logistic回归**：Y为定类且为2个，比如是否购买(1购买；0不购买)
+- **多分类logistic回归**：Y为定类且选项大于2个，比如总统候选人偏好(特朗普、希拉里、卢比奥)
+- **有序logistic回归**：Y为定类且有序，幸福感(不幸福、比较幸福和非常幸福)
+
+
+
+## 生活中的有序logistic回归
+- 人们在肯德基里点餐，一般都会买可乐，可乐有四种型号(small, medium, large or extra large)，选择何种型号的可乐会与哪些因素有关呢？是否购买了汉堡、是否购买了薯条，消费者的年龄等。我们这里考察的被解释变量，可乐的大小就是一个有序的值。
+
+- 问卷调查。问大三的学生是否申请读研究生，有三个选项：1不愿意，2有点愿意，3非常愿意。那么这里的被解释变量是三个有序的类别，影响读研意愿的因素可能与父母的教育水平、本科阶段学习成绩、经济压力等有关。
+
+
+
+
+## 案例
+
+教育代际传递。通俗点说子女的教育程度是否受到父母教育程度的影响。我这个案例思路参考了南京大学池彪的《教育人力资本的代际传递研究》硕士论文，这篇文章思路很清晰，建议大家可以看看。根据文中提供的数据来源，我们下载2016年的中国家庭追踪调查数据[CFPS](http://www.isss.pku.edu.cn/cfps/)，并整理了部分数据。
+
+```{r echo=FALSE, out.width = "90%"}
+knitr::include_graphics(path = "images/variables.png")
+```
+
+
+```{r}
+tb <- readr::read_rds("./demo_data/cfps.rds")
+head(tb)
+```
+
+```{r}
+tb %>% count(edu)
+tb %>% count(edu_f)
+tb %>% count(edu_m)
+```
+
+
+为了方便处理，减少分类，我们将大专以及大专以上的都归为一类
+```{r}
+df <- tb %>%
+  dplyr::mutate(
+    across(
+      starts_with("edu"),
+      ~ case_when(
+        . %in% c(5, 6, 7, 8) ~ 5,
+        TRUE ~ .
+      )
+    )
+  )
+df
+```
+看起很复杂？那我写简单点
+
+
+```{r}
+tb %>%
+  dplyr::mutate(
+    across(
+      starts_with("edu"),
+      ~ if_else(. %in% c(5, 6, 7, 8), 5, .)
+    )
+  )
+```
+
+
+
+```{r}
+df %>% count(edu)
+df %>% count(edu_f)
+df %>% count(edu_m)
+```
+
+## 问题的提出
+
+问题的提出：
+- 学历上父母是否门当户对？
+- 父母的受教育程度对子女的受教育水平是正向影响？
+- 父亲和母亲谁的影响大？
+- 对男孩影响大？还是对女孩影响大？
+- 以上情况城乡有无差异？
+
+
+### 父母门当户对？
+
+数据还是比较有意思的，我们来看看父母是否门当户对
+
+
+多大比例选择门当户对?
+```{r}
+df
+```
+
+```{r}
+df %>% 
+  dplyr::summarise(
+    eq_n = sum(edu_m == edu_f),
+    n = n()
+) %>% 
+  dplyr::mutate(prop = eq_n/n)
+```
+
+```{r}
+df %>% 
+  dplyr::count(edu_m, edu_f) %>% 
+  dplyr::group_by(edu_m) %>% 
+  dplyr::mutate(prop = n /sum(n)) %>% 
+  dplyr::ungroup() 
+```
+
+
+```{r}
+df %>% 
+  dplyr::count(edu_m, edu_f) %>% 
+  dplyr::group_by(edu_m) %>% 
+  dplyr::mutate(percent = n/sum(n) ) %>% 
+  dplyr::select(-n) %>% 
+  tidyr::pivot_wider(names_from = edu_f,
+              values_from = percent)
+```
+
+
+
+
+
+
+
+### 母亲的教育程度对子女的影响
+```{r, fig.showtext= TRUE}
+library(ggridges)
+df %>% 
+  dplyr::mutate(
+    across(edu_m, as.factor)
+    ) %>%
+  ggplot(aes(x = edu, y = edu_m)) +
+  geom_density_ridges()  +
+  scale_x_continuous(limits = c(0, 6), breaks = c(1:5)) +
+  labs(title = "家庭中母亲的教育程度对子女的影响",
+       subtitle = "数字越大，教育程度越高",
+       x = "子女的教育程度",
+       y = "母亲的教育程度")
+
+```
+
+
+
+
+
+
+### 父亲和母亲谁的影响大
+
+这里需要用到**有序logistic回归**，我们使用`MASS::polr`函数。
+为了理解模型的输出，我们需要先简单介绍下模型的含义。假定被解释变量$Y$有$J$类且有序，那么$Y$ 小于等于某个具体类别$j$的累积概率，可以写为$P(Y \le j)$，这里$j = 1, \cdots, J-1$. 
+
+从而，小于等于某个具体类别$j$的**比率**就可以定义为
+
+
+$$\frac{P(Y \le j)}{P(Y>j)}$$
+对这个比率取对数，就是我们熟知的logit
+
+$$log \frac{P(Y \le j)}{P(Y>j)} = logit (P(Y \le j)).$$
+
+在R语言中，有序logistic回归的数学模型就是
+
+$$logit (P(Y \le j)) = \alpha_{j} + \beta_{1}x_1 + \beta_{2}x_2 $$
+$\alpha$ 是截距 $\beta$ 是回归系数，注意到有序分类 logistic 回归模型中就有 $J-1$ 个 logit 模型。对于每个模型，系数是相同的，截距不同。下面我们通过代码来演示
+
+
+```{r}
+library(MASS)
+df1 <- df %>% 
+  dplyr::mutate(
+    across(c(edu, sex, urban), as.factor), 
+    across(edu, ~fct_inseq(., ordered = TRUE))
+    )  
+
+mod_mass <- polr(edu ~ edu_f + edu_m + sex + num_siblings + urban, 
+                 data = df1, 
+                 method = c("logistic")
+                 )
+
+summary(mod_mass)
+```
+
+
+输出结果得到有序分类 logistic 回归模型中截距和回归系数的最大似然估计值，确定出回归方程为：
+
+
+
+
+$$
+\begin{aligned}
+\text{logit}(\hat{P}(Y \le 1))&= \text{logit}\left(p_{1}\right) = \ln \left(\frac{p_{1}}{1 - p_{1}}\right) =  -0.8385 + \\ 
+\text{logit}(\hat{P}(Y \le 2))&= \text{logit}\left(p_{1} + p_{2}\right) = \ln \left(\frac{p_{1} + p_{2}}{1 - p_{1} - p_{2}}\right) =  0.6742 + \\ 
+\text{logit}(\hat{P}(Y \le 3))&= \text{logit}\left(p_{1} + p_{2} + p_{3}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3}}{1 - p_{1} - p_{2} - p_{3}}\right) =  2.5093\\ 
+\text{logit}(\hat{P}(Y \le 4))&= \text{logit}\left(p_{1} + p_{2} + p_{3} + p_{4}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3} + p_{4}}{1 - p_{1} - p_{2} - p_{3} - p_{4}}\right) = 3.5454\\ 
+\end{aligned}
+$$
+
+
+
+写起很麻烦，偷个懒吧
+
+```{r}
+library(equatiomatic)
+extract_eq(mod_mass, use_coefs = TRUE)
+```
+
+
+
+
+
+
+
+### 系数的解释
+
+先将系数转换成odds ratios(OR)
+
+```{r}
+coef(mod_mass) %>% exp()
+```
+
+- 在其它因素不变的情况下，父亲教育程度每增加一个等级（比如，大专到本科），
+  会增加子女教育程度向上提高一个级别的概率1.58倍，也就是增加了58%。
+- 在其它因素不变的情况下，母亲教育程度每提高一个等级，会增加提升子女教育水平的概率1.66倍.
+- 从子女的性别差异来看, 在其它因素不变的情况下，女性的受教育水平向上提高一个级别的概率更大，是男性的(1/0.630)倍，或者说，男性受教育水平向上提高一个级别的概率比女性减少37%(1 - 0.63).
+- 从城乡差异来看，城镇子女提升教育水平的概率是农村的2.6倍
+
+
+### 边际效应
+
+```{r message=FALSE, warning=FALSE}
+library(margins)
+#me_mass <- marginal_effects(mod_mass, variables = "sex")
+me_mass <- marginal_effects(mod_mass, variables = "edu_m")
+me_mass 
+```
+
+
+从边际效应图可以看到，随着父母教育程度的增加，子女低学历的的概率减少，高学历的概率增加
+
+
+
+## 其他宏包
+
+### ordinal 包
+
+```{r}
+library(ordinal)
+mod_ordinal <- clm(edu ~ edu_f + edu_m + sex + num_siblings + urban, 
+                   data = df1, 
+                   link = "logit",
+                   thresholds = "flexible"
+                  )
+
+broom::tidy(mod_ordinal)
+```
+
+
+
+
+
+<!-- ### 贝叶斯框架 -->
+
+<!-- ```{r message=TRUE, warning=TRUE, include=FALSE} -->
+<!-- library(brms) -->
+<!-- df1 <- df %>%  -->
+<!--   mutate( -->
+<!--     across(c(edu, sex, urban), as.factor),  -->
+<!--     across(edu, ~fct_inseq(., ordered = TRUE)) -->
+<!--     )   -->
+
+<!-- mod_brms1 <- brm(edu ~ edu_f + edu_m + sex + num_siblings + urban, -->
+<!--                 data = df1,   -->
+<!--                 family = cumulative(link = "logit") -->
+<!--                ) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- mod_brms1 -->
+<!-- ``` -->
+
+
+<!-- ```{r, } -->
+<!-- conditions <- data.frame(edu = 1:5) -->
+<!-- brms::conditional_effects(mod_brms1,  -->
+<!--                           effects = "edu_m",  -->
+<!--                           conditions = conditions, -->
+<!--                           categorical = TRUE) -->
+
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms1, effects = "edu_m", categorical = TRUE) -->
+<!-- ``` -->
+
+
+
+
+<!-- ## 后续 -->
+<!-- 个人感觉这个问题似乎没那么简单，我还需要继续看文档。 -->
+
+<!-- ### 父母教育程度变为因子 -->
+
+<!-- 如果把父母的教育程度也设定为离散值 -->
+<!-- ```{r} -->
+<!-- library(MASS) -->
+<!-- df2 <- df %>%  -->
+<!--   mutate( -->
+<!--     across(c(edu, sex, urban, edu_f, edu_m), as.factor),  -->
+<!--     across(edu, ~fct_inseq(., ordered = TRUE)) -->
+<!--     )   -->
+
+<!-- mod_mass2 <- polr(edu ~ edu_f + edu_m + sex + num_siblings + urban,  -->
+<!--                  data = df2,  -->
+<!--                  method = c("logistic") -->
+<!--                  ) -->
+
+<!-- summary(mod_mass2) -->
+<!-- ``` -->
+
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- margins::marginal_effects(mod_mass2, variables = "edu_m") -->
+<!-- ``` -->
+
+
+
+
+<!-- ```{r message=TRUE, warning=TRUE, include=FALSE} -->
+<!-- library(brms) -->
+<!-- mod_brms2 <- brm(edu ~ edu_f + edu_m + sex + num_siblings + urban, -->
+<!--                 data = df2,   -->
+<!--                 family = cumulative(link = "logit") -->
+<!--                ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- mod_brms2 -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms2, effects = "edu_m", categorical = TRUE) -->
+<!-- ``` -->
+
+
+<!-- ### 类型指定效应 -->
+
+<!-- category specific effects -->
+<!-- ```{r} -->
+<!-- mod_brms3 <- brm( -->
+<!--   edu ~ edu_f + edu_m + cs(sex) + num_siblings + urban, -->
+<!--   data = df2, -->
+<!--   family = sratio("logit") -->
+<!-- ) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- summary(mod_brms3) -->
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms3, "edu_m", categorical = TRUE) -->
+<!-- ``` -->
+
+<!-- ## 符合实际的模型 -->
+
+<!-- 子女教育程度是sequential过程 -->
+
+
+
+
+<!-- ```{r} -->
+<!-- library(brms) -->
+<!-- df3 <- df %>%  -->
+<!--   mutate( -->
+<!--     across(c(edu, sex, urban), as.factor),  -->
+<!--     across(edu, ~fct_inseq(., ordered = TRUE)) -->
+<!--     )   -->
+
+<!-- mod_brms3 <- brm( -->
+<!--   edu ~ edu_f + edu_m + cs(sex) + num_siblings + urban, -->
+<!--   data = df3, -->
+<!--   family = sratio("logit") -->
+<!-- ) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- mod_brms1 -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- mod_brms3 -->
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms3, effects = "edu_m", categorical = TRUE) -->
+<!-- ``` -->
+
+
+<!-- 父母教育程度的提高，子女高学历的增多，低学历的减少 -->
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms3, effects = "sex", categorical = TRUE) -->
+<!-- ``` -->
+<!-- 之前我们假定子女性别在子女受教育程度中的影响时等同的，事实上，在这种假设也有不完全正确，性别在子女不同等级的教育程度中的影响是不一样的，比如初等教育，性别没有差异，而到了高等教育，性别的差异就明显了。也就说，性别在子女教育不同等级上的影响(系数)是不同。 -->
+
+
+<!-- ```{r} -->
+<!-- library(brms) -->
+<!-- df4 <- df %>%  -->
+<!--   mutate( -->
+<!--     across(c(edu, sex, urban), as.factor),  -->
+<!--     across(edu, ~fct_inseq(., ordered = TRUE)) -->
+<!--     )   -->
+
+<!-- mod_brms4 <- brm( -->
+<!--   edu ~ edu_f + edu_m + sex + num_siblings + urban, -->
+<!--   data = df4, -->
+<!--   family = sratio("cloglog") -->
+<!-- ) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- brms::conditional_effects(mod_brms4, effects = "sex", categorical = TRUE) -->
+<!-- ``` -->
+
+
+<!-- - 男孩获得较低层次教育的概率要比女还大 -->
+<!-- - 女孩获得较高层次教育的概率要比男还大 -->
+
+<!-- ## 模型比较 -->
+<!-- ```{r} -->
+<!-- #brms::loo(mod_brms1, mod_brms2, mod_brms3, mod_brms4) -->
+<!-- brms::loo(mod_brms1, mod_brms3, mod_brms4) -->
+<!-- ``` -->
+

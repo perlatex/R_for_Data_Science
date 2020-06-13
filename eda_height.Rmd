@@ -1,0 +1,228 @@
+# 探索性数据分析5 {#eda05}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+
+## 案例分析
+
+这是一份身高和体重的数据集
+```{r}
+d <- read_csv("./demo_data/weight-height.csv")
+d
+```
+
+```{r}
+d %>% summarise(
+  across(everything(), ~ sum(is.na(.)))
+)
+```
+
+
+## 可视化
+### 画出不同性别的身高分布
+
+常规答案
+```{r}
+d %>%
+  ggplot(aes(x = Height, fill = Gender)) +
+  geom_density(alpha = 0.5)
+```
+
+
+```{r}
+d %>%
+  ggplot(aes(x = Height, fill = Gender)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(vars(Gender))
+```
+
+
+## 来点高级的
+
+刚才我们看到了分面的操作，全局数据按照某个变量分组后，形成的若干个子集在不同的面板中分别展示出来。
+
+这种方法很适合子集之间对比。事实上，我们看到每个子集的情况后，还很想知道全局的情况，以及子集在全局中的分布、状态或者位置。也就说，想对比子集和全局的情况。
+
+所以我们期望（**子集之间对比，子集与全局对比**）。
+
+具体方法：**用分面的方法高亮展示子集，同时在每个分面上添加全局（灰色背景）**
+
+
+
+
+- 第一步，先把子集用分面的方法，分别画出来
+
+```{r, eval = FALSE}
+d %>%
+  ggplot(aes(x = Height)) +
+  geom_density() +
+  facet_wrap(vars(Gender))
+```
+
+
+- 第二步，添加整体的情况作为背景图层。因为第一步用到了分面，也就说会分组，但我们希望整体的背景图层不受分面信息影响，或者叫背景图层不需要分组，而是显示全部。也就说，要保证每个分面面板中的背景图都是一样的，因此，在这个geom_denstiy()图层中，构建不受facet_wrap()影响的数据，即删掉data的分组列。
+
+```{r, eval = FALSE}
+d %>%
+  ggplot(aes(x = Height)) +
+  geom_density(
+    data = d %>% select(-Gender)
+  ) +
+  geom_density() +
+  facet_wrap(vars(Gender))
+```
+
+- 第三步，y轴的调整，我们希望保持密度的形状，同时希望y轴不用比例值而是用具体的count个数，这样整体和局部能放在一个标度下，
+
+```{r, eval = FALSE}
+d %>%
+  ggplot(aes(x = Height, y = after_stat(count))) +
+  geom_density(
+    data = d %>% select(-Gender)
+  ) +
+  geom_density() +
+  facet_wrap(vars(Gender))
+```
+
+
+- 第四步， 配色。
+[配色网站](https://coolors.co/50514f-f25f5c-ffe066-247ba0-70c1b3)选颜色
+
+"Male", "Female" 是Gender已经存在的分组。另外，我们在背景图层，新增了一个组"all people"，这样，整个图就有三个分组（三个color组），那么，我们可以在scale_fill_manual中统一设置和指定。
+
+```{r, eval = FALSE}
+density_colors <- c(
+  "Male" = "#247BA0",
+  "Female" = "#F25F5C",
+  "all people" = "grey85"
+)
+```
+
+
+```{r, eval = FALSE}
+d %>% 
+  ggplot(aes(x = Height, y = after_stat(count))) +
+  geom_density(
+    data = df %>% select(-Gender),
+    aes(fill = "all people", color = "all people")
+  ) +
+  geom_density(aes(color = Gender, fill = Gender)) +
+  facet_wrap(vars(Gender)) +
+  scale_fill_manual(name = NULL, values = density_colors) +
+  scale_color_manual(name = NULL, values = density_colors) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+
+
+### 完整代码
+
+```{r}
+density_colors <- c(
+  "Male" = "#247BA0",
+  "Female" = "#F25F5C",
+  "all people" = "grey80"
+)
+
+scales::show_col(density_colors)
+```
+
+
+```{r}
+d %>% 
+  ggplot(aes(x = Height, y = after_stat(count))) +
+  geom_density(
+    data = d %>% dplyr::select(-Gender),
+    aes(fill = "all people", color = "all people")
+  ) +
+  geom_density(aes(color = Gender, fill = Gender)) +
+  facet_wrap(vars(Gender)) +
+  scale_fill_manual(name = NULL, values = density_colors) +
+  scale_color_manual(name = NULL, values = density_colors) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+
+
+
+或者，用不同的主题风格
+```{r}
+density_colors <- c(
+  "Male" = "#56B4E9",
+  "Female" = "#EF8A17",
+  "all participants" = "grey85"
+)
+
+d %>%
+  ggplot(aes(x = Height, y = after_stat(count))) +
+  geom_density(
+    data = function(x) dplyr::select(x, -Gender),
+    aes(fill = "all participants", color = "all participants")
+  ) +
+  geom_density(aes(fill = Gender, color = Gender)) +
+  facet_wrap(vars(Gender)) +
+  scale_color_manual(name = NULL, values = density_colors) +
+  scale_fill_manual(name = NULL, values = density_colors) +
+  cowplot::theme_minimal_hgrid(16) +
+  theme(legend.position = "bottom", legend.justification = "center")
+```
+
+
+
+
+
+### 画出不同性别的体重分布
+
+```{r}
+d %>%
+  ggplot(aes(x = Weight, fill = Gender)) +
+  geom_density(alpha = 0.5)
+```
+
+
+
+## 建模
+### 身高与体重的散点图
+```{r}
+d %>%
+  ggplot(aes(x = Height, y = Weight, color = Gender)) +
+  geom_point()
+```
+
+
+### 建立身高与体重的线性模型
+```{r}
+fit <- lm(Weight ~ 1 + Height, data = d)
+summary(fit)
+```
+
+
+```{r}
+broom::tidy(fit)
+```
+
+
+### 建立不同性别下的身高与体重的线性模型
+
+```{r}
+d %>%
+  group_by(Gender) %>%
+  group_modify(
+    ~ broom::tidy(lm(Weight ~ 1 + Height, data = .))
+  )
+```
+
+
+```{r}
+d %>%
+  ggplot(aes(x = Height, y = Weight, group = Gender)) +
+  geom_point(aes(color = Gender)) +
+  geom_smooth(method = lm)
+```

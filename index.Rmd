@@ -81,6 +81,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda02) 章介绍探索性数据分析2   
    - 第 \@ref(eda03) 章介绍探索性数据分析3   
    - 第 \@ref(eda04) 章介绍探索性数据分析4   
+   - 第 \@ref(eda05) 章介绍探索性数据分析5   
    - 第 \@ref(ggplot2) 章再讲ggplot2
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
@@ -91,6 +92,9 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(sampling) 章介绍模拟与抽样
    - 第 \@ref(tidystats) 章介绍方差分析
    - 第 \@ref(lm) 章介绍线性模型
+   - 第 \@ref(lmm) 章介绍多层线性模型
+   - 第 \@ref(glm) 章介绍广义线性模型
+   - 第 \@ref(ordinal) 章介绍有序logistic回归模型
    - 第 \@ref(tidymodels) 章介绍机器学习
    - 第 \@ref(tidyeval) 章介绍非标准性评估
 - 应用篇
