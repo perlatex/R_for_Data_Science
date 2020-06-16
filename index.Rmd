@@ -76,6 +76,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(colwise) 章介绍数据框列方向和行方向
    - 第 \@ref(visual) 章介绍数据可视化
    - 第 \@ref(stringr) 章介绍字符串处理
+   - 第 \@ref(forcats) 章介绍因子类型数据
    - 第 \@ref(purrr) 章介绍函数式编程
    - 第 \@ref(eda01) 章介绍探索性数据分析1   
    - 第 \@ref(eda02) 章介绍探索性数据分析2   
@@ -140,6 +141,37 @@ knitr::include_graphics("images/rbook1.png")
    - 代码是什么？
    - 报错信息是什么？
 
+
+
+## 课件中用到的宏包
+
+```{r, eval = FALSE}
+my_packages <- c(
+  "brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
+)
+```
+
+
+```{r, eval = FALSE}
+install.packages(my_packages, repos = "http://cran.rstudio.com")
+```
+
+
+
+可能用到的开发版本的宏包
+
+```{r, eval = FALSE}
+remotes::install_github("datalorax/equatiomatic")
+devtools::install_github("easystats/report")
+devtools::install_github("kassambara/navdata")
+devtools::install_github('cttobin/ggthemr')
+remotes::install_github("daranzolin/inferregex")
+devtools::install_github("EmilHvitfeldt/gganonymize")
+remotes::install_github("ThinkR-open/remedy") 
+remotes::install_git("https://git.rud.is/hrbrmstr/hrbraddins.git") 
+devtools::install_github("hadley/emo") 
+remotes::install_github("romainfrancois/lay")
+```
 
 
 

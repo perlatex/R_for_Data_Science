@@ -1,0 +1,20 @@
+# 因子型变量 {#forcats}
+
+本章介绍R语言中的因子类型数据。
+
+https://www.cnblogs.com/ljhdo/p/4911110.html、
+
+```{r}
+heights <- data.frame(
+  height_cm = c(156, 182, 170),
+  gender = c('f','m','f')
+)
+```
+
+```{r}
+class(heights$gender)
+```
+
+## 创建因子
+
+## 因子水平

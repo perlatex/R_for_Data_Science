@@ -22,6 +22,7 @@ rmd_files: [
   "colwise.Rmd",
   "visualization.Rmd",
   "stringr.Rmd",
+  "forcats.Rmd",
   "purrr.Rmd",
   "eda_nobel.Rmd",
   "eda_olympics.Rmd",
