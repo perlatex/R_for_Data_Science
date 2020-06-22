@@ -206,4 +206,48 @@ newgapdata %>%
 
 ## 用标度还是主题？
 
-那什么时候用标度，什么时候用主题？这里有个原则：主题风格不会增加标签，也不会改变变量的范围，主题只会改变字体、大小、颜色等等
+那什么时候用标度，什么时候用主题？这里有个原则：主题风格不会增加标签，也不会改变变量的范围，主题只会改变字体、大小、颜色等等。
+
+- 假定数据是这样
+```{r}
+library(tidyverse)
+set.seed(12)
+
+d1 <- data.frame(x = rnorm(50, 10, 2), type = "Island #1")
+d2 <- data.frame(x = rnorm(50, 18, 1.2), type = "Island #2")
+
+dd <- bind_rows(d1, d2) %>%
+  set_names(c("Height", "Location"))
+
+head(dd)
+```
+
+- 你画图后，交给老板看
+```{r}
+dd %>%
+  ggplot(aes(x = Height, fill = Location)) +
+  geom_histogram(binwidth = 1, color = "white") +
+  scale_fill_manual(values = c("green3", "turquoise3"))
+```
+
+- 然而，老板有点不满意，希望你要这样改
+```{r echo=FALSE, out.width='85%'}
+knitr::include_graphics("images/advisor_email.png")
+```
+
+- 请用前后两章学到的内容让老板满意吧
+
+```{r eval=FALSE, include=FALSE}
+ggplot(data = dd, aes(x = Height, fill = Location)) +
+  geom_histogram(binwidth = 1, color = "white") +
+  scale_fill_manual(values = c("green3", "turquoise3")) +
+  theme_light() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Teacup Giraffe heights", y = "Frequency", fill = NULL) +
+  theme(panel.border = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        legend.position = "top", 
+        legend.justification='left',
+        legend.background = element_rect(color = "white")
+  )
+```
