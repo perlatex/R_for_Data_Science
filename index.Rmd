@@ -83,10 +83,12 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda03) 章介绍探索性数据分析3   
    - 第 \@ref(eda04) 章介绍探索性数据分析4   
    - 第 \@ref(eda05) 章介绍探索性数据分析5   
+   - 第 \@ref(eda06) 章介绍探索性数据分析6   
    - 第 \@ref(ggplot2) 章再讲ggplot2
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
+   - 第 \@ref(ggplot2-gganimate) 章让数据动起来
    - 第 \@ref(tips) 章介绍tidyverse中常用技巧
    - 第 \@ref(tibble) 章介绍简单数据框
 - 建模篇

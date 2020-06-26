@@ -1,0 +1,141 @@
+# 探索性数据分析6 {#eda06}
+
+
+## 驯鹿位置跟踪
+
+```{r, out.width='85%', fig.align='left'}
+knitr::include_graphics("images/caribou_location.png")
+```
+
+
+[驯鹿位置跟踪数据](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md)，包含了两个数据集
+
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+
+individuals <- readr::read_csv('./demo_data/caribou/individuals.csv')
+locations <- readr::read_csv('./demo_data/caribou/locations.csv')
+```
+
+
+## 驯鹿的身份信息
+
+```{r}
+individuals %>% glimpse()
+```
+
+
+```{r}
+individuals %>% count(animal_id)
+```
+
+
+我们发现有重复id的，怎么办？
+```{r}
+individuals %>% janitor::get_dupes(animal_id)
+```
+
+
+
+```{r}
+individuals %>% 
+  filter(deploy_on_latitude >50) %>% 
+  ggplot(aes(x = deploy_on_longitude, y = deploy_on_latitude)) +
+  geom_point(aes(color = study_site)) #+
+  #borders("world", regions = "china")
+```
+
+
+
+
+## 驯鹿的活动信息
+
+简单点说，就是哪个驯鹿在什么时间出现在什么地方
+
+```{r}
+locations
+```
+
+```{r}
+locations %>% 
+  ggplot(aes(x = longitude, y = latitude)) +
+  geom_point(aes(color = study_site)) 
+```
+
+
+## 选择某个驯鹿，查看他的活动轨迹
+
+```{r}
+example_animal <- locations %>% 
+  dplyr::filter(animal_id == sample(animal_id, 1)) %>% 
+   dplyr::arrange(timestamp)
+example_animal
+```
+
+
+```{r, eval=FALSE}
+"2010-03-28 21:00:44" %>% lubridate::as_date()
+"2010-03-28 21:00:44" %>% lubridate::as_datetime()
+"2010-03-28 21:00:44" %>% lubridate::quarter()
+```
+
+```{r}
+example_animal %>% 
+   dplyr::mutate(date = lubridate::as_date(timestamp)) %>% 
+
+  ggplot(aes(x = longitude, y = latitude, color = date)) +
+  geom_path()
+```
+
+```{r}
+example_animal %>% 
+   dplyr::mutate(quarter = lubridate::quarter(timestamp) %>% as.factor()) %>% 
+  
+  ggplot(aes(x = longitude, y = latitude, color = quarter)) +
+  geom_path() +
+  facet_wrap(vars(quarter)) +
+  labs(title = "一只小驯鹿到处啊跑")
+```
+
+## 迁移速度
+
+```{r}
+location_with_speed <- locations %>% 
+   dplyr::group_by(animal_id) %>% 
+   dplyr::mutate(
+    last_longitude = lag(longitude),
+    last_latitude = lag(latitude),
+    hours = as.numeric(difftime(timestamp, lag(timestamp), units = "hours")), 
+    km = geosphere::distHaversine(
+      cbind(longitude, latitude), cbind(last_longitude, last_latitude)) /1000, 
+    speed = km/hours
+   ) %>% 
+   dplyr::ungroup()
+
+location_with_speed
+```
+
+
+```{r}
+location_with_speed %>% 
+  ggplot(aes(x = speed)) +
+  geom_histogram() +
+  scale_x_log10()
+```
+
+
+## 动态展示
+
+```{r}
+library(gganimate)
+
+example_animal %>% 
+  ggplot(aes(x = longitude, y = latitude)) +
+  geom_point() +
+  transition_time(time = timestamp) +
+  shadow_mark(past = TRUE) +
+  labs(title = "date is {frame_time}")
+  
+```
+
