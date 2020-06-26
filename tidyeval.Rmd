@@ -70,6 +70,26 @@ grouped_mean <- function(data, group_var, summary_var) {
 
 grouped_mean(mtcars, cyl, mpg)
 ```
+
+
+dplyr1.0之后，可以这样写
+
+```{r, eval=FALSE}
+sum_group_vars <- function(df, 
+                           group_vars, 
+                           sum_vars){
+  df %>% 
+    group_by(across({{ group_vars }})) %>% 
+    summarise(n = n(), 
+              across({{ sum_vars }}, 
+                     list(mean = mean, sd = sd))
+              )
+}
+
+sum_group_vars(mpg, c(model, year), c(hwy, cty))
+```
+
+
 下面我们讲讲为什么要这样写。
 
 

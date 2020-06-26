@@ -1,8 +1,15 @@
 # 因子型变量 {#forcats}
 
-本章介绍R语言中的因子类型数据。
+本章介绍R语言中的因子类型数据。因子型变量在数据处理和可视化中，应用很广泛。
+
+## 什么是因子
+
+R把表示分类的数据称为因子，比如人可以分为：男人和女人。由于因子比字符串更方便处理，所以在R 4.0之前，将字符串类型默认为因子类型，但这个默认也带来一些不方便，因此在R
+R 4.0之后取消了这个默认。在tidyverse集合里，有专门处理因子的宏包`forcats`，因此，本章将围绕`forcats`宏包讲解如何处理因子类型变量，更多内容可以参考[这里](https://r4ds.had.co.nz/factors.html)。
+
 
 https://www.cnblogs.com/ljhdo/p/4911110.html、
+https://r4ds.had.co.nz/factors.html
 
 ```{r}
 heights <- data.frame(
@@ -18,3 +25,7 @@ class(heights$gender)
 ## 创建因子
 
 ## 因子水平
+
+## 调整因子顺序
+
+## 调整因子水平

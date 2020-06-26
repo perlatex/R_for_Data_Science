@@ -457,7 +457,8 @@ tribble(
 
 ### 常用方法
 
-我一般会保存为 gif 格式，方法类似`ggsave()`
+一般用`anim_save()`保存为 gif 格式，方法类似`ggsave()`
+
 ```{r, eval=F}
 animation_to_save <- diamonds %>% 
   ggplot(aes(carat, price)) +

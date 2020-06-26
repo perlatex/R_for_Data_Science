@@ -1,5 +1,6 @@
 # 探索性数据分析6 {#eda06}
 
+本章我们分析加拿大哥伦比亚林地**驯鹿追踪数据**，数据包含了从1988年到2016年期间260只驯鹿，近250000个位置标签。
 
 ## 驯鹿位置跟踪
 
@@ -8,11 +9,24 @@ knitr::include_graphics("images/caribou_location.png")
 ```
 
 
-[驯鹿位置跟踪数据](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md)，包含了两个数据集
+大家可以在[这里](https://github.com/tacookson/data/tree/master/caribou-location-tracking)了解数据集的信息，它包含了两个数据集
+
+
+```{r, eval=FALSE}
+# devtools::install_github("thebioengineer/tidytuesdayR")
+library(tidytuesdayR)
+
+tuesdata <- tidytuesdayR::tt_load('2020-06-23')
+# or
+# tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
+```
+
 
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
+library(lubridate)
+library(gganimate)
 
 individuals <- readr::read_csv('./demo_data/caribou/individuals.csv')
 locations <- readr::read_csv('./demo_data/caribou/locations.csv')
@@ -47,6 +61,10 @@ individuals %>%
 ```
 
 
+## 性别比例
+
+
+## 每个站点运动最频繁的前10的驯鹿
 
 
 ## 驯鹿的活动信息
@@ -98,6 +116,10 @@ example_animal %>%
   labs(title = "一只小驯鹿到处啊跑")
 ```
 
+## 季节模式
+看看驯鹿夏季和冬季运动模式
+
+
 ## 迁移速度
 
 ```{r}
@@ -137,5 +159,44 @@ example_animal %>%
   shadow_mark(past = TRUE) +
   labs(title = "date is {frame_time}")
   
+```
+
+## 更多
+
+```{r}
+df <- locations %>%
+  filter(study_site == "Graham",
+         year(timestamp) == 2002) %>%
+  group_by(animal_id) %>%
+  filter(as_date(min(timestamp)) == "2002-01-01",
+         as_date(max(timestamp)) == "2002-12-31") %>%
+  ungroup() %>%
+  mutate(date = as_date(timestamp)) %>%
+  group_by(animal_id, date) %>%
+  summarise(longitude_centroid = mean(longitude),
+            latitude_centroid = mean(latitude)) %>%
+  ungroup() %>%
+  complete(animal_id, date) %>%
+  arrange(animal_id, date) %>%
+  fill(longitude_centroid, latitude_centroid, .direction = "down")
+```
+
+
+```{r}
+p <- df %>%
+  ggplot(aes(longitude_centroid, latitude_centroid, colour = animal_id)) +
+  geom_point(size = 2) +
+  coord_map() +
+  theme_void() +
+  theme(legend.position = "none") +
+  transition_time(time = date) +
+  shadow_mark(alpha = 0.2, size = 0.8) +
+  ggtitle("Caribou location on {frame_time}")
+p
+```
+
+
+```{r}
+p
 ```
 
