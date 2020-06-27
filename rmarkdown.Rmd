@@ -77,6 +77,10 @@ output:
 ---
 ```
 
+## 生成word文档
+
+rmarkdown 生成的word功能不是很多，推荐使用[officedown宏包](https://github.com/davidgohel/officedown)
+
 
 ## 生成pdf文档
 

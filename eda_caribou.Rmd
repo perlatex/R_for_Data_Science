@@ -82,6 +82,77 @@ locations %>%
 ```
 
 
+
+## 被追踪最多次的驯鹿的轨迹
+
+```{r}
+top_animal_ids <- 
+  count(locations, animal_id, sort = TRUE) %>%
+  slice(1:10) %>% pull(animal_id)
+
+
+locations %>%
+  filter(animal_id %in% top_animal_ids) %>%
+  arrange(animal_id, timestamp) %>%
+  group_by(animal_id) %>%
+  mutate(measurement_n = row_number()) %>%
+  ggplot(aes(x = longitude,
+             y = latitude,
+             color = animal_id,
+             alpha = measurement_n))+
+  geom_point(show.legend = FALSE, size = 1) +
+  geom_path( show.legend = FALSE, size = 1) +
+  #scale_color_manual(values = ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    text = element_text(color = "White"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "gray60", size = 0.05),
+    plot.background = element_rect(fill = "gray10"),
+    axis.text = element_text(color = "white")
+  ) +
+  labs( x = "\nLongitude", y = "Latitude\n",
+        title = "Caribou movement tracking",
+        subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n",
+        caption = "Tidy Tuesday: Caribou Location Tracking"
+  )
+```
+
+
+## 某一只驯鹿的轨迹
+```{r}
+locations %>% 
+  filter(animal_id %in% c("QU_car143")) %>%
+  arrange(animal_id, timestamp) %>%
+  group_by(animal_id) %>%
+  mutate(measurement_n = row_number()) %>%
+  ggplot(aes(x = longitude,
+             y = latitude,
+             color = measurement_n,
+             alpha = measurement_n))+
+  geom_point(show.legend = FALSE, size = 1) +
+  geom_path( show.legend = FALSE, size = 1) +
+  scale_color_gradient(low = "white", high = "firebrick3") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 20, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    text = element_text(color = "White"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "gray60", size = 0.05),
+    plot.background = element_rect(fill = "gray10"),
+    axis.text = element_text(color = "white")
+  ) +
+  labs( x = "\nLongitude", y = "Latitude\n",
+        title = "QU_car143 movement tracking",
+        subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n Ligher colors indicate earlier measurements",
+        caption = "Tidy Tuesday: Caribou Location Tracking"
+  )
+```
+
+
 ## 选择某个驯鹿，查看他的活动轨迹
 
 ```{r}
@@ -101,7 +172,6 @@ example_animal
 ```{r}
 example_animal %>% 
    dplyr::mutate(date = lubridate::as_date(timestamp)) %>% 
-
   ggplot(aes(x = longitude, y = latitude, color = date)) +
   geom_path()
 ```
@@ -196,7 +266,23 @@ p
 ```
 
 
-```{r}
-p
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
