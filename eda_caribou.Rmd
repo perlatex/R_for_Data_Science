@@ -171,7 +171,7 @@ example_animal
 
 ```{r}
 example_animal %>% 
-   dplyr::mutate(date = lubridate::as_date(timestamp)) %>% 
+  dplyr::mutate(date = lubridate::as_date(timestamp)) %>% 
   ggplot(aes(x = longitude, y = latitude, color = date)) +
   geom_path()
 ```
@@ -187,7 +187,55 @@ example_animal %>%
 ```
 
 ## 季节模式
-看看驯鹿夏季和冬季运动模式
+
+看看驯鹿夏季和冬季运动模式，这段代码来自gkaramanis
+
+```{r}
+movement <- locations %>% 
+  filter(study_site != "Hart Ranges") %>% 
+  mutate(
+    season = fct_rev(season), 
+    longitude = round(longitude, 2), 
+    latitude = round(latitude, 2)
+  ) %>% 
+  distinct(season, study_site, longitude, latitude)
+
+
+
+ggplot(movement) +
+  geom_point(aes(longitude, latitude, 
+                 group = study_site, 
+                 colour = study_site), size = 0.1) +
+  gghighlight::gghighlight(
+    unhighlighted_params = list(colour = "grey70"), use_direct_label = FALSE
+    ) +
+  scale_colour_manual(
+    values = c('#ffe119', '#4363d8', '#f58231', '#e6194B', '#800000', '#000075', '#f032e6', '#3cb44b'), 
+    breaks = c("Graham", "Scott", "Moberly", "Burnt Pine", "Kennedy", "Quintette", "Narraway")
+    ) +
+  guides(colour = guide_legend(title = "Herd", override.aes = list(size = 3))) +
+  coord_fixed(ratio = 1.5) +
+  facet_wrap(vars(season), ncol = 2) +
+	labs(
+	  title = "Migration patterns of Northern Caribou\nin the South Peace of British Columbia",
+		subtitle = str_wrap("In summer, most caribou migrate towards the central core of the Rocky Mountains where they use alpine and subalpine habitat. The result of this movement to the central core of the Rocky Mountains is that some of the east side herds can overlap with west side herds during the summer.", 100),
+		caption = str_wrap("Source: Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k | Graphic: Georgios Karamanis", 70)
+	) +
+  theme_void() +
+  theme(
+    legend.position = c(0.5, 0.6),
+		legend.text = element_text(size = 11, colour = "#F9EED9"),
+		legend.title = element_text(size = 16, hjust = 0.5, colour = "#F9EED9"),
+		panel.spacing.x = unit(3, "lines"),
+    plot.margin = margin(20, 20, 20, 20),
+    plot.background = element_rect(fill = "#7A6A4F", colour = NA),
+    strip.text = element_text(colour = "#F9EED9", size = 18),
+		plot.title = element_text(colour = "white", size = 20, hjust = 0, lineheight = 1),
+		plot.subtitle = element_text(colour = "white", size = 12, hjust = 0, lineheight = 1, margin = margin(10, 0, 50, 0)),
+		plot.caption = element_text(colour = "grey80", size = 7, hjust = 1, margin = margin(30, 0, 10, 0))
+  ) 
+
+```
 
 
 ## 迁移速度

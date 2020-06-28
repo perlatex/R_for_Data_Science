@@ -33,7 +33,9 @@ factor(income, levels = c("low", "high") )
 相比较字符串而言，因子类型更容易处理，因子很多函数会自动的将字符串转换为因子来处理，但事实上，这也会造成，不想当做因子的却又当做了因子的情形，最典型的是在R 4.0之前，`data.frame()`中`stringsAsFactors`选项，默认将字符串类型转换为因子类型，但这个默认也带来一些不方便，因此在R 4.0之后取消了这个默认。在tidyverse集合里，有专门处理因子的宏包`forcats`，因此，本章将围绕`forcats`宏包讲解如何处理因子类型变量，更多内容可以参考[这里](https://r4ds.had.co.nz/factors.html)。
 
 
-
+```{r}
+library(forcats)
+```
 
 
 ## 调整因子顺序
