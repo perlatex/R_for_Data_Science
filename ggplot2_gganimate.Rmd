@@ -13,7 +13,7 @@
 
 ## `gganimate`宏包
 
-动图可以将其理解为多张静态图堆在一起，当然不是随意的堆放，而是按照一定的规则，比如按照时间的顺序，或者类别的顺序。一般而言，动图制作包括两个步骤: 静态图制作及图形组装。静态图制作，前面几章我们讲过主要用ggplot2宏包实现；对于图形组装，需要用到今天我们要讲Thomas Lin Pedersen的`gganimate`宏包。
+动图可以将其理解为多张静态图堆在一起，当然不是随意的堆放，而是按照一定的规则，比如按照时间的顺序，或者类别的顺序。一般而言，动图制作包括两个步骤: 静态图制作及图形组装。静态图制作，前面几章我们讲过主要用ggplot2宏包实现；对于图形组装，需要用到今天我们要讲Thomas Lin Pedersen的`gganimate`宏包，来自同一工厂的产品，用起来自然是无缝衔接啦。
 
 ```{r, eval=FALSE}
 install.packages("gganimate")
@@ -35,7 +35,7 @@ ggplot(economics) +
 
 
 我们只需要增加一段代码！
-```{r}
+```{r, cache = TRUE}
 ggplot(economics) +
   aes(date, unemploy) +
   geom_line() +
@@ -67,7 +67,7 @@ ggplot(datasaurus_dozen) +
   labs(title = "Dataset: {closest_state}")
 ```
 
-
+是不是很炫酷，下面我们就一个个讲解其中的函数。
 
 ## The grammar of animation
 
@@ -112,7 +112,8 @@ diamonds %>%
 ```
 
 ### transition_time
-- `transition_time(time = )`, 这里的time一般认为是连续的值，相比于transition_states，没有了transtion_length这个选项，是因为transtion_length默认为time. 事实上，transition_time是transition_states的一种特例，但其实也有分组的要求
+
+- `transition_time(time = )`, 这里的time一般认为是**连续**的值，相比于`transition_states`，没有了`transtion_length`这个选项，是因为`transtion_length`默认为time. 事实上，`transition_time`是`transition_states`的一种特例，但其实也有分组的要求
 
 ```{r}
 p <- gapminder::gapminder %>% 
@@ -198,19 +199,16 @@ mtcars %>%
 
 ## 希望坐标轴随数据动起来
 
-How the plot window changes through the animation.
+动画过程中，绘图窗口怎么变化呢？
 
-```{r views-tbl}
+```{r views-tbl, echo=FALSE}
 tribble(
   ~ Function, ~ Description,
-  "view_follow", "Change the view to follow the range of current data.",
-  "view_step", "Similar to view_follow, except the view is static between transitions.",
-  "view_step_manual", "Same as view_step, except view ranges are manually defined.",
-  "view_zoom", "Similar to view_step, but appears smoother by zooming out then in.",
-  "view_zoom_manual", "Same as view_zoom, except view ranges are manually defined."
-) %>% 
-  kable(format = "html") %>%
-  kableExtra::kable_styling(font_size = 26)
+  "view_follow", "完全跟随当前数据的范围",
+  "view_step", "类似 view_follow, 除了过渡的时候要静止下下",
+  "view_step_manual", "类似 view_step, 除了需要手动定义坐标轴的范围",
+  "view_zoom", "与view_step一样, 但更变化过程更平滑",
+  "view_zoom_manual", "同上，除了需要手动定义坐标轴的范围" ) 
 ```
 
 ### view_follow
@@ -298,19 +296,17 @@ ggplot(airquality, aes(Day, Temp)) +
 
 出现和退去的函数是成对的
 
-```{r enter-exit-tbl}
+```{r enter-exit-tbl, echo=FALSE}
 tribble(
   ~ Function, ~ Description,
-  "enter_appear/exit_disappear", "Poof! Instantly appears or disappears.",
-  "enter_fade/exit_fade", "Opacity is used to fade in or out the elements.",
-  "enter_grow/exit_shrink", "Element size will grow from or shrink to zero.",
-  "enter_recolour/exit_recolour", "Change element colours to blend into the background.",
-  "enter_fly/exit_fly", "Elements will move from/to a specific x,y position.",
-  "enter_drift/exit_drift", "Elements will shift relative from/to their x,y position.",
-  "enter_reset/exit_reset", "Clear all previously added entrace/exits."
-) %>% 
-  kable(format = "html") %>%
-  kableExtra::kable_styling(font_size = 26)
+  "enter_appear/exit_disappear", "突然出现，或者闪退",
+  "enter_fade/exit_fade", "使用透明度上的变化",
+  "enter_grow/exit_shrink", "使用大小上的变化",
+  "enter_recolour/exit_recolour", "使用颜色上的变化",
+  "enter_fly/exit_fly", "使用位置上飞来飞去的效果",
+  "enter_drift/exit_drift", "使用位置上漂移的效果",
+  "enter_reset/exit_reset", "使用清空之前的效果"
+) 
 ```
 
 ### enter/exit_fade() 
@@ -441,7 +437,7 @@ transition_reveal(along =  ) +
 
 ### Renderer options
 
-```{r renderer-tbl}
+```{r renderer-tbl, echo=FALSE}
 tribble(
   ~ Function, ~ Description,
   "gifski_renderer", "Default, super fast gif renderer.",
@@ -450,9 +446,7 @@ tribble(
   "av_renderer", "Uses the av package to create a video (using ffmpeg).",
   "file_renderer", "Dumps a list of image frames from the animation.",
   "sprite_renderer", "Creates a spritesheet from frames of the animation."
-) %>% 
-  kable(format = "html") %>%
-  kableExtra::kable_styling(font_size = 26)
+)  
 ```
 
 ### 常用方法
@@ -476,6 +470,56 @@ anim_save("first_saved_animation.gif", animation = animation_to_save)
 bats <- readr::read_csv("./demo_data/bats-subset.csv") %>% 
         dplyr::mutate(id = factor(id))
 
+bats %>% 
+  ggplot(aes(x = longitude, 
+             y = latitude,
+             group = id, 
+             color = id)
+         ) +
+  geom_point() 
+```
+
+
+
+
+### 常规的方法
+
+```{r}
+bats %>% 
+  ggplot(aes(x = longitude, 
+             y = latitude,
+             group = id, 
+             color = id)
+         ) +
+  geom_point() +
+  transition_time(time) +
+  shadow_mark(past = TRUE)
+```
+
+
+
+- geom_path()是按照数据点出现的先后顺序
+- geom_line()是按照数据点在x轴的顺序
+
+```{r}
+bats %>% 
+  ggplot(aes(x = longitude, 
+             y = latitude,
+             group = id, 
+             color = id)
+         ) +
+  geom_path() +
+  transition_time(time) +
+  shadow_mark(past = TRUE)
+```
+
+
+### 炫酷点的
+
+<!-- 此时geom_path() + transition_reveal(time) = transition_time(time) -->
+
+
+```{r}
 bats %>%
   dplyr::mutate(
     image = "images/bat-cartoon.png"
@@ -489,6 +533,8 @@ bats %>%
   ggimage::geom_image(aes(image = image), size = 0.1) +
   transition_reveal(time)
 ```
+
+
 
 
 

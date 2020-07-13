@@ -95,6 +95,7 @@ d %>%
   ggplot(aes(x = x, y = y)) +
   geom_point()
 ```
+
 我们看到，横坐标上是a-b-c的顺序。
 
 
@@ -112,6 +113,7 @@ d %>%
   ggplot(aes(x = fct_reorder(x, y, .fun = median), y = y)) +
   geom_point()
 ```
+
 当然，我们可以加一个参数`.desc = TRUE`让因子层级变为降序排列b-a-c
 
 ```{r}

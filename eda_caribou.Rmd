@@ -216,11 +216,11 @@ ggplot(movement) +
   guides(colour = guide_legend(title = "Herd", override.aes = list(size = 3))) +
   coord_fixed(ratio = 1.5) +
   facet_wrap(vars(season), ncol = 2) +
-	labs(
-	  title = "Migration patterns of Northern Caribou\nin the South Peace of British Columbia",
-		subtitle = str_wrap("In summer, most caribou migrate towards the central core of the Rocky Mountains where they use alpine and subalpine habitat. The result of this movement to the central core of the Rocky Mountains is that some of the east side herds can overlap with west side herds during the summer.", 100),
-		caption = str_wrap("Source: Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k | Graphic: Georgios Karamanis", 70)
-	) +
+	# labs(
+	#   title = "Migration patterns of Northern Caribou\nin the South Peace of British Columbia",
+	# 	subtitle = str_wrap("In summer, most caribou migrate towards the central core of the Rocky Mountains where they use alpine and subalpine habitat. The result of this movement to the central core of the Rocky Mountains is that some of the east side herds can overlap with west side herds during the summer.", 100),
+	# 	caption = str_wrap("Source: Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k | Graphic: Georgios Karamanis", 70)
+	# ) +
   theme_void() +
   theme(
     legend.position = c(0.5, 0.6),

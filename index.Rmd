@@ -88,7 +88,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
-   - 第 \@ref(ggplot2-gganimate) 章让数据动起来
+   - 第 \@ref(ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(tips) 章介绍tidyverse中常用技巧
    - 第 \@ref(tibble) 章介绍简单数据框
 - 建模篇
@@ -120,8 +120,13 @@ knitr::include_graphics("images/rbook1.png")
 - <https://github.com/perlatex/R_for_Data_Science>
 
 
+3、课程视频
 
-3、**关于课程目标**
+- 部分课程视频放在[bilibili](https://space.bilibili.com/627373342/video)网站
+
+
+
+4、**关于课程目标**
 
 - 课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用，**不是 learning R，而是 learning with R**
 
@@ -131,10 +136,14 @@ knitr::include_graphics("images/rbook1.png")
 
 - 课堂要求
   - 自带电脑，配好运行环境
+  - 光看李小龙的电影，是学不会功夫的
+  
+- 知识脚手架
+  - 知识脚手架，我个人比较喜欢这个比喻。在教育中，各种知识或技巧就好比建房子用的脚手架，它帮助我们加深理解，逐渐获得独立自主学习的能力。
   
 
 
-4、**关于如何提问**
+5、**关于如何提问**
 
 有的同学，这样一上来就问：**老师，我的代码怎么运行不出来呢？**或者图省事，干脆手机拍个照片一发。
 
@@ -145,11 +154,11 @@ knitr::include_graphics("images/rbook1.png")
 
 
 
-## 课件中用到的宏包
+## 课件中用到的宏包 {-}
 
 ```{r, eval = FALSE}
 my_packages <- c(
-  "brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
+"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
 )
 ```
 
