@@ -464,7 +464,69 @@ anim_save("first_saved_animation.gif", animation = animation_to_save)
 ```
 
 
-## 案例演示
+## 案例演示一
+
+这是网上有段时间比较火的racing_bar图
+```{r}
+ranked_by_year <-
+  gapminder %>%
+  select(country, pop, year, continent) %>%
+  group_by(year) %>%
+  arrange(year, desc(pop)) %>%
+  mutate(rank = 1:n()) %>%
+  filter(rank <= 10)
+```
+
+
+```{r}
+ranked_by_year %>%
+  ungroup() %>%
+  mutate(pop = pop / 1000000) %>%
+  ggplot(aes(
+    x = rank,
+    y = country,
+    group = country,
+    label = country,
+    fill = continent
+  )) +
+  geom_tile(
+    aes(
+      y = pop / 2,
+      height = pop,
+      width = 0.9,
+      fill = continent
+    ),
+    alpha = 0.8,
+    show.legend = F
+  ) +
+  geom_text(aes(
+    y = pop,
+    label = country,
+    color = ifelse(pop > 1100, "#ffffff", "#000000"),
+    hjust = ifelse(pop > 1100, 1, 0)
+  )) +
+  scale_x_reverse(
+    breaks = c(1:10),
+    label = c(1:10)
+  ) +
+  theme_minimal() +
+  coord_flip(clip = "off", expand = FALSE) +
+  labs(
+    title = "year {closest_state}",
+    x = "",
+    y = "Population (millions)",
+    caption = "Source: github/corydonbaylor"
+  ) +
+  transition_states(year,
+    transition_length = 4,
+    state_length = 1,
+    wrap = TRUE
+  ) +
+  ease_aes("cubic-in-out")
+```
+
+
+## 案例演示二
 
 ```{r}
 bats <- readr::read_csv("./demo_data/bats-subset.csv") %>% 
