@@ -22,24 +22,37 @@ install.packages("gganimate")
 
 ### 先来一张静态图
 ```{r}
-library(tidyverse)
-library(gganimate) 
+library(tidyverse) 
+library(covdata)  # remotes::install_github("kjhealy/covdata")
+library(gganimate)
 ```
+
 
 
 ```{r}
-ggplot(economics) +
-  aes(date, unemploy) +
-  geom_line()
+covdata::covnat %>% 
+  dplyr::filter(iso3 == "USA") %>% 
+  dplyr::filter(cu_cases > 0) %>% 
+  
+  ggplot(aes(x = date, y = cases)) +
+  geom_path() +
+  labs(title = "美国新冠肺炎累积确诊病例",
+       subtitle = "数据来源https://kjhealy.github.io/covdata/")
 ```
 
 
-我们只需要增加一段代码！
-```{r, cache = TRUE}
-ggplot(economics) +
-  aes(date, unemploy) +
-  geom_line() +
-  transition_reveal(date)   #<<
+让它动起来，我们只需要增加一行代码！
+
+``` {r}
+covdata::covnat %>% 
+  dplyr::filter(iso3 == "USA") %>% 
+  dplyr::filter(cu_cases > 0) %>% 
+  ggplot(aes(x = date, y = cases)) +
+  geom_path() +
+  labs(title = "美国新冠肺炎累积确诊病例 {frame_along}",
+       subtitle = "数据来源https://kjhealy.github.io/covdata/") +
+  
+  transition_reveal(along = date)
 ```
 
 
@@ -48,20 +61,22 @@ ggplot(economics) +
 ```{r}
 library(datasauRus)
 ggplot(datasaurus_dozen) +
-  aes(x, y, color=dataset) +
+  aes(x, y, color = dataset) +
   geom_point()
 ```
 
+用分面展示
 ```{r}
 ggplot(datasaurus_dozen) +
-  aes(x, y, color=dataset) +
+  aes(x, y, color = dataset) +
   geom_point() +
   facet_wrap(~dataset)
 ```
 
+可以用动图展示
 ```{r}
 ggplot(datasaurus_dozen) +
-  aes(x, y) +
+  aes(x, y, color = dataset) +
   geom_point() +
   transition_states(dataset, 3, 1) +       #<<
   labs(title = "Dataset: {closest_state}")
@@ -69,9 +84,11 @@ ggplot(datasaurus_dozen) +
 
 是不是很炫酷，下面我们就一个个讲解其中的函数。
 
+
+
 ## The grammar of animation
 
-使用gganimate做动画，只需要掌握以下五类函数：
+使用`gganimate`做动画，只需要掌握以下五类函数：
 
 - `transition_*()`: 定义动画是根据哪个变量进行”动”，以及如何”动”
 - `view_*()`: 定义坐标轴随数据变化.
@@ -138,8 +155,8 @@ anim
 - `transition_reveal(along =  )`,  along 这个词可以看出，它是按照某个变量**依次**显示的意思，比如顺着x轴显示
 
 ```{r}
-ggplot(economics) +
-  aes(date, unemploy) +
+ggplot(data = economics) +
+  aes(x= date, y = unemploy) +
   geom_line()
 ```
 
@@ -147,9 +164,10 @@ ggplot(economics) +
 
 ```{r}
 ggplot(economics) +
-  aes(date, unemploy) +
+  aes(x= date, y = unemploy) +
   geom_line() +
-  transition_reveal(date)   #<<
+  transition_reveal(along = date)  +
+  labs(title = "now is {frame_along}")
 ```
 
 
@@ -164,6 +182,7 @@ diamonds %>%
   transition_filter(
     transition_length = 3,
     filter_length = 1,
+    
     cut == "Ideal",
     Deep = depth >= 60
   )
@@ -279,7 +298,7 @@ ggplot(iris, aes(Petal.Length, Sepal.Length)) +
 p + 
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
-  shadow_mark(alpha = 0.3, size =0.5)
+  shadow_mark(alpha = 0.3, size = 0.5)
 ```
 
 
@@ -466,45 +485,101 @@ anim_save("first_saved_animation.gif", animation = animation_to_save)
 
 ## 案例演示一
 
+
+<!-- 这是网上有段时间比较火的racing_bar图 -->
+<!-- ```{r} -->
+<!-- ranked_by_year <- -->
+<!--   gapminder %>% -->
+<!--   select(country, pop, year, continent) %>% -->
+<!--   group_by(year) %>% -->
+<!--   arrange(year, desc(pop)) %>% -->
+<!--   mutate(rank = 1:n()) %>% -->
+<!--   filter(rank <= 10) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- ranked_by_year %>% -->
+<!--   ungroup() %>% -->
+<!--   mutate(pop = pop / 1000000) %>% -->
+<!--   ggplot(aes( -->
+<!--     x = rank, -->
+<!--     y = country, -->
+<!--     group = country, -->
+<!--     label = country, -->
+<!--     fill = continent -->
+<!--   )) + -->
+<!--   geom_tile( -->
+<!--     aes( -->
+<!--       y = pop / 2, -->
+<!--       height = pop, -->
+<!--       width = 0.9, -->
+<!--       fill = continent -->
+<!--     ), -->
+<!--     alpha = 0.8, -->
+<!--     show.legend = F -->
+<!--   ) + -->
+<!--   geom_text(aes( -->
+<!--     y = pop, -->
+<!--     label = country, -->
+<!--     color = ifelse(pop > 1100, "#ffffff", "#000000"), -->
+<!--     hjust = ifelse(pop > 1100, 1, 0) -->
+<!--   )) + -->
+<!--   scale_x_reverse( -->
+<!--     breaks = c(1:10), -->
+<!--     label = c(1:10) -->
+<!--   ) + -->
+<!--   theme_minimal() + -->
+<!--   coord_flip(clip = "off", expand = FALSE) + -->
+<!--   labs( -->
+<!--     title = "year {closest_state}", -->
+<!--     x = "", -->
+<!--     y = "Population (millions)", -->
+<!--     caption = "Source: github/corydonbaylor" -->
+<!--   ) + -->
+<!--   transition_states(year, -->
+<!--     transition_length = 4, -->
+<!--     state_length = 1, -->
+<!--     wrap = TRUE -->
+<!--   ) + -->
+<!--   ease_aes("cubic-in-out") -->
+<!-- ``` -->
+
+
+
 这是网上有段时间比较火的racing_bar图
+
 ```{r}
-ranked_by_year <-
-  gapminder %>%
-  select(country, pop, year, continent) %>%
-  group_by(year) %>%
-  arrange(year, desc(pop)) %>%
+ranked_by_date <- covdata::covnat %>% 
+  group_by(date) %>% 
+  arrange(date, desc(cu_cases)) %>%
   mutate(rank = 1:n()) %>%
-  filter(rank <= 10)
+  filter(rank <= 10) %>% 
+  ungroup()
 ```
 
 
 ```{r}
-ranked_by_year %>%
-  ungroup() %>%
-  mutate(pop = pop / 1000000) %>%
-  ggplot(aes(
-    x = rank,
-    y = country,
-    group = country,
-    label = country,
-    fill = continent
-  )) +
+ranked_by_date %>%
+  filter(date >= "2020-05-01") %>% 
+  ggplot(
+    aes(x = rank, y = cname, group = cname, fill = cname)
+    ) +
   geom_tile(
     aes(
-      y = pop / 2,
-      height = pop,
-      width = 0.9,
-      fill = continent
+      y = cu_cases / 2,
+      height = cu_cases,
+      width = 0.9
     ),
     alpha = 0.8,
     show.legend = F
   ) +
   geom_text(aes(
-    y = pop,
-    label = country,
-    color = ifelse(pop > 1100, "#ffffff", "#000000"),
-    hjust = ifelse(pop > 1100, 1, 0)
-  )) +
+    y = cu_cases,
+    label = cname
+  ),
+  show.legend = FALSE
+  ) +
   scale_x_reverse(
     breaks = c(1:10),
     label = c(1:10)
@@ -512,17 +587,16 @@ ranked_by_year %>%
   theme_minimal() +
   coord_flip(clip = "off", expand = FALSE) +
   labs(
-    title = "year {closest_state}",
+    title = "日期: {closest_state}",
     x = "",
-    y = "Population (millions)",
-    caption = "Source: github/corydonbaylor"
+    caption = "Source: github/kjhealy/covdata"
   ) +
-  transition_states(year,
-    transition_length = 4,
-    state_length = 1,
-    wrap = TRUE
+  transition_states(date,
+                    transition_length = 4,
+                    state_length = 1,
+                    wrap = TRUE
   ) +
-  ease_aes("cubic-in-out")
+  ease_aes("cubic-in-out") 
 ```
 
 
@@ -531,7 +605,11 @@ ranked_by_year %>%
 ```{r}
 bats <- readr::read_csv("./demo_data/bats-subset.csv") %>% 
         dplyr::mutate(id = factor(id))
+```
 
+
+
+```{r}
 bats %>% 
   ggplot(aes(x = longitude, 
              y = latitude,
@@ -597,10 +675,60 @@ bats %>%
 ```
 
 
+## 案例演示三
+
+全球R-Ladies组织，会议活动的情况，我们在地图上用动图展示
+```{r}
+rladies <- read_csv("./demo_data/rladies.csv")
+rladies
+```
+
+
+```{r}
+#library(maps)
+#library(ggthemes)
+
+world <- ggplot() +
+  borders("world", colour = "gray85", fill = "gray80") +
+  ggthemes::theme_map() 
+world
+```
 
 
 
-## 问题
+```{r}
+world +
+  geom_point(
+    data = rladies,
+    aes(x = lon, y = lat, size = followers),
+    colour = 'purple', alpha = .5) +
+  scale_size_continuous(range = c(1, 8), 
+                        breaks = c(250, 500, 750, 1000)) +
+  labs(size = 'Followers')
+```
+
+
+
+用动图展示（这种方法可以用在流行病传播的展示上）
+
+```{r}
+world +
+  geom_point(aes(x = lon, y = lat, size = followers),
+             data = rladies,
+             colour = 'purple', alpha = .5
+  ) +
+  scale_size_continuous(range = c(1, 8), 
+                        breaks = c(250, 500, 750, 1000)) +
+  transition_states(created_at) +
+  shadow_mark(past = TRUE) +
+  labs(title = 'Day: {closest_state}')
+```
+
+
+
+
+
+## 课后作业
 
 ### 作业1
 
