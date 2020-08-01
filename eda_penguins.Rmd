@@ -1,0 +1,453 @@
+# 探索性数据分析7 {#eda07}
+
+
+今天讲一个关于企鹅的数据故事。数据来源[这里](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/penguins.png")
+```
+
+
+
+## 数据
+
+### 导入数据
+读取本地`penguins.csv`文件，也可以通过宏包`palmerpenguins::penguins`获取数据
+```{r eval=FALSE, include=FALSE}
+library(tidyverse)
+d <- palmerpenguins::penguins
+d %>%
+  tidyr::drop_na() %>%
+  head()
+```
+
+```{r}
+library(tidyverse)
+penguins <- read_csv("./demo_data/penguins.csv") %>%
+  janitor::clean_names() # %>%
+# na.omit()
+penguins %>%
+  head()
+```
+### 变量含义
+
+|variable          |class   |description |
+|:-----------------|:-------|:-----------|
+|species           |integer | 企鹅种类 (Adelie, Gentoo, Chinstrap) |
+|island            |integer | 所在岛屿 (Biscoe, Dream, Torgersen) |
+|bill_length_mm    |double  | 嘴峰长度 (单位毫米) |
+|bill_depth_mm     |double  | 嘴峰深度 (单位毫米)|
+|flipper_length_mm |integer | 鰭肢长度 (单位毫米) |
+|body_mass_g       |integer | 体重 (单位克) |
+|sex               |integer | 性别 |
+|year              |integer | 记录年份 |
+
+
+
+The main measurements are body mass, culmen (bill) length, bill depth, and flipper length.
+作者的意图是取代iris
+
+```{r out.width = '86%', echo = FALSE}
+knitr::include_graphics("images/culmen_depth.png")
+```
+
+
+
+## 探索性分析
+
+### 数据清洗
+```{r}
+penguins %>% filter_all(
+  any_vars(is.na(.))
+)
+```
+发现有11行或多或少的有缺失值，于是我们就删除它们
+
+
+
+```{r}
+penguins <- penguins %>% drop_na()
+penguins
+```
+
+### 每种类型企鹅有多少只
+```{r}
+penguins %>%
+  count(species)
+```
+
+
+
+### 每种类型企鹅各种属性的均值
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+```
+
+
+
+### 性别特征
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm)) +
+  geom_histogram(aes(fill = sex)) +
+  facet_wrap(vars(species), scales = "free")
+```
+
+来张更好看点的
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, fill = sex)) +
+  geom_histogram(
+    position = "identity",
+    alpha = 0.7,
+    bins = 25
+  ) +
+  scale_fill_manual(values = c("#66b3ff", "#8c8c8c")) +
+  ylab("number of penguins") +
+  xlab("length (mm)") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 11),
+    legend.title = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.title = element_text(color = "white", size = 10),
+    plot.title = element_text(size = 20),
+    plot.subtitle = element_text(size = 12, hjust = 1)
+  ) +
+  facet_wrap(vars(species), scales = "free")
+```
+同理可以画出其他属性的分布
+
+
+
+
+
+
+### 每种类型企鹅各种嘴峰长度的分布
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm)) +
+  geom_density() +
+  facet_wrap(vars(species))
+```
+
+
+
+```{r}
+library(ggridges)
+penguins %>%
+  ggplot(aes(x = bill_length_mm, fill = species)) +
+  ggridges::geom_density_ridges(aes(y = species))
+```
+
+
+
+
+同理，我们可以画出嘴峰深度的分布
+
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_depth_mm, fill = species)) +
+  ggridges::geom_density_ridges(aes(y = species))
+```
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_depth_mm, fill = sex)) +
+  ggridges::geom_density_ridges(aes(y = species))
+```
+```{r}
+penguins %>%
+  ggplot(aes(x = body_mass_g, fill = sex)) +
+  ggridges::geom_density_ridges(aes(y = species), alpha = 0.5)
+```
+
+
+但，这样一个变量一个变量的画，可能会比较麻烦。于是我们可以这样
+```{r}
+penguins %>%
+  select(species, bill_length_mm:body_mass_g) %>%
+  pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
+  ggplot(aes(x = value)) +
+  geom_density(aes(color = species, fill = species), size = 1.2, alpha = 0.2) +
+  facet_wrap(vars(measurement), ncol = 2, scales = "free")
+```
+
+
+### 嘴峰长度和深度的分布
+```{r}
+penguins %>%
+  ggplot(aes(
+    x = bill_length_mm, y = bill_depth_mm,
+    shape = species, color = species
+  )) +
+  geom_point()
+```
+
+```{r}
+penguins %>%
+  ggplot(aes(
+    x = bill_length_mm, y = bill_depth_mm,
+    shape = species, color = species
+  )) +
+  geom_point(aes(size = body_mass_g))
+```
+
+
+感觉这是一个辛普森佯谬， 我们画图看看
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = lm) +
+  geom_smooth(method = lm, aes(color = species))
+```
+
+### 体重分布
+```{r}
+penguins %>%
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_jitter() +
+  geom_boxplot()
+```
+
+
+
+
+```{r}
+penguins %>%
+  group_by(species, island, sex) %>%
+  ggplot(aes(
+    x = body_mass_g, y = reorder(species, -body_mass_g),
+    color = species
+  )) +
+  geom_jitter(position = position_jitter(seed = 2020, width = 0.2), alpha = 0.4, size = 2) +
+  stat_summary(fun = mean, geom = "point", size = 5, alpha = 1)
+```
+
+
+
+```{r}
+library(ggtext)
+penguins %>%
+  ggplot(aes(flipper_length_mm, body_mass_g, group = species)) +
+  geom_point(aes(colour = species, shape = species), alpha = 0.7) +
+  scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
+  labs(
+    title = "Penguin Size, Palmer Station LTER",
+    subtitle = "Flipper length and body mass for <span style = 'color:darkorange;'>Adelie</span>, <span style = 'color:purple;'>Chinstrap</span> and <span style = 'color:cyan4;'>Gentoo</span> Penguins",
+    caption = "Visualization: Ella Kaye, Data: Gorman, Williams & Fraser (2014) DOI: 10.1371/journal.pone.009008",
+    x = "flipper length (mm)",
+    y = "body mass (g)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    # text = element_text(family = "Futura"),
+    # (I only have 'Light' )
+    plot.title = element_text(size = 16),
+    plot.subtitle = element_markdown(), # element_markdown from `ggtext` to parse the css in the subtitle
+    plot.title.position = "plot",
+    plot.caption = element_text(size = 8, colour = "grey50"),
+    plot.caption.position = "plot"
+  )
+```
+
+
+### 可视化学统计
+
+这个[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（科研数据可视化中会介绍）, 
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    count = n(),
+    mean_body_mass = mean(body_mass_g),
+    sd_body_mass = sd(body_mass_g)
+  )
+```
+
+#### 参数检验
+one-way ANOVA(要求等方差)
+
+```{r}
+stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
+  summary()
+```
+
+
+
+one-way ANOVA(不要求等方差)[here](http://www.sthda.com/english/wiki/one-way-anova-test-in-r)
+```{r}
+oneway.test(body_mass_g ~ species, data = penguins)
+```
+
+```{r}
+stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
+  TukeyHSD(which = "species") %>%
+  broom::tidy()
+```
+
+
+```{r}
+library(ggstatsplot)
+
+penguins %>%
+  ggbetweenstats(
+    x = species, # > 2 groups
+    y = body_mass_g,
+    type = "parametric",
+    messages = FALSE,
+    var.equal = FALSE
+  )
+```
+
+#### 非参数检验
+[here](http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r)
+```{r}
+kruskal.test(body_mass_g ~ species, data = penguins)
+```
+
+```{r}
+penguins %>%
+ggbetweenstats(
+  x = species, 
+  y = body_mass_g,
+  type = "nonparametric", 
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, # <<
+  pairwise.display = "all", # ns = only non-significant
+  p.adjust.method = "fdr", # <<
+  messages = FALSE
+)
+```
+
+
+### 嘴峰长度与嘴峰深度的比例
+```{r}
+penguins %>%
+  mutate(ratio = bill_length_mm / bill_depth_mm) %>%
+  group_by(species) %>%
+  summarise(mean = mean(ratio))
+```
+
+```{r}
+penguins %>%
+  mutate(ratio = bill_length_mm / bill_depth_mm) %>%
+  ggplot(aes(x = ratio, fill = species)) +
+  ggridges::geom_density_ridges(aes(y = species))
+```
+
+
+### 建立模型
+
+```{r}
+scale_fun <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+
+d <- penguins %>%
+  select(sex, species, bill_length_mm:body_mass_g) %>%
+  mutate(
+    across(where(is.numeric), scale_fun)
+  ) %>%
+  mutate(male = if_else(sex == "male", 1, 0))
+d
+```
+
+按照species分组后，对flipper_length_mm标准化？这样数据会聚拢到一起了喔
+```{r, eval=FALSE}
+penguins %>%
+  select(sex, species, bill_length_mm:body_mass_g) %>%
+  group_by(species) %>%
+  mutate(
+    across(where(is.numeric), scale_fun)
+  ) %>%
+  ungroup()
+```
+
+
+
+#### model_01
+```{r}
+logit_mod1 <- glm(
+  male ~ 1 + species + bill_length_mm + bill_depth_mm +
+    flipper_length_mm + body_mass_g,
+  data = d,
+  family = binomial(link = "logit")
+)
+
+summary(logit_mod1)
+```
+
+
+```{r}
+library(ggeffects)
+ggpredict(logit_mod1, "bill_depth_mm [all]") %>%
+  plot()
+```
+
+
+#### model_02
+
+
+```{r}
+library(brms)
+
+brms_mod2 <- brm(
+  male ~ 1 + bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g + (1 | species),
+  data = d,
+  family = binomial(link = "logit")
+)
+```
+
+
+```{r}
+summary(brms_mod2)
+```
+
+```{r}
+library(ggeffects)
+ggpredict(brms_mod2, "bill_depth_mm [all]") %>%
+  plot()
+```
+
+
+
+#### model_03
+
+```{r}
+penguins %>%
+  ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = species)) +
+  geom_point()
+```
+
+
+
+```{r}
+library(brms)
+brms_mod3 <- brm(bill_length_mm ~ flipper_length_mm + (1 + species),
+  data = penguins
+)
+```
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  modelr::data_grid(flipper_length_mm) %>%
+  tidybayes::add_fitted_draws(brms_mod3, n = 100) %>%
+  ggplot() +
+  geom_point(
+    data = penguins,
+    aes(flipper_length_mm, bill_length_mm, color = species, shape = species)
+  ) +
+  geom_line(aes(flipper_length_mm, .value, group = interaction(.draw, species), color = species), alpha = 0.1)
+```
+
+
+

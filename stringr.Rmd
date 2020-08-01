@@ -1,10 +1,35 @@
 # 正则表达式 {#stringr}
 
-
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(stringr)
 ```
+
+
+
+## 问题
+
+这是一份关于地址信息的数据
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d <- tibble::tribble(
+  ~No,                        ~address,
+   1L,       "Sichuan Univ, Coll Chem",
+   2L, "Sichuan Univ, Coll Elect Engn",
+   3L,       "Sichuan Univ, Dept Phys",
+   4L,   "Sichuan Univ, Coll Life Sci",
+   6L,       "Sichuan Univ, Food Engn",
+   7L,       "Sichuan Univ, Coll Phys",
+   8L,    "Sichuan Univ, Sch Business",
+   9L,           "Wuhan Univ, Mat Sci"
+  )
+
+d 
+```
+
+**问题**：如何提取`Sichuan Univ`后面的学院？
+
+
 
 
 ## 什么是正则表达式
@@ -126,12 +151,22 @@ str_sub(x, -3, -1)
 
 
 也可以进行赋值，如果该位置上有字符，就用新的字符替换旧的字符
+
 ```{r}
-str_sub(x, 1, 1) <- "Q"
+x <- c("Apple", "Banana", "Pear")
 x
 ```
 
 
+```{r}
+str_sub(x, 1, 1)
+```
+
+
+```{r}
+str_sub(x, 1, 1) <- "Q"
+x
+```
 
 
 
@@ -148,7 +183,7 @@ x <- c("apple", "banana", "pear")
 str_view(string = x, pattern = "an")
 ```
 
-有时候，我们希望在字符串中，`a`前后都有字符（a处在两字符中间， rap, bad, sad, wave，spear等等）
+有时候，我们希望在字符`a`前后都有字符（即，a处在两字符中间，如rap, bad, sad, wave，spear等等）
 ```{r}
 x <- c("apple", "banana", "pear")
 str_view(x, ".a.")
@@ -321,12 +356,30 @@ str_view(ft, "(.)(.)\\2\\1", match = TRUE)
 
 ### 确定一个字符向量是否匹配一种模式
 
-实际问题中，我们希望得到，是否匹配？或者将匹配的筛选处理，
-这个时候，需要用到`str_detect`等函数
+实际问题中，想判断是否匹配？可以用到`str_detect()`函数
 ```{r}
 x <- c("apple", "banana", "pear")
 str_detect(x, "e")
 ```
+
+数据框中也是一样
+```{r echo=FALSE}
+d <- tibble(x = c("apple", "banana", "pear") )
+d
+```
+
+```{r}
+d %>% mutate(has_e = str_detect(x, "e"))
+```
+
+用于筛选也很方便
+
+```{r}
+d %>% filter(str_detect(x, "e"))
+```
+
+
+
 
 `stringr::words`包含了牛津字典里常用单词
 ```{r}
@@ -614,9 +667,6 @@ dt %>%
 
 
 
-
-
-
 ### 案例2
 
 提取第二列中的大写字母
@@ -760,6 +810,59 @@ pairs <-
 
 
 text %>% str_replace_all(pairs)
+```
+
+
+
+
+## 回答提问
+
+回到上课提问：如何提取`Sichuan Univ`后面的学院？
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d <- tibble::tribble(
+  ~No,                        ~address,
+   1L,       "Sichuan Univ, Coll Chem",
+   2L, "Sichuan Univ, Coll Elect Engn",
+   3L,       "Sichuan Univ, Dept Phys",
+   4L,   "Sichuan Univ, Coll Life Sci",
+   6L,       "Sichuan Univ, Food Engn",
+   7L,       "Sichuan Univ, Coll Phys",
+   8L,    "Sichuan Univ, Sch Business",
+   9L,           "Wuhan Univ, Mat Sci"
+  )
+
+d 
+```
+
+
+```{r}
+d %>% dplyr::mutate(
+  coll = str_extract(address, "(?<=Sichuan Univ,).*") 
+) %>% 
+  tidyr::unnest(coll, keep_empty = TRUE)
+```
+
+
+当然还有其他的解决办法
+```{r eval=FALSE}
+d %>% mutate(
+  coll = str_remove_all(address, ".*,")
+  ) 
+```
+
+```{r eval=FALSE}
+d %>% tidyr::separate(
+  address, into = c("univ", "coll"), sep = ",", remove = FALSE
+)
+```
+
+
+```{r eval=FALSE}
+d %>% 
+  tidyr::extract(
+  address, c("univ", "coll"), "(Sichuan Univ), (.+)",
+  remove = FALSE
+)
 ```
 
 

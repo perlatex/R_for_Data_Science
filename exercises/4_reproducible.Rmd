@@ -1,0 +1,87 @@
+---
+title: "这是一份关于新冠肺炎的探索性分析报告"
+author: "王小二"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    extra_dependencies:
+      ctex: UTF8
+    number_sections: yes
+    toc: yes
+    df_print: kable
+classoptions: "hyperref, 12pt, a4paper"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      fig.align = "center"
+                      )
+```
+
+
+
+# 引言
+
+这是一份关于新冠肺炎的探索性分析报告。
+
+
+
+# 导入数据
+
+首先，我们加载需要的宏包，其中tidyverse用于数据探索、covdata用于获取数据
+
+```{r}
+# Load libraries
+library(tidyverse) 
+library(covdata)
+```
+
+
+论文的数据来源
+[https://kjhealy.github.io/covdata/](https://kjhealy.github.io/covdata/)，我们选取部分数据看看
+
+
+```{r, echo = FALSE}
+covnat %>% 
+  tail(10) 
+```
+
+
+
+# 数据变量
+
+这个数据集包含8个变量，具体含义如下：
+
+| 变量      	| 含义               	|
+|-----------	|--------------------	|
+| date      	| 日期               	|
+| cname     	| 国家名             	|
+| iso3      	| 国家编码           	|
+| cases     	| 确诊病例           	|
+| deaths    	| 死亡病例           	|
+| pop       	| 2019年国家人口数量 	|
+| cu_cases  	| 累积确诊病例       	|
+| cu_deaths 	| 累积死亡病例       	|
+
+
+
+# 可视化
+
+为了更好的呈现数据，我们将筛选出美国确诊病例数据，并可视化
+
+```{r, fig.showtext = TRUE}
+covdata::covnat %>% 
+  dplyr::filter(iso3 == "USA") %>% 
+  dplyr::filter(cu_cases > 0) %>% 
+  
+  ggplot(aes(x = date, y = cases)) +
+  geom_path() +
+  labs(title = "美国新冠肺炎累积确诊病例",
+       subtitle = "数据来源https://kjhealy.github.io/covdata/")
+```
+
+

@@ -8,6 +8,7 @@ output:
     extra_dependencies:
       ctex: UTF8
     number_sections: yes
+    df_print: kable
     toc: yes
 classoptions: "hyperref, 12pt, a4paper"
 ---

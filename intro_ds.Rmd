@@ -19,17 +19,120 @@ knitr::include_graphics("images/Data_Science2010.png", dpi = 120)
 
 （事实上，最重要的最下面那个部分，专业领域的知识）
 
-## 数据科学流程
+## 什么是R
+
+### R那些事
+
+-   1992年，新西兰奥克兰大学统计学教授 Ross Ihaka 和 Robert Gentleman，为了方便地给学生教授统计学课程，他们设计开发了R语言（他们名字的首字母都是R）。
+
+```{r echo=FALSE, out.width = '0.8\\textwidth'}
+knitr::include_graphics(path = "images/R_inventor.png")
+```
+
+-   2000年，R1.0.0 发布
+-   2004年，第一届国际useR!会议（随后每年举办一次）
+-   2005年，ggplot2宏包（2018.8 - 2019.8下载量超过 1.3 亿次）
+-   2012年，R2.15.2 发布
+-   2013年，R3.0.2 发布, CRAN上的宏包数量5026个
+-   2016年，Rstudio公司推出 tidyverse 宏包（数据科学当前最流行的R宏包）
+-   2017年，R3.4.1 发布，CRAN上的宏包数量10875个
+-   2019年，R3.6.1 发布，CRAN上的宏包数量15102个
+-   2020年，R4.0.0 发布，CRAN上的宏包数量16054个
+
+[The History of R](https://blog.revolutionanalytics.com/2020/07/the-history-of-r-updated-for-2020.html)
+
+### R是什么
+
+官网定义：<https://www.r-project.org/>
+
+```{r echo=FALSE, out.width = '100%'}
+knitr::include_graphics("images/what_is_R.png")
+```
+
+R语言是用于统计分析，图形表示和报告的编程语言:
+
+-   R 是一个\textcolor{red}{统计编程}语言（statistical programming）
+-   R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X
+-   R 拥有顶尖水准的\textcolor{red}{制图}功能
+-   R 是免费的
+-   R 应用广泛，拥有丰富的\textcolor{red}{库包}
+-   活跃的\textcolor{red}{社区}
+
+<!-- -   R 是一个**统计编程**语言（statistical programming） -->
+<!-- -   R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X -->
+<!-- -   R 拥有顶尖水准的**制图**功能 -->
+<!-- -   R 是免费的 -->
+<!-- -   R 应用广泛，拥有丰富的**库包** -->
+<!-- -   活跃的**社区** -->
+
+### R语言发展趋势
+
+```{r echo=FALSE, out.width = '100%'}
+knitr::include_graphics("images/tiobe-index.png")
+```
+
+[TIOBE index](https://www.tiobe.com/tiobe-index/)
+
+
+
+### R路上的大神
+
+2019 年 8 月，国际统计学年会将考普斯总统奖（The Committee of Presidents of Statistical Societies
+Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
+
+
+```{r echo=FALSE, out.width = '50%'}
+knitr::include_graphics("images/hadley-wickham.jpg")
+```
+
+-   [Hadley Wickham](http://hadley.nz/)
+-   R路上的大神
+-   改变了R语言的人
+
+
+
+## R能干什么
+
+### 数据科学流程
 Hadley Wickham将[数据科学流程](https://r4ds.had.co.nz/)分解成6个环节
 
 ```{r out.width = '80%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/data-science-explore.png")
 ```
+
 即数据导入、数据规整、数据处理、可视化、建模以及形成可重复性报告，整个分析和探索过程都在一个程序代码中完成，这种方式对训练我们的数据思维非常有帮助。
+
+
+### tidyverse家族
+
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/tidyverse.png")
+```
+
+[https://www.tidyverse.org/](https://www.tidyverse.org/)
+
+
+
+###  R & tidyverse 四大功能和代码演示
+
+| 序号 	| 内容         	| 代码演示         	|
+|------	|--------------	|------------------	|
+| 1    	| 统计         	| 1_stats.R        	|
+| 2    	| 可视化       	| 2_visual.R       	|
+| 3    	| 探索性分析   	| 3_eda.R          	|
+| 4    	| 可重复性报告 	| 4_reproducible.R 	|
 
 
 
 ## 为什么选择 R
+
+
+### 数据科学是为社会科学服务的
+
+```{r echo=FALSE, out.width = '70%'}
+knitr::include_graphics("images/social_science.jpg")
+```
+
 
 2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
 
@@ -41,14 +144,15 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 可以参考[《为什么R语言是当今最值得学习的数据科学语言》](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)，这篇文章做了详细的对比。我个人的观点是，如果想做程序员或者打算今后在工业企业里工作，可以选择python; 如果你今后打算在科研机构做学术研究，我推荐R语言作为入门语言。
 
 
-2019 年国际统计学年会将考普斯总统奖（The Committee of Presidents of Statistical Societies
-Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
+### 选择 R & tidyverse 的理由
 
-* 数据科学为什么选择 R & tidyverse
-  +  统计
-  +  可视化
-  +  探索性分析
-  +  可重复性报告
+| 序号 	| 内容          	| 特性     	| 评价 	| 代码演示         	|
+|------	|---------------	|----------	|------	|------------------	|
+| 1    	| 统计分析      	| 看家本领 	| 好用 	| 1_stats.R        	|
+| 2    	| ggplot2画图   	| 颜值担当 	| 好看 	| 2_visual.R       	|
+| 3    	| tidyverse语法 	| 简单易懂 	| 好学 	| 3_eda.R          	|
+| 4    	| 可重复性报告  	| 方便快捷 	| 好玩 	| 4_reproducible.R 	|
+
   
 * tidyverse
   + 语法一致性（学习一个宏包，可以帮助理解其他宏包）
@@ -71,9 +175,7 @@ Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyve
 <!-- - 活跃的社区 -->
 
 
-
-
-## R vs Excel
+### 一见钟情，还是相见恨晚？
 
 为什么不能用excel做数据分析？画个图说明下
 
@@ -83,4 +185,13 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 
 
 
+```{r echo=FALSE, out.width = '100%'}
+knitr::include_graphics("images/meme.png")
+```
 
+
+## 推荐阅读
+
+-   [为什么R语言是当今最值得学习的数据科学语言](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)
+-   [R for Data Science](https://r4ds.had.co.nz/)
+-   <https://www.tidyverse.org/>

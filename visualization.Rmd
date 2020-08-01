@@ -94,11 +94,13 @@ sum(d$count)
 
 ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。
 
+<!-- ```{r out.width = '100%', echo = FALSE} -->
+<!-- knitr::include_graphics("images/visualization-grammar-3.png") -->
+<!-- ``` -->
+
 ```{r out.width = '100%', echo = FALSE}
-knitr::include_graphics("images/visualization-grammar-3.png")
+knitr::include_graphics("images/mapping.png")
 ```
-
-
 
 `ggplot()`函数包括9个部件：
 
@@ -190,9 +192,14 @@ str(mpg)
 
 回答这个问题，我们用到mpg数据集其中的三个变量
 
-- displ： 发动机排量, **排量**
-- hwy： 每加仑英里数，**油耗**
-- class：汽车类型
+
+|序号|变量|含义|
+|:---|:---|:---|
+|3 | displ | 发动机排量, **排量**|
+|9 | hwy | 每加仑英里数，**油耗**|
+|11 | class | 汽车类型|
+
+
 
 ```{r}
 mpg[c("displ", "hwy",  "class")]
@@ -201,7 +208,7 @@ mpg[c("displ", "hwy",  "class")]
 
 
 
-为考察，发动机排量(displ)与每加仑英里数(hwy)之间的关联，先绘制这两个变量的散点图，
+为考察发动机排量(displ)与每加仑英里数(hwy)之间的关联，先绘制这两个变量的散点图，
 
 ```{r out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/a-3.png")
@@ -358,6 +365,8 @@ p2
 ```
 
 
+## 图层叠加
+
 ```{r}
 p3 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
    geom_point() +
@@ -399,21 +408,21 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point()
 ```
 
-`x = displ, y = hwy, color = class` 为全局变量。
+那么`x = displ, y = hwy, color = class` 为全局变量。此时`geom_point()`中缺少所绘图所需要的映射关系，就会继承全局变量的映射关系
 
 
-如果映射关系`aes()` 写在几何对象`geom_point()`里, 就为局部变量, 比如。
+
+如果映射关系`aes()` 写在几何对象`geom_point()`里, 那么就为局部变量, 比如。
 
 ```{r, eval=FALSE}
 ggplot(mpg) + 
   geom_point(aes(x = displ, y = hwy, color = class))
 ```
 
-
-如果`geom_point()`中缺少所绘图所需要的映射关系，就会继承全局变量的映射关系`aes(x = displ, y = hwy, color = class)` 。
-
+此时`geom_point()`绘图所需要的映射关系`aes(x = displ, y = hwy, color = class)` 已经存在，就不会继承全局变量的映射关系。
 
 
+再看下面这个例子，
 ```{r, eval=FALSE, warning=FALSE, message=FALSE}
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(aes(color = class)) +
@@ -424,13 +433,16 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 这里的 `geom_point()` 和 `geom_smooth()` 都会从全局变量中继承映射关系。
 
 
-
-如果局部变量中的映射关系已经存在，那么就不会从全局变量中继承，沿用当前的映射关系。
+再看下面这个例子，
 
 ```{r}
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_point(aes(color = factor(cyl))) 
 ```
+
+局部变量中的映射关系
+`aes(color = )`已经存在，因此不会从全局变量中继承，沿用当前的映射关系。
+
 
 
 大家细细体会下，下面两段代码的区别
@@ -450,7 +462,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 
 
 
-## saving plots
+## 保存图片
 
 可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等
 

@@ -84,7 +84,7 @@ rmarkdown 生成的word功能不是很多，推荐使用[officedown宏包](https
 
 ## 生成pdf文档
 
-pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受同学们的喜欢。但往往我们写中文的时候，编译不成功。这里就来讲讲如何解决这些问题，推荐阅读[这里](https://bookdown.org/yihui/rmarkdown/)。
+pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受同学们的喜欢。但往往我们写中文的时候，编译不成功。这里就来讲讲如何解决这些问题，推荐阅读[这里](https://bookdown.org/yihui/rmarkdown/)，或者看这个[视频](https://www.bilibili.com/video/BV1Gf4y1R7md)。
 
 *Instructions*
 
@@ -112,6 +112,7 @@ output:
     extra_dependencies:
       ctex: UTF8
     number_sections: yes
+    df_print: kable
     toc: yes
 classoptions: "hyperref, 12pt, a4paper"
 ---
@@ -171,7 +172,18 @@ summary(cars)
 
 ### 表格
 
-```{r tables-mtcars,  echo = TRUE}
+<!-- ```{r tables-mtcars,  echo = TRUE} -->
+<!-- knitr::kable(iris[1:5, ], caption = "A caption") -->
+<!-- ``` -->
+
+````md
+```{r tables-mtcars}`r ''`
+knitr::kable(iris[1:5, ], caption = "A caption")
+```
+````
+
+
+```{r tables-mtcars,  echo = F}
 knitr::kable(iris[1:5, ], caption = "A caption")
 ```
 
@@ -179,8 +191,44 @@ knitr::kable(iris[1:5, ], caption = "A caption")
 
 
 ### 生成图片
+````md
+```{r}`r ''`
+plot(pressure)
+```
+````
 
-```{r}
+
+```{r out.width = '85%', echo=FALSE}
+plot(pressure)
+```
+
+或者
+
+````md
+```{r, out.width = '85%', fig.showtext = TRUE}`r ''`
+library(tidyverse)
+library(nycflights13)
+library(showtext)
+showtext_auto()
+
+flights %>%
+  group_by(dest) %>%
+  summarize(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>%
+  dplyr::filter(delay > 0, count > 20, dest != "HNL") %>%
+  ggplot(mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1 / 3) +
+  geom_smooth(se = FALSE) +
+  ggtitle("这是我的标题")
+```
+````
+
+
+
+```{r, fig.showtext = TRUE, echo=FALSE}
 library(tidyverse)
 library(nycflights13)
 library(showtext)
@@ -215,6 +263,8 @@ xfun::embed_file('./data/my_pdf_document.Rmd')
 
 * Markdown tutorial https://www.markdowntutorial.com (10分钟学完)
 * LaTeX tutorial https://www.latex-tutorial.com/quick-start/
+* Rmarkdown 介绍 https://bookdown.org/yihui/rmarkdown/
+* Rmarkdown 手册 https://bookdown.org/yihui/rmarkdown-cookbook/
 
 
 
