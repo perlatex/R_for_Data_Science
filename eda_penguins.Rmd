@@ -73,9 +73,13 @@ penguins
 ### 每种类型企鹅有多少只
 ```{r}
 penguins %>%
-  count(species)
+  count(species, sort = T)
 ```
 
+```{r}
+penguins %>%
+  count(island, sort = T)
+```
 
 
 ### 每种类型企鹅各种属性的均值
@@ -175,6 +179,14 @@ penguins %>%
   facet_wrap(vars(measurement), ncol = 2, scales = "free")
 ```
 
+```{r}
+penguins %>%
+  select(species, bill_length_mm:body_mass_g) %>%
+  pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
+  ggplot(aes(x = species, y = value)) +
+  geom_boxplot(aes(color = species, fill = species), size = 1.2, alpha = 0.2) +
+  facet_wrap(vars(measurement), ncol = 2, scales = "free")
+```
 
 ### 嘴峰长度和深度的分布
 ```{r}
@@ -449,5 +461,124 @@ penguins %>%
   geom_line(aes(flipper_length_mm, .value, group = interaction(.draw, species), color = species), alpha = 0.1)
 ```
 
+## 机器学习
 
+?predict.model_fit
+https://tidymodels.github.io/model-implementation-principles/model-predictions.html
+
+
+```{r}
+library(tidymodels)
+split <- penguins %>% 
+  mutate(species = as_factor(species)) %>% 
+  mutate(species = fct_lump(species, 1)) %>% 
+  initial_split()
+
+split
+
+training_data <- training(split)
+training_data
+testing_data <- testing(split)
+testing_data
+
+model <- parsnip::logistic_reg() %>% 
+  set_engine("glm") %>% 
+  set_mode("classification") %>% 
+  fit(species ~ bill_length_mm, data = training_data)
+
+
+bind_cols(
+  predict(model, new_data = testing_data, type = "class"),
+  predict(model, new_data = testing_data, type = "prob"),
+  testing_data
+)
+
+
+predict(model, new_data = testing_data) %>% 
+  bind_cols(testing_data) %>% 
+  count(.pred_class, species)
+```
+
+
+```{r}
+model_neighbor <- parsnip::nearest_neighbor(neighbors = 10) %>% 
+  set_engine("kknn") %>% 
+  set_mode("classification") %>% 
+  fit(species ~ bill_length_mm, data = training_data)
+
+predict(model_neighbor, new_data = testing_data) %>% 
+  bind_cols(testing_data) %>% 
+  count(.pred_class, species)
+```
+
+```{r}
+library(tidymodels)
+split <- penguins %>% 
+  mutate(species = as_factor(species)) %>% 
+  initial_split()
+
+split
+
+training_data <- training(split)
+training_data
+testing_data <- testing(split)
+testing_data
+
+
+
+model_neighbor <- parsnip::multinom_reg() %>% 
+  set_engine("nnet") %>% 
+  set_mode("classification") %>% 
+  fit(species ~ bill_length_mm, data = training_data)
+
+predict(model_neighbor, new_data = testing_data) %>% 
+  bind_cols(testing_data) %>% 
+  count(.pred_class, species)
+
+```
+
+```{r}
+library(tidymodels)
+split <- penguins %>% 
+  mutate(species = as_factor(species)) %>% 
+  initial_split()
+
+split
+
+training_data <- training(split)
+training_data
+testing_data <- testing(split)
+testing_data
+
+
+
+model_neighbor <- parsnip::decision_tree() %>% 
+  set_engine("rpart") %>% 
+  set_mode("classification") %>% 
+  fit(species ~ bill_length_mm, data = training_data)
+
+predict(model_neighbor, new_data = testing_data) %>% 
+  bind_cols(testing_data) %>% 
+  count(.pred_class, species)
+
+```
+
+
+
+
+```{r}
+mod_glm <- 
+  glm(species ~ bill_length_mm, 
+      family = binomial("logit"),
+      data = training_data
+    )
+
+mod_glm
+
+probabilities <- predict(mod_glm, 
+        newdata = testing_data,
+        type = "response")
+
+tibble(prob = probabilities)
+```
 
