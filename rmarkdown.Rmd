@@ -98,6 +98,8 @@ pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受�
 install.packages("tinytex")
 tinytex::install_tinytex(dir = "D:\\Tinytex", force = T)
 ```
+中途会有两次警告，按 “ 确定 ” 就可以了。
+
 
 4. 修改头文件，用下面的内容替换Rmarkdown的头文件, 不要修改缩进
 

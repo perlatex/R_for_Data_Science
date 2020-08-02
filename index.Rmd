@@ -74,7 +74,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(readr) 章介绍数据读入
    - 第 \@ref(dplyr) 章介绍数据规整与数据处理
    - 第 \@ref(colwise) 章介绍数据框列方向和行方向
-   - 第 \@ref(visual) 章介绍数据可视化
+   - 第 \@ref(ggplot2-aes) 章介绍数据可视化
    - 第 \@ref(stringr) 章介绍字符串处理
    - 第 \@ref(forcats) 章介绍因子类型数据
    - 第 \@ref(purrr) 章介绍函数式编程
@@ -84,7 +84,8 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda04) 章介绍探索性数据分析4   
    - 第 \@ref(eda05) 章介绍探索性数据分析5   
    - 第 \@ref(eda06) 章介绍探索性数据分析6   
-   - 第 \@ref(ggplot2) 章再讲ggplot2
+   - 第 \@ref(eda07) 章介绍探索性数据分析7   
+   - 第 \@ref(ggplot2-geom) 章再讲ggplot2
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
@@ -158,7 +159,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r, eval = FALSE}
 my_packages <- c(
-"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
+"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggstatsplot", "ggeffects", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
 )
 ```
 

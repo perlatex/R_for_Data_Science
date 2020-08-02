@@ -1,6 +1,6 @@
 # (PART) tidyverse篇 {-}
 
-# ggplot2 {#ggplot2}
+# ggplot2 {#ggplot2-geom}
 
 > 采菊东篱下，悠然见南山。
 >

@@ -27,7 +27,7 @@ d <- tibble::tribble(
 d 
 ```
 
-**问题**：如何提取`Sichuan Univ`后面的学院？
+**问题**：如何提取`Sichuan Univ`后面的学院？这需要用到正则表达式的知识。
 
 
 
@@ -50,9 +50,9 @@ d
 
 这个时候就需要用到正则表达式（Regular Expression），这一强大、便捷、高效的文本处理工具。那么，什么是正则表达式呢？简单点说，正则表达式是处理字符串的。复杂点说，正则表达式描述了一种字符串匹配的模式（pattern），通常被用来检索、替换那些符合某个模式(规则)的文本。这种固定的格式的文本，生活中常见的有电话号码、网络地址、邮件地址和日期格式等等。
 
-正则表达式并不是R语言特有的，事实上，几乎所有程序语言都支持正则表达式。
+正则表达式并不是R语言特有的，事实上，几乎所有程序语言都支持正则表达式 (e.g. Perl, Python, Java, Ruby, etc).
 
-R语言中的字符串操作，基础包里有很多函数可以使用，然而大神Hadley Wickham开发的stringr包让正则表达式简单易懂，所以今天我们介绍这个包，本章的内容与《R for data science》第10章基本一致。本章目的教大家写**简单的**正则表示式就行了。
+R 语言中很多函数都需要使用正则表达式，然而正则表达式不太好学。幸运的是，大神Hadley Wickham开发的stringr包让正则表达式简单易懂，因此今天我们就介绍这个包。本章的内容与《R for data science》第10章基本一致。本章目的教大家写**简单的**正则表示式就行了。
 
 
 
@@ -67,7 +67,7 @@ R语言中的字符串操作，基础包里有很多函数可以使用，然而�
 str_length("R for data science")
 ```
 
-对字符串向量
+字符串向量，也适用
 ```{r}
 str_length(c("a", "R for data science", NA))
 ```
@@ -89,7 +89,7 @@ data.frame(
 ### 字符串组合
 
 
-把字符串拼接在一起
+把字符串拼接在一起，使用 `str_c()` 函数
 ```{r}
 str_c("x", "y")
 ```
@@ -375,7 +375,7 @@ d %>% mutate(has_e = str_detect(x, "e"))
 用于筛选也很方便
 
 ```{r}
-d %>% filter(str_detect(x, "e"))
+d %>% dplyr::filter(str_detect(x, "e"))
 ```
 
 
@@ -406,7 +406,7 @@ mean(str_detect(words, "[aeiou]$"))
 tibble(
   word = words
 ) %>%
-  filter(str_detect(word, "x$"))
+  dplyr::filter(str_detect(word, "x$"))
 ```
 
 
@@ -817,7 +817,7 @@ text %>% str_replace_all(pairs)
 
 ## 回答提问
 
-回到上课提问：如何提取`Sichuan Univ`后面的学院？
+回到上课前的提问：如何提取`Sichuan Univ`后面的学院？
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 d <- tibble::tribble(
   ~No,                        ~address,

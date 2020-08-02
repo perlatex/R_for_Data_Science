@@ -9,10 +9,10 @@
 
 ## 什么是数据科学
 
-数据科学是综合了统计学、计算机科学和领域知识的交叉学科，其基本内容就是用数据的方法研究科学，用科学的方法研究数据（鄂维南院士）。2010年，Drew Conway画了一张数据科学的韦恩图
+数据科学是综合了统计学、计算机科学和领域知识的交叉学科，其基本内容就是用数据的方法研究科学，用科学的方法研究数据（鄂维南院士）。2010年，Drew Conway画了一张数据科学的[韦恩图](https://www.kainos.com/my-experience-as-a-data-scientist)
 
 ```{r out.width = '40%', fig.align='center', echo = FALSE}
-knitr::include_graphics("images/Data_Science2010.png", dpi = 120)
+knitr::include_graphics("images/data_science.png", dpi = 300)
 ```
 
 从数据科学所涉及的学科领域来看，其知识结构不仅仅包括数学、统计学、计算机科学、信息科学等在内的基础性理论，还应该包括社会学、物理学、情报学、生物医学等在内的专业性领域理论。
@@ -123,6 +123,19 @@ knitr::include_graphics("images/tidyverse.png")
 | 4    	| 可重复性报告 	| 4_reproducible.R 	|
 
 
+可能看到这些代码，第一眼感觉是这样的
+```{r echo=FALSE, out.width = '70%', fig.cap='图片来自电影《降临》'}
+knitr::include_graphics("images/arrival-movie.png")
+```
+
+
+
+但我更希望这门课结束后，大家的感觉是这样的
+```{r echo=FALSE, out.width = '70%',fig.cap='图片来自美剧《权利的游戏》'}
+knitr::include_graphics("images/night_king.jpg")
+```
+
+
 
 ## 为什么选择 R
 
@@ -133,6 +146,7 @@ knitr::include_graphics("images/tidyverse.png")
 knitr::include_graphics("images/social_science.jpg")
 ```
 
+### 选择 R & tidyverse 的理由
 
 2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
 
@@ -144,14 +158,14 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 可以参考[《为什么R语言是当今最值得学习的数据科学语言》](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)，这篇文章做了详细的对比。我个人的观点是，如果想做程序员或者打算今后在工业企业里工作，可以选择python; 如果你今后打算在科研机构做学术研究，我推荐R语言作为入门语言。
 
 
-### 选择 R & tidyverse 的理由
 
-| 序号 	| 内容          	| 特性     	| 评价 	| 代码演示         	|
-|------	|---------------	|----------	|------	|------------------	|
-| 1    	| 统计分析      	| 看家本领 	| 好用 	| 1_stats.R        	|
-| 2    	| ggplot2画图   	| 颜值担当 	| 好看 	| 2_visual.R       	|
-| 3    	| tidyverse语法 	| 简单易懂 	| 好学 	| 3_eda.R          	|
-| 4    	| 可重复性报告  	| 方便快捷 	| 好玩 	| 4_reproducible.R 	|
+
+| 序号 	| 内容          	| 特性     	| 评价 	| 
+|------	|---------------	|----------	|------	|
+| 1    	| 统计分析      	| 看家本领 	| 好用 	| 
+| 2    	| ggplot2画图   	| 颜值担当 	| 好看 	| 
+| 3    	| tidyverse语法 	| 简单易懂 	| 好学 	| 
+| 4    	| 可重复性报告  	| 方便快捷 	| 好玩 	| 
 
   
 * tidyverse
@@ -159,20 +173,6 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
   + 代码可读性，接近人类语言 ( `%>%` 太酷了 )
 
 
-
-<!-- R 是一种为统计计算和绘图而生的语言和环境 -->
-
-<!-- -  R 是一个全面的.hl[统计]研究平台 -->
-
-<!-- - R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X -->
-
-<!-- - R 拥有顶尖水准的.hl[制图]功能 -->
-
-<!-- - R 是免费的 -->
-
-<!-- - R 应用广泛，拥有丰富的.hl[库包]  -->
-
-<!-- - 活跃的社区 -->
 
 
 ### 一见钟情，还是相见恨晚？
@@ -184,7 +184,7 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 ```
 
 
-
+你心动了？
 ```{r echo=FALSE, out.width = '100%'}
 knitr::include_graphics("images/meme.png")
 ```

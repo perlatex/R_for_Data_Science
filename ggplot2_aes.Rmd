@@ -1,4 +1,4 @@
-# 数据可视化 {#visual}
+# 数据可视化 {#ggplot2-aes}
 
 上节课介绍了R语言的基本数据结构，可能大家有种看美剧的感觉，有些懵。这很正常，我在开始学习R的时候，感觉和大家一样，所以不要惊慌，我们后面会慢慢填补这些知识点。
 
@@ -156,14 +156,17 @@ ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
    ggtitle("Annual global carbon emissions, 1880-2014")
 ```
 
+是不是很简单?
+
+
 
 ## 映射 
 
-我们用ggplot2宏包内置数据集[mpg](https://ggplot2.tidyverse.org/reference/mpg.html)来演示
+我们用ggplot2宏包内置数据集[mpg](https://ggplot2.tidyverse.org/reference/mpg.html)来演示.
 
-1999年和2008年期间，市面上38种流行车型，燃油经济性数据
+- 1999年和2008年期间，市面上38种流行车型，燃油经济性数据
 
-mpg包含234行和11个变量的数据框
+- mpg包含234行和11个变量的数据框
 
 
 
@@ -205,6 +208,11 @@ str(mpg)
 mpg[c("displ", "hwy",  "class")]
 ```
 
+```{r, eval=FALSE}
+mpg %>%
+  select(displ, hwy, class) %>%
+  head(4)
+```
 
 
 
@@ -215,17 +223,17 @@ knitr::include_graphics("images/a-3.png")
 ```
 
 
-  - `ggplot()`表示调用该函数画图，`data = mpg` 表示使用mpg这个**数据框**来画图。
+- `ggplot()`表示调用该函数画图，`data = mpg` 表示使用mpg这个**数据框**来画图。
 
-  - `aes()`表示数据和视觉属性之间的映射，
+- `aes()`表示数据和视觉属性之间的映射，
   
 `aes(x = displ, y = hwy)`，意思是变量displ作为（映射为）x轴方向的**位置**，变量hwy作为（映射为）y轴方向的**位置**。
 
-  - `aes()`除了位置上映射，还可以实现色彩、形状或透明度等视觉属性的映射。
+- `aes()`除了位置上映射，还可以实现色彩、形状或透明度等视觉属性的映射。
 
-  - `geom_point()`表示绘制散点图。
+- `geom_point()`表示绘制散点图。
 
-  - `+`表示添加图层。
+- `+`表示添加图层。
 
 
 运行脚本后生成图片：
@@ -274,12 +282,14 @@ ggplot(data = mpg, aes(x = displ, y = hwy, alpha = class)) +
 
 
 
-一些默认的设置
+为什么图中是这样的颜色呢？那是因为ggplot内部有一套默认的设置
 
 ```{r out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/a-14.png")
 ```
 
+
+不喜欢默认的颜色，可以自己定义喔。请往下看
 
 
 ## 映射 vs.设置
@@ -408,11 +418,11 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point()
 ```
 
-那么`x = displ, y = hwy, color = class` 为全局变量。此时`geom_point()`中缺少所绘图所需要的映射关系，就会继承全局变量的映射关系
+那么映射关系`x = displ, y = hwy, color = class` 为全局变量。因此，当`geom_point()`画图时，发现缺少所绘图所需要的映射关系，就会从`ggplot()`中继承全局变量的映射关系。
 
 
 
-如果映射关系`aes()` 写在几何对象`geom_point()`里, 那么就为局部变量, 比如。
+如果映射关系`aes()` 写在几何对象`geom_point()`里, 那么映射关系就为局部变量, 比如。
 
 ```{r, eval=FALSE}
 ggplot(mpg) + 
@@ -473,13 +483,18 @@ p <- ggplot(mpg, aes(x = displ, y = hwy)) +
   ggtitle("This is my first plot")
 
 
-ggsave(filename = "myfirst_plot.pdf", plot = p, width = 8, height = 6, dpi = 300)
+ggsave(filename = "myfirst_plot.pdf", 
+       plot = p, 
+       width = 8, 
+       height = 6, 
+       dpi = 300
+       )
 ```
 
 
 
 ## 延伸阅读 
 
-在第 \@ref(ggplot2) 章会再讲ggplot2
+在第 \@ref(ggplot2-geom) 章到第 \@ref(ggplot2-guides) 章会再讲ggplot2
 
 

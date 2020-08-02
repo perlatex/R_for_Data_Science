@@ -18,7 +18,7 @@ library(dplyr)
 
 
 
-dplyr 定义了数据处理的规范语法，其中主要包含以下七个主要的函数。
+dplyr 定义了数据处理的规范语法，其中主要包含以下九个主要的函数。
 
 
 
@@ -51,29 +51,34 @@ score2020
 
 使用传统的方法
 ```{r}
-df$score <- score2020
+df$newscore <- score2020
 df
 ```
 
-
+```{r include=FALSE}
+df <- data.frame(
+      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
+      type = c("english", "math", "english", "math", "english", "math")
+)
+```
 
 
 dplyr语法这样写
 
 
 ```{r}
-mutate(.data = df, score4 = score2020)
+mutate(df, newscore = score2020)
 ```
 
 
 `mutate()` 函数
 
 ```{r, eval=FALSE}
-mutate(.data = df, score = score2020)
+mutate(.data = df, newscore = score2020)
 ```
 
 - 第一参数是我们要处理的数据框，比如这里的`df`，
-- 第二个参数是`score = score2020`，等号左边的`score`是我们打算创建一个新列，而取的列名；
+- 第二个参数是`newscore = score2020`，等号左边的`newscore`是我们打算创建一个新列，而取的列名；
 等号右边是装着学生成绩的**向量**（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
 
 
@@ -123,7 +128,7 @@ c(-10:10) %>% abs() %>% sum() %>% sqrt()
 
 
 
-那么，上面增加学生成绩的语句`mutate(df, score = score2020)`就可以使用管道
+那么，上面增加学生成绩的语句`mutate(df, newscore = score2020)`就可以使用管道
 
 ```{r out.width = '50%', echo = FALSE}
 knitr::include_graphics("images/pipe2.png")
@@ -133,13 +138,13 @@ knitr::include_graphics("images/pipe2.png")
 
 ```{r}
 # 等价于
-df %>% mutate(score = score2020)
+df %>% mutate(newscore = score2020)
 ```
 是不是很赞？
 
 
 ```{r}
-df <- df %>% mutate(score = score2020)
+df <- df %>% mutate(newscore = score2020)
 df
 ```
 
@@ -167,7 +172,7 @@ df %>% select(name)
 
 - 如果选取多列，用dplyr 就只是再写一个就行了
 ```{r}
-df %>% select(name, score)
+df %>% select(name, newscore)
 ```
 
 
@@ -186,14 +191,14 @@ df %>% select(-type)
 `select`是列方向的选择， 我们还可以对数据行方向的选择和筛选，比如这里把**成绩高于90分的**同学筛选出来
 
 ```{r}
-df %>% filter(score >= 90)
+df %>% filter(newscore >= 90)
 ```
 
 
 
 也可以限定多个条件进行筛选, 英语成绩高于90分的筛选出来
 ```{r}
-df %>% filter(type == "english", score >= 90)
+df %>% filter(type == "english", newscore >= 90)
 ```
 
 
@@ -208,13 +213,13 @@ df
 
 `summarise() `主要用于统计，往往与其他函数配合使用，比如计算所有同学考试成绩的均值
 ```{r}
-df %>% summarise( mean_score = mean(score))
+df %>% summarise( mean_score = mean(newscore))
 ```
 
 
 比如，计算所有同学的考试成绩的标准差
 ```{r}
-df %>% summarise( mean_score = sd(score))
+df %>% summarise( mean_score = sd(newscore))
 ```
 
 
@@ -222,10 +227,10 @@ df %>% summarise( mean_score = sd(score))
 还同时完成多个统计
 ```{r}
 df %>% summarise(
-  mean_score = mean(score),
-  median_score = median(score),
+  mean_score = mean(newscore),
+  median_score = median(newscore),
   n = n(),
-  sum = sum(score)
+  sum = sum(newscore)
 )
 ```
 
@@ -240,8 +245,8 @@ df %>% summarise(
 df %>% 
   group_by(name) %>% 
   summarise( 
-    mean_score = mean(score),
-   sd_score = sd(score)
+    mean_score = mean(newscore),
+   sd_score = sd(newscore)
   )
 ```
 
@@ -252,27 +257,27 @@ df %>%
 ## `arrange() `排序
 这个很好理解的。比如我们按照考试成绩从低到高排序，然后输出
 ```{r}
-df %>% arrange(score)
+df %>% arrange(newscore)
 ```
 
 
 如果从高到低排序呢，有两种方法:
 ```{r}
-df %>% arrange(-score)
+df %>% arrange(-newscore)
 ```
 
 
 
 写成下面这种形式也是降序排列，但可读性更强些
 ```{r}
-df %>% arrange(desc(score))
+df %>% arrange(desc(newscore))
 ```
 
 
 也可对多个变量先后排序。先按学科排，然后按照成绩从高到底排序
 ```{r}
 df %>% 
-  arrange(type, desc(score))
+  arrange(type, desc(newscore))
 ```
 
 
@@ -285,7 +290,7 @@ df %>%
 ```{r}
 df1 <- df %>% 
   group_by(name) %>% 
-  summarise( mean_score = mean(score) )
+  summarise( mean_score = mean(newscore) )
 
 df1
 ```
