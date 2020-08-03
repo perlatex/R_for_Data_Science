@@ -12,7 +12,8 @@ knitr::include_graphics("images/penguins.png")
 ## 数据
 
 ### 导入数据
-读取本地`penguins.csv`文件，也可以通过宏包`palmerpenguins::penguins`获取数据
+可通过宏包`palmerpenguins::penguins`获取数据，也可以读取本地`penguins.csv`文件，
+我们采取后面一种方法：
 ```{r eval=FALSE, include=FALSE}
 library(tidyverse)
 d <- palmerpenguins::penguins
@@ -24,8 +25,8 @@ d %>%
 ```{r}
 library(tidyverse)
 penguins <- read_csv("./demo_data/penguins.csv") %>%
-  janitor::clean_names() # %>%
-# na.omit()
+  janitor::clean_names() 
+
 penguins %>%
   head()
 ```
@@ -44,16 +45,9 @@ penguins %>%
 
 
 
-The main measurements are body mass, culmen (bill) length, bill depth, and flipper length.
-作者的意图是取代iris
-
 ```{r out.width = '86%', echo = FALSE}
 knitr::include_graphics("images/culmen_depth.png")
 ```
-
-
-
-## 探索性分析
 
 ### 数据清洗
 ```{r}
@@ -61,7 +55,7 @@ penguins %>% filter_all(
   any_vars(is.na(.))
 )
 ```
-发现有11行或多或少的有缺失值，于是我们就删除它们
+发现有11行至少有一处有缺失值，于是我们就删除这些行
 
 
 
@@ -69,6 +63,13 @@ penguins %>% filter_all(
 penguins <- penguins %>% drop_na()
 penguins
 ```
+
+
+
+## 探索性分析
+
+大家可以提出自己想探索的内容
+
 
 ### 每种类型企鹅有多少只
 ```{r}
@@ -82,7 +83,7 @@ penguins %>%
 ```
 
 
-### 每种类型企鹅各种属性的均值
+### 每种类型企鹅各种属性的均值和分布
 ```{r}
 penguins %>%
   group_by(species) %>%
@@ -91,7 +92,8 @@ penguins %>%
 
 
 
-### 性别特征
+
+
 ```{r}
 penguins %>%
   ggplot(aes(x = bill_length_mm)) +
@@ -126,11 +128,6 @@ penguins %>%
 同理可以画出其他属性的分布
 
 
-
-
-
-
-### 每种类型企鹅各种嘴峰长度的分布
 ```{r}
 penguins %>%
   ggplot(aes(x = bill_length_mm)) +
@@ -139,12 +136,12 @@ penguins %>%
 ```
 
 
-
+我更喜欢这样，方便比较均值
 ```{r}
 library(ggridges)
 penguins %>%
-  ggplot(aes(x = bill_length_mm, fill = species)) +
-  ggridges::geom_density_ridges(aes(y = species))
+  ggplot(aes(x = bill_length_mm, y = species, fill = species)) +
+  ggridges::geom_density_ridges()
 ```
 
 
@@ -157,15 +154,20 @@ penguins %>%
   ggplot(aes(x = bill_depth_mm, fill = species)) +
   ggridges::geom_density_ridges(aes(y = species))
 ```
+
+
 ```{r}
 penguins %>%
   ggplot(aes(x = bill_depth_mm, fill = sex)) +
   ggridges::geom_density_ridges(aes(y = species))
 ```
+
+
+
 ```{r}
 penguins %>%
-  ggplot(aes(x = body_mass_g, fill = sex)) +
-  ggridges::geom_density_ridges(aes(y = species), alpha = 0.5)
+  ggplot(aes(x = body_mass_g, y = species, fill = sex)) +
+  ggridges::geom_density_ridges(alpha = 0.5)
 ```
 
 
@@ -188,7 +190,18 @@ penguins %>%
   facet_wrap(vars(measurement), ncol = 2, scales = "free")
 ```
 
-### 嘴峰长度和深度的分布
+
+```{r}
+penguins %>%
+  select(species, bill_length_mm:body_mass_g) %>%
+  pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
+  ggplot(aes(x = value, y = species, fill = species) ) +
+  ggridges::geom_density_ridges() +
+  facet_wrap(vars(measurement), scales = "free")
+```
+
+
+### 嘴峰长度和深度的关联
 ```{r}
 penguins %>%
   ggplot(aes(
@@ -217,15 +230,15 @@ penguins %>%
   geom_smooth(method = lm, aes(color = species))
 ```
 
-### 体重分布
-```{r}
-penguins %>%
-  ggplot(aes(x = species, y = body_mass_g)) +
-  geom_jitter() +
-  geom_boxplot()
-```
 
 
+
+
+
+
+
+
+### 体重与翅膀长度的关联
 
 
 ```{r}
@@ -250,7 +263,6 @@ penguins %>%
   labs(
     title = "Penguin Size, Palmer Station LTER",
     subtitle = "Flipper length and body mass for <span style = 'color:darkorange;'>Adelie</span>, <span style = 'color:purple;'>Chinstrap</span> and <span style = 'color:cyan4;'>Gentoo</span> Penguins",
-    caption = "Visualization: Ella Kaye, Data: Gorman, Williams & Fraser (2014) DOI: 10.1371/journal.pone.009008",
     x = "flipper length (mm)",
     y = "body mass (g)"
   ) +
@@ -268,9 +280,17 @@ penguins %>%
 ```
 
 
-### 可视化学统计
 
-这个[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（科研数据可视化中会介绍）, 
+### 不同种类的宝宝，体重具有显著性差异？
+```{r}
+penguins %>%
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+
+这里推荐**可视化学统计**的宏包[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（使用这个宏包辅助我们学习统计） 
 
 
 ```{r}
@@ -284,7 +304,8 @@ penguins %>%
 ```
 
 #### 参数检验
-one-way ANOVA(要求等方差)
+
+- one-way ANOVA(要求等方差)
 
 ```{r}
 stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
@@ -293,7 +314,7 @@ stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
 
 
 
-one-way ANOVA(不要求等方差)[here](http://www.sthda.com/english/wiki/one-way-anova-test-in-r)
+- one-way ANOVA(不要求等方差)，相关介绍看[here](http://www.sthda.com/english/wiki/one-way-anova-test-in-r)
 ```{r}
 oneway.test(body_mass_g ~ species, data = penguins)
 ```
@@ -319,7 +340,8 @@ penguins %>%
 ```
 
 #### 非参数检验
-[here](http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r)
+
+相关介绍看[here](http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r)
 ```{r}
 kruskal.test(body_mass_g ~ species, data = penguins)
 ```
@@ -371,7 +393,7 @@ d <- penguins %>%
 d
 ```
 
-按照species分组后，对flipper_length_mm标准化？这样数据会聚拢到一起了喔
+按照species分组后，对flipper_length_mm标准化？这样数据会聚拢到一起了喔, 还是不要了
 ```{r, eval=FALSE}
 penguins %>%
   select(sex, species, bill_length_mm:body_mass_g) %>%
@@ -385,7 +407,7 @@ penguins %>%
 
 
 #### model_01
-```{r}
+```{r, eval=FALSE}
 logit_mod1 <- glm(
   male ~ 1 + species + bill_length_mm + bill_depth_mm +
     flipper_length_mm + body_mass_g,
@@ -397,17 +419,17 @@ summary(logit_mod1)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 library(ggeffects)
 ggpredict(logit_mod1, "bill_depth_mm [all]") %>%
   plot()
 ```
 
 
+
 #### model_02
 
-
-```{r}
+```{r, eval=FALSE}
 library(brms)
 
 brms_mod2 <- brm(
@@ -418,11 +440,12 @@ brms_mod2 <- brm(
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 summary(brms_mod2)
 ```
 
-```{r}
+
+```{r, eval=FALSE}
 library(ggeffects)
 ggpredict(brms_mod2, "bill_depth_mm [all]") %>%
   plot()
@@ -432,7 +455,7 @@ ggpredict(brms_mod2, "bill_depth_mm [all]") %>%
 
 #### model_03
 
-```{r}
+```{r, eval=FALSE}
 penguins %>%
   ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = species)) +
   geom_point()
@@ -440,15 +463,14 @@ penguins %>%
 
 
 
-```{r}
-library(brms)
+```{r, eval=FALSE}
 brms_mod3 <- brm(bill_length_mm ~ flipper_length_mm + (1 + species),
   data = penguins
 )
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 penguins %>%
   group_by(species) %>%
   modelr::data_grid(flipper_length_mm) %>%
@@ -461,124 +483,4 @@ penguins %>%
   geom_line(aes(flipper_length_mm, .value, group = interaction(.draw, species), color = species), alpha = 0.1)
 ```
 
-## 机器学习
-
-?predict.model_fit
-https://tidymodels.github.io/model-implementation-principles/model-predictions.html
-
-
-```{r}
-library(tidymodels)
-split <- penguins %>% 
-  mutate(species = as_factor(species)) %>% 
-  mutate(species = fct_lump(species, 1)) %>% 
-  initial_split()
-
-split
-
-training_data <- training(split)
-training_data
-testing_data <- testing(split)
-testing_data
-
-model <- parsnip::logistic_reg() %>% 
-  set_engine("glm") %>% 
-  set_mode("classification") %>% 
-  fit(species ~ bill_length_mm, data = training_data)
-
-
-bind_cols(
-  predict(model, new_data = testing_data, type = "class"),
-  predict(model, new_data = testing_data, type = "prob"),
-  testing_data
-)
-
-
-predict(model, new_data = testing_data) %>% 
-  bind_cols(testing_data) %>% 
-  count(.pred_class, species)
-```
-
-
-```{r}
-model_neighbor <- parsnip::nearest_neighbor(neighbors = 10) %>% 
-  set_engine("kknn") %>% 
-  set_mode("classification") %>% 
-  fit(species ~ bill_length_mm, data = training_data)
-
-predict(model_neighbor, new_data = testing_data) %>% 
-  bind_cols(testing_data) %>% 
-  count(.pred_class, species)
-```
-
-```{r}
-library(tidymodels)
-split <- penguins %>% 
-  mutate(species = as_factor(species)) %>% 
-  initial_split()
-
-split
-
-training_data <- training(split)
-training_data
-testing_data <- testing(split)
-testing_data
-
-
-
-model_neighbor <- parsnip::multinom_reg() %>% 
-  set_engine("nnet") %>% 
-  set_mode("classification") %>% 
-  fit(species ~ bill_length_mm, data = training_data)
-
-predict(model_neighbor, new_data = testing_data) %>% 
-  bind_cols(testing_data) %>% 
-  count(.pred_class, species)
-
-```
-
-```{r}
-library(tidymodels)
-split <- penguins %>% 
-  mutate(species = as_factor(species)) %>% 
-  initial_split()
-
-split
-
-training_data <- training(split)
-training_data
-testing_data <- testing(split)
-testing_data
-
-
-
-model_neighbor <- parsnip::decision_tree() %>% 
-  set_engine("rpart") %>% 
-  set_mode("classification") %>% 
-  fit(species ~ bill_length_mm, data = training_data)
-
-predict(model_neighbor, new_data = testing_data) %>% 
-  bind_cols(testing_data) %>% 
-  count(.pred_class, species)
-
-```
-
-
-
-
-```{r}
-mod_glm <- 
-  glm(species ~ bill_length_mm, 
-      family = binomial("logit"),
-      data = training_data
-    )
-
-mod_glm
-
-probabilities <- predict(mod_glm, 
-        newdata = testing_data,
-        type = "response")
-
-tibble(prob = probabilities)
-```
 
