@@ -19,6 +19,8 @@ library(tibble)  #事实上，library(tidyverse)已经加装了library(tibble)
 数据载入利器 | readr |
 循环加速器 | purrr |
 强化数据框 | tibble |
+字符串处理 | stringr |
+因子处理   | forcats |
 
 
 
@@ -62,6 +64,13 @@ data.frame(a = 1:5,
            b = letters[1:5],
 		   stringsAsFactors = FALSE)
 ```
+```{block, type="danger"}
+Note：
+
+- 在R 4.0 后，`data.frame()` 不会将**字符串型**变量自动转换成**因子型**
+
+```
+
 
 
 

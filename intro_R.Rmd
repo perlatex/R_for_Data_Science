@@ -437,6 +437,10 @@ options(download.file.method="libcurl")
 knitr::include_graphics("images/code_utf_8.png")
 ```
 
+如果加载太慢，可以在Rstudio里将这几个选项取消
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dont-load-data.png")
+```
 
 
 ## 如何获取帮助

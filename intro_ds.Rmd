@@ -26,7 +26,7 @@ knitr::include_graphics("images/data_science.png", dpi = 300)
 -   1992年，新西兰奥克兰大学统计学教授 Ross Ihaka 和 Robert Gentleman，为了方便地给学生教授统计学课程，他们设计开发了R语言（他们名字的首字母都是R）。
 
 ```{r echo=FALSE, out.width = '0.8\\textwidth'}
-knitr::include_graphics(path = "images/R_inventor.png")
+knitr::include_graphics("images/R_inventor.png")
 ```
 
 -   2000年，R1.0.0 发布
@@ -39,7 +39,7 @@ knitr::include_graphics(path = "images/R_inventor.png")
 -   2019年，R3.6.1 发布，CRAN上的宏包数量15102个
 -   2020年，R4.0.0 发布，CRAN上的宏包数量16054个
 
-[The History of R](https://blog.revolutionanalytics.com/2020/07/the-history-of-r-updated-for-2020.html)
+想了解R语言的发展历史，可阅读[The History of R](https://blog.revolutionanalytics.com/2020/07/the-history-of-r-updated-for-2020.html)
 
 ### R是什么
 
@@ -105,7 +105,7 @@ knitr::include_graphics("images/data-science-explore.png")
 
 ### tidyverse家族
 
-```{r out.width = '70%', echo = FALSE}
+```{r out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/tidyverse.png")
 ```
 
@@ -113,14 +113,14 @@ knitr::include_graphics("images/tidyverse.png")
 
 
 
-###  R & tidyverse 四大功能和代码演示
+###  R & tidyverse 四大优势
 
-| 序号 	| 内容         	| 代码演示         	|
-|------	|--------------	|------------------	|
-| 1    	| 统计         	| 1_stats.R        	|
-| 2    	| 可视化       	| 2_visual.R       	|
-| 3    	| 探索性分析   	| 3_eda.R          	|
-| 4    	| 可重复性报告 	| 4_reproducible.R 	|
+| 序号 | 内容   |  代码演示   |
+|-----|------------|-----------------|
+| 1     |  统计           |   1_stats.R         |
+| 2     |  可视化         |   2_visual.R        |
+| 3     |  探索性分析     |   3_eda.R           |
+| 4     |   可重复性报告  |   4_reproducible.R  |
 
 
 可能看到这些代码，第一眼感觉是这样的
@@ -142,7 +142,7 @@ knitr::include_graphics("images/night_king.jpg")
 
 ### 数据科学是为社会科学服务的
 
-```{r echo=FALSE, out.width = '70%'}
+```{r echo=FALSE, fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/social_science.jpg")
 ```
 
@@ -159,13 +159,15 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 
 
 
+| 序号| 内容 | 特性| 评价|
+|------ |------------ |--------- |------ |
+| 1  | 统计分析 | 看家本领  | 好用|
+| 2  | ggplot2画图 |颜值担当| 好看|
+| 3  | tidyverse语法 | 简单易懂| 好学|
+| 4  | 可重复性报告 | 方便快捷 | 好玩 |
 
-| 序号 	| 内容          	| 特性     	| 评价 	| 
-|------	|---------------	|----------	|------	|
-| 1    	| 统计分析      	| 看家本领 	| 好用 	| 
-| 2    	| ggplot2画图   	| 颜值担当 	| 好看 	| 
-| 3    	| tidyverse语法 	| 简单易懂 	| 好学 	| 
-| 4    	| 可重复性报告  	| 方便快捷 	| 好玩 	| 
+
+
 
   
 * tidyverse
@@ -185,7 +187,7 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 
 
 你心动了？
-```{r echo=FALSE, out.width = '100%'}
+```{r echo=FALSE, out.width = '70%'}
 knitr::include_graphics("images/meme.png")
 ```
 

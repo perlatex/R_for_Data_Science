@@ -238,7 +238,7 @@ show_col(viridis_pal()(10))
 
 
 ## 宏包太多
-```{r}
+```{r, eval=FALSE}
 library(pacman)
 ##p_load(lattice, foreign, boot, rpart)
 ```
@@ -313,7 +313,7 @@ airquality %>%
 
 
 ## 看看数据什么情况
-```{r}
+```{r, eval=FALSE}
 library(visdat)
 
 vis_dat(airquality)

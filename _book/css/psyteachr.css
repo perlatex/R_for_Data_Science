@@ -1,0 +1,208 @@
+/* psyTeachR default styles. Do not edit this !! */
+/* (edit style.css for your own book styles) */
+
+:root {
+  --pink: #983E82;   /* hsl(315, 42%, 42%) */
+  --orange: #E2A458; /* hsl( 33, 70%, 62%) */
+  --yellow: #F5DC70; /* hsl( 49, 87%, 70%) */
+  --green: #59935B;  /* hsl(122, 25%, 46%) */
+  --blue: #467AAC;   /* hsl(209, 42%, 47%) */
+  --purple: #61589C; /* hsl(248, 28%, 48%) */
+}
+
+.psyteachr_footer {
+  margin-top: 1em;
+}
+
+
+pre {
+  border: 1px solid grey !important;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal code {
+  border: 1px solid #DEDEDE;
+  border: 1px solid hsla(0, 0%, 0%, .1);
+  border-radius: 5px;
+  padding: 1px;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code {
+  border-color: #333333;
+  border-color: hsla(0, 0%, 100%, .1);
+}
+
+.book .book-body .page-wrapper .page-inner section.normal pre > code {
+  border: none;
+  border-radius: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal strong code {
+  color: black;
+  padding: 0;
+  background-color: inherit !important;
+  font-size: 105%;
+  border: none;
+}
+
+div.color-theme-1 .book-body .page-wrapper .page-inner section.normal strong code {
+  color: hsl(30, 70%, 16%) !important;
+}
+
+div.color-theme-2 .book-body .page-wrapper .page-inner section.normal strong code {
+  color: hsl(200, 29%, 85%) !important;
+}
+
+.logo {
+  height: 150px;
+  width: 150px;
+  float: right;
+}
+
+.join {
+  height: 150px;
+  width: 200px;
+  float: right;
+  clear: right;
+}
+
+/* set styles for alert boxes */
+
+.danger, .warning, .info , .alert, .try {
+  padding: 1em 1em 0.25em 3.5em;
+  margin-bottom: 10px;
+  background-color: hsla(0, 0%, 100%, .1);
+  background-position: 0.5em 0.5em;
+  background-size: 2.5em;
+  background-repeat: no-repeat;
+  border-radius: 0.5em;
+}
+
+.danger {
+  background-image: url("../images/alerts/danger.svg");
+  background-color: hsla(315, 42%, 42%, .10);
+  border: 1px solid var(--pink);
+}
+
+.warning {
+  background-image: url("../images/alerts/warning.svg");
+  background-color: hsla(49, 87%, 70%, .1);
+  border: 1px solid var(--yellow);
+}
+
+.info {
+  background-image: url("../images/alerts/info.svg");
+  background-color: hsla(209, 42%, 47%, .1);
+  border: 1px solid var(--blue);
+}
+
+.try {
+  background-image: url("../images/alerts/rainbow.svg");
+  background-color: hsla(248, 28%, 48%, .1);
+  border: 1px solid var(--purple);
+  background-position: 0.5em -.25em;
+}
+
+
+/* webex style */
+
+/* styles for solveme */
+.solveme { border: 2px dotted var(--pink); }
+.solveme.correct { border: 2px solid var(--green); }
+/* styles for hidden solutions */
+.solution {
+    height: 2.2em;
+    overflow-y: hidden;
+    padding: 0.5em;
+}
+.solution.open {
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+.solution button {
+    height: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+/* verbatim code chunks with ```{r ...} at top */
+
+div.verbatim {
+  border: 1px solid grey;
+  padding: 0.25em 1em 0 1em;
+  border-radius: 5px;
+  margin-bottom: 1em;
+  font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+}
+
+div.verbatim code {
+  border: none !important;
+  font-size: 100% !important;
+  display: block;
+}
+
+div.verbatim pre.sourceCode.r {
+  border: none !important;
+}
+
+div.verbatim {
+  background-color: rgb(247, 247, 247) !important;
+}
+
+.color-theme-1 div.verbatim {
+  background-color: rgb(253, 246, 227) !important;
+}
+
+.color-theme-2 div.verbatim {
+  background-color: rgb(45, 49, 67) !important;
+}
+
+div.verbatim * {
+  background-color: transparent !important;
+}
+
+div.verbatim div.sourceCode { 
+  margin: 0 !important;
+  padding: 0 !important;
+}
+div.verbatim pre.sourceCode { 
+  margin: 0 !important; 
+  padding: 0 1em !important;
+}
+
+
+/* external link icons */
+
+a[target="_blank"]::after {
+  content: url("../images/icons/link_external.svg");
+  margin: 0 3px 0 5px;
+}
+
+.color-theme-1 a[target="_blank"]::after {
+  content: url("../images/icons/link_external1.svg");
+}
+
+
+.color-theme-2 a[target="_blank"]::after {
+  content: url("../images/icons/link_external2.svg");
+}
+
+a.glossary::after {
+  content: none !important;
+  margin: 0 !important;
+}
+
+a.glossary, a:visited.glossary {
+  color: var(--purple) !important;
+}
+
+
+/* override table striping */
+
+.book .book-body .page-wrapper .page-inner section.normal table tr:nth-child(2n) {
+  background-color: inherit;
+}

@@ -159,13 +159,13 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r, eval = FALSE}
 my_packages <- c(
-"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggstatsplot", "ggeffects", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat"
+"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggstatsplot", "ggeffects", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "geoshpere", "ggstatsplot", "datasauRus", "ggimage", "ggthemes", "pacman"
 )
 ```
 
 
 ```{r, eval = FALSE}
-install.packages(my_packages, repos = "http://cran.rstudio.com")
+install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = T)
 ```
 
 
@@ -183,6 +183,7 @@ remotes::install_github("ThinkR-open/remedy")
 remotes::install_git("https://git.rud.is/hrbrmstr/hrbraddins.git") 
 devtools::install_github("hadley/emo") 
 remotes::install_github("romainfrancois/lay")
+remotes::install_github("kjhealy/covdata")
 ```
 
 

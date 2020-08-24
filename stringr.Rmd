@@ -710,7 +710,8 @@ tb
 ```{r}
 tb %>% 
   tidyr::extract(
-  x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
+  #x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
+  x, c("en", "cn"), "([a-zA-Z]+)([^a-zA-Z]+)",
   remove = FALSE
 )
 ```
@@ -731,7 +732,8 @@ df
 ```{r}
 df %>% extract(
   x,
-  c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
+  #c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
+  c("start", "end", "cn"), "(\\d+)-(\\d+)(\\D+)",
   remove = FALSE
 )
 ```

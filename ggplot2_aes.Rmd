@@ -121,7 +121,9 @@ Hadley Wickham将这套语法诠释为:
 
 一张统计图形就是从数据到几何对象(geometric object，缩写geom)的图形属性(aesthetic attribute，缩写aes)的一个映射。
 
-
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/grammar-of-graphics.png")
+```
 
 
 此外，图形中还可能包含数据的统计变换(statistical  transformation，缩写stats)，最后绘制在某个特定的坐标系(coordinate

@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>第 26 章 模拟与抽样 | 数据科学中的 R 语言</title>
+  <meta name="description" content="一个简单的中文书示例。" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="第 26 章 模拟与抽样 | 数据科学中的 R 语言" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="一个简单的中文书示例。" />
+  <meta name="github-repo" content="perlatex/r_for_data_science" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 26 章 模拟与抽样 | 数据科学中的 R 语言" />
+  
+  <meta name="twitter:description" content="一个简单的中文书示例。" />
+  
+
+<meta name="author" content="王敏杰" />
+
+
+<meta name="date" content="2020-08-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="tibble.html"/>
+<link rel="next" href="tidystats.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable/js/pagedtable.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/str_view/str_view.css" rel="stylesheet" />
+<script src="libs/str_view-binding/str_view.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css\psyteachr.css" type="text/css" />
+<link rel="stylesheet" href="css\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">数据科学中的R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>前言</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#关于课程"><i class="fa fa-check"></i>关于课程</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#课件中用到的宏包"><i class="fa fa-check"></i>课件中用到的宏包</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#ryouwithme"><i class="fa fa-check"></i>RYouWithMe</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#致谢"><i class="fa fa-check"></i>致谢</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="part"><span><b>I 基础篇</b></span></li>
+<li class="chapter" data-level="1" data-path="intro-ds.html"><a href="intro-ds.html"><i class="fa fa-check"></i><b>1</b> 数据科学与R语言</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro-ds.html"><a href="intro-ds.html#什么是数据科学"><i class="fa fa-check"></i><b>1.1</b> 什么是数据科学</a></li>
+<li class="chapter" data-level="1.2" data-path="intro-ds.html"><a href="intro-ds.html#什么是r"><i class="fa fa-check"></i><b>1.2</b> 什么是R</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="intro-ds.html"><a href="intro-ds.html#r那些事"><i class="fa fa-check"></i><b>1.2.1</b> R那些事</a></li>
+<li class="chapter" data-level="1.2.2" data-path="intro-ds.html"><a href="intro-ds.html#r是什么"><i class="fa fa-check"></i><b>1.2.2</b> R是什么</a></li>
+<li class="chapter" data-level="1.2.3" data-path="intro-ds.html"><a href="intro-ds.html#r语言发展趋势"><i class="fa fa-check"></i><b>1.2.3</b> R语言发展趋势</a></li>
+<li class="chapter" data-level="1.2.4" data-path="intro-ds.html"><a href="intro-ds.html#r路上的大神"><i class="fa fa-check"></i><b>1.2.4</b> R路上的大神</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="intro-ds.html"><a href="intro-ds.html#r能干什么"><i class="fa fa-check"></i><b>1.3</b> R能干什么</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="intro-ds.html"><a href="intro-ds.html#数据科学流程"><i class="fa fa-check"></i><b>1.3.1</b> 数据科学流程</a></li>
+<li class="chapter" data-level="1.3.2" data-path="intro-ds.html"><a href="intro-ds.html#tidyverse家族"><i class="fa fa-check"></i><b>1.3.2</b> tidyverse家族</a></li>
+<li class="chapter" data-level="1.3.3" data-path="intro-ds.html"><a href="intro-ds.html#r-tidyverse-四大功能和代码演示"><i class="fa fa-check"></i><b>1.3.3</b> R &amp; tidyverse 四大功能和代码演示</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="intro-ds.html"><a href="intro-ds.html#为什么选择-r"><i class="fa fa-check"></i><b>1.4</b> 为什么选择 R</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="intro-ds.html"><a href="intro-ds.html#数据科学是为社会科学服务的"><i class="fa fa-check"></i><b>1.4.1</b> 数据科学是为社会科学服务的</a></li>
+<li class="chapter" data-level="1.4.2" data-path="intro-ds.html"><a href="intro-ds.html#选择-r-tidyverse-的理由"><i class="fa fa-check"></i><b>1.4.2</b> 选择 R &amp; tidyverse 的理由</a></li>
+<li class="chapter" data-level="1.4.3" data-path="intro-ds.html"><a href="intro-ds.html#一见钟情还是相见恨晚"><i class="fa fa-check"></i><b>1.4.3</b> 一见钟情，还是相见恨晚？</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="intro-ds.html"><a href="intro-ds.html#推荐阅读"><i class="fa fa-check"></i><b>1.5</b> 推荐阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro-R.html"><a href="intro-R.html"><i class="fa fa-check"></i><b>2</b> R语言基础</a><ul>
+<li class="chapter" data-level="2.1" data-path="intro-R.html"><a href="intro-R.html#安装-r"><i class="fa fa-check"></i><b>2.1</b> 安装 R</a></li>
+<li class="chapter" data-level="2.2" data-path="intro-R.html"><a href="intro-R.html#安装-rstudio"><i class="fa fa-check"></i><b>2.2</b> 安装 RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="intro-R.html"><a href="intro-R.html#开始"><i class="fa fa-check"></i><b>2.3</b> 开始</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-R.html"><a href="intro-R.html#一切都是对象"><i class="fa fa-check"></i><b>2.4</b> 一切都是对象</a></li>
+<li class="chapter" data-level="2.5" data-path="intro-R.html"><a href="intro-R.html#数据类型"><i class="fa fa-check"></i><b>2.5</b> 数据类型</a></li>
+<li class="chapter" data-level="2.6" data-path="intro-R.html"><a href="intro-R.html#数据结构"><i class="fa fa-check"></i><b>2.6</b> 数据结构</a></li>
+<li class="chapter" data-level="2.7" data-path="intro-R.html"><a href="intro-R.html#函数"><i class="fa fa-check"></i><b>2.7</b> 函数</a></li>
+<li class="chapter" data-level="2.8" data-path="intro-R.html"><a href="intro-R.html#脚本"><i class="fa fa-check"></i><b>2.8</b> 脚本</a></li>
+<li class="chapter" data-level="2.9" data-path="intro-R.html"><a href="intro-R.html#宏包"><i class="fa fa-check"></i><b>2.9</b> 宏包</a></li>
+<li class="chapter" data-level="2.10" data-path="intro-R.html"><a href="intro-R.html#如何获取帮助"><i class="fa fa-check"></i><b>2.10</b> 如何获取帮助</a></li>
+<li class="chapter" data-level="2.11" data-path="intro-R.html"><a href="intro-R.html#r-语言社区"><i class="fa fa-check"></i><b>2.11</b> R 语言社区</a></li>
+<li class="chapter" data-level="2.12" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>2.12</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="subsetting.html"><a href="subsetting.html"><i class="fa fa-check"></i><b>3</b> 子集选取</a><ul>
+<li class="chapter" data-level="3.1" data-path="subsetting.html"><a href="subsetting.html#向量"><i class="fa fa-check"></i><b>3.1</b> 向量</a></li>
+<li class="chapter" data-level="3.2" data-path="subsetting.html"><a href="subsetting.html#列表"><i class="fa fa-check"></i><b>3.2</b> 列表</a></li>
+<li class="chapter" data-level="3.3" data-path="subsetting.html"><a href="subsetting.html#矩阵"><i class="fa fa-check"></i><b>3.3</b> 矩阵</a></li>
+<li class="chapter" data-level="3.4" data-path="subsetting.html"><a href="subsetting.html#数据框"><i class="fa fa-check"></i><b>3.4</b> 数据框</a></li>
+<li class="chapter" data-level="3.5" data-path="subsetting.html"><a href="subsetting.html#增强型数据框"><i class="fa fa-check"></i><b>3.5</b> 增强型数据框</a></li>
+<li class="chapter" data-level="3.6" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>3.6</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="rmarkdown.html"><a href="rmarkdown.html"><i class="fa fa-check"></i><b>4</b> 可重复性研究</a><ul>
+<li class="chapter" data-level="4.1" data-path="rmarkdown.html"><a href="rmarkdown.html#什么是rmarkdown"><i class="fa fa-check"></i><b>4.1</b> 什么是Rmarkdown</a></li>
+<li class="chapter" data-level="4.2" data-path="rmarkdown.html"><a href="rmarkdown.html#markdown-基本语法"><i class="fa fa-check"></i><b>4.2</b> markdown 基本语法</a></li>
+<li class="chapter" data-level="4.3" data-path="rmarkdown.html"><a href="rmarkdown.html#hello-r-markdown"><i class="fa fa-check"></i><b>4.3</b> Hello R Markdown</a></li>
+<li class="chapter" data-level="4.4" data-path="rmarkdown.html"><a href="rmarkdown.html#生成html文档"><i class="fa fa-check"></i><b>4.4</b> 生成html文档</a></li>
+<li class="chapter" data-level="4.5" data-path="rmarkdown.html"><a href="rmarkdown.html#生成word文档"><i class="fa fa-check"></i><b>4.5</b> 生成word文档</a></li>
+<li class="chapter" data-level="4.6" data-path="rmarkdown.html"><a href="rmarkdown.html#生成pdf文档"><i class="fa fa-check"></i><b>4.6</b> 生成pdf文档</a></li>
+<li class="chapter" data-level="4.7" data-path="rmarkdown.html"><a href="rmarkdown.html#使用方法"><i class="fa fa-check"></i><b>4.7</b> 使用方法</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="rmarkdown.html"><a href="rmarkdown.html#插入公式"><i class="fa fa-check"></i><b>4.7.1</b> 插入公式</a></li>
+<li class="chapter" data-level="4.7.2" data-path="rmarkdown.html"><a href="rmarkdown.html#插入图片"><i class="fa fa-check"></i><b>4.7.2</b> 插入图片</a></li>
+<li class="chapter" data-level="4.7.3" data-path="rmarkdown.html"><a href="rmarkdown.html#运行代码"><i class="fa fa-check"></i><b>4.7.3</b> 运行代码</a></li>
+<li class="chapter" data-level="4.7.4" data-path="rmarkdown.html"><a href="rmarkdown.html#表格"><i class="fa fa-check"></i><b>4.7.4</b> 表格</a></li>
+<li class="chapter" data-level="4.7.5" data-path="rmarkdown.html"><a href="rmarkdown.html#生成图片"><i class="fa fa-check"></i><b>4.7.5</b> 生成图片</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>4.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="readr.html"><a href="readr.html"><i class="fa fa-check"></i><b>5</b> 读取数据</a><ul>
+<li class="chapter" data-level="5.1" data-path="readr.html"><a href="readr.html#常见格式"><i class="fa fa-check"></i><b>5.1</b> 常见格式</a></li>
+<li class="chapter" data-level="5.2" data-path="readr.html"><a href="readr.html#范例"><i class="fa fa-check"></i><b>5.2</b> 范例</a></li>
+<li class="chapter" data-level="5.3" data-path="readr.html"><a href="readr.html#乱码情形"><i class="fa fa-check"></i><b>5.3</b> 乱码情形</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dplyr.html"><a href="dplyr.html"><i class="fa fa-check"></i><b>6</b> 数据处理</a><ul>
+<li class="chapter" data-level="6.1" data-path="dplyr.html"><a href="dplyr.html#mutate"><i class="fa fa-check"></i><b>6.1</b> <code>mutate()</code></a></li>
+<li class="chapter" data-level="6.2" data-path="dplyr.html"><a href="dplyr.html#管道"><i class="fa fa-check"></i><b>6.2</b> <code>管道</code> %&gt;%</a></li>
+<li class="chapter" data-level="6.3" data-path="dplyr.html"><a href="dplyr.html#select"><i class="fa fa-check"></i><b>6.3</b> <code>select()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="dplyr.html"><a href="dplyr.html#filter"><i class="fa fa-check"></i><b>6.4</b> <code>filter()</code></a></li>
+<li class="chapter" data-level="6.5" data-path="dplyr.html"><a href="dplyr.html#summarise统计"><i class="fa fa-check"></i><b>6.5</b> <code>summarise()</code>统计</a></li>
+<li class="chapter" data-level="6.6" data-path="dplyr.html"><a href="dplyr.html#group_by分组"><i class="fa fa-check"></i><b>6.6</b> <code>group_by()</code>分组</a></li>
+<li class="chapter" data-level="6.7" data-path="dplyr.html"><a href="dplyr.html#arrange排序"><i class="fa fa-check"></i><b>6.7</b> <code>arrange()</code>排序</a></li>
+<li class="chapter" data-level="6.8" data-path="dplyr.html"><a href="dplyr.html#left_join"><i class="fa fa-check"></i><b>6.8</b> <code>left_join()</code></a></li>
+<li class="chapter" data-level="6.9" data-path="dplyr.html"><a href="dplyr.html#right_join"><i class="fa fa-check"></i><b>6.9</b> <code>right_join()</code></a></li>
+<li class="chapter" data-level="6.10" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>6.10</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="colwise.html"><a href="colwise.html"><i class="fa fa-check"></i><b>7</b> 列方向和行方向</a><ul>
+<li class="chapter" data-level="7.1" data-path="colwise.html"><a href="colwise.html#体验新版本"><i class="fa fa-check"></i><b>7.1</b> 体验新版本</a></li>
+<li class="chapter" data-level="7.2" data-path="colwise.html"><a href="colwise.html#简单回顾"><i class="fa fa-check"></i><b>7.2</b> 简单回顾</a></li>
+<li class="chapter" data-level="7.3" data-path="colwise.html"><a href="colwise.html#summarise更强大了"><i class="fa fa-check"></i><b>7.3</b> summarise()更强大了</a></li>
+<li class="chapter" data-level="7.4" data-path="colwise.html"><a href="colwise.html#summarise后的分组信息是去是留"><i class="fa fa-check"></i><b>7.4</b> summarise()后的分组信息是去是留？</a></li>
+<li class="chapter" data-level="7.5" data-path="colwise.html"><a href="colwise.html#选择某列"><i class="fa fa-check"></i><b>7.5</b> 选择某列</a></li>
+<li class="chapter" data-level="7.6" data-path="colwise.html"><a href="colwise.html#重命名某列"><i class="fa fa-check"></i><b>7.6</b> 重命名某列</a></li>
+<li class="chapter" data-level="7.7" data-path="colwise.html"><a href="colwise.html#调整列的位置"><i class="fa fa-check"></i><b>7.7</b> 调整列的位置</a></li>
+<li class="chapter" data-level="7.8" data-path="colwise.html"><a href="colwise.html#强大的across函数"><i class="fa fa-check"></i><b>7.8</b> 强大的across函数</a></li>
+<li class="chapter" data-level="7.9" data-path="colwise.html"><a href="colwise.html#current-group-or-current-variable"><i class="fa fa-check"></i><b>7.9</b> “current” group or “current” variable</a></li>
+<li class="chapter" data-level="7.10" data-path="colwise.html"><a href="colwise.html#行方向操作"><i class="fa fa-check"></i><b>7.10</b> 行方向操作</a><ul>
+<li class="chapter" data-level="7.10.1" data-path="colwise.html"><a href="colwise.html#行方向上的统计"><i class="fa fa-check"></i><b>7.10.1</b> 行方向上的统计</a></li>
+<li class="chapter" data-level="7.10.2" data-path="colwise.html"><a href="colwise.html#行方向处理与列表列是天然一对"><i class="fa fa-check"></i><b>7.10.2</b> 行方向处理与列表列是天然一对</a></li>
+<li class="chapter" data-level="7.10.3" data-path="colwise.html"><a href="colwise.html#行方向上的建模"><i class="fa fa-check"></i><b>7.10.3</b> 行方向上的建模</a></li>
+</ul></li>
+<li class="chapter" data-level="7.11" data-path="colwise.html"><a href="colwise.html#参考资料"><i class="fa fa-check"></i><b>7.11</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html"><i class="fa fa-check"></i><b>8</b> 数据可视化</a><ul>
+<li class="chapter" data-level="8.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#为什么要可视化"><i class="fa fa-check"></i><b>8.1</b> 为什么要可视化</a></li>
+<li class="chapter" data-level="8.2" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#宏包ggplot2"><i class="fa fa-check"></i><b>8.2</b> 宏包ggplot2</a></li>
+<li class="chapter" data-level="8.3" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#ggplot2-的图形语法"><i class="fa fa-check"></i><b>8.3</b> ggplot2 的图形语法</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#语法模板"><i class="fa fa-check"></i><b>8.3.1</b> 语法模板</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#映射"><i class="fa fa-check"></i><b>8.4</b> 映射</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#排量越大越耗油吗"><i class="fa fa-check"></i><b>8.4.1</b> 排量越大，越耗油吗？</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#映射-vs.设置"><i class="fa fa-check"></i><b>8.5</b> 映射 vs.设置</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#提问"><i class="fa fa-check"></i><b>8.5.1</b> 提问</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#几何对象"><i class="fa fa-check"></i><b>8.6</b> 几何对象</a></li>
+<li class="chapter" data-level="8.7" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#图层叠加"><i class="fa fa-check"></i><b>8.7</b> 图层叠加</a></li>
+<li class="chapter" data-level="8.8" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#global-vs.-local"><i class="fa fa-check"></i><b>8.8</b> Global vs. Local</a></li>
+<li class="chapter" data-level="8.9" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#保存图片"><i class="fa fa-check"></i><b>8.9</b> 保存图片</a></li>
+<li class="chapter" data-level="8.10" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>8.10</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="stringr.html"><a href="stringr.html"><i class="fa fa-check"></i><b>9</b> 正则表达式</a><ul>
+<li class="chapter" data-level="9.1" data-path="stringr.html"><a href="stringr.html#问题"><i class="fa fa-check"></i><b>9.1</b> 问题</a></li>
+<li class="chapter" data-level="9.2" data-path="stringr.html"><a href="stringr.html#什么是正则表达式"><i class="fa fa-check"></i><b>9.2</b> 什么是正则表达式</a></li>
+<li class="chapter" data-level="9.3" data-path="stringr.html"><a href="stringr.html#字符串基础"><i class="fa fa-check"></i><b>9.3</b> 字符串基础</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="stringr.html"><a href="stringr.html#字符串长度"><i class="fa fa-check"></i><b>9.3.1</b> 字符串长度</a></li>
+<li class="chapter" data-level="9.3.2" data-path="stringr.html"><a href="stringr.html#字符串组合"><i class="fa fa-check"></i><b>9.3.2</b> 字符串组合</a></li>
+<li class="chapter" data-level="9.3.3" data-path="stringr.html"><a href="stringr.html#字符串取子集"><i class="fa fa-check"></i><b>9.3.3</b> 字符串取子集</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="stringr.html"><a href="stringr.html#使用正则表达式进行模式匹配"><i class="fa fa-check"></i><b>9.4</b> 使用正则表达式进行模式匹配</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="stringr.html"><a href="stringr.html#基础匹配"><i class="fa fa-check"></i><b>9.4.1</b> 基础匹配</a></li>
+<li class="chapter" data-level="9.4.2" data-path="stringr.html"><a href="stringr.html#锚点"><i class="fa fa-check"></i><b>9.4.2</b> 锚点</a></li>
+<li class="chapter" data-level="9.4.3" data-path="stringr.html"><a href="stringr.html#字符类与字符选项"><i class="fa fa-check"></i><b>9.4.3</b> 字符类与字符选项</a></li>
+<li class="chapter" data-level="9.4.4" data-path="stringr.html"><a href="stringr.html#重复"><i class="fa fa-check"></i><b>9.4.4</b> 重复</a></li>
+<li class="chapter" data-level="9.4.5" data-path="stringr.html"><a href="stringr.html#分组与回溯引用"><i class="fa fa-check"></i><b>9.4.5</b> 分组与回溯引用</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="stringr.html"><a href="stringr.html#解决实际问题"><i class="fa fa-check"></i><b>9.5</b> 解决实际问题</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="stringr.html"><a href="stringr.html#确定一个字符向量是否匹配一种模式"><i class="fa fa-check"></i><b>9.5.1</b> 确定一个字符向量是否匹配一种模式</a></li>
+<li class="chapter" data-level="9.5.2" data-path="stringr.html"><a href="stringr.html#确定匹配的位置"><i class="fa fa-check"></i><b>9.5.2</b> 确定匹配的位置</a></li>
+<li class="chapter" data-level="9.5.3" data-path="stringr.html"><a href="stringr.html#提取匹配的内容"><i class="fa fa-check"></i><b>9.5.3</b> 提取匹配的内容</a></li>
+<li class="chapter" data-level="9.5.4" data-path="stringr.html"><a href="stringr.html#替换匹配内容"><i class="fa fa-check"></i><b>9.5.4</b> 替换匹配内容</a></li>
+<li class="chapter" data-level="9.5.5" data-path="stringr.html"><a href="stringr.html#拆分字符串"><i class="fa fa-check"></i><b>9.5.5</b> 拆分字符串</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="stringr.html"><a href="stringr.html#进阶部分"><i class="fa fa-check"></i><b>9.6</b> 进阶部分</a><ul>
+<li class="chapter" data-level="9.6.1" data-path="stringr.html"><a href="stringr.html#look-ahead"><i class="fa fa-check"></i><b>9.6.1</b> look ahead</a></li>
+<li class="chapter" data-level="9.6.2" data-path="stringr.html"><a href="stringr.html#look-behind"><i class="fa fa-check"></i><b>9.6.2</b> look behind</a></li>
+</ul></li>
+<li class="chapter" data-level="9.7" data-path="stringr.html"><a href="stringr.html#案例分析"><i class="fa fa-check"></i><b>9.7</b> 案例分析</a><ul>
+<li class="chapter" data-level="9.7.1" data-path="stringr.html"><a href="stringr.html#案例1"><i class="fa fa-check"></i><b>9.7.1</b> 案例1</a></li>
+<li class="chapter" data-level="9.7.2" data-path="stringr.html"><a href="stringr.html#案例2"><i class="fa fa-check"></i><b>9.7.2</b> 案例2</a></li>
+<li class="chapter" data-level="9.7.3" data-path="stringr.html"><a href="stringr.html#案例3"><i class="fa fa-check"></i><b>9.7.3</b> 案例3</a></li>
+<li class="chapter" data-level="9.7.4" data-path="stringr.html"><a href="stringr.html#案例4"><i class="fa fa-check"></i><b>9.7.4</b> 案例4</a></li>
+<li class="chapter" data-level="9.7.5" data-path="stringr.html"><a href="stringr.html#案例5"><i class="fa fa-check"></i><b>9.7.5</b> 案例5</a></li>
+<li class="chapter" data-level="9.7.6" data-path="stringr.html"><a href="stringr.html#案例6"><i class="fa fa-check"></i><b>9.7.6</b> 案例6</a></li>
+<li class="chapter" data-level="9.7.7" data-path="stringr.html"><a href="stringr.html#案例7"><i class="fa fa-check"></i><b>9.7.7</b> 案例7</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="stringr.html"><a href="stringr.html#回答提问"><i class="fa fa-check"></i><b>9.8</b> 回答提问</a></li>
+<li class="chapter" data-level="9.9" data-path="stringr.html"><a href="stringr.html#一些有趣的正则表达式的宏包"><i class="fa fa-check"></i><b>9.9</b> 一些有趣的正则表达式的宏包</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="forcats.html"><a href="forcats.html"><i class="fa fa-check"></i><b>10</b> 因子型变量</a><ul>
+<li class="chapter" data-level="10.1" data-path="forcats.html"><a href="forcats.html#什么是因子"><i class="fa fa-check"></i><b>10.1</b> 什么是因子</a></li>
+<li class="chapter" data-level="10.2" data-path="forcats.html"><a href="forcats.html#创建因子"><i class="fa fa-check"></i><b>10.2</b> 创建因子</a></li>
+<li class="chapter" data-level="10.3" data-path="forcats.html"><a href="forcats.html#调整因子顺序"><i class="fa fa-check"></i><b>10.3</b> 调整因子顺序</a></li>
+<li class="chapter" data-level="10.4" data-path="forcats.html"><a href="forcats.html#应用"><i class="fa fa-check"></i><b>10.4</b> 应用</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="forcats.html"><a href="forcats.html#fct_reorder"><i class="fa fa-check"></i><b>10.4.1</b> fct_reorder()</a></li>
+<li class="chapter" data-level="10.4.2" data-path="forcats.html"><a href="forcats.html#fct_rev"><i class="fa fa-check"></i><b>10.4.2</b> fct_rev()</a></li>
+<li class="chapter" data-level="10.4.3" data-path="forcats.html"><a href="forcats.html#fct_relevel"><i class="fa fa-check"></i><b>10.4.3</b> fct_relevel()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="purrr.html"><a href="purrr.html"><i class="fa fa-check"></i><b>11</b> 函数式编程</a><ul>
+<li class="chapter" data-level="11.1" data-path="colwise.html"><a href="colwise.html#简单回顾"><i class="fa fa-check"></i><b>11.1</b> 简单回顾</a></li>
+<li class="chapter" data-level="11.2" data-path="purrr.html"><a href="purrr.html#向量化运算"><i class="fa fa-check"></i><b>11.2</b> 向量化运算</a></li>
+<li class="chapter" data-level="11.3" data-path="purrr.html"><a href="purrr.html#多说说列表"><i class="fa fa-check"></i><b>11.3</b> 多说说列表</a></li>
+<li class="chapter" data-level="11.4" data-path="purrr.html"><a href="purrr.html#列表-vs-向量"><i class="fa fa-check"></i><b>11.4</b> 列表 vs 向量</a></li>
+<li class="chapter" data-level="11.5" data-path="purrr.html"><a href="purrr.html#purrr-1"><i class="fa fa-check"></i><b>11.5</b> purrr</a></li>
+<li class="chapter" data-level="11.6" data-path="purrr.html"><a href="purrr.html#自定义函数"><i class="fa fa-check"></i><b>11.6</b> 自定义函数</a></li>
+<li class="chapter" data-level="11.7" data-path="purrr.html"><a href="purrr.html#在dplyr函数中的运用map"><i class="fa fa-check"></i><b>11.7</b> 在dplyr函数中的运用map</a></li>
+<li class="chapter" data-level="11.8" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>11.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="eda01.html"><a href="eda01.html"><i class="fa fa-check"></i><b>12</b> 探索性数据分析</a><ul>
+<li class="chapter" data-level="12.1" data-path="eda01.html"><a href="eda01.html#探索性"><i class="fa fa-check"></i><b>12.1</b> 探索性</a></li>
+<li class="chapter" data-level="12.2" data-path="eda01.html"><a href="eda01.html#数据集"><i class="fa fa-check"></i><b>12.2</b> 数据集</a></li>
+<li class="chapter" data-level="12.3" data-path="eda01.html"><a href="eda01.html#导入数据"><i class="fa fa-check"></i><b>12.3</b> 导入数据</a></li>
+<li class="chapter" data-level="12.4" data-path="intro-R.html"><a href="intro-R.html#数据结构"><i class="fa fa-check"></i><b>12.4</b> 数据结构</a></li>
+<li class="chapter" data-level="12.5" data-path="eda01.html"><a href="eda01.html#我们想探索哪些问题"><i class="fa fa-check"></i><b>12.5</b> 我们想探索哪些问题？</a></li>
+<li class="chapter" data-level="12.6" data-path="eda01.html"><a href="eda01.html#每个学科颁过多少次奖"><i class="fa fa-check"></i><b>12.6</b> 每个学科颁过多少次奖</a></li>
+<li class="chapter" data-level="12.7" data-path="eda01.html"><a href="eda01.html#看看我们伟大的祖国"><i class="fa fa-check"></i><b>12.7</b> 看看我们伟大的祖国</a></li>
+<li class="chapter" data-level="12.8" data-path="eda01.html"><a href="eda01.html#哪些大神多次获得诺贝尔奖"><i class="fa fa-check"></i><b>12.8</b> 哪些大神多次获得诺贝尔奖</a></li>
+<li class="chapter" data-level="12.9" data-path="eda01.html"><a href="eda01.html#大神在得奖的时候是多大年龄"><i class="fa fa-check"></i><b>12.9</b> 大神在得奖的时候是多大年龄？</a></li>
+<li class="chapter" data-level="12.10" data-path="eda01.html"><a href="eda01.html#性别比例"><i class="fa fa-check"></i><b>12.10</b> 性别比例</a></li>
+<li class="chapter" data-level="12.11" data-path="eda01.html"><a href="eda01.html#这些大神都是哪个年代出生的人"><i class="fa fa-check"></i><b>12.11</b> 这些大神都是哪个年代出生的人？</a></li>
+<li class="chapter" data-level="12.12" data-path="eda01.html"><a href="eda01.html#最年轻的诺奖获得者"><i class="fa fa-check"></i><b>12.12</b> 最年轻的诺奖获得者？</a></li>
+<li class="chapter" data-level="12.13" data-path="eda01.html"><a href="eda01.html#平均年龄和获奖数量"><i class="fa fa-check"></i><b>12.13</b> 平均年龄和获奖数量</a></li>
+<li class="chapter" data-level="12.14" data-path="eda01.html"><a href="eda01.html#出生地与工作地分布"><i class="fa fa-check"></i><b>12.14</b> 出生地与工作地分布</a></li>
+<li class="chapter" data-level="12.15" data-path="eda01.html"><a href="eda01.html#迁移模式"><i class="fa fa-check"></i><b>12.15</b> 迁移模式</a></li>
+<li class="chapter" data-level="12.16" data-path="eda01.html"><a href="eda01.html#地图"><i class="fa fa-check"></i><b>12.16</b> 地图</a></li>
+<li class="chapter" data-level="12.17" data-path="eda01.html"><a href="eda01.html#出生地和工作地不一样的占比"><i class="fa fa-check"></i><b>12.17</b> 出生地和工作地不一样的占比</a></li>
+<li class="chapter" data-level="12.18" data-path="eda01.html"><a href="eda01.html#诺奖分享者"><i class="fa fa-check"></i><b>12.18</b> 诺奖分享者</a></li>
+<li class="chapter" data-level="12.19" data-path="eda01.html"><a href="eda01.html#其它"><i class="fa fa-check"></i><b>12.19</b> 其它</a></li>
+<li class="chapter" data-level="12.20" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>12.20</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="eda02.html"><a href="eda02.html"><i class="fa fa-check"></i><b>13</b> 探索性数据分析2</a><ul>
+<li class="chapter" data-level="13.1" data-path="eda01.html"><a href="eda01.html#导入数据"><i class="fa fa-check"></i><b>13.1</b> 导入数据</a></li>
+<li class="chapter" data-level="13.2" data-path="eda02.html"><a href="eda02.html#可视化"><i class="fa fa-check"></i><b>13.2</b> 可视化</a></li>
+<li class="chapter" data-level="13.3" data-path="eda02.html"><a href="eda02.html#回归分析"><i class="fa fa-check"></i><b>13.3</b> 回归分析</a></li>
+<li class="chapter" data-level="13.4" data-path="eda02.html"><a href="eda02.html#预测"><i class="fa fa-check"></i><b>13.4</b> 预测</a></li>
+<li class="chapter" data-level="13.5" data-path="eda02.html"><a href="eda02.html#再次可视化"><i class="fa fa-check"></i><b>13.5</b> 再次可视化</a></li>
+<li class="chapter" data-level="13.6" data-path="eda02.html"><a href="eda02.html#list_column"><i class="fa fa-check"></i><b>13.6</b> list_column</a></li>
+<li class="chapter" data-level="13.7" data-path="eda02.html"><a href="eda02.html#课后作业"><i class="fa fa-check"></i><b>13.7</b> 课后作业</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="eda03.html"><a href="eda03.html"><i class="fa fa-check"></i><b>14</b> 探索性数据分析3</a><ul>
+<li class="chapter" data-level="14.1" data-path="eda03.html"><a href="eda03.html#数据来源"><i class="fa fa-check"></i><b>14.1</b> 数据来源</a></li>
+<li class="chapter" data-level="14.2" data-path="eda03.html"><a href="eda03.html#读取数据"><i class="fa fa-check"></i><b>14.2</b> 读取数据</a></li>
+<li class="chapter" data-level="14.3" data-path="eda03.html"><a href="eda03.html#数据集结构"><i class="fa fa-check"></i><b>14.3</b> 数据集结构</a></li>
+<li class="chapter" data-level="14.4" data-path="eda03.html"><a href="eda03.html#数据清洗规整"><i class="fa fa-check"></i><b>14.4</b> 数据清洗规整</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="eda03.html"><a href="eda03.html#必要的预备知识之select"><i class="fa fa-check"></i><b>14.4.1</b> 必要的预备知识之<code>select()</code></a></li>
+<li class="chapter" data-level="14.4.2" data-path="eda03.html"><a href="eda03.html#必要的预备知识之pivot_longer"><i class="fa fa-check"></i><b>14.4.2</b> 必要的预备知识之<code>pivot_longer()</code></a></li>
+<li class="chapter" data-level="14.4.3" data-path="eda03.html"><a href="eda03.html#必要的预备知识之pivot_wider"><i class="fa fa-check"></i><b>14.4.3</b> 必要的预备知识之<code>pivot_wider()</code></a></li>
+<li class="chapter" data-level="14.4.4" data-path="eda03.html"><a href="eda03.html#必要的预备知识之日期格式"><i class="fa fa-check"></i><b>14.4.4</b> 必要的预备知识之日期格式</a></li>
+<li class="chapter" data-level="14.4.5" data-path="eda03.html"><a href="eda03.html#必要的预备知识之时间差"><i class="fa fa-check"></i><b>14.4.5</b> 必要的预备知识之时间差</a></li>
+<li class="chapter" data-level="14.4.6" data-path="eda03.html"><a href="eda03.html#有时候需要log10_scale"><i class="fa fa-check"></i><b>14.4.6</b> 有时候需要log10_scale</a></li>
+<li class="chapter" data-level="14.4.7" data-path="eda03.html"><a href="eda03.html#数据清洗规整-1"><i class="fa fa-check"></i><b>14.4.7</b> 数据清洗规整</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="eda03.html"><a href="eda03.html#可视化探索"><i class="fa fa-check"></i><b>14.5</b> 可视化探索</a><ul>
+<li class="chapter" data-level="14.5.1" data-path="eda03.html"><a href="eda03.html#简便的方法"><i class="fa fa-check"></i><b>14.5.1</b> 简便的方法</a></li>
+<li class="chapter" data-level="14.5.2" data-path="eda03.html"><a href="eda03.html#疫情持续时间最久的国家"><i class="fa fa-check"></i><b>14.5.2</b> 疫情持续时间最久的国家</a></li>
+<li class="chapter" data-level="14.5.3" data-path="eda03.html"><a href="eda03.html#笨办法吧"><i class="fa fa-check"></i><b>14.5.3</b> 笨办法吧</a></li>
+<li class="chapter" data-level="14.5.4" data-path="eda03.html"><a href="eda03.html#比较tidy的方法"><i class="fa fa-check"></i><b>14.5.4</b> 比较tidy的方法</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="eda03.html"><a href="eda03.html#每个国家的情况"><i class="fa fa-check"></i><b>14.6</b> 每个国家的情况</a></li>
+<li class="chapter" data-level="14.7" data-path="eda01.html"><a href="eda01.html#地图"><i class="fa fa-check"></i><b>14.7</b> 地图</a></li>
+<li class="chapter" data-level="14.8" data-path="eda03.html"><a href="eda03.html#更多"><i class="fa fa-check"></i><b>14.8</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="eda04.html"><a href="eda04.html"><i class="fa fa-check"></i><b>15</b> 探索性数据分析4</a><ul>
+<li class="chapter" data-level="15.1" data-path="eda04.html"><a href="eda04.html#探索anscombe"><i class="fa fa-check"></i><b>15.1</b> 探索anscombe</a></li>
+<li class="chapter" data-level="15.2" data-path="eda04.html"><a href="eda04.html#规整数据"><i class="fa fa-check"></i><b>15.2</b> 规整数据</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="eda04.html"><a href="eda04.html#小小的回顾"><i class="fa fa-check"></i><b>15.2.1</b> 小小的回顾</a></li>
+<li class="chapter" data-level="15.2.2" data-path="eda04.html"><a href="eda04.html#回到案例"><i class="fa fa-check"></i><b>15.2.2</b> 回到案例</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="eda04.html"><a href="eda04.html#统计"><i class="fa fa-check"></i><b>15.3</b> 统计</a></li>
+<li class="chapter" data-level="15.4" data-path="eda04.html"><a href="eda04.html#建模"><i class="fa fa-check"></i><b>15.4</b> 建模</a></li>
+<li class="chapter" data-level="15.5" data-path="eda04.html"><a href="eda04.html#可视化看看"><i class="fa fa-check"></i><b>15.5</b> 可视化看看</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="eda05.html"><a href="eda05.html"><i class="fa fa-check"></i><b>16</b> 探索性数据分析5</a><ul>
+<li class="chapter" data-level="16.1" data-path="stringr.html"><a href="stringr.html#案例分析"><i class="fa fa-check"></i><b>16.1</b> 案例分析</a></li>
+<li class="chapter" data-level="16.2" data-path="eda02.html"><a href="eda02.html#可视化"><i class="fa fa-check"></i><b>16.2</b> 可视化</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="eda05.html"><a href="eda05.html#画出不同性别的身高分布"><i class="fa fa-check"></i><b>16.2.1</b> 画出不同性别的身高分布</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="eda05.html"><a href="eda05.html#来点高级的"><i class="fa fa-check"></i><b>16.3</b> 来点高级的</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="eda05.html"><a href="eda05.html#完整代码"><i class="fa fa-check"></i><b>16.3.1</b> 完整代码</a></li>
+<li class="chapter" data-level="16.3.2" data-path="eda05.html"><a href="eda05.html#画出不同性别的体重分布"><i class="fa fa-check"></i><b>16.3.2</b> 画出不同性别的体重分布</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="eda04.html"><a href="eda04.html#建模"><i class="fa fa-check"></i><b>16.4</b> 建模</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="eda05.html"><a href="eda05.html#身高与体重的散点图"><i class="fa fa-check"></i><b>16.4.1</b> 身高与体重的散点图</a></li>
+<li class="chapter" data-level="16.4.2" data-path="eda05.html"><a href="eda05.html#建立身高与体重的线性模型"><i class="fa fa-check"></i><b>16.4.2</b> 建立身高与体重的线性模型</a></li>
+<li class="chapter" data-level="16.4.3" data-path="eda05.html"><a href="eda05.html#建立不同性别下的身高与体重的线性模型"><i class="fa fa-check"></i><b>16.4.3</b> 建立不同性别下的身高与体重的线性模型</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="eda06.html"><a href="eda06.html"><i class="fa fa-check"></i><b>17</b> 探索性数据分析6</a><ul>
+<li class="chapter" data-level="17.1" data-path="eda06.html"><a href="eda06.html#驯鹿位置跟踪"><i class="fa fa-check"></i><b>17.1</b> 驯鹿位置跟踪</a></li>
+<li class="chapter" data-level="17.2" data-path="eda06.html"><a href="eda06.html#驯鹿的身份信息"><i class="fa fa-check"></i><b>17.2</b> 驯鹿的身份信息</a></li>
+<li class="chapter" data-level="17.3" data-path="eda01.html"><a href="eda01.html#性别比例"><i class="fa fa-check"></i><b>17.3</b> 性别比例</a></li>
+<li class="chapter" data-level="17.4" data-path="eda06.html"><a href="eda06.html#每个站点运动最频繁的前10的驯鹿"><i class="fa fa-check"></i><b>17.4</b> 每个站点运动最频繁的前10的驯鹿</a></li>
+<li class="chapter" data-level="17.5" data-path="eda06.html"><a href="eda06.html#驯鹿的活动信息"><i class="fa fa-check"></i><b>17.5</b> 驯鹿的活动信息</a></li>
+<li class="chapter" data-level="17.6" data-path="eda06.html"><a href="eda06.html#被追踪最多次的驯鹿的轨迹"><i class="fa fa-check"></i><b>17.6</b> 被追踪最多次的驯鹿的轨迹</a></li>
+<li class="chapter" data-level="17.7" data-path="eda06.html"><a href="eda06.html#某一只驯鹿的轨迹"><i class="fa fa-check"></i><b>17.7</b> 某一只驯鹿的轨迹</a></li>
+<li class="chapter" data-level="17.8" data-path="eda06.html"><a href="eda06.html#选择某个驯鹿查看他的活动轨迹"><i class="fa fa-check"></i><b>17.8</b> 选择某个驯鹿，查看他的活动轨迹</a></li>
+<li class="chapter" data-level="17.9" data-path="eda06.html"><a href="eda06.html#季节模式"><i class="fa fa-check"></i><b>17.9</b> 季节模式</a></li>
+<li class="chapter" data-level="17.10" data-path="eda06.html"><a href="eda06.html#迁移速度"><i class="fa fa-check"></i><b>17.10</b> 迁移速度</a></li>
+<li class="chapter" data-level="17.11" data-path="eda06.html"><a href="eda06.html#动态展示"><i class="fa fa-check"></i><b>17.11</b> 动态展示</a></li>
+<li class="chapter" data-level="17.12" data-path="eda03.html"><a href="eda03.html#更多"><i class="fa fa-check"></i><b>17.12</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="eda07.html"><a href="eda07.html"><i class="fa fa-check"></i><b>18</b> 探索性数据分析7</a><ul>
+<li class="chapter" data-level="18.1" data-path="eda07.html"><a href="eda07.html#数据"><i class="fa fa-check"></i><b>18.1</b> 数据</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="eda01.html"><a href="eda01.html#导入数据"><i class="fa fa-check"></i><b>18.1.1</b> 导入数据</a></li>
+<li class="chapter" data-level="18.1.2" data-path="eda07.html"><a href="eda07.html#变量含义"><i class="fa fa-check"></i><b>18.1.2</b> 变量含义</a></li>
+<li class="chapter" data-level="18.1.3" data-path="eda07.html"><a href="eda07.html#数据清洗"><i class="fa fa-check"></i><b>18.1.3</b> 数据清洗</a></li>
+</ul></li>
+<li class="chapter" data-level="18.2" data-path="eda07.html"><a href="eda07.html#探索性分析"><i class="fa fa-check"></i><b>18.2</b> 探索性分析</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="eda07.html"><a href="eda07.html#每种类型企鹅有多少只"><i class="fa fa-check"></i><b>18.2.1</b> 每种类型企鹅有多少只</a></li>
+<li class="chapter" data-level="18.2.2" data-path="eda07.html"><a href="eda07.html#每种类型企鹅各种属性的均值和分布"><i class="fa fa-check"></i><b>18.2.2</b> 每种类型企鹅各种属性的均值和分布</a></li>
+<li class="chapter" data-level="18.2.3" data-path="eda07.html"><a href="eda07.html#嘴峰长度和深度的关联"><i class="fa fa-check"></i><b>18.2.3</b> 嘴峰长度和深度的关联</a></li>
+<li class="chapter" data-level="18.2.4" data-path="eda07.html"><a href="eda07.html#体重与翅膀长度的关联"><i class="fa fa-check"></i><b>18.2.4</b> 体重与翅膀长度的关联</a></li>
+<li class="chapter" data-level="18.2.5" data-path="eda07.html"><a href="eda07.html#不同种类的宝宝体重具有显著性差异"><i class="fa fa-check"></i><b>18.2.5</b> 不同种类的宝宝，体重具有显著性差异？</a></li>
+<li class="chapter" data-level="18.2.6" data-path="eda07.html"><a href="eda07.html#嘴峰长度与嘴峰深度的比例"><i class="fa fa-check"></i><b>18.2.6</b> 嘴峰长度与嘴峰深度的比例</a></li>
+<li class="chapter" data-level="18.2.7" data-path="eda07.html"><a href="eda07.html#建立模型"><i class="fa fa-check"></i><b>18.2.7</b> 建立模型</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>II tidyverse篇</b></span></li>
+<li class="chapter" data-level="19" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html"><i class="fa fa-check"></i><b>19</b> ggplot2</a><ul>
+<li class="chapter" data-level="19.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#一个有趣的案例"><i class="fa fa-check"></i><b>19.1</b> 一个有趣的案例</a></li>
+<li class="chapter" data-level="19.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#学习目标"><i class="fa fa-check"></i><b>19.2</b> 学习目标</a></li>
+<li class="chapter" data-level="19.3" data-path="intro-R.html"><a href="intro-R.html#开始"><i class="fa fa-check"></i><b>19.3</b> 开始</a><ul>
+<li class="chapter" data-level="19.3.1" data-path="eda01.html"><a href="eda01.html#导入数据"><i class="fa fa-check"></i><b>19.3.1</b> 导入数据</a></li>
+<li class="chapter" data-level="19.3.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#检查数据"><i class="fa fa-check"></i><b>19.3.2</b> 检查数据</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#基本绘图"><i class="fa fa-check"></i><b>19.4</b> 基本绘图</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#柱状图"><i class="fa fa-check"></i><b>19.4.1</b> 柱状图</a></li>
+<li class="chapter" data-level="19.4.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#直方图"><i class="fa fa-check"></i><b>19.4.2</b> 直方图</a></li>
+<li class="chapter" data-level="19.4.3" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#箱线图"><i class="fa fa-check"></i><b>19.4.3</b> 箱线图</a></li>
+<li class="chapter" data-level="19.4.4" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#抖散图"><i class="fa fa-check"></i><b>19.4.4</b> 抖散图</a></li>
+<li class="chapter" data-level="19.4.5" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#山峦图"><i class="fa fa-check"></i><b>19.4.5</b> 山峦图</a></li>
+<li class="chapter" data-level="19.4.6" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#散点图"><i class="fa fa-check"></i><b>19.4.6</b> 散点图</a></li>
+<li class="chapter" data-level="19.4.7" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#点线图"><i class="fa fa-check"></i><b>19.4.7</b> 点线图</a></li>
+<li class="chapter" data-level="19.4.8" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#文本标注"><i class="fa fa-check"></i><b>19.4.8</b> 文本标注</a></li>
+<li class="chapter" data-level="19.4.9" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#errorbar图"><i class="fa fa-check"></i><b>19.4.9</b> errorbar图</a></li>
+<li class="chapter" data-level="19.4.10" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#椭圆图"><i class="fa fa-check"></i><b>19.4.10</b> 椭圆图</a></li>
+<li class="chapter" data-level="19.4.11" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#d-密度图"><i class="fa fa-check"></i><b>19.4.11</b> 2D 密度图</a></li>
+<li class="chapter" data-level="19.4.12" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#马赛克图"><i class="fa fa-check"></i><b>19.4.12</b> 马赛克图</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#主题风格"><i class="fa fa-check"></i><b>19.5</b> 主题风格</a></li>
+<li class="chapter" data-level="19.6" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#定制"><i class="fa fa-check"></i><b>19.6</b> 定制</a><ul>
+<li class="chapter" data-level="19.6.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#labels"><i class="fa fa-check"></i><b>19.6.1</b> Labels</a></li>
+<li class="chapter" data-level="19.6.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#定制颜色"><i class="fa fa-check"></i><b>19.6.2</b> 定制颜色</a></li>
+</ul></li>
+<li class="chapter" data-level="19.7" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#组合图片"><i class="fa fa-check"></i><b>19.7</b> 组合图片</a><ul>
+<li class="chapter" data-level="19.7.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#cowplot"><i class="fa fa-check"></i><b>19.7.1</b> cowplot</a></li>
+<li class="chapter" data-level="19.7.2" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#保存图片"><i class="fa fa-check"></i><b>19.7.2</b> 保存图片</a></li>
+</ul></li>
+<li class="chapter" data-level="19.8" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#中文字体"><i class="fa fa-check"></i><b>19.8</b> 中文字体</a></li>
+<li class="chapter" data-level="19.9" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#高亮某一组"><i class="fa fa-check"></i><b>19.9</b> 高亮某一组</a><ul>
+<li class="chapter" data-level="19.9.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#ggplot2方法"><i class="fa fa-check"></i><b>19.9.1</b> ggplot2方法</a></li>
+<li class="chapter" data-level="19.9.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#gghighlight方法"><i class="fa fa-check"></i><b>19.9.2</b> gghighlight方法</a></li>
+</ul></li>
+<li class="chapter" data-level="19.10" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#函数图"><i class="fa fa-check"></i><b>19.10</b> 函数图</a></li>
+<li class="chapter" data-level="19.11" data-path="eda01.html"><a href="eda01.html#地图"><i class="fa fa-check"></i><b>19.11</b> 地图</a><ul>
+<li class="chapter" data-level="19.11.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#latex公式"><i class="fa fa-check"></i><b>19.11.1</b> latex公式</a></li>
+</ul></li>
+<li class="chapter" data-level="19.12" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#你喜欢哪个图"><i class="fa fa-check"></i><b>19.12</b> 你喜欢哪个图</a></li>
+<li class="chapter" data-level="19.13" data-path="colwise.html"><a href="colwise.html#参考资料"><i class="fa fa-check"></i><b>19.13</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html"><i class="fa fa-check"></i><b>20</b> ggplot2之主题设置</a><ul>
+<li class="chapter" data-level="20.1" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#图表整体元素"><i class="fa fa-check"></i><b>20.1</b> 图表整体元素</a></li>
+<li class="chapter" data-level="20.2" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#坐标轴元素"><i class="fa fa-check"></i><b>20.2</b> 坐标轴元素</a></li>
+<li class="chapter" data-level="20.3" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#面板元素"><i class="fa fa-check"></i><b>20.3</b> 面板元素</a></li>
+<li class="chapter" data-level="20.4" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#图例元素"><i class="fa fa-check"></i><b>20.4</b> 图例元素</a></li>
+<li class="chapter" data-level="20.5" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#分面元素"><i class="fa fa-check"></i><b>20.5</b> 分面元素</a></li>
+<li class="chapter" data-level="20.6" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#小结"><i class="fa fa-check"></i><b>20.6</b> 小结</a></li>
+<li class="chapter" data-level="20.7" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#提问"><i class="fa fa-check"></i><b>20.7</b> 提问</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html"><i class="fa fa-check"></i><b>21</b> ggplot2之标度</a><ul>
+<li class="chapter" data-level="21.1" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#标度"><i class="fa fa-check"></i><b>21.1</b> 标度</a></li>
+<li class="chapter" data-level="21.2" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#图形属性和变量类型"><i class="fa fa-check"></i><b>21.2</b> 图形属性和变量类型</a></li>
+<li class="chapter" data-level="21.3" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#坐标轴和图例是同样的东西"><i class="fa fa-check"></i><b>21.3</b> 坐标轴和图例是同样的东西</a></li>
+<li class="chapter" data-level="21.4" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#丰富的标度体系"><i class="fa fa-check"></i><b>21.4</b> 丰富的标度体系</a></li>
+<li class="chapter" data-level="21.5" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#案例详解"><i class="fa fa-check"></i><b>21.5</b> 案例详解</a></li>
+<li class="chapter" data-level="21.6" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#用标度还是主题"><i class="fa fa-check"></i><b>21.6</b> 用标度还是主题？</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html"><i class="fa fa-check"></i><b>22</b> ggplot2之图例系统</a><ul>
+<li class="chapter" data-level="22.1" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html#图例系统"><i class="fa fa-check"></i><b>22.1</b> 图例系统</a></li>
+<li class="chapter" data-level="22.2" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#案例详解"><i class="fa fa-check"></i><b>22.2</b> 案例详解</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html"><i class="fa fa-check"></i><b>23</b> ggplot2之让你的数据骚动起来</a><ul>
+<li class="chapter" data-level="23.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#为什么要使用动图"><i class="fa fa-check"></i><b>23.1</b> 为什么要使用动图</a></li>
+<li class="chapter" data-level="23.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#gganimate宏包"><i class="fa fa-check"></i><b>23.2</b> <code>gganimate</code>宏包</a><ul>
+<li class="chapter" data-level="23.2.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#先来一张静态图"><i class="fa fa-check"></i><b>23.2.1</b> 先来一张静态图</a></li>
+<li class="chapter" data-level="23.2.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#相对复杂点的例子"><i class="fa fa-check"></i><b>23.2.2</b> 相对复杂点的例子</a></li>
+</ul></li>
+<li class="chapter" data-level="23.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#the-grammar-of-animation"><i class="fa fa-check"></i><b>23.3</b> The grammar of animation</a></li>
+<li class="chapter" data-level="23.4" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望动画随哪个变量动起来"><i class="fa fa-check"></i><b>23.4</b> 希望动画随哪个变量动起来</a><ul>
+<li class="chapter" data-level="23.4.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_states"><i class="fa fa-check"></i><b>23.4.1</b> transition_states</a></li>
+<li class="chapter" data-level="23.4.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_time"><i class="fa fa-check"></i><b>23.4.2</b> transition_time</a></li>
+<li class="chapter" data-level="23.4.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_reveal"><i class="fa fa-check"></i><b>23.4.3</b> transition_reveal</a></li>
+<li class="chapter" data-level="23.4.4" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_filter"><i class="fa fa-check"></i><b>23.4.4</b> transition_filter</a></li>
+<li class="chapter" data-level="23.4.5" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_layers"><i class="fa fa-check"></i><b>23.4.5</b> transition_layers</a></li>
+<li class="chapter" data-level="23.4.6" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#其他"><i class="fa fa-check"></i><b>23.4.6</b> 其他</a></li>
+</ul></li>
+<li class="chapter" data-level="23.5" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望坐标轴随数据动起来"><i class="fa fa-check"></i><b>23.5</b> 希望坐标轴随数据动起来</a><ul>
+<li class="chapter" data-level="23.5.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#view_follow"><i class="fa fa-check"></i><b>23.5.1</b> view_follow</a></li>
+<li class="chapter" data-level="23.5.2" data-path="eda01.html"><a href="eda01.html#其它"><i class="fa fa-check"></i><b>23.5.2</b> 其它</a></li>
+</ul></li>
+<li class="chapter" data-level="23.6" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望动画有个记忆"><i class="fa fa-check"></i><b>23.6</b> 希望动画有个记忆</a><ul>
+<li class="chapter" data-level="23.6.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_wake"><i class="fa fa-check"></i><b>23.6.1</b> shadow_wake()</a></li>
+<li class="chapter" data-level="23.6.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_trail"><i class="fa fa-check"></i><b>23.6.2</b> shadow_trail()</a></li>
+<li class="chapter" data-level="23.6.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_mark"><i class="fa fa-check"></i><b>23.6.3</b> shadow_mark()</a></li>
+</ul></li>
+<li class="chapter" data-level="23.7" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#定义新数据出现和旧数据退去的方式"><i class="fa fa-check"></i><b>23.7</b> 定义新数据出现和旧数据退去的方式</a><ul>
+<li class="chapter" data-level="23.7.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#enterexit_fade"><i class="fa fa-check"></i><b>23.7.1</b> enter/exit_fade()</a></li>
+<li class="chapter" data-level="23.7.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#enter_growexit_shrink"><i class="fa fa-check"></i><b>23.7.2</b> enter_grow()/exit_shrink()</a></li>
+</ul></li>
+<li class="chapter" data-level="23.8" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#控制变化的节奏"><i class="fa fa-check"></i><b>23.8</b> 控制变化的节奏</a></li>
+<li class="chapter" data-level="23.9" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#标签"><i class="fa fa-check"></i><b>23.9</b> 标签</a></li>
+<li class="chapter" data-level="23.10" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#保存"><i class="fa fa-check"></i><b>23.10</b> 保存</a><ul>
+<li class="chapter" data-level="23.10.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#renderer-options"><i class="fa fa-check"></i><b>23.10.1</b> Renderer options</a></li>
+<li class="chapter" data-level="23.10.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#常用方法"><i class="fa fa-check"></i><b>23.10.2</b> 常用方法</a></li>
+</ul></li>
+<li class="chapter" data-level="23.11" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示一"><i class="fa fa-check"></i><b>23.11</b> 案例演示一</a></li>
+<li class="chapter" data-level="23.12" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示二"><i class="fa fa-check"></i><b>23.12</b> 案例演示二</a><ul>
+<li class="chapter" data-level="23.12.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#常规的方法"><i class="fa fa-check"></i><b>23.12.1</b> 常规的方法</a></li>
+<li class="chapter" data-level="23.12.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#炫酷点的"><i class="fa fa-check"></i><b>23.12.2</b> 炫酷点的</a></li>
+</ul></li>
+<li class="chapter" data-level="23.13" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示三"><i class="fa fa-check"></i><b>23.13</b> 案例演示三</a></li>
+<li class="chapter" data-level="23.14" data-path="eda02.html"><a href="eda02.html#课后作业"><i class="fa fa-check"></i><b>23.14</b> 课后作业</a><ul>
+<li class="chapter" data-level="23.14.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#作业1"><i class="fa fa-check"></i><b>23.14.1</b> 作业1</a></li>
+<li class="chapter" data-level="23.14.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#作业2"><i class="fa fa-check"></i><b>23.14.2</b> 作业2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="tips.html"><a href="tips.html"><i class="fa fa-check"></i><b>24</b> tidyverse中的若干技巧</a><ul>
+<li class="chapter" data-level="24.1" data-path="tips.html"><a href="tips.html#from-gather-to-pivot"><i class="fa fa-check"></i><b>24.1</b> From <code>gather()</code> to <code>pivot()</code></a></li>
+<li class="chapter" data-level="24.2" data-path="tips.html"><a href="tips.html#count"><i class="fa fa-check"></i><b>24.2</b> count()</a></li>
+<li class="chapter" data-level="24.3" data-path="tips.html"><a href="tips.html#在-count-中创建新变量"><i class="fa fa-check"></i><b>24.3</b> 在 count() 中创建新变量</a></li>
+<li class="chapter" data-level="24.4" data-path="tips.html"><a href="tips.html#add_count"><i class="fa fa-check"></i><b>24.4</b> add_count()</a></li>
+<li class="chapter" data-level="24.5" data-path="tips.html"><a href="tips.html#nth-first-last"><i class="fa fa-check"></i><b>24.5</b> nth(), first(), last()</a></li>
+<li class="chapter" data-level="24.6" data-path="tips.html"><a href="tips.html#列变量重新排序"><i class="fa fa-check"></i><b>24.6</b> 列变量重新排序</a></li>
+<li class="chapter" data-level="24.7" data-path="tips.html"><a href="tips.html#if_else"><i class="fa fa-check"></i><b>24.7</b> if_else</a></li>
+<li class="chapter" data-level="24.8" data-path="tips.html"><a href="tips.html#case_when"><i class="fa fa-check"></i><b>24.8</b> case_when</a></li>
+<li class="chapter" data-level="24.9" data-path="tips.html"><a href="tips.html#找出前几名"><i class="fa fa-check"></i><b>24.9</b> 找出前几名</a></li>
+<li class="chapter" data-level="24.10" data-path="tips.html"><a href="tips.html#去除多余的空白"><i class="fa fa-check"></i><b>24.10</b> 去除多余的空白</a></li>
+<li class="chapter" data-level="24.11" data-path="tips.html"><a href="tips.html#取反操作"><i class="fa fa-check"></i><b>24.11</b> 取反操作</a></li>
+<li class="chapter" data-level="24.12" data-path="tips.html"><a href="tips.html#drop_na"><i class="fa fa-check"></i><b>24.12</b> drop_na()</a></li>
+<li class="chapter" data-level="24.13" data-path="tips.html"><a href="tips.html#replace_na"><i class="fa fa-check"></i><b>24.13</b> replace_na()</a></li>
+<li class="chapter" data-level="24.14" data-path="tips.html"><a href="tips.html#coalesce"><i class="fa fa-check"></i><b>24.14</b> coalesce</a></li>
+<li class="chapter" data-level="24.15" data-path="tips.html"><a href="tips.html#summarise-生成-list-column"><i class="fa fa-check"></i><b>24.15</b> summarise() 生成 list-column</a></li>
+<li class="chapter" data-level="24.16" data-path="tips.html"><a href="tips.html#count-fct_reorder-geom_col-coord_flip"><i class="fa fa-check"></i><b>24.16</b> count() + fct_reorder() + geom_col() + coord_flip()</a></li>
+<li class="chapter" data-level="24.17" data-path="tips.html"><a href="tips.html#scale_xy_log10"><i class="fa fa-check"></i><b>24.17</b> scale_x/y_log10</a></li>
+<li class="chapter" data-level="24.18" data-path="tips.html"><a href="tips.html#fct_lump"><i class="fa fa-check"></i><b>24.18</b> fct_lump</a></li>
+<li class="chapter" data-level="24.19" data-path="tips.html"><a href="tips.html#fct_reoder2"><i class="fa fa-check"></i><b>24.19</b> fct_reoder2</a></li>
+<li class="chapter" data-level="24.20" data-path="tips.html"><a href="tips.html#unite"><i class="fa fa-check"></i><b>24.20</b> unite</a></li>
+<li class="chapter" data-level="24.21" data-path="tips.html"><a href="tips.html#separate"><i class="fa fa-check"></i><b>24.21</b> separate()</a></li>
+<li class="chapter" data-level="24.22" data-path="tips.html"><a href="tips.html#extract"><i class="fa fa-check"></i><b>24.22</b> extract()</a></li>
+<li class="chapter" data-level="24.23" data-path="tips.html"><a href="tips.html#crossing"><i class="fa fa-check"></i><b>24.23</b> crossing()</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="tibble.html"><a href="tibble.html"><i class="fa fa-check"></i><b>25</b> 简单数据框</a><ul>
+<li class="chapter" data-level="25.1" data-path="tibble.html"><a href="tibble.html#tidyverse-家族"><i class="fa fa-check"></i><b>25.1</b> tidyverse 家族</a></li>
+<li class="chapter" data-level="25.2" data-path="tibble.html"><a href="tibble.html#人性化的tibble"><i class="fa fa-check"></i><b>25.2</b> 人性化的tibble</a></li>
+<li class="chapter" data-level="25.3" data-path="tibble.html"><a href="tibble.html#tibble-与-data.frame"><i class="fa fa-check"></i><b>25.3</b> tibble 与 data.frame</a></li>
+<li class="chapter" data-level="25.4" data-path="tibble.html"><a href="tibble.html#tibble数据操作"><i class="fa fa-check"></i><b>25.4</b> tibble数据操作</a><ul>
+<li class="chapter" data-level="25.4.1" data-path="tibble.html"><a href="tibble.html#创建tibble"><i class="fa fa-check"></i><b>25.4.1</b> 创建tibble</a></li>
+<li class="chapter" data-level="25.4.2" data-path="tibble.html"><a href="tibble.html#转换成tibble类型"><i class="fa fa-check"></i><b>25.4.2</b> 转换成tibble类型</a></li>
+<li class="chapter" data-level="25.4.3" data-path="tibble.html"><a href="tibble.html#tibble简单操作"><i class="fa fa-check"></i><b>25.4.3</b> tibble简单操作</a></li>
+<li class="chapter" data-level="25.4.4" data-path="tibble.html"><a href="tibble.html#有用的函数lst"><i class="fa fa-check"></i><b>25.4.4</b> 有用的函数<code>lst</code></a></li>
+<li class="chapter" data-level="25.4.5" data-path="tibble.html"><a href="tibble.html#有用的函数enframe"><i class="fa fa-check"></i><b>25.4.5</b> 有用的函数<code>enframe</code></a></li>
+<li class="chapter" data-level="25.4.6" data-path="tibble.html"><a href="tibble.html#有用的函数deframe"><i class="fa fa-check"></i><b>25.4.6</b> 有用的函数<code>deframe</code></a></li>
+<li class="chapter" data-level="25.4.7" data-path="tibble.html"><a href="tibble.html#读取文件"><i class="fa fa-check"></i><b>25.4.7</b> 读取文件</a></li>
+</ul></li>
+<li class="chapter" data-level="25.5" data-path="tibble.html"><a href="tibble.html#关于行名"><i class="fa fa-check"></i><b>25.5</b> 关于行名</a></li>
+<li class="chapter" data-level="25.6" data-path="tibble.html"><a href="tibble.html#修复列名"><i class="fa fa-check"></i><b>25.6</b> 修复列名</a></li>
+<li class="chapter" data-level="25.7" data-path="tibble.html"><a href="tibble.html#nested-tibble"><i class="fa fa-check"></i><b>25.7</b> nested tibble</a></li>
+<li class="chapter" data-level="25.8" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>25.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="part"><span><b>III 建模篇</b></span></li>
+<li class="chapter" data-level="26" data-path="sampling.html"><a href="sampling.html"><i class="fa fa-check"></i><b>26</b> 模拟与抽样</a><ul>
+<li class="chapter" data-level="26.1" data-path="sampling.html"><a href="sampling.html#模拟"><i class="fa fa-check"></i><b>26.1</b> 模拟</a><ul>
+<li class="chapter" data-level="26.1.1" data-path="sampling.html"><a href="sampling.html#生成随机数"><i class="fa fa-check"></i><b>26.1.1</b> 生成随机数</a></li>
+</ul></li>
+<li class="chapter" data-level="26.2" data-path="sampling.html"><a href="sampling.html#massmvrnorm"><i class="fa fa-check"></i><b>26.2</b> MASS::mvrnorm</a></li>
+<li class="chapter" data-level="26.3" data-path="sampling.html"><a href="sampling.html#蒙特卡洛"><i class="fa fa-check"></i><b>26.3</b> 蒙特卡洛</a></li>
+<li class="chapter" data-level="26.4" data-path="sampling.html"><a href="sampling.html#抽样与样本"><i class="fa fa-check"></i><b>26.4</b> 抽样与样本</a><ul>
+<li class="chapter" data-level="26.4.1" data-path="sampling.html"><a href="sampling.html#总体分布"><i class="fa fa-check"></i><b>26.4.1</b> 总体分布</a></li>
+<li class="chapter" data-level="26.4.2" data-path="sampling.html"><a href="sampling.html#样本"><i class="fa fa-check"></i><b>26.4.2</b> 样本</a></li>
+</ul></li>
+<li class="chapter" data-level="26.5" data-path="sampling.html"><a href="sampling.html#扩展阅读"><i class="fa fa-check"></i><b>26.5</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="27" data-path="tidystats.html"><a href="tidystats.html"><i class="fa fa-check"></i><b>27</b> Tidy Statistics</a><ul>
+<li class="chapter" data-level="27.1" data-path="tidystats.html"><a href="tidystats.html#从一个案例开始"><i class="fa fa-check"></i><b>27.1</b> 从一个案例开始</a></li>
+<li class="chapter" data-level="27.2" data-path="tidystats.html"><a href="tidystats.html#单因素方差分析"><i class="fa fa-check"></i><b>27.2</b> 单因素方差分析</a></li>
+<li class="chapter" data-level="27.3" data-path="tidystats.html"><a href="tidystats.html#双因素方差分析"><i class="fa fa-check"></i><b>27.3</b> 双因素方差分析</a></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="lm.html"><a href="lm.html"><i class="fa fa-check"></i><b>28</b> 线性回归</a><ul>
+<li class="chapter" data-level="28.1" data-path="tidystats.html"><a href="tidystats.html#从一个案例开始"><i class="fa fa-check"></i><b>28.1</b> 从一个案例开始</a><ul>
+<li class="chapter" data-level="28.1.1" data-path="lm.html"><a href="lm.html#缺失值检查"><i class="fa fa-check"></i><b>28.1.1</b> 缺失值检查</a></li>
+<li class="chapter" data-level="28.1.2" data-path="lm.html"><a href="lm.html#变量简单统计"><i class="fa fa-check"></i><b>28.1.2</b> 变量简单统计</a></li>
+</ul></li>
+<li class="chapter" data-level="28.2" data-path="lm.html"><a href="lm.html#线性回归模型"><i class="fa fa-check"></i><b>28.2</b> 线性回归模型</a></li>
+<li class="chapter" data-level="28.3" data-path="lm.html"><a href="lm.html#使用lm-函数"><i class="fa fa-check"></i><b>28.3</b> 使用<code>lm()</code> 函数</a></li>
+<li class="chapter" data-level="28.4" data-path="lm.html"><a href="lm.html#模型的解释"><i class="fa fa-check"></i><b>28.4</b> 模型的解释</a></li>
+<li class="chapter" data-level="28.5" data-path="lm.html"><a href="lm.html#多元线性回归"><i class="fa fa-check"></i><b>28.5</b> 多元线性回归</a></li>
+<li class="chapter" data-level="28.6" data-path="lm.html"><a href="lm.html#更多模型"><i class="fa fa-check"></i><b>28.6</b> 更多模型</a></li>
+<li class="chapter" data-level="28.7" data-path="lm.html"><a href="lm.html#变量重要性"><i class="fa fa-check"></i><b>28.7</b> 变量重要性</a></li>
+<li class="chapter" data-level="28.8" data-path="lm.html"><a href="lm.html#可能遇到的情形"><i class="fa fa-check"></i><b>28.8</b> 可能遇到的情形</a><ul>
+<li class="chapter" data-level="28.8.1" data-path="lm.html"><a href="lm.html#截距项"><i class="fa fa-check"></i><b>28.8.1</b> 截距项</a></li>
+<li class="chapter" data-level="28.8.2" data-path="lm.html"><a href="lm.html#只有截距项"><i class="fa fa-check"></i><b>28.8.2</b> 只有截距项</a></li>
+<li class="chapter" data-level="28.8.3" data-path="lm.html"><a href="lm.html#分类变量"><i class="fa fa-check"></i><b>28.8.3</b> 分类变量</a></li>
+<li class="chapter" data-level="28.8.4" data-path="lm.html"><a href="lm.html#因子变量"><i class="fa fa-check"></i><b>28.8.4</b> 因子变量</a></li>
+<li class="chapter" data-level="28.8.5" data-path="lm.html"><a href="lm.html#一个分类变量和一个连续变量"><i class="fa fa-check"></i><b>28.8.5</b> 一个分类变量和一个连续变量</a></li>
+<li class="chapter" data-level="28.8.6" data-path="lm.html"><a href="lm.html#偷懒的写法"><i class="fa fa-check"></i><b>28.8.6</b> 偷懒的写法</a></li>
+<li class="chapter" data-level="28.8.7" data-path="lm.html"><a href="lm.html#交互项"><i class="fa fa-check"></i><b>28.8.7</b> 交互项</a></li>
+<li class="chapter" data-level="28.8.8" data-path="lm.html"><a href="lm.html#虚拟变量"><i class="fa fa-check"></i><b>28.8.8</b> 虚拟变量</a></li>
+<li class="chapter" data-level="28.8.9" data-path="lm.html"><a href="lm.html#predict-vs-fit"><i class="fa fa-check"></i><b>28.8.9</b> predict vs fit</a></li>
+<li class="chapter" data-level="28.8.10" data-path="lm.html"><a href="lm.html#回归和相关的关系"><i class="fa fa-check"></i><b>28.8.10</b> 回归和相关的关系</a></li>
+</ul></li>
+<li class="chapter" data-level="28.9" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>28.9</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="lmm.html"><a href="lmm.html"><i class="fa fa-check"></i><b>29</b> 多层线性模型</a><ul>
+<li class="chapter" data-level="29.1" data-path="lmm.html"><a href="lmm.html#分组数据"><i class="fa fa-check"></i><b>29.1</b> 分组数据</a></li>
+<li class="chapter" data-level="29.2" data-path="lmm.html"><a href="lmm.html#案例"><i class="fa fa-check"></i><b>29.2</b> 案例</a></li>
+<li class="chapter" data-level="29.3" data-path="lmm.html"><a href="lmm.html#线性模型"><i class="fa fa-check"></i><b>29.3</b> 线性模型</a></li>
+<li class="chapter" data-level="29.4" data-path="lmm.html"><a href="lmm.html#变化的截距"><i class="fa fa-check"></i><b>29.4</b> 变化的截距</a></li>
+<li class="chapter" data-level="29.5" data-path="lmm.html"><a href="lmm.html#变化的斜率"><i class="fa fa-check"></i><b>29.5</b> 变化的斜率</a></li>
+<li class="chapter" data-level="29.6" data-path="lmm.html"><a href="lmm.html#变化的斜率-变化的截距"><i class="fa fa-check"></i><b>29.6</b> 变化的斜率 + 变化的截距</a></li>
+<li class="chapter" data-level="29.7" data-path="lmm.html"><a href="lmm.html#信息池"><i class="fa fa-check"></i><b>29.7</b> 信息池</a><ul>
+<li class="chapter" data-level="29.7.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#提问"><i class="fa fa-check"></i><b>29.7.1</b> 提问</a></li>
+<li class="chapter" data-level="29.7.2" data-path="lmm.html"><a href="lmm.html#信息共享"><i class="fa fa-check"></i><b>29.7.2</b> 信息共享</a></li>
+<li class="chapter" data-level="29.7.3" data-path="eda02.html"><a href="eda02.html#可视化"><i class="fa fa-check"></i><b>29.7.3</b> 可视化</a></li>
+</ul></li>
+<li class="chapter" data-level="29.8" data-path="eda03.html"><a href="eda03.html#更多"><i class="fa fa-check"></i><b>29.8</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="glm.html"><a href="glm.html"><i class="fa fa-check"></i><b>30</b> 广义线性模型</a><ul>
+<li class="chapter" data-level="30.1" data-path="glm.html"><a href="glm.html#线性回归回顾"><i class="fa fa-check"></i><b>30.1</b> 线性回归回顾</a></li>
+<li class="chapter" data-level="30.2" data-path="lmm.html"><a href="lmm.html#案例"><i class="fa fa-check"></i><b>30.2</b> 案例</a><ul>
+<li class="chapter" data-level="30.2.1" data-path="glm.html"><a href="glm.html#线性模型的局限性"><i class="fa fa-check"></i><b>30.2.1</b> 线性模型的局限性</a></li>
+<li class="chapter" data-level="30.2.2" data-path="glm.html"><a href="glm.html#泊松分布"><i class="fa fa-check"></i><b>30.2.2</b> 泊松分布</a></li>
+<li class="chapter" data-level="30.2.3" data-path="glm.html"><a href="glm.html#正态分布换成泊松分布就行了"><i class="fa fa-check"></i><b>30.2.3</b> 正态分布换成泊松分布就行了？</a></li>
+</ul></li>
+<li class="chapter" data-level="30.3" data-path="glm.html"><a href="glm.html#泊松回归模型"><i class="fa fa-check"></i><b>30.3</b> 泊松回归模型</a><ul>
+<li class="chapter" data-level="30.3.1" data-path="glm.html"><a href="glm.html#解决办法-连接函数之美"><i class="fa fa-check"></i><b>30.3.1</b> 解决办法-连接函数之美</a></li>
+<li class="chapter" data-level="30.3.2" data-path="glm.html"><a href="glm.html#代码实现"><i class="fa fa-check"></i><b>30.3.2</b> 代码实现</a></li>
+</ul></li>
+<li class="chapter" data-level="30.4" data-path="glm.html"><a href="glm.html#模型解释"><i class="fa fa-check"></i><b>30.4</b> 模型解释</a><ul>
+<li class="chapter" data-level="30.4.1" data-path="glm.html"><a href="glm.html#系数"><i class="fa fa-check"></i><b>30.4.1</b> 系数</a></li>
+<li class="chapter" data-level="30.4.2" data-path="glm.html"><a href="glm.html#边际效应marginal-effects"><i class="fa fa-check"></i><b>30.4.2</b> 边际效应(Marginal effects)</a></li>
+<li class="chapter" data-level="30.4.3" data-path="glm.html"><a href="glm.html#拟合"><i class="fa fa-check"></i><b>30.4.3</b> 拟合</a></li>
+<li class="chapter" data-level="30.4.4" data-path="glm.html"><a href="glm.html#模型评估"><i class="fa fa-check"></i><b>30.4.4</b> 模型评估</a></li>
+</ul></li>
+<li class="chapter" data-level="30.5" data-path="glm.html"><a href="glm.html#思考"><i class="fa fa-check"></i><b>30.5</b> 思考</a><ul>
+<li class="chapter" data-level="30.5.1" data-path="glm.html"><a href="glm.html#这两者为什么是相等的"><i class="fa fa-check"></i><b>30.5.1</b> 这两者为什么是相等的？</a></li>
+<li class="chapter" data-level="30.5.2" data-path="glm.html"><a href="glm.html#log-link-与-log-transforming"><i class="fa fa-check"></i><b>30.5.2</b> <code>log link</code> 与 <code>log transforming</code></a></li>
+<li class="chapter" data-level="30.5.3" data-path="glm.html"><a href="glm.html#更多分布"><i class="fa fa-check"></i><b>30.5.3</b> 更多分布</a></li>
+<li class="chapter" data-level="30.5.4" data-path="glm.html"><a href="glm.html#更复杂的模型"><i class="fa fa-check"></i><b>30.5.4</b> 更复杂的模型</a></li>
+</ul></li>
+<li class="chapter" data-level="30.6" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#小结"><i class="fa fa-check"></i><b>30.6</b> 小结</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="ordinal.html"><a href="ordinal.html"><i class="fa fa-check"></i><b>31</b> 有序logistic回归</a><ul>
+<li class="chapter" data-level="31.1" data-path="ordinal.html"><a href="ordinal.html#logistic回归"><i class="fa fa-check"></i><b>31.1</b> logistic回归</a></li>
+<li class="chapter" data-level="31.2" data-path="ordinal.html"><a href="ordinal.html#生活中的有序logistic回归"><i class="fa fa-check"></i><b>31.2</b> 生活中的有序logistic回归</a></li>
+<li class="chapter" data-level="31.3" data-path="lmm.html"><a href="lmm.html#案例"><i class="fa fa-check"></i><b>31.3</b> 案例</a></li>
+<li class="chapter" data-level="31.4" data-path="ordinal.html"><a href="ordinal.html#问题的提出"><i class="fa fa-check"></i><b>31.4</b> 问题的提出</a><ul>
+<li class="chapter" data-level="31.4.1" data-path="ordinal.html"><a href="ordinal.html#父母门当户对"><i class="fa fa-check"></i><b>31.4.1</b> 父母门当户对？</a></li>
+<li class="chapter" data-level="31.4.2" data-path="ordinal.html"><a href="ordinal.html#母亲的教育程度对子女的影响"><i class="fa fa-check"></i><b>31.4.2</b> 母亲的教育程度对子女的影响</a></li>
+<li class="chapter" data-level="31.4.3" data-path="ordinal.html"><a href="ordinal.html#父亲和母亲谁的影响大"><i class="fa fa-check"></i><b>31.4.3</b> 父亲和母亲谁的影响大</a></li>
+<li class="chapter" data-level="31.4.4" data-path="ordinal.html"><a href="ordinal.html#系数的解释"><i class="fa fa-check"></i><b>31.4.4</b> 系数的解释</a></li>
+<li class="chapter" data-level="31.4.5" data-path="ordinal.html"><a href="ordinal.html#边际效应"><i class="fa fa-check"></i><b>31.4.5</b> 边际效应</a></li>
+</ul></li>
+<li class="chapter" data-level="31.5" data-path="ordinal.html"><a href="ordinal.html#其他宏包"><i class="fa fa-check"></i><b>31.5</b> 其他宏包</a><ul>
+<li class="chapter" data-level="31.5.1" data-path="ordinal.html"><a href="ordinal.html#ordinal-包"><i class="fa fa-check"></i><b>31.5.1</b> ordinal 包</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="32" data-path="tidymodels.html"><a href="tidymodels.html"><i class="fa fa-check"></i><b>32</b> 机器学习</a><ul>
+<li class="chapter" data-level="32.1" data-path="eda07.html"><a href="eda07.html#数据"><i class="fa fa-check"></i><b>32.1</b> 数据</a></li>
+<li class="chapter" data-level="32.2" data-path="tidymodels.html"><a href="tidymodels.html#机器学习"><i class="fa fa-check"></i><b>32.2</b> 机器学习</a></li>
+<li class="chapter" data-level="32.3" data-path="tidymodels.html"><a href="tidymodels.html#model01"><i class="fa fa-check"></i><b>32.3</b> model01</a></li>
+<li class="chapter" data-level="32.4" data-path="tidymodels.html"><a href="tidymodels.html#model02"><i class="fa fa-check"></i><b>32.4</b> model02</a></li>
+<li class="chapter" data-level="32.5" data-path="tidymodels.html"><a href="tidymodels.html#model03"><i class="fa fa-check"></i><b>32.5</b> model03</a></li>
+<li class="chapter" data-level="32.6" data-path="tidymodels.html"><a href="tidymodels.html#model04"><i class="fa fa-check"></i><b>32.6</b> model04</a></li>
+</ul></li>
+<li class="chapter" data-level="33" data-path="tidyeval.html"><a href="tidyeval.html"><i class="fa fa-check"></i><b>33</b> 非标准性评估</a><ul>
+<li class="chapter" data-level="33.1" data-path="tidyeval.html"><a href="tidyeval.html#编写函数"><i class="fa fa-check"></i><b>33.1</b> 编写函数</a></li>
+<li class="chapter" data-level="33.2" data-path="tidyeval.html"><a href="tidyeval.html#看看发生了什么"><i class="fa fa-check"></i><b>33.2</b> 看看发生了什么</a></li>
+<li class="chapter" data-level="33.3" data-path="tidyeval.html"><a href="tidyeval.html#处理多个参数"><i class="fa fa-check"></i><b>33.3</b> 处理多个参数</a></li>
+<li class="chapter" data-level="33.4" data-path="tidyeval.html"><a href="tidyeval.html#调整输入的表达式"><i class="fa fa-check"></i><b>33.4</b> 调整输入的表达式</a><ul>
+<li class="chapter" data-level="33.4.1" data-path="tidyeval.html"><a href="tidyeval.html#修改引用参数的默认名"><i class="fa fa-check"></i><b>33.4.1</b> 修改引用参数的默认名</a></li>
+<li class="chapter" data-level="33.4.2" data-path="tidyeval.html"><a href="tidyeval.html#修改引用的表达式"><i class="fa fa-check"></i><b>33.4.2</b> 修改引用的表达式</a></li>
+</ul></li>
+<li class="chapter" data-level="33.5" data-path="lmm.html"><a href="lmm.html#案例"><i class="fa fa-check"></i><b>33.5</b> 案例</a><ul>
+<li class="chapter" data-level="33.5.1" data-path="tidyeval.html"><a href="tidyeval.html#统计并过滤"><i class="fa fa-check"></i><b>33.5.1</b> 统计并过滤</a></li>
+<li class="chapter" data-level="33.5.2" data-path="tidyeval.html"><a href="tidyeval.html#自定义统计输出"><i class="fa fa-check"></i><b>33.5.2</b> 自定义统计输出</a></li>
+<li class="chapter" data-level="33.5.3" data-path="tidyeval.html"><a href="tidyeval.html#形成依次下滑的列"><i class="fa fa-check"></i><b>33.5.3</b> 形成依次下滑的列</a></li>
+</ul></li>
+<li class="chapter" data-level="33.6" data-path="tidyeval.html"><a href="tidyeval.html#可能会用到的函数"><i class="fa fa-check"></i><b>33.6</b> 可能会用到的函数</a></li>
+<li class="chapter" data-level="33.7" data-path="tidyeval.html"><a href="tidyeval.html#resources"><i class="fa fa-check"></i><b>33.7</b> Resources</a></li>
+</ul></li>
+<li class="part"><span><b>IV 应用篇</b></span></li>
+<li class="chapter" data-level="34" data-path="advR.html"><a href="advR.html"><i class="fa fa-check"></i><b>34</b> tidyverse进阶</a><ul>
+<li class="chapter" data-level="34.1" data-path="advR.html"><a href="advR.html#scoped-函数"><i class="fa fa-check"></i><b>34.1</b> scoped 函数</a><ul>
+<li class="chapter" data-level="34.1.1" data-path="advR.html"><a href="advR.html#mutate_if"><i class="fa fa-check"></i><b>34.1.1</b> mutate_if</a></li>
+<li class="chapter" data-level="34.1.2" data-path="advR.html"><a href="advR.html#select_if"><i class="fa fa-check"></i><b>34.1.2</b> select_if()</a></li>
+</ul></li>
+<li class="chapter" data-level="34.2" data-path="advR.html"><a href="advR.html#summarise_if"><i class="fa fa-check"></i><b>34.2</b> summarise_if</a></li>
+<li class="chapter" data-level="34.3" data-path="advR.html"><a href="advR.html#filter_if"><i class="fa fa-check"></i><b>34.3</b> filter_if()</a></li>
+<li class="chapter" data-level="34.4" data-path="advR.html"><a href="advR.html#group_by"><i class="fa fa-check"></i><b>34.4</b> group_by</a><ul>
+<li class="chapter" data-level="34.4.1" data-path="advR.html"><a href="advR.html#group_split-group_map-group_modify"><i class="fa fa-check"></i><b>34.4.1</b> group_split(), group_map(), group_modify()</a></li>
+<li class="chapter" data-level="34.4.2" data-path="advR.html"><a href="advR.html#其他group函数"><i class="fa fa-check"></i><b>34.4.2</b> 其他group函数</a></li>
+</ul></li>
+<li class="chapter" data-level="34.5" data-path="advR.html"><a href="advR.html#列名清理"><i class="fa fa-check"></i><b>34.5</b> 列名清理</a></li>
+<li class="chapter" data-level="34.6" data-path="advR.html"><a href="advR.html#缺失值检查与处理"><i class="fa fa-check"></i><b>34.6</b> 缺失值检查与处理</a><ul>
+<li class="chapter" data-level="34.6.1" data-path="advR.html"><a href="advR.html#purrr-dplyr-技巧"><i class="fa fa-check"></i><b>34.6.1</b> purrr &amp; dplyr 技巧</a></li>
+<li class="chapter" data-level="34.6.2" data-path="advR.html"><a href="advR.html#缺失值替换"><i class="fa fa-check"></i><b>34.6.2</b> 缺失值替换</a></li>
+</ul></li>
+<li class="chapter" data-level="34.7" data-path="advR.html"><a href="advR.html#标准化"><i class="fa fa-check"></i><b>34.7</b> 标准化</a></li>
+<li class="chapter" data-level="34.8" data-path="advR.html"><a href="advR.html#across函数"><i class="fa fa-check"></i><b>34.8</b> across函数</a><ul>
+<li class="chapter" data-level="34.8.1" data-path="advR.html"><a href="advR.html#across函数替代scope函数"><i class="fa fa-check"></i><b>34.8.1</b> across函数替代scope函数</a></li>
+<li class="chapter" data-level="34.8.2" data-path="advR.html"><a href="advR.html#更方便的colwise操作"><i class="fa fa-check"></i><b>34.8.2</b> 更方便的colwise操作</a></li>
+</ul></li>
+<li class="chapter" data-level="34.9" data-path="colwise.html"><a href="colwise.html#参考资料"><i class="fa fa-check"></i><b>34.9</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="35" data-path="rowwise.html"><a href="rowwise.html"><i class="fa fa-check"></i><b>35</b> tidyverse中行方向的操作</a><ul>
+<li class="chapter" data-level="35.1" data-path="stringr.html"><a href="stringr.html#问题"><i class="fa fa-check"></i><b>35.1</b> 问题</a></li>
+<li class="chapter" data-level="35.2" data-path="rowwise.html"><a href="rowwise.html#rowwise函数"><i class="fa fa-check"></i><b>35.2</b> rowwise函数</a></li>
+<li class="chapter" data-level="35.3" data-path="rowwise.html"><a href="rowwise.html#row-wise-summaries"><i class="fa fa-check"></i><b>35.3</b> Row-wise Summaries</a></li>
+<li class="chapter" data-level="35.4" data-path="rowwise.html"><a href="rowwise.html#purrrmap方案"><i class="fa fa-check"></i><b>35.4</b> purrr::map方案</a></li>
+<li class="chapter" data-level="35.5" data-path="rowwise.html"><a href="rowwise.html#tidy-的方案"><i class="fa fa-check"></i><b>35.5</b> tidy 的方案</a></li>
+<li class="chapter" data-level="35.6" data-path="rowwise.html"><a href="rowwise.html#用slide方案"><i class="fa fa-check"></i><b>35.6</b> 用slide方案</a></li>
+<li class="chapter" data-level="35.7" data-path="rowwise.html"><a href="rowwise.html#rowwise-c_across"><i class="fa fa-check"></i><b>35.7</b> rowwise() + c_across()</a></li>
+<li class="chapter" data-level="35.8" data-path="rowwise.html"><a href="rowwise.html#用lay方案"><i class="fa fa-check"></i><b>35.8</b> 用lay方案</a></li>
+</ul></li>
+<li class="chapter" data-level="36" data-path="dot.html"><a href="dot.html"><i class="fa fa-check"></i><b>36</b> tidyverse中的dot</a><ul>
+<li class="chapter" data-level="36.1" data-path="dot.html"><a href="dot.html#每一行的-.-各自代表什么意思呢"><i class="fa fa-check"></i><b>36.1</b> 每一行的 <code>.</code> 各自代表什么意思呢?</a></li>
+<li class="chapter" data-level="36.2" data-path="dot.html"><a href="dot.html#占位符"><i class="fa fa-check"></i><b>36.2</b> 占位符</a></li>
+<li class="chapter" data-level="36.3" data-path="dot.html"><a href="dot.html#lambda函数"><i class="fa fa-check"></i><b>36.3</b> Lambda函数</a></li>
+<li class="chapter" data-level="36.4" data-path="dot.html"><a href="dot.html#正则表达式"><i class="fa fa-check"></i><b>36.4</b> 正则表达式</a></li>
+<li class="chapter" data-level="36.5" data-path="dot.html"><a href="dot.html#unary-funciton-只带一个参数的函数"><i class="fa fa-check"></i><b>36.5</b> Unary funciton (只带一个参数的函数)</a></li>
+<li class="chapter" data-level="36.6" data-path="dot.html"><a href="dot.html#more-placeholder"><i class="fa fa-check"></i><b>36.6</b> more placeholder</a></li>
+<li class="chapter" data-level="36.7" data-path="dot.html"><a href="dot.html#当mutate遇到map"><i class="fa fa-check"></i><b>36.7</b> 当mutate遇到map</a></li>
+<li class="chapter" data-level="36.8" data-path="dot.html"><a href="dot.html#dot-dot-dot"><i class="fa fa-check"></i><b>36.8</b> Dot dot dot</a></li>
+<li class="chapter" data-level="36.9" data-path="dot.html"><a href="dot.html#dont-confuse"><i class="fa fa-check"></i><b>36.9</b> Don’t confuse</a></li>
+<li class="chapter" data-level="36.10" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#小结"><i class="fa fa-check"></i><b>36.10</b> 小结</a></li>
+<li class="chapter" data-level="36.11" data-path="dot.html"><a href="dot.html#回答问题"><i class="fa fa-check"></i><b>36.11</b> 回答问题</a></li>
+</ul></li>
+<li class="chapter" data-level="37" data-path="rvest.html"><a href="rvest.html"><i class="fa fa-check"></i><b>37</b> 网络爬虫</a><ul>
+<li class="chapter" data-level="37.1" data-path="rvest.html"><a href="rvest.html#链家网"><i class="fa fa-check"></i><b>37.1</b> 链家网</a></li>
+<li class="chapter" data-level="37.2" data-path="rvest.html"><a href="rvest.html#猪肉价格"><i class="fa fa-check"></i><b>37.2</b> 猪肉价格</a></li>
+</ul></li>
+<li class="chapter" data-level="38" data-path="tidygraph.html"><a href="tidygraph.html"><i class="fa fa-check"></i><b>38</b> 社会网络分析</a><ul>
+<li class="chapter" data-level="38.1" data-path="tidygraph.html"><a href="tidygraph.html#图论基本知识"><i class="fa fa-check"></i><b>38.1</b> 图论基本知识</a></li>
+<li class="chapter" data-level="38.2" data-path="tidygraph.html"><a href="tidygraph.html#网络分析"><i class="fa fa-check"></i><b>38.2</b> 网络分析</a><ul>
+<li class="chapter" data-level="38.2.1" data-path="tidygraph.html"><a href="tidygraph.html#tidygraph-a-tidy-api-for-graph-manipulation"><i class="fa fa-check"></i><b>38.2.1</b> tidygraph: A tidy API for graph manipulation</a></li>
+<li class="chapter" data-level="38.2.2" data-path="tidygraph.html"><a href="tidygraph.html#tidy-network-anaylsis"><i class="fa fa-check"></i><b>38.2.2</b> Tidy Network Anaylsis</a></li>
+<li class="chapter" data-level="38.2.3" data-path="tidygraph.html"><a href="tidygraph.html#create-network-objects"><i class="fa fa-check"></i><b>38.2.3</b> Create network objects</a></li>
+<li class="chapter" data-level="38.2.4" data-path="tidygraph.html"><a href="tidygraph.html#use-tbl_graph"><i class="fa fa-check"></i><b>38.2.4</b> Use <code>tbl_graph</code></a></li>
+<li class="chapter" data-level="38.2.5" data-path="tidygraph.html"><a href="tidygraph.html#use-as_tbl_graph"><i class="fa fa-check"></i><b>38.2.5</b> Use <code>as_tbl_graph</code></a></li>
+<li class="chapter" data-level="38.2.6" data-path="tidygraph.html"><a href="tidygraph.html#print-out-a-network-object"><i class="fa fa-check"></i><b>38.2.6</b> Print out a network object</a></li>
+<li class="chapter" data-level="38.2.7" data-path="tidygraph.html"><a href="tidygraph.html#extract-the-current-active-data"><i class="fa fa-check"></i><b>38.2.7</b> extract the current active data</a></li>
+</ul></li>
+<li class="chapter" data-level="38.3" data-path="tidygraph.html"><a href="tidygraph.html#network-graph-manipulation"><i class="fa fa-check"></i><b>38.3</b> Network graph manipulation</a><ul>
+<li class="chapter" data-level="38.3.1" data-path="tidygraph.html"><a href="tidygraph.html#car-groups-info-number-of-cylinders"><i class="fa fa-check"></i><b>38.3.1</b> Car groups info (Number of cylinders)</a></li>
+<li class="chapter" data-level="38.3.2" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-nodes-data"><i class="fa fa-check"></i><b>38.3.2</b> Modify the nodes data:</a></li>
+<li class="chapter" data-level="38.3.3" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-edge-data."><i class="fa fa-check"></i><b>38.3.3</b> Modify the edge data.</a></li>
+<li class="chapter" data-level="38.3.4" data-path="tidygraph.html"><a href="tidygraph.html#display-the-final-modified-graphs-object"><i class="fa fa-check"></i><b>38.3.4</b> Display the final modified graphs object:</a></li>
+<li class="chapter" data-level="38.3.5" data-path="tidygraph.html"><a href="tidygraph.html#visualize-the-correlation-network"><i class="fa fa-check"></i><b>38.3.5</b> Visualize the correlation network</a></li>
+</ul></li>
+<li class="chapter" data-level="38.4" data-path="tidygraph.html"><a href="tidygraph.html#network-analysis"><i class="fa fa-check"></i><b>38.4</b> Network analysis</a><ul>
+<li class="chapter" data-level="38.4.1" data-path="tidygraph.html"><a href="tidygraph.html#centrality"><i class="fa fa-check"></i><b>38.4.1</b> Centrality</a></li>
+<li class="chapter" data-level="38.4.2" data-path="tidygraph.html"><a href="tidygraph.html#clustering"><i class="fa fa-check"></i><b>38.4.2</b> Clustering</a></li>
+<li class="chapter" data-level="38.4.3" data-path="tidygraph.html"><a href="tidygraph.html#more-algorithms"><i class="fa fa-check"></i><b>38.4.3</b> More Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="38.5" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#小结"><i class="fa fa-check"></i><b>38.5</b> 小结</a></li>
+<li class="chapter" data-level="38.6" data-path="tidygraph.html"><a href="tidygraph.html#network-visualization"><i class="fa fa-check"></i><b>38.6</b> Network Visualization</a><ul>
+<li class="chapter" data-level="38.6.1" data-path="tidygraph.html"><a href="tidygraph.html#ggraph-a-grammar-of-graphics-for-relational-data"><i class="fa fa-check"></i><b>38.6.1</b> ggraph: A grammar of graphics for relational data</a></li>
+</ul></li>
+<li class="chapter" data-level="38.7" data-path="sampling.html"><a href="sampling.html#扩展阅读"><i class="fa fa-check"></i><b>38.7</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="39" data-path="tidytext.html"><a href="tidytext.html"><i class="fa fa-check"></i><b>39</b> 文本挖掘</a></li>
+<li class="chapter" data-level="40" data-path="tibbletime.html"><a href="tibbletime.html"><i class="fa fa-check"></i><b>40</b> 时间序列分析</a></li>
+<li class="chapter" data-level="41" data-path="stars.html"><a href="stars.html"><i class="fa fa-check"></i><b>41</b> 地理数据处理</a></li>
+<li class="chapter" data-level="42" data-path="lazyman.html"><a href="lazyman.html"><i class="fa fa-check"></i><b>42</b> 懒人系列</a><ul>
+<li class="chapter" data-level="42.1" data-path="lazyman.html"><a href="lazyman.html#列名太乱了"><i class="fa fa-check"></i><b>42.1</b> 列名太乱了</a></li>
+<li class="chapter" data-level="42.2" data-path="lazyman.html"><a href="lazyman.html#比count更懂我的心"><i class="fa fa-check"></i><b>42.2</b> 比count()更懂我的心</a></li>
+<li class="chapter" data-level="42.3" data-path="lazyman.html"><a href="lazyman.html#比distinct更知我心"><i class="fa fa-check"></i><b>42.3</b> 比distinct()更知我心</a></li>
+<li class="chapter" data-level="42.4" data-path="lazyman.html"><a href="lazyman.html#代码太乱了谁帮我整理下"><i class="fa fa-check"></i><b>42.4</b> 代码太乱了，谁帮我整理下</a></li>
+<li class="chapter" data-level="42.5" data-path="lazyman.html"><a href="lazyman.html#谁帮我敲模型的公式"><i class="fa fa-check"></i><b>42.5</b> 谁帮我敲模型的公式</a></li>
+<li class="chapter" data-level="42.6" data-path="lazyman.html"><a href="lazyman.html#模型有了不知道怎么写论文"><i class="fa fa-check"></i><b>42.6</b> 模型有了，不知道怎么写论文？</a></li>
+<li class="chapter" data-level="42.7" data-path="lazyman.html"><a href="lazyman.html#模型评估一步到位"><i class="fa fa-check"></i><b>42.7</b> 模型评估一步到位</a></li>
+<li class="chapter" data-level="42.8" data-path="lazyman.html"><a href="lazyman.html#统计表格不用愁"><i class="fa fa-check"></i><b>42.8</b> 统计表格不用愁</a></li>
+<li class="chapter" data-level="42.9" data-path="lazyman.html"><a href="lazyman.html#统计结果写图上"><i class="fa fa-check"></i><b>42.9</b> 统计结果写图上</a></li>
+<li class="chapter" data-level="42.10" data-path="lazyman.html"><a href="lazyman.html#正则表达式太南了"><i class="fa fa-check"></i><b>42.10</b> 正则表达式太南了</a></li>
+<li class="chapter" data-level="42.11" data-path="lazyman.html"><a href="lazyman.html#颜控怎么配色"><i class="fa fa-check"></i><b>42.11</b> 颜控怎么配色？</a></li>
+<li class="chapter" data-level="42.12" data-path="lazyman.html"><a href="lazyman.html#画图颜色好看不"><i class="fa fa-check"></i><b>42.12</b> 画图颜色好看不</a></li>
+<li class="chapter" data-level="42.13" data-path="lazyman.html"><a href="lazyman.html#宏包太多"><i class="fa fa-check"></i><b>42.13</b> 宏包太多</a></li>
+<li class="chapter" data-level="42.14" data-path="lazyman.html"><a href="lazyman.html#犹抱琵琶半遮面"><i class="fa fa-check"></i><b>42.14</b> 犹抱琵琶半遮面</a></li>
+<li class="chapter" data-level="42.15" data-path="lazyman.html"><a href="lazyman.html#整理rmarkdown"><i class="fa fa-check"></i><b>42.15</b> 整理Rmarkdown</a></li>
+<li class="chapter" data-level="42.16" data-path="lazyman.html"><a href="lazyman.html#如何有效的提问"><i class="fa fa-check"></i><b>42.16</b> 如何有效的提问</a></li>
+<li class="chapter" data-level="42.17" data-path="lazyman.html"><a href="lazyman.html#程序结束后记得提醒我"><i class="fa fa-check"></i><b>42.17</b> 程序结束后记得提醒我</a></li>
+<li class="chapter" data-level="42.18" data-path="lazyman.html"><a href="lazyman.html#多张图摆放"><i class="fa fa-check"></i><b>42.18</b> 多张图摆放</a></li>
+<li class="chapter" data-level="42.19" data-path="lazyman.html"><a href="lazyman.html#缺失值处理"><i class="fa fa-check"></i><b>42.19</b> 缺失值处理</a></li>
+<li class="chapter" data-level="42.20" data-path="lazyman.html"><a href="lazyman.html#看看数据什么情况"><i class="fa fa-check"></i><b>42.20</b> 看看数据什么情况</a></li>
+<li class="chapter" data-level="42.21" data-path="lazyman.html"><a href="lazyman.html#管道都不想"><i class="fa fa-check"></i><b>42.21</b> 管道都不想</a></li>
+<li class="chapter" data-level="42.22" data-path="lazyman.html"><a href="lazyman.html#各种插件任君选取"><i class="fa fa-check"></i><b>42.22</b> 各种插件，任君选取</a></li>
+</ul></li>
+<li class="appendix"><span><b>附录</b></span></li>
+<li class="chapter" data-level="A" data-path="exams.html"><a href="exams.html"><i class="fa fa-check"></i><b>A</b> 期末考试</a><ul>
+<li class="chapter" data-level="A.1" data-path="exams.html"><a href="exams.html#方式"><i class="fa fa-check"></i><b>A.1</b> 方式</a></li>
+<li class="chapter" data-level="A.2" data-path="exams.html"><a href="exams.html#要求"><i class="fa fa-check"></i><b>A.2</b> 要求</a></li>
+<li class="chapter" data-level="A.3" data-path="eda01.html"><a href="eda01.html#数据集"><i class="fa fa-check"></i><b>A.3</b> 数据集</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">数据科学中的 R 语言</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="sampling" class="section level1">
+<h1><span class="header-section-number">第 26 章</span> 模拟与抽样</h1>
+<div class="sourceCode" id="cb1080"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1080-1"><a href="sampling.html#cb1080-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<p>本章目的是在tidyverse的架构下，介绍一些模拟和抽样的知识。先回顾下Hadley Wickham提出的数据科学tidy原则，tidy思想体现在:</p>
+<ul>
+<li>任何数据都可以规整为数据框</li>
+<li>数据框的一列代表一个<strong>变量</strong>，数据框的一行代表一次<strong>观察</strong></li>
+<li>函数处理数据时，数据框进、数据框出</li>
+</ul>
+<div id="模拟" class="section level2">
+<h2><span class="header-section-number">26.1</span> 模拟</h2>
+<div id="生成随机数" class="section level3">
+<h3><span class="header-section-number">26.1.1</span> 生成随机数</h3>
+<p>比如生成5个高斯分布的随机数，高斯分布就是正态分布，R语言里我们用<code>rnorm()</code>函数产生正态分布的随机数</p>
+<div class="sourceCode" id="cb1081"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1081-1"><a href="sampling.html#cb1081-1"></a><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1]  0.3070 -0.1948 -1.0236  0.1429  0.6283</code></pre>
+<p>事实上，R内置了很多随机数产生的函数</p>
+<table>
+<thead>
+<tr class="header">
+<th>Distrution |</th>
+<th align="center">Notation | R |</th>
+<th align="center">R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Uniform</td>
+<td align="center"><span class="math inline">\(\text{U}(a, b)\)</span></td>
+<td align="center"><code>runif</code></td>
+</tr>
+<tr class="even">
+<td>Normal</td>
+<td align="center"><span class="math inline">\(\text{N}(\mu, \sigma)\)</span></td>
+<td align="center"><code>rnorm</code></td>
+</tr>
+<tr class="odd">
+<td>Binormal</td>
+<td align="center"><span class="math inline">\(\text{Bin}(n, p)\)</span></td>
+<td align="center"><code>rbinorm</code></td>
+</tr>
+<tr class="even">
+<td>Piosson</td>
+<td align="center"><span class="math inline">\(\text{pois}(\lambda)\)</span></td>
+<td align="center"><code>rpois</code></td>
+</tr>
+<tr class="odd">
+<td>Beta</td>
+<td align="center"><span class="math inline">\(\text{Beta}(\alpha, \beta)\)</span></td>
+<td align="center"><code>rbeta</code></td>
+</tr>
+</tbody>
+</table>
+<p>如果大家查看帮助文档<code>?runif</code>，会发现每种<strong>分布</strong>都有对应的四个函数</p>
+<ul>
+<li><code>d</code>:density</li>
+<li><code>p</code>:cumulative probability</li>
+<li><code>q</code>:quantile</li>
+<li><code>r</code>:random</li>
+</ul>
+<div class="sourceCode" id="cb1083"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1083-1"><a href="sampling.html#cb1083-1"></a><span class="kw">dnorm</span>(<span class="kw">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="dt">length.out =</span> <span class="dv">10</span>), <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>##  [1] 0.3970 0.3948 0.3919 0.3882 0.3838 0.3788 0.3730
+##  [8] 0.3666 0.3596 0.3521</code></pre>
+<p>在tidyverse的框架下，我们喜欢在数据框(data.frame)下运用这些函数，因为这样我们可以方便使用ggplot2来可视化，</p>
+<ul>
+<li>例子1，我们生成100个正态分布的点，然后看看其分布</li>
+</ul>
+<div class="sourceCode" id="cb1085"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1085-1"><a href="sampling.html#cb1085-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb1085-2"><a href="sampling.html#cb1085-2"></a>  <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1085-3"><a href="sampling.html#cb1085-3"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb1085-4"><a href="sampling.html#cb1085-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x)) <span class="op">+</span></span>
+<span id="cb1085-5"><a href="sampling.html#cb1085-5"></a><span class="st">  </span><span class="kw">geom_density</span>()</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-973-1.png" width="576" /></p>
+<p>我们将模拟的正态分布和理论上正态分布画在一起</p>
+<div class="sourceCode" id="cb1086"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1086-1"><a href="sampling.html#cb1086-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb1086-2"><a href="sampling.html#cb1086-2"></a>  <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1086-3"><a href="sampling.html#cb1086-3"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb1086-4"><a href="sampling.html#cb1086-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x)) <span class="op">+</span></span>
+<span id="cb1086-5"><a href="sampling.html#cb1086-5"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span></span>
+<span id="cb1086-6"><a href="sampling.html#cb1086-6"></a><span class="st">  </span><span class="kw">stat_function</span>(</span>
+<span id="cb1086-7"><a href="sampling.html#cb1086-7"></a>    <span class="dt">fun =</span> dnorm,</span>
+<span id="cb1086-8"><a href="sampling.html#cb1086-8"></a>    <span class="dt">args =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb1086-9"><a href="sampling.html#cb1086-9"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span></span>
+<span id="cb1086-10"><a href="sampling.html#cb1086-10"></a>  )</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-974-1.png" width="576" />
+如果我们模拟点再增加点，会越来越逼近理论上的分布。</p>
+<ul>
+<li>例子2，在数据框(data.frame)下，建立模拟<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>的线性关系</li>
+</ul>
+<p><span class="math display">\[ y_i  = 4 + 3.2\, x_i\]</span>
+现实中，观察值往往会带入误差，假定误差服从正态分布，那么<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>的线性关系重新表述为
+<span class="math display">\[ y_i  = \beta_0 + \beta_1\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) \]</span></p>
+<div class="sourceCode" id="cb1087"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1087-1"><a href="sampling.html#cb1087-1"></a>beta_<span class="dv">0</span>  &lt;-<span class="st"> </span><span class="dv">4</span></span>
+<span id="cb1087-2"><a href="sampling.html#cb1087-2"></a>beta_<span class="dv">1</span>  &lt;-<span class="st"> </span><span class="fl">3.2</span></span>
+<span id="cb1087-3"><a href="sampling.html#cb1087-3"></a>epsilon &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">1000</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb1087-4"><a href="sampling.html#cb1087-4"></a></span>
+<span id="cb1087-5"><a href="sampling.html#cb1087-5"></a>sim_normal &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb1087-6"><a href="sampling.html#cb1087-6"></a> <span class="co"># x_vals = runif(1000, 0, 10)</span></span>
+<span id="cb1087-7"><a href="sampling.html#cb1087-7"></a>  </span>
+<span id="cb1087-8"><a href="sampling.html#cb1087-8"></a>  <span class="dt">x_vals =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">5</span>, <span class="dt">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb1087-9"><a href="sampling.html#cb1087-9"></a>  <span class="dt">y_vals =</span> beta_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span>beta_<span class="dv">1</span> <span class="op">*</span><span class="st"> </span>x_vals <span class="op">+</span><span class="st"> </span>epsilon,</span>
+<span id="cb1087-10"><a href="sampling.html#cb1087-10"></a>)</span>
+<span id="cb1087-11"><a href="sampling.html#cb1087-11"></a></span>
+<span id="cb1087-12"><a href="sampling.html#cb1087-12"></a>sim_normal <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["x_vals"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y_vals"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.000000","2":"2.561"},{"1":"0.005005","2":"4.087"},{"1":"0.010010","2":"2.654"},{"1":"0.015015","2":"4.161"},{"1":"0.020020","2":"4.798"},{"1":"0.025025","2":"5.683"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb1088"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1088-1"><a href="sampling.html#cb1088-1"></a>sim_normal <span class="op">%&gt;%</span></span>
+<span id="cb1088-2"><a href="sampling.html#cb1088-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x_vals, <span class="dt">y =</span> y_vals)) <span class="op">+</span></span>
+<span id="cb1088-3"><a href="sampling.html#cb1088-3"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-976-1.png" width="576" /></p>
+<p>有时候为了方便，可以写简练点</p>
+<div class="sourceCode" id="cb1089"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1089-1"><a href="sampling.html#cb1089-1"></a><span class="kw">tibble</span>(</span>
+<span id="cb1089-2"><a href="sampling.html#cb1089-2"></a>  <span class="dt">a =</span> <span class="kw">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">5</span>),</span>
+<span id="cb1089-3"><a href="sampling.html#cb1089-3"></a>  <span class="dt">b =</span> <span class="dv">4</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>, <span class="dt">mean =</span> <span class="fl">3.2</span> <span class="op">*</span><span class="st"> </span>a, <span class="dt">sd =</span> <span class="dv">1</span>) </span>
+<span id="cb1089-4"><a href="sampling.html#cb1089-4"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1089-5"><a href="sampling.html#cb1089-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> a, <span class="dt">y =</span> b)) <span class="op">+</span></span>
+<span id="cb1089-6"><a href="sampling.html#cb1089-6"></a><span class="st">  </span><span class="kw">geom_point</span>() </span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-977-1.png" width="576" /></p>
+</div>
+</div>
+<div id="massmvrnorm" class="section level2">
+<h2><span class="header-section-number">26.2</span> MASS::mvrnorm</h2>
+<p><code>MASS::mvrnorm(n = 1, mu,  Sigma)</code>产生多元高斯分布的随机数，每组随机变量高度相关。
+比如人的身高服从正态分布，人的体重也服从正态分布，同时身高和体重又存在强烈的关联。</p>
+<ul>
+<li><code>n</code>: 随机样本的大小</li>
+<li><code>mu</code>: 多元高斯分布的均值向量</li>
+<li><code>Sigma</code>: 协方差矩阵，主要这里是大写的S (Sigma)，提醒我们它是一个矩阵，不是一个数值</li>
+</ul>
+<div class="sourceCode" id="cb1090"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1090-1"><a href="sampling.html#cb1090-1"></a>a &lt;-<span class="st"> </span><span class="fl">3.5</span> </span>
+<span id="cb1090-2"><a href="sampling.html#cb1090-2"></a>b &lt;-<span class="st"> </span><span class="dv">-1</span> </span>
+<span id="cb1090-3"><a href="sampling.html#cb1090-3"></a>sigma_a &lt;-<span class="st"> </span><span class="dv">1</span> </span>
+<span id="cb1090-4"><a href="sampling.html#cb1090-4"></a>sigma_b &lt;-<span class="st"> </span><span class="fl">0.5</span> </span>
+<span id="cb1090-5"><a href="sampling.html#cb1090-5"></a>rho &lt;-<span class="st"> </span><span class="fl">-0.7</span> </span>
+<span id="cb1090-6"><a href="sampling.html#cb1090-6"></a></span>
+<span id="cb1090-7"><a href="sampling.html#cb1090-7"></a>mu &lt;-<span class="st"> </span><span class="kw">c</span>(a, b)</span>
+<span id="cb1090-8"><a href="sampling.html#cb1090-8"></a>cov_ab &lt;-<span class="st"> </span>sigma_a <span class="op">*</span><span class="st"> </span>sigma_b <span class="op">*</span><span class="st"> </span>rho <span class="co"># 协方差</span></span></code></pre></div>
+<div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1091-1"><a href="sampling.html#cb1091-1"></a><span class="co"># 构建协方差矩阵</span></span>
+<span id="cb1091-2"><a href="sampling.html#cb1091-2"></a>sigma &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(sigma_a<span class="op">^</span><span class="dv">2</span>, cov_ab,</span>
+<span id="cb1091-3"><a href="sampling.html#cb1091-3"></a>                  cov_ab, sigma_b<span class="op">^</span><span class="dv">2</span>), <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1092"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1092-1"><a href="sampling.html#cb1092-1"></a>d &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(<span class="dv">1000</span>, <span class="dt">mu =</span> mu, <span class="dt">Sigma =</span> sigma) <span class="op">%&gt;%</span></span>
+<span id="cb1092-2"><a href="sampling.html#cb1092-2"></a><span class="st">  </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1092-3"><a href="sampling.html#cb1092-3"></a><span class="st">  </span><span class="kw">set_names</span>(<span class="st">&quot;group_a&quot;</span>, <span class="st">&quot;group_b&quot;</span>)</span>
+<span id="cb1092-4"><a href="sampling.html#cb1092-4"></a></span>
+<span id="cb1092-5"><a href="sampling.html#cb1092-5"></a><span class="kw">head</span>(d)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["group_a"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["group_b"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4.502","2":"-1.5215","_rn_":"1"},{"1":"2.177","2":"-0.8764","_rn_":"2"},{"1":"2.082","2":"-0.3779","_rn_":"3"},{"1":"2.200","2":"-0.5076","_rn_":"4"},{"1":"2.447","2":"-0.2077","_rn_":"5"},{"1":"3.745","2":"-1.0466","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb1093"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1093-1"><a href="sampling.html#cb1093-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1093-2"><a href="sampling.html#cb1093-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group_a)) <span class="op">+</span></span>
+<span id="cb1093-3"><a href="sampling.html#cb1093-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>, </span>
+<span id="cb1093-4"><a href="sampling.html#cb1093-4"></a>               <span class="dt">fill =</span> <span class="st">&quot;dodgerblue3&quot;</span>, </span>
+<span id="cb1093-5"><a href="sampling.html#cb1093-5"></a>               <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb1093-6"><a href="sampling.html#cb1093-6"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> dnorm, </span>
+<span id="cb1093-7"><a href="sampling.html#cb1093-7"></a>                <span class="dt">args =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="fl">3.5</span>, <span class="dt">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb1093-8"><a href="sampling.html#cb1093-8"></a>                <span class="dt">linetype =</span> <span class="dv">2</span></span>
+<span id="cb1093-9"><a href="sampling.html#cb1093-9"></a>                ) </span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-981-1.png" width="576" /></p>
+<div class="sourceCode" id="cb1094"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1094-1"><a href="sampling.html#cb1094-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1094-2"><a href="sampling.html#cb1094-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group_b)) <span class="op">+</span></span>
+<span id="cb1094-3"><a href="sampling.html#cb1094-3"></a><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>, </span>
+<span id="cb1094-4"><a href="sampling.html#cb1094-4"></a>               <span class="dt">fill =</span> <span class="st">&quot;dodgerblue3&quot;</span>, </span>
+<span id="cb1094-5"><a href="sampling.html#cb1094-5"></a>               <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb1094-6"><a href="sampling.html#cb1094-6"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> dnorm, </span>
+<span id="cb1094-7"><a href="sampling.html#cb1094-7"></a>                <span class="dt">args =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="dv">-1</span>, <span class="dt">sd =</span> <span class="fl">0.5</span>),</span>
+<span id="cb1094-8"><a href="sampling.html#cb1094-8"></a>                <span class="dt">linetype =</span> <span class="dv">2</span></span>
+<span id="cb1094-9"><a href="sampling.html#cb1094-9"></a>                ) </span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-982-1.png" width="576" /></p>
+<div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1095-1"><a href="sampling.html#cb1095-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1095-2"><a href="sampling.html#cb1095-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group_a, <span class="dt">y =</span> group_b)) <span class="op">+</span></span>
+<span id="cb1095-3"><a href="sampling.html#cb1095-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb1095-4"><a href="sampling.html#cb1095-4"></a><span class="st">  </span><span class="kw">stat_ellipse</span>(<span class="dt">type =</span> <span class="st">&quot;norm&quot;</span>, <span class="dt">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-983-1.png" width="576" /></p>
+<p>我们回头验算一下</p>
+<div class="sourceCode" id="cb1096"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1096-1"><a href="sampling.html#cb1096-1"></a>d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(</span>
+<span id="cb1096-2"><a href="sampling.html#cb1096-2"></a>  <span class="dt">a_mean =</span> <span class="kw">mean</span>(group_a),</span>
+<span id="cb1096-3"><a href="sampling.html#cb1096-3"></a>  <span class="dt">b_mean =</span> <span class="kw">mean</span>(group_b),</span>
+<span id="cb1096-4"><a href="sampling.html#cb1096-4"></a>  <span class="dt">a_sd =</span> <span class="kw">sd</span>(group_a),</span>
+<span id="cb1096-5"><a href="sampling.html#cb1096-5"></a>  <span class="dt">b_sd =</span> <span class="kw">sd</span>(group_b),</span>
+<span id="cb1096-6"><a href="sampling.html#cb1096-6"></a>  <span class="dt">cor =</span> <span class="kw">cor</span>(group_a,group_b),</span>
+<span id="cb1096-7"><a href="sampling.html#cb1096-7"></a>  <span class="dt">cov =</span> <span class="kw">cov</span>(group_a,group_b)</span>
+<span id="cb1096-8"><a href="sampling.html#cb1096-8"></a>  )</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["a_mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b_mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["a_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["b_sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["cor"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["cov"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.499","2":"-1.003","3":"1.004","4":"0.4947","5":"-0.7022","6":"-0.3486"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="蒙特卡洛" class="section level2">
+<h2><span class="header-section-number">26.3</span> 蒙特卡洛</h2>
+<p>这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse</p>
+<p><img src="images/pi.jpg" width="50%" style="display: block; margin: auto auto auto 0;" /></p>
+<div class="sourceCode" id="cb1097"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1097-1"><a href="sampling.html#cb1097-1"></a><span class="kw">set.seed</span>(<span class="dv">2019</span>)</span>
+<span id="cb1097-2"><a href="sampling.html#cb1097-2"></a></span>
+<span id="cb1097-3"><a href="sampling.html#cb1097-3"></a>n &lt;-<span class="st"> </span><span class="dv">50000</span></span>
+<span id="cb1097-4"><a href="sampling.html#cb1097-4"></a>points &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="st">&quot;x&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n), <span class="st">&quot;y&quot;</span> =<span class="st"> </span><span class="kw">runif</span>(n))</span></code></pre></div>
+<div class="sourceCode" id="cb1098"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1098-1"><a href="sampling.html#cb1098-1"></a>points &lt;-<span class="st"> </span>points <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1098-2"><a href="sampling.html#cb1098-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">inside =</span> <span class="kw">map2_dbl</span>(<span class="dt">.x =</span> x, <span class="dt">.y =</span> y, <span class="op">~</span><span class="kw">if_else</span>(.x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>.y<span class="op">**</span><span class="dv">2</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1098-3"><a href="sampling.html#cb1098-3"></a><span class="st">    </span><span class="kw">rowid_to_column</span>(<span class="st">&quot;N&quot;</span>)</span></code></pre></div>
+<p>正方形的面积是1，圆的面积是<span class="math inline">\(\pi r^2 = \frac{1}{4} \pi\)</span>，如果知道两者的比例，就可以估算<span class="math inline">\(\pi\)</span></p>
+<div class="sourceCode" id="cb1099"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1099-1"><a href="sampling.html#cb1099-1"></a>points &lt;-<span class="st"> </span>points <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1099-2"><a href="sampling.html#cb1099-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">estimate =</span> <span class="dv">4</span><span class="op">*</span><span class="kw">cumsum</span>(inside)<span class="op">/</span>N)</span></code></pre></div>
+<div class="sourceCode" id="cb1100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1100-1"><a href="sampling.html#cb1100-1"></a>points <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["N"],"name":[1],"type":["int"],"align":["right"]},{"label":["x"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["inside"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["estimate"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"49995","2":"0.590941","3":"0.04113","4":"1","5":"3.154"},{"1":"49996","2":"0.944844","3":"0.12664","4":"1","5":"3.154"},{"1":"49997","2":"0.653940","3":"0.15856","4":"1","5":"3.155"},{"1":"49998","2":"0.521017","3":"0.49110","4":"1","5":"3.155"},{"1":"49999","2":"0.811726","3":"0.20315","4":"1","5":"3.155"},{"1":"50000","2":"0.009348","3":"0.65669","4":"1","5":"3.155"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb1101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1101-1"><a href="sampling.html#cb1101-1"></a>points <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1101-2"><a href="sampling.html#cb1101-2"></a>	<span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1101-3"><a href="sampling.html#cb1101-3"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> estimate, <span class="dt">x =</span> N), <span class="dt">colour =</span> <span class="st">&quot;#82518c&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1101-4"><a href="sampling.html#cb1101-4"></a><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> pi) </span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-990-1.png" width="576" /></p>
+</div>
+<div id="抽样与样本" class="section level2">
+<h2><span class="header-section-number">26.4</span> 抽样与样本</h2>
+<div id="总体分布" class="section level3">
+<h3><span class="header-section-number">26.4.1</span> 总体分布</h3>
+<p>假定一个事实，川师男生总体的平均身高和身高的标准差分别为</p>
+<div class="sourceCode" id="cb1102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1102-1"><a href="sampling.html#cb1102-1"></a>true.mean &lt;-<span class="st"> </span><span class="fl">175.7</span></span>
+<span id="cb1102-2"><a href="sampling.html#cb1102-2"></a>true.sd &lt;-<span class="st"> </span><span class="fl">15.19</span></span></code></pre></div>
+<p>那么我们可以模拟分布情况如下</p>
+<div class="sourceCode" id="cb1103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1103-1"><a href="sampling.html#cb1103-1"></a>pop.distn &lt;-</span>
+<span id="cb1103-2"><a href="sampling.html#cb1103-2"></a><span class="st">  </span><span class="kw">tibble</span>(</span>
+<span id="cb1103-3"><a href="sampling.html#cb1103-3"></a>    <span class="dt">height =</span> <span class="kw">seq</span>(<span class="dv">100</span>, <span class="dv">250</span>, <span class="fl">0.5</span>),</span>
+<span id="cb1103-4"><a href="sampling.html#cb1103-4"></a>    <span class="dt">density =</span> <span class="kw">dnorm</span>(height, <span class="dt">mean =</span> true.mean, <span class="dt">sd =</span> true.sd)</span>
+<span id="cb1103-5"><a href="sampling.html#cb1103-5"></a>  )</span>
+<span id="cb1103-6"><a href="sampling.html#cb1103-6"></a></span>
+<span id="cb1103-7"><a href="sampling.html#cb1103-7"></a><span class="kw">ggplot</span>(pop.distn) <span class="op">+</span></span>
+<span id="cb1103-8"><a href="sampling.html#cb1103-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(height, density)) <span class="op">+</span></span>
+<span id="cb1103-9"><a href="sampling.html#cb1103-9"></a><span class="st">  </span><span class="kw">geom_vline</span>(</span>
+<span id="cb1103-10"><a href="sampling.html#cb1103-10"></a>    <span class="dt">xintercept =</span> true.mean,</span>
+<span id="cb1103-11"><a href="sampling.html#cb1103-11"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb1103-12"><a href="sampling.html#cb1103-12"></a>    <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span></span>
+<span id="cb1103-13"><a href="sampling.html#cb1103-13"></a>  ) <span class="op">+</span></span>
+<span id="cb1103-14"><a href="sampling.html#cb1103-14"></a><span class="st">  </span><span class="kw">geom_vline</span>(</span>
+<span id="cb1103-15"><a href="sampling.html#cb1103-15"></a>    <span class="dt">xintercept =</span> true.mean <span class="op">+</span><span class="st"> </span>true.sd,</span>
+<span id="cb1103-16"><a href="sampling.html#cb1103-16"></a>    <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb1103-17"><a href="sampling.html#cb1103-17"></a>    <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span></span>
+<span id="cb1103-18"><a href="sampling.html#cb1103-18"></a>  ) <span class="op">+</span></span>
+<span id="cb1103-19"><a href="sampling.html#cb1103-19"></a><span class="st">  </span><span class="kw">geom_vline</span>(</span>
+<span id="cb1103-20"><a href="sampling.html#cb1103-20"></a>    <span class="dt">xintercept =</span> true.mean <span class="op">-</span><span class="st"> </span>true.sd,</span>
+<span id="cb1103-21"><a href="sampling.html#cb1103-21"></a>    <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb1103-22"><a href="sampling.html#cb1103-22"></a>    <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span></span>
+<span id="cb1103-23"><a href="sampling.html#cb1103-23"></a>  ) <span class="op">+</span></span>
+<span id="cb1103-24"><a href="sampling.html#cb1103-24"></a><span class="st">  </span><span class="kw">labs</span>(</span>
+<span id="cb1103-25"><a href="sampling.html#cb1103-25"></a>    <span class="dt">x =</span> <span class="st">&quot;Height (cm)&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
+<span id="cb1103-26"><a href="sampling.html#cb1103-26"></a>    <span class="dt">title =</span> <span class="st">&quot;川师男生身高分布&quot;</span></span>
+<span id="cb1103-27"><a href="sampling.html#cb1103-27"></a>  )</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-992-1.png" width="576" /></p>
+</div>
+<div id="样本" class="section level3">
+<h3><span class="header-section-number">26.4.2</span> 样本</h3>
+<p>假定我们从中抽取30个男生身高样本</p>
+<div class="sourceCode" id="cb1104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1104-1"><a href="sampling.html#cb1104-1"></a>sample.a &lt;-</span>
+<span id="cb1104-2"><a href="sampling.html#cb1104-2"></a><span class="st">  </span><span class="kw">tibble</span>(<span class="dt">height =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">30</span>, <span class="dt">mean =</span> true.mean, <span class="dt">sd =</span> true.sd))</span></code></pre></div>
+<p>然后看看样本的直方图</p>
+<div class="sourceCode" id="cb1105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1105-1"><a href="sampling.html#cb1105-1"></a>sample.a <span class="op">%&gt;%</span></span>
+<span id="cb1105-2"><a href="sampling.html#cb1105-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height)) <span class="op">+</span></span>
+<span id="cb1105-3"><a href="sampling.html#cb1105-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">stat</span>(density)),</span>
+<span id="cb1105-4"><a href="sampling.html#cb1105-4"></a>    <span class="dt">fill =</span> <span class="st">&quot;steelblue&quot;</span>,</span>
+<span id="cb1105-5"><a href="sampling.html#cb1105-5"></a>    <span class="dt">alpha =</span> <span class="fl">0.75</span>,</span>
+<span id="cb1105-6"><a href="sampling.html#cb1105-6"></a>    <span class="dt">bins =</span> <span class="dv">10</span></span>
+<span id="cb1105-7"><a href="sampling.html#cb1105-7"></a>  ) <span class="op">+</span></span>
+<span id="cb1105-8"><a href="sampling.html#cb1105-8"></a><span class="st">  </span><span class="kw">geom_line</span>(</span>
+<span id="cb1105-9"><a href="sampling.html#cb1105-9"></a>    <span class="dt">data =</span> pop.distn,</span>
+<span id="cb1105-10"><a href="sampling.html#cb1105-10"></a>    <span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> density),</span>
+<span id="cb1105-11"><a href="sampling.html#cb1105-11"></a>    <span class="dt">alpha =</span> <span class="fl">0.25</span>, <span class="dt">size =</span> <span class="fl">1.5</span></span>
+<span id="cb1105-12"><a href="sampling.html#cb1105-12"></a>  ) <span class="op">+</span></span>
+<span id="cb1105-13"><a href="sampling.html#cb1105-13"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> true.mean, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb1105-14"><a href="sampling.html#cb1105-14"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">mean</span>(sample.a<span class="op">$</span>height), <span class="dt">linetype =</span> <span class="st">&quot;solid&quot;</span>)</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-994-1.png" width="576" /></p>
+<p>红色的虚线代表分布的总体的均值，黑色实线代表30个样本的均值，</p>
+<div class="sourceCode" id="cb1106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1106-1"><a href="sampling.html#cb1106-1"></a>sample.a <span class="op">%&gt;%</span></span>
+<span id="cb1106-2"><a href="sampling.html#cb1106-2"></a><span class="st">  </span><span class="kw">summarize</span>(</span>
+<span id="cb1106-3"><a href="sampling.html#cb1106-3"></a>    <span class="dt">sample.mean =</span> <span class="kw">mean</span>(height),</span>
+<span id="cb1106-4"><a href="sampling.html#cb1106-4"></a>    <span class="dt">sample.sd =</span> <span class="kw">sd</span>(height)</span>
+<span id="cb1106-5"><a href="sampling.html#cb1106-5"></a>  )</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sample.sd"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"175.7","2":"17.3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>也就是说，基于这30个观察值的样本，我们认为川师男生的身高均值为175.743cm，方差为17.3027</p>
+<p>可能有同学说，这个样本太少了，计算的均值还不够科学，会以偏概全。于是又重新找了30个男生，和上次类似，用<code>rnorm</code>函数模拟，我们记为样本b</p>
+<div class="sourceCode" id="cb1107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1107-1"><a href="sampling.html#cb1107-1"></a>sample.b &lt;-</span>
+<span id="cb1107-2"><a href="sampling.html#cb1107-2"></a><span class="st">  </span><span class="kw">tibble</span>(<span class="dt">height =</span> <span class="kw">rnorm</span>(<span class="dv">30</span>, <span class="dt">mean =</span> true.mean, <span class="dt">sd =</span> true.sd))</span></code></pre></div>
+<p>再来看看这次样本的分布</p>
+<div class="sourceCode" id="cb1108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1108-1"><a href="sampling.html#cb1108-1"></a>sample.b <span class="op">%&gt;%</span></span>
+<span id="cb1108-2"><a href="sampling.html#cb1108-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height)) <span class="op">+</span></span>
+<span id="cb1108-3"><a href="sampling.html#cb1108-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">stat</span>(density)),</span>
+<span id="cb1108-4"><a href="sampling.html#cb1108-4"></a>    <span class="dt">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.75</span>, <span class="dt">bins =</span> <span class="dv">10</span></span>
+<span id="cb1108-5"><a href="sampling.html#cb1108-5"></a>  ) <span class="op">+</span></span>
+<span id="cb1108-6"><a href="sampling.html#cb1108-6"></a><span class="st">  </span><span class="kw">geom_line</span>(</span>
+<span id="cb1108-7"><a href="sampling.html#cb1108-7"></a>    <span class="dt">data =</span> pop.distn, <span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> density),</span>
+<span id="cb1108-8"><a href="sampling.html#cb1108-8"></a>    <span class="dt">alpha =</span> <span class="fl">0.25</span>, <span class="dt">size =</span> <span class="fl">1.5</span></span>
+<span id="cb1108-9"><a href="sampling.html#cb1108-9"></a>  ) <span class="op">+</span></span>
+<span id="cb1108-10"><a href="sampling.html#cb1108-10"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> true.mean, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb1108-11"><a href="sampling.html#cb1108-11"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">mean</span>(sample.a<span class="op">$</span>height), <span class="dt">linetype =</span> <span class="st">&quot;solid&quot;</span>)</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-997-1.png" width="576" /></p>
+<p>同样，我们计算样本b的均值和方差</p>
+<div class="sourceCode" id="cb1109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1109-1"><a href="sampling.html#cb1109-1"></a>sample.b <span class="op">%&gt;%</span></span>
+<span id="cb1109-2"><a href="sampling.html#cb1109-2"></a><span class="st">  </span><span class="kw">summarize</span>(</span>
+<span id="cb1109-3"><a href="sampling.html#cb1109-3"></a>    <span class="dt">sample.mean =</span> <span class="kw">mean</span>(height),</span>
+<span id="cb1109-4"><a href="sampling.html#cb1109-4"></a>    <span class="dt">sample.sd =</span> <span class="kw">sd</span>(height)</span>
+<span id="cb1109-5"><a href="sampling.html#cb1109-5"></a>  )</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.mean"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sample.sd"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"173.7","2":"14.86"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>这次抽样的结果，均值为173.711cm，方差为14.8641</p>
+<p>和样本a比，有一点点变化。不经想问，我能否继续抽样呢？结果会有变化吗？为了避免重复写代码
+，我把上面的过程整合到一起，写一个<strong>子函数</strong>，专门模拟抽样过程</p>
+<div class="sourceCode" id="cb1110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1110-1"><a href="sampling.html#cb1110-1"></a>rnorm.stats &lt;-<span class="st"> </span><span class="cf">function</span>(n, mu, sigma) {</span>
+<span id="cb1110-2"><a href="sampling.html#cb1110-2"></a>  the.sample &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, mu, sigma)</span>
+<span id="cb1110-3"><a href="sampling.html#cb1110-3"></a>  <span class="kw">tibble</span>(</span>
+<span id="cb1110-4"><a href="sampling.html#cb1110-4"></a>    <span class="dt">sample.size =</span> n,</span>
+<span id="cb1110-5"><a href="sampling.html#cb1110-5"></a>    <span class="dt">sample.mean =</span> <span class="kw">mean</span>(the.sample),</span>
+<span id="cb1110-6"><a href="sampling.html#cb1110-6"></a>    <span class="dt">sample.sd =</span> <span class="kw">sd</span>(the.sample)</span>
+<span id="cb1110-7"><a href="sampling.html#cb1110-7"></a>  )</span>
+<span id="cb1110-8"><a href="sampling.html#cb1110-8"></a>}</span></code></pre></div>
+<p>于是，我们又可以继续模拟了。注意我们之前设定的总体分布的均值和方差</p>
+<div class="sourceCode" id="cb1111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1111-1"><a href="sampling.html#cb1111-1"></a>true.mean &lt;-<span class="st"> </span><span class="fl">175.7</span></span>
+<span id="cb1111-2"><a href="sampling.html#cb1111-2"></a>true.sd &lt;-<span class="st"> </span><span class="fl">15.19</span></span></code></pre></div>
+<div class="sourceCode" id="cb1112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1112-1"><a href="sampling.html#cb1112-1"></a><span class="kw">rnorm.stats</span>(<span class="dv">30</span>, true.mean, true.sd)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.size"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sample.mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sample.sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"175.3","3":"16.23"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>yes，代码工作的很好，但不过只是代码减少了一点点，仍然只是一次抽样（这里30个样本为一次抽样），<strong>我们的目的是反复抽样</strong>， 抽很多次的那种喔。</p>
+<p>那我们用<code>purrr</code>包的<code>rerun</code>函数偷个懒，</p>
+<div class="sourceCode" id="cb1113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1113-1"><a href="sampling.html#cb1113-1"></a>df.samples.of<span class="fl">.30</span> &lt;-</span>
+<span id="cb1113-2"><a href="sampling.html#cb1113-2"></a><span class="st">  </span>purrr<span class="op">::</span><span class="kw">rerun</span>(<span class="dv">2500</span>, <span class="kw">rnorm.stats</span>(<span class="dv">30</span>, true.mean, true.sd)) <span class="op">%&gt;%</span></span>
+<span id="cb1113-3"><a href="sampling.html#cb1113-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>()</span></code></pre></div>
+<p>哇，一下子抽了2500个样本,全部装进了<code>df.sample.of.30</code>这个数据框， 偷偷看一眼呢</p>
+<div class="sourceCode" id="cb1114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1114-1"><a href="sampling.html#cb1114-1"></a>df.samples.of<span class="fl">.30</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.size"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sample.mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sample.sd"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"173.0","3":"16.06"},{"1":"30","2":"177.5","3":"15.81"},{"1":"30","2":"175.3","3":"14.18"},{"1":"30","2":"178.9","3":"17.89"},{"1":"30","2":"178.0","3":"15.41"},{"1":"30","2":"180.3","3":"12.63"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>回过头看看<code>df.samples.of.30</code>是什么：</p>
+<ul>
+<li>从川师的男生中随机抽取30个，计算这30个人身高的均值和方差，这叫一次抽样</li>
+<li>把上面的工作，重复2500次，得到2500个均值和方差</li>
+<li>2500个均值和方差，组成了一个数据框</li>
+</ul>
+<p>我们发现每次抽样的均值都不一样，感觉又像一个分布(抽样的均值分布)，我们画出来看看吧</p>
+<div class="sourceCode" id="cb1115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1115-1"><a href="sampling.html#cb1115-1"></a>df.samples.of<span class="fl">.30</span> <span class="op">%&gt;%</span></span>
+<span id="cb1115-2"><a href="sampling.html#cb1115-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sample.mean, <span class="dt">y =</span> <span class="kw">stat</span>(density))) <span class="op">+</span></span>
+<span id="cb1115-3"><a href="sampling.html#cb1115-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">25</span>, <span class="dt">fill =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb1115-4"><a href="sampling.html#cb1115-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> true.mean, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb1115-5"><a href="sampling.html#cb1115-5"></a><span class="st">  </span><span class="kw">labs</span>(</span>
+<span id="cb1115-6"><a href="sampling.html#cb1115-6"></a>    <span class="dt">title =</span> <span class="st">&quot;抽样2500次（每次30个男生）身高均值的分布&quot;</span>,</span>
+<span id="cb1115-7"><a href="sampling.html#cb1115-7"></a>    <span class="dt">subtitle =</span> <span class="st">&quot;Distribution of mean heights for 2500 samples of size 30&quot;</span></span>
+<span id="cb1115-8"><a href="sampling.html#cb1115-8"></a>  )</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-1004-1.png" width="576" />
+注意到，这不是男生身高的分布，而是<strong>每次抽样计算的均值</strong>构成的分布.</p>
+<p>为了更清楚的说明，我们把<strong>整体的分布(灰色曲线)、样本a（蓝色直方图）、抽样的均值分布（红色直方图）</strong>三者画在一起。</p>
+<div class="sourceCode" id="cb1116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1116-1"><a href="sampling.html#cb1116-1"></a>df.samples.of<span class="fl">.30</span> <span class="op">%&gt;%</span></span>
+<span id="cb1116-2"><a href="sampling.html#cb1116-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sample.mean, <span class="dt">y =</span> <span class="kw">stat</span>(density))) <span class="op">+</span></span>
+<span id="cb1116-3"><a href="sampling.html#cb1116-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">50</span>, <span class="dt">fill =</span> <span class="st">&quot;firebrick&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb1116-4"><a href="sampling.html#cb1116-4"></a><span class="st">  </span><span class="kw">geom_histogram</span>(</span>
+<span id="cb1116-5"><a href="sampling.html#cb1116-5"></a>    <span class="dt">data =</span> sample.a,</span>
+<span id="cb1116-6"><a href="sampling.html#cb1116-6"></a>    <span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> <span class="kw">stat</span>(density)),</span>
+<span id="cb1116-7"><a href="sampling.html#cb1116-7"></a>    <span class="dt">bins =</span> <span class="dv">11</span>, <span class="dt">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.25</span></span>
+<span id="cb1116-8"><a href="sampling.html#cb1116-8"></a>  ) <span class="op">+</span></span>
+<span id="cb1116-9"><a href="sampling.html#cb1116-9"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> true.mean, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb1116-10"><a href="sampling.html#cb1116-10"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> pop.distn, <span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">y =</span> density), <span class="dt">alpha =</span> <span class="fl">0.25</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></span>
+<span id="cb1116-11"><a href="sampling.html#cb1116-11"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">125</span>, <span class="dv">225</span>)</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-1005-1.png" width="576" /></p>
+<p>样本的均值分布，是个很有意思的结果，比如，我们<strong>再选30个男生</strong>再抽样一次，我们可以断定，这次抽样的均值会落在了红色的区间之内。</p>
+<p>然而，注意到，必须限定再次抽样的大小仍然是30个男生，以上这句话才成立。</p>
+<div class="sourceCode" id="cb1117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1117-1"><a href="sampling.html#cb1117-1"></a>df.samples.of<span class="fl">.30</span> <span class="op">%&gt;%</span></span>
+<span id="cb1117-2"><a href="sampling.html#cb1117-2"></a><span class="st">  </span><span class="kw">summarize</span>(</span>
+<span id="cb1117-3"><a href="sampling.html#cb1117-3"></a>    <span class="dt">mean.of.means =</span> <span class="kw">mean</span>(sample.mean),</span>
+<span id="cb1117-4"><a href="sampling.html#cb1117-4"></a>    <span class="dt">sd.of.means =</span> <span class="kw">sd</span>(sample.mean)</span>
+<span id="cb1117-5"><a href="sampling.html#cb1117-5"></a>  )</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["mean.of.means"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd.of.means"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"175.7","2":"2.769"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>这里计算的是抽样(样本大小为30)均值分布，而不是整体的均值分布。言外之意，样本大小可以是其它的呗， 那就把样本调整为50、100、250、500分别试试看</p>
+<div class="sourceCode" id="cb1118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1118-1"><a href="sampling.html#cb1118-1"></a>df.samples.of<span class="fl">.50</span> &lt;-</span>
+<span id="cb1118-2"><a href="sampling.html#cb1118-2"></a><span class="st">  </span><span class="kw">rerun</span>(<span class="dv">2500</span>, <span class="kw">rnorm.stats</span>(<span class="dv">50</span>, true.mean, true.sd)) <span class="op">%&gt;%</span></span>
+<span id="cb1118-3"><a href="sampling.html#cb1118-3"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span>
+<span id="cb1118-4"><a href="sampling.html#cb1118-4"></a></span>
+<span id="cb1118-5"><a href="sampling.html#cb1118-5"></a>df.samples.of<span class="fl">.100</span> &lt;-</span>
+<span id="cb1118-6"><a href="sampling.html#cb1118-6"></a><span class="st">  </span><span class="kw">rerun</span>(<span class="dv">2500</span>, <span class="kw">rnorm.stats</span>(<span class="dv">100</span>, true.mean, true.sd)) <span class="op">%&gt;%</span></span>
+<span id="cb1118-7"><a href="sampling.html#cb1118-7"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span>
+<span id="cb1118-8"><a href="sampling.html#cb1118-8"></a></span>
+<span id="cb1118-9"><a href="sampling.html#cb1118-9"></a>df.samples.of<span class="fl">.250</span> &lt;-</span>
+<span id="cb1118-10"><a href="sampling.html#cb1118-10"></a><span class="st">  </span><span class="kw">rerun</span>(<span class="dv">2500</span>, <span class="kw">rnorm.stats</span>(<span class="dv">250</span>, true.mean, true.sd)) <span class="op">%&gt;%</span></span>
+<span id="cb1118-11"><a href="sampling.html#cb1118-11"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span>
+<span id="cb1118-12"><a href="sampling.html#cb1118-12"></a></span>
+<span id="cb1118-13"><a href="sampling.html#cb1118-13"></a>df.samples.of<span class="fl">.500</span> &lt;-</span>
+<span id="cb1118-14"><a href="sampling.html#cb1118-14"></a><span class="st">  </span><span class="kw">rerun</span>(<span class="dv">2500</span>, <span class="kw">rnorm.stats</span>(<span class="dv">500</span>, true.mean, true.sd)) <span class="op">%&gt;%</span></span>
+<span id="cb1118-15"><a href="sampling.html#cb1118-15"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span></code></pre></div>
+<p>忍不住想画图看看，每次抽取的男生数量不同，均值的分布会有不同？</p>
+<div class="sourceCode" id="cb1119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1119-1"><a href="sampling.html#cb1119-1"></a>df.combined &lt;-</span>
+<span id="cb1119-2"><a href="sampling.html#cb1119-2"></a><span class="st">  </span><span class="kw">bind_rows</span>(</span>
+<span id="cb1119-3"><a href="sampling.html#cb1119-3"></a>    df.samples.of<span class="fl">.30</span>,</span>
+<span id="cb1119-4"><a href="sampling.html#cb1119-4"></a>    df.samples.of<span class="fl">.50</span>,</span>
+<span id="cb1119-5"><a href="sampling.html#cb1119-5"></a>    df.samples.of<span class="fl">.100</span>,</span>
+<span id="cb1119-6"><a href="sampling.html#cb1119-6"></a>    df.samples.of<span class="fl">.250</span>,</span>
+<span id="cb1119-7"><a href="sampling.html#cb1119-7"></a>    df.samples.of<span class="fl">.500</span></span>
+<span id="cb1119-8"><a href="sampling.html#cb1119-8"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb1119-9"><a href="sampling.html#cb1119-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample.sz =</span> <span class="kw">as.factor</span>(sample.size))</span></code></pre></div>
+<div class="sourceCode" id="cb1120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1120-1"><a href="sampling.html#cb1120-1"></a>df.combined <span class="op">%&gt;%</span></span>
+<span id="cb1120-2"><a href="sampling.html#cb1120-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sample.mean, <span class="dt">y =</span> <span class="kw">stat</span>(density), <span class="dt">fill =</span> sample.sz)) <span class="op">+</span></span>
+<span id="cb1120-3"><a href="sampling.html#cb1120-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">25</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb1120-4"><a href="sampling.html#cb1120-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> true.mean, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></span>
+<span id="cb1120-5"><a href="sampling.html#cb1120-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(sample.sz), <span class="dt">nrow =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb1120-6"><a href="sampling.html#cb1120-6"></a><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>) <span class="op">+</span></span>
+<span id="cb1120-7"><a href="sampling.html#cb1120-7"></a><span class="st">  </span><span class="kw">labs</span>(</span>
+<span id="cb1120-8"><a href="sampling.html#cb1120-8"></a>    <span class="dt">x =</span> <span class="st">&quot;Sample means&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>,</span>
+<span id="cb1120-9"><a href="sampling.html#cb1120-9"></a>    <span class="dt">title =</span> <span class="st">&quot;Distribution of mean heights for samples of varying size&quot;</span></span>
+<span id="cb1120-10"><a href="sampling.html#cb1120-10"></a>  )</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-1009-1.png" width="960" /></p>
+<p>随着样本大小由30增加到500，抽样的均值分布围绕着越来越聚合到实际的均值，或者说随着样本大小的增多，对均值估计的不确定性越小。</p>
+<div class="sourceCode" id="cb1121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1121-1"><a href="sampling.html#cb1121-1"></a>sampling.distn.mean.table &lt;-</span>
+<span id="cb1121-2"><a href="sampling.html#cb1121-2"></a><span class="st">  </span>df.combined <span class="op">%&gt;%</span></span>
+<span id="cb1121-3"><a href="sampling.html#cb1121-3"></a><span class="st">  </span><span class="kw">group_by</span>(sample.size) <span class="op">%&gt;%</span></span>
+<span id="cb1121-4"><a href="sampling.html#cb1121-4"></a><span class="st">  </span><span class="kw">summarize</span>(</span>
+<span id="cb1121-5"><a href="sampling.html#cb1121-5"></a>    <span class="dt">mean.of.means =</span> <span class="kw">mean</span>(sample.mean),</span>
+<span id="cb1121-6"><a href="sampling.html#cb1121-6"></a>    <span class="dt">sd.of.means =</span> <span class="kw">sd</span>(sample.mean)</span>
+<span id="cb1121-7"><a href="sampling.html#cb1121-7"></a>  )</span>
+<span id="cb1121-8"><a href="sampling.html#cb1121-8"></a>sampling.distn.mean.table</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.size"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mean.of.means"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.of.means"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"175.7","3":"2.7690"},{"1":"50","2":"175.7","3":"2.1111"},{"1":"100","2":"175.7","3":"1.5137"},{"1":"250","2":"175.7","3":"0.9478"},{"1":"500","2":"175.7","3":"0.6715"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>有个统计学上的概念需要明确。</p>
+<p>输出结果的第三列<code>sd.of.means</code> 是不同样本大小(30,50,100,250,500)下，反复抽样后平均数分布的标准差。</p>
+<p>数学上，如果已知总体的标准差(<span class="math inline">\(\sigma\)</span>)，那么抽取无限多份大小为 <span class="math inline">\(n\)</span> 的样本，每个样本各有一个平均值，所有这个大小的样本之平均值的标准差可证明为</p>
+<p><span class="math display">\[
+\frac{\sigma}{\sqrt{n}}
+\]</span>
+即，<strong>平均值的标准误差</strong>。</p>
+<p>下面我们画图看看，模拟出来的<span class="math inline">\(sd.of.means\)</span>和理论值<span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span>是否一致。</p>
+<p>注意到这里的<span class="math inline">\(\sigma\)</span>是总体的标准差，即最开始我们设定的川师男生身高的标准差<code>true.sd</code>. 也就说，理论上</p>
+<div class="sourceCode" id="cb1122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1122-1"><a href="sampling.html#cb1122-1"></a>df.se.mean.theory &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb1122-2"><a href="sampling.html#cb1122-2"></a>  <span class="dt">sample.size =</span> <span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">500</span>,<span class="dv">10</span>)</span>
+<span id="cb1122-3"><a href="sampling.html#cb1122-3"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1122-4"><a href="sampling.html#cb1122-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">std.error =</span> true.sd<span class="op">/</span><span class="kw">sqrt</span>(sample.size))</span>
+<span id="cb1122-5"><a href="sampling.html#cb1122-5"></a></span>
+<span id="cb1122-6"><a href="sampling.html#cb1122-6"></a>df.se.mean.theory</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.size"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"10","2":"4.8035"},{"1":"20","2":"3.3966"},{"1":"30","2":"2.7733"},{"1":"40","2":"2.4017"},{"1":"50","2":"2.1482"},{"1":"60","2":"1.9610"},{"1":"70","2":"1.8156"},{"1":"80","2":"1.6983"},{"1":"90","2":"1.6012"},{"1":"100","2":"1.5190"},{"1":"110","2":"1.4483"},{"1":"120","2":"1.3867"},{"1":"130","2":"1.3323"},{"1":"140","2":"1.2838"},{"1":"150","2":"1.2403"},{"1":"160","2":"1.2009"},{"1":"170","2":"1.1650"},{"1":"180","2":"1.1322"},{"1":"190","2":"1.1020"},{"1":"200","2":"1.0741"},{"1":"210","2":"1.0482"},{"1":"220","2":"1.0241"},{"1":"230","2":"1.0016"},{"1":"240","2":"0.9805"},{"1":"250","2":"0.9607"},{"1":"260","2":"0.9420"},{"1":"270","2":"0.9244"},{"1":"280","2":"0.9078"},{"1":"290","2":"0.8920"},{"1":"300","2":"0.8770"},{"1":"310","2":"0.8627"},{"1":"320","2":"0.8491"},{"1":"330","2":"0.8362"},{"1":"340","2":"0.8238"},{"1":"350","2":"0.8119"},{"1":"360","2":"0.8006"},{"1":"370","2":"0.7897"},{"1":"380","2":"0.7792"},{"1":"390","2":"0.7692"},{"1":"400","2":"0.7595"},{"1":"410","2":"0.7502"},{"1":"420","2":"0.7412"},{"1":"430","2":"0.7325"},{"1":"440","2":"0.7242"},{"1":"450","2":"0.7161"},{"1":"460","2":"0.7082"},{"1":"470","2":"0.7007"},{"1":"480","2":"0.6933"},{"1":"490","2":"0.6862"},{"1":"500","2":"0.6793"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb1123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1123-1"><a href="sampling.html#cb1123-1"></a>sampling.distn.mean.table <span class="op">%&gt;%</span></span>
+<span id="cb1123-2"><a href="sampling.html#cb1123-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sample.size, <span class="dt">y =</span> sd.of.means)) <span class="op">+</span></span>
+<span id="cb1123-3"><a href="sampling.html#cb1123-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb1123-4"><a href="sampling.html#cb1123-4"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sample.size, <span class="dt">y =</span> std.error), </span>
+<span id="cb1123-5"><a href="sampling.html#cb1123-5"></a>            <span class="dt">data =</span> df.se.mean.theory, </span>
+<span id="cb1123-6"><a href="sampling.html#cb1123-6"></a>            <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb1123-7"><a href="sampling.html#cb1123-7"></a><span class="st">  </span><span class="kw">labs</span>(</span>
+<span id="cb1123-8"><a href="sampling.html#cb1123-8"></a>    <span class="dt">x =</span> <span class="st">&quot;Sample size&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Std Error of Mean&quot;</span>,</span>
+<span id="cb1123-9"><a href="sampling.html#cb1123-9"></a>    <span class="dt">title =</span> <span class="st">&quot;平均值标准误差随样本大小变化（理论值和模拟值对比）&quot;</span></span>
+<span id="cb1123-10"><a href="sampling.html#cb1123-10"></a>  )</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/unnamed-chunk-1012-1.png" width="576" /></p>
+<p>两者吻合的很好。</p>
+<p>刚刚我们看到的，<strong>抽样均值分布</strong>随着<strong>样本大小</strong>变化而变化。可以试想下，抽样的其他统计量分布（方差，中位数），是不是也随着样本大小变化而变化呢？</p>
+<div class="sourceCode" id="cb1124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1124-1"><a href="sampling.html#cb1124-1"></a>sampling.distn.sd.table &lt;-</span>
+<span id="cb1124-2"><a href="sampling.html#cb1124-2"></a><span class="st">  </span>df.combined <span class="op">%&gt;%</span></span>
+<span id="cb1124-3"><a href="sampling.html#cb1124-3"></a><span class="st">  </span><span class="kw">group_by</span>(sample.size) <span class="op">%&gt;%</span></span>
+<span id="cb1124-4"><a href="sampling.html#cb1124-4"></a><span class="st">  </span><span class="kw">summarize</span>(</span>
+<span id="cb1124-5"><a href="sampling.html#cb1124-5"></a>    <span class="dt">mean.of.sds =</span> <span class="kw">mean</span>(sample.sd),</span>
+<span id="cb1124-6"><a href="sampling.html#cb1124-6"></a>    <span class="dt">sd.of.sds =</span> <span class="kw">sd</span>(sample.sd)</span>
+<span id="cb1124-7"><a href="sampling.html#cb1124-7"></a>  )</span>
+<span id="cb1124-8"><a href="sampling.html#cb1124-8"></a></span>
+<span id="cb1124-9"><a href="sampling.html#cb1124-9"></a>sampling.distn.sd.table</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample.size"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mean.of.sds"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.of.sds"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"15.12","3":"1.9942"},{"1":"50","2":"15.14","3":"1.5600"},{"1":"100","2":"15.19","3":"1.0706"},{"1":"250","2":"15.18","3":"0.6807"},{"1":"500","2":"15.17","3":"0.4856"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>答案是肯定的，样本量的增多，抽样方差的不确定性减少。</p>
+</div>
+</div>
+<div id="扩展阅读" class="section level2">
+<h2><span class="header-section-number">26.5</span> 扩展阅读</h2>
+<ul>
+<li><a href="https://learningstatisticswithr.com/book/" class="uri">https://learningstatisticswithr.com/book/</a></li>
+</ul>
+<!-- - <https://bookdown.org/content/922/> -->
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="tibble.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tidystats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-chinese/edit/master/sampling.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R4DS.pdf", "R4DS.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
