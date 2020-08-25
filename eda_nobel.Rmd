@@ -1,4 +1,6 @@
-# 探索性数据分析 {#eda01}
+# (PART) 应用篇 {-}
+
+# 探索性数据分析 {#eda-nobel}
 
 探索性数据分析（exporatory data analysis）是各种知识的综合运用。本章通过一个案例，讲解探索性数据分析的基本思路，也算是对前面几章内容的一次总结复习。
 
@@ -188,8 +190,8 @@ df %>%
 ## 看看我们伟大的祖国
 ```{r}
 df %>% 
-  filter(birth_country == "China") %>% 
-  select(full_name, prize_year, category)
+  dplyr::filter(birth_country == "China") %>% 
+  dplyr::select(full_name, prize_year, category)
 ```
 
 
@@ -242,8 +244,8 @@ nobel_winners
 再来看看我的祖国
 ```{r}
 nobel_winners %>%
-  filter(birth_country == "china") %>%
-  select(full_name, prize_year, category)
+  dplyr::filter(birth_country == "china") %>%
+  dplyr::select(full_name, prize_year, category)
 ```
 
 ## 哪些大神多次获得诺贝尔奖
@@ -259,7 +261,7 @@ nobel_winners %>%
     number_cateory = n_distinct(category)
     ) %>% 
   arrange(desc(number_prize), full_name) %>% 
-  filter(number_cateory == 2) 
+  dplyr::filter(number_cateory == 2) 
 ```
 
 
@@ -292,7 +294,7 @@ nobel_winners %>%
 
 ```{r}
 nobel_winners %>%
-  filter(!is.na(prize_age)) %>%
+  dplyr::filter(!is.na(prize_age)) %>%
   group_by(decade, category) %>%
   summarize(average_age = mean(prize_age),
             median_age = median(prize_age)) %>%
@@ -353,7 +355,7 @@ nobel_winners %>%
 ## 性别比例
 ```{r}
 nobel_winners %>% 
-  filter(laureate_type == "individual") %>% 
+  dplyr::filter(laureate_type == "individual") %>% 
   count(category, gender) %>% 
   group_by(category) %>% 
   mutate(prop = n / sum(n)
@@ -363,7 +365,7 @@ nobel_winners %>%
 各年代性别比例
 ```{r, fig.width= 9, fig.height= 6}
 nobel_winners %>%
-  filter(laureate_type == "individual") %>%
+  dplyr::filter(laureate_type == "individual") %>%
   # mutate(decade = glue::glue("{round(prize_year - 1, -1)}s")) %>%
   count(decade, category, gender) %>%
   group_by(decade, category) %>%
@@ -425,7 +427,7 @@ nobel_winners %>%
   select(category, birth_date) %>% 
   mutate(year =  floor(year(birth_date)/10) * 10 ) %>% 
   count(category, year) %>% 
-  filter(!is.na(year)) %>% 
+  dplyr::filter(!is.na(year)) %>% 
   ggplot(aes(x = year, y = n)) +
   geom_col() +
   scale_x_continuous(breaks = seq(1810, 1990, 20)) +
@@ -441,13 +443,13 @@ nobel_winners %>%
 
 ```{r}
 nobel_winners %>% 
-    filter(prize_age == min(prize_age, na.rm = T))
+    dplyr::filter(prize_age == min(prize_age, na.rm = T))
 ```
 
 
 ```{r}
 nobel_winners %>% 
-  filter(
+  dplyr::filter(
     rank(prize_year - year(birth_date) ) == 1
   )
 ```

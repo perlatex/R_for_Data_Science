@@ -1,4 +1,4 @@
-# 探索性数据分析7 {#eda07}
+# 探索性数据分析7 {#eda-penguins}
 
 
 今天讲一个关于企鹅的数据故事。数据来源[这里](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 

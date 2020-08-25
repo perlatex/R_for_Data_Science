@@ -1,4 +1,4 @@
-# 探索性数据分析4 {#eda04}
+# 探索性数据分析4 {#eda-anscombe}
 
 
 在可视化章节，我们提到 Anscombe’s quartet这个数据集，

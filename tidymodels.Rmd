@@ -1,5 +1,6 @@
 # 机器学习 {#tidymodels}
 
+Rstudio工厂的 Max Kuhn 大神正主持**机器学习**的开发，日臻成熟了，感觉很强大啊。
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)

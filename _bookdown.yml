@@ -12,35 +12,31 @@ rmd_files: [
   "index.Rmd",
   "author.Rmd",
 
-  "intro_ds.Rmd",
+  "intro_ds.Rmd",        # 基础篇
   "intro_R.Rmd",
   "subsetting.Rmd",
 
-  "rmarkdown.Rmd",
+  "rmarkdown.Rmd",       # tidyverse篇
   "readr.Rmd",
   "dplyr.Rmd",
-  "colwise.Rmd",
   "ggplot2_aes.Rmd",
   "stringr.Rmd",
   "forcats.Rmd",
   "purrr.Rmd",
-  "eda_nobel.Rmd",
-  "eda_olympics.Rmd",
-  "eda_covid2019.Rmd",
-  "eda_anscombe.Rmd",
-  "eda_height.Rmd",
-  "eda_caribou.Rmd",
-  "eda_penguins.Rmd",
+  "tibble.Rmd",
   "ggplot2_geom.Rmd",
   "ggplot2_theme.Rmd",
   "ggplot2_scales.Rmd",
   "ggplot2_guides.Rmd",
   "ggplot2_gganimate.Rmd",
+  "adv_dplyr.Rmd",
+  "rowwise.Rmd",
+  "colwise.Rmd",
   "tidyverse_tips.Rmd",
-  "tibble.Rmd",
+  "dot.Rmd",
 
 
-  "sampling.Rmd",
+  "sampling.Rmd",       # 建模篇
   "tidystats.Rmd",
   "lm.Rmd",
   "lmm.Rmd",
@@ -50,9 +46,13 @@ rmd_files: [
   "tidyeval.Rmd",
 
 
-  "adv_dplyr.Rmd",
-  "rowwise.Rmd",
-  "dot.Rmd",
+  "eda_nobel.Rmd",     # 应用篇
+  "eda_olympics.Rmd",
+  "eda_covid2019.Rmd",
+  "eda_anscombe.Rmd",
+  "eda_height.Rmd",
+  "eda_caribou.Rmd",
+  "eda_penguins.Rmd",
   "rvest.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",

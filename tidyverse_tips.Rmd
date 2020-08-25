@@ -695,7 +695,7 @@ p_ABCD + p_sane +
 ## unite
 
 ```{r}
-df <- tribble(
+dfa <- tribble(
    ~school, ~class,
   "chuansi", "01",
   "chuansi", "02",
@@ -705,12 +705,12 @@ df <- tribble(
   "huapulu", "103"
 )
 
-df
+dfa
 ```
 
 ```{r}
-df_united <- df %>% 
-   unite(school, class, col = "school_plus_class", sep = "_", remove = FALSE)
+df_united <- dfa %>% 
+   tidyr::unite(school, class, col = "school_plus_class", sep = "_", remove = FALSE)
 
 df_united
 ```
@@ -718,7 +718,7 @@ df_united
 
 当然，简单的情况也可以用`mutate()`实现
 ```{r}
-df %>% mutate(newcol = str_c(school, "_", class))
+dfa %>% mutate(newcol = str_c(school, "_", class))
 ```
 
 
@@ -726,8 +726,9 @@ df %>% mutate(newcol = str_c(school, "_", class))
 
 ## separate()
 
-```{r}
-df_united %>% separate(school_plus_class, into = c("sch", "cls"), sep = "_", remove = F)
+```{r, eval=FALSE}
+df_united %>%
+  tidyr::separate(school_plus_class, into = c("sch", "cls"), sep = "_", remove = F)
 ```
 
 
@@ -742,7 +743,7 @@ df_united %>%
 如果每行不是都恰好分隔成两部分呢？就需要`tidyr::extract()`, 使用方法和`tidyr::separate()`类似
 
 ```{r}
-df <- tribble(
+dfb <- tribble(
    ~school_class,
   "chuansi_01",
   "chuansi_02_03",
@@ -751,12 +752,12 @@ df <- tribble(
   "huapulu_101_u",
   "huapulu_103__p"
 )
-df
+dfb
 ```
 
 
-```{r}
-df %>% separate(school_class, 
+```{r, eval=FALSE}
+dfb %>% tidyr::separate(school_class, 
                 into = c("sch", "cls"), 
                 sep = "_", 
                 extra = "drop",
@@ -768,15 +769,15 @@ df %>% separate(school_class,
 
 有时候分隔符搞不定的，可以用正则表达式，讲捕获的每组弄成一列
 ```{r}
-df <- tibble(x = c("1-12week", "1-10wk", "5-12w", "01-05weeks"))
-df
+dfc <- tibble(x = c("1-12week", "1-10wk", "5-12w", "01-05weeks"))
+dfc
 ```
 
 
 
 
 ```{r}
-df %>% extract(
+dfc %>% tidyr::extract(
   x,
   c("start", "end", "letter"), "(\\d+)-(\\d+)([a-z]+)",
   remove = FALSE
@@ -790,13 +791,13 @@ df %>% extract(
 
 先看看效果
 ```{r}
-crossing(x = c("F", "M"), y = c("a", "b"), z = c(1:2))
+tidyr::crossing(x = c("F", "M"), y = c("a", "b"), z = c(1:2))
 ```
 
 
 这个函数在**数据模拟**的时候很方便，
 ```{r}
-crossing(trials = 1:10, m = 1:5) %>%
+tidyr::crossing(trials = 1:10, m = 1:5) %>%
   group_by(trials) %>%
   mutate(
     guess = sample.int(5, n()),

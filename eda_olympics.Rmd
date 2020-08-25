@@ -1,4 +1,4 @@
-# 探索性数据分析2 {#eda02}
+# 探索性数据分析2 {#eda-olympics}
 
 
 这是Nature期刊上的一篇文章[Nature. 2004 September 30; 431(7008)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173856/#SD2)，

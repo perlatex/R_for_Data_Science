@@ -680,3 +680,17 @@ mtcars %>%
 
 - https://dplyr.tidyverse.org/dev/articles/rowwise.html
 - https://dplyr.tidyverse.org/dev/articles/colwise.html
+
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(df, df1, df2, s)
+rm(list=ls())
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

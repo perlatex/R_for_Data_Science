@@ -25,8 +25,8 @@ knitr::include_graphics("images/data_science.png", dpi = 300)
 
 -   1992年，新西兰奥克兰大学统计学教授 Ross Ihaka 和 Robert Gentleman，为了方便地给学生教授统计学课程，他们设计开发了R语言（他们名字的首字母都是R）。
 
-```{r echo=FALSE, out.width = '0.8\\textwidth'}
-knitr::include_graphics("images/R_inventor.png")
+```{r echo=FALSE, fig.align='center', out.width = '100%'}
+knitr::include_graphics("images/Rinventor.png")
 ```
 
 -   2000年，R1.0.0 发布
@@ -81,7 +81,7 @@ knitr::include_graphics("images/tiobe-index.png")
 Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
 
 
-```{r echo=FALSE, out.width = '50%'}
+```{r echo=FALSE,  fig.align='center', out.width = '80%'}
 knitr::include_graphics("images/hadley-wickham.jpg")
 ```
 
@@ -109,21 +109,33 @@ knitr::include_graphics("images/data-science-explore.png")
 knitr::include_graphics("images/tidyverse.png")
 ```
 
-[https://www.tidyverse.org/](https://www.tidyverse.org/)
+前面陆续介绍了[tidyverse](https://www.tidyverse.org/)家族，家庭主要成员包括
+
+
+| 功能 | 宏包        |
+|:------|:-------------|
+有颜值担当 | ggplot2 |
+数据处理王者 | dplyr |
+数据转换专家  | tidyr |
+数据载入利器 | readr |
+循环加速器 | purrr |
+强化数据框 | tibble |
+字符串处理 | stringr |
+因子处理   | forcats |
 
 
 
 ###  R & tidyverse 四大优势
 
 | 序号 | 内容   |  代码演示   |
-|-----|------------|-----------------|
+|:---|:---|:---|
 | 1     |  统计           |   1_stats.R         |
 | 2     |  可视化         |   2_visual.R        |
 | 3     |  探索性分析     |   3_eda.R           |
 | 4     |   可重复性报告  |   4_reproducible.R  |
 
 
-可能看到这些代码，第一眼感觉是这样的
+看了这些代码，可能第一眼感觉是这样的
 ```{r echo=FALSE, out.width = '70%', fig.cap='图片来自电影《降临》'}
 knitr::include_graphics("images/arrival-movie.png")
 ```
@@ -160,7 +172,7 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 
 
 | 序号| 内容 | 特性| 评价|
-|------ |------------ |--------- |------ |
+|:---|:---|:---|:---|
 | 1  | 统计分析 | 看家本领  | 好用|
 | 2  | ggplot2画图 |颜值担当| 好看|
 | 3  | tidyverse语法 | 简单易懂| 好学|
@@ -187,7 +199,8 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 
 
 你心动了？
-```{r echo=FALSE, out.width = '70%'}
+
+```{r echo=FALSE,  fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/meme.png")
 ```
 
