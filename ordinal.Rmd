@@ -99,31 +99,33 @@ df
 ```
 
 ```{r}
-df %>% 
+df %>%
   dplyr::summarise(
     eq_n = sum(edu_m == edu_f),
     n = n()
-) %>% 
-  dplyr::mutate(prop = eq_n/n)
+  ) %>%
+  dplyr::mutate(prop = eq_n / n)
 ```
 
 ```{r}
-df %>% 
-  dplyr::count(edu_m, edu_f) %>% 
-  dplyr::group_by(edu_m) %>% 
-  dplyr::mutate(prop = n /sum(n)) %>% 
-  dplyr::ungroup() 
+df %>%
+  dplyr::count(edu_m, edu_f) %>%
+  dplyr::group_by(edu_m) %>%
+  dplyr::mutate(prop = n / sum(n)) %>%
+  dplyr::ungroup()
 ```
 
 
 ```{r}
-df %>% 
-  dplyr::count(edu_m, edu_f) %>% 
-  dplyr::group_by(edu_m) %>% 
-  dplyr::mutate(percent = n/sum(n) ) %>% 
-  dplyr::select(-n) %>% 
-  tidyr::pivot_wider(names_from = edu_f,
-              values_from = percent)
+df %>%
+  dplyr::count(edu_m, edu_f) %>%
+  dplyr::group_by(edu_m) %>%
+  dplyr::mutate(percent = n / sum(n)) %>%
+  dplyr::select(-n) %>%
+  tidyr::pivot_wider(
+    names_from = edu_f,
+    values_from = percent
+  )
 ```
 
 
@@ -135,18 +137,19 @@ df %>%
 ### 母亲的教育程度对子女的影响
 ```{r, fig.showtext= TRUE}
 library(ggridges)
-df %>% 
+df %>%
   dplyr::mutate(
     across(edu_m, as.factor)
-    ) %>%
+  ) %>%
   ggplot(aes(x = edu, y = edu_m)) +
-  geom_density_ridges()  +
+  geom_density_ridges() +
   scale_x_continuous(limits = c(0, 6), breaks = c(1:5)) +
-  labs(title = "家庭中母亲的教育程度对子女的影响",
-       subtitle = "数字越大，教育程度越高",
-       x = "子女的教育程度",
-       y = "母亲的教育程度")
-
+  labs(
+    title = "家庭中母亲的教育程度对子女的影响",
+    subtitle = "数字越大，教育程度越高",
+    x = "子女的教育程度",
+    y = "母亲的教育程度"
+  )
 ```
 
 
@@ -175,16 +178,16 @@ $\alpha$ 是截距 $\beta$ 是回归系数，注意到有序分类 logistic 回�
 
 ```{r}
 library(MASS)
-df1 <- df %>% 
+df1 <- df %>%
   dplyr::mutate(
-    across(c(edu, sex, urban), as.factor), 
-    across(edu, ~fct_inseq(., ordered = TRUE))
-    )  
+    across(c(edu, sex, urban), as.factor),
+    across(edu, ~ fct_inseq(., ordered = TRUE))
+  )
 
-mod_mass <- polr(edu ~ edu_f + edu_m + sex + num_siblings + urban, 
-                 data = df1, 
-                 method = c("logistic")
-                 )
+mod_mass <- polr(edu ~ edu_f + edu_m + sex + num_siblings + urban,
+  data = df1,
+  method = c("logistic")
+)
 
 summary(mod_mass)
 ```
@@ -238,9 +241,9 @@ coef(mod_mass) %>% exp()
 
 ```{r message=FALSE, warning=FALSE}
 library(margins)
-#me_mass <- marginal_effects(mod_mass, variables = "sex")
+# me_mass <- marginal_effects(mod_mass, variables = "sex")
 me_mass <- marginal_effects(mod_mass, variables = "edu_m")
-me_mass 
+me_mass
 ```
 
 
@@ -254,11 +257,11 @@ me_mass
 
 ```{r}
 library(ordinal)
-mod_ordinal <- clm(edu ~ edu_f + edu_m + sex + num_siblings + urban, 
-                   data = df1, 
-                   link = "logit",
-                   thresholds = "flexible"
-                  )
+mod_ordinal <- clm(edu ~ edu_f + edu_m + sex + num_siblings + urban,
+  data = df1,
+  link = "logit",
+  thresholds = "flexible"
+)
 
 broom::tidy(mod_ordinal)
 ```
@@ -453,3 +456,15 @@ broom::tidy(mod_ordinal)
 <!-- brms::loo(mod_brms1, mod_brms3, mod_brms4) -->
 <!-- ``` -->
 
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(df, df1, me_mass, mod_mass, mod_ordinal, tb)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

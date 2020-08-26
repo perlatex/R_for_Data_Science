@@ -22,36 +22,38 @@ install.packages("gganimate")
 
 ### 先来一张静态图
 ```{r}
-library(tidyverse) 
-library(covdata)  # remotes::install_github("kjhealy/covdata")
+library(tidyverse)
+library(covdata) # remotes::install_github("kjhealy/covdata")
 library(gganimate)
 ```
 
 
 
 ```{r}
-covdata::covnat %>% 
-  dplyr::filter(iso3 == "USA") %>% 
-  dplyr::filter(cu_cases > 0) %>% 
-  
+covdata::covnat %>%
+  dplyr::filter(iso3 == "USA") %>%
+  dplyr::filter(cu_cases > 0) %>%
   ggplot(aes(x = date, y = cases)) +
   geom_path() +
-  labs(title = "美国新冠肺炎累积确诊病例",
-       subtitle = "数据来源https://kjhealy.github.io/covdata/")
+  labs(
+    title = "美国新冠肺炎累积确诊病例",
+    subtitle = "数据来源https://kjhealy.github.io/covdata/"
+  )
 ```
 
 
 让它动起来，我们只需要增加一行代码！
 
 ``` {r}
-covdata::covnat %>% 
-  dplyr::filter(iso3 == "USA") %>% 
-  dplyr::filter(cu_cases > 0) %>% 
+covdata::covnat %>%
+  dplyr::filter(iso3 == "USA") %>%
+  dplyr::filter(cu_cases > 0) %>%
   ggplot(aes(x = date, y = cases)) +
   geom_path() +
-  labs(title = "美国新冠肺炎累积确诊病例 {frame_along}",
-       subtitle = "数据来源https://kjhealy.github.io/covdata/") +
-  
+  labs(
+    title = "美国新冠肺炎累积确诊病例 {frame_along}",
+    subtitle = "数据来源https://kjhealy.github.io/covdata/"
+  ) +
   transition_reveal(along = date)
 ```
 
@@ -78,7 +80,7 @@ ggplot(datasaurus_dozen) +
 ggplot(datasaurus_dozen) +
   aes(x, y, color = dataset) +
   geom_point() +
-  transition_states(dataset, 3, 1) +       #<<
+  transition_states(dataset, 3, 1) + # <<
   labs(title = "Dataset: {closest_state}")
 ```
 
@@ -109,20 +111,20 @@ ggplot(datasaurus_dozen) +
 
 - `transition_states(states = )`, 这里的参数states往往带有分组信息，可以等价于静态图中的分面。
 ```{r}
-diamonds %>% 
+diamonds %>%
   ggplot(aes(carat, price)) +
   geom_point()
 ```
 
 ```{r}
-diamonds %>% 
+diamonds %>%
   ggplot(aes(carat, price)) +
   geom_point() +
   facet_wrap(vars(color))
 ```
 
 ```{r}
-diamonds %>% 
+diamonds %>%
   ggplot(aes(carat, price)) +
   geom_point() +
   transition_states(states = color, transition_length = 3, state_length = 1)
@@ -133,19 +135,20 @@ diamonds %>%
 - `transition_time(time = )`, 这里的time一般认为是**连续**的值，相比于`transition_states`，没有了`transtion_length`这个选项，是因为`transtion_length`默认为time. 事实上，`transition_time`是`transition_states`的一种特例，但其实也有分组的要求
 
 ```{r}
-p <- gapminder::gapminder %>% 
+p <- gapminder::gapminder %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
   scale_size(range = c(2, 12)) +
   scale_x_log10() +
-  labs(x = "GDP per capita",
-       y = "life expectancy"
+  labs(
+    x = "GDP per capita",
+    y = "life expectancy"
   )
 p
 ```
 
 ```{r}
-anim <- p + 
+anim <- p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}")
 anim
@@ -156,7 +159,7 @@ anim
 
 ```{r}
 ggplot(data = economics) +
-  aes(x= date, y = unemploy) +
+  aes(x = date, y = unemploy) +
   geom_line()
 ```
 
@@ -164,9 +167,9 @@ ggplot(data = economics) +
 
 ```{r}
 ggplot(economics) +
-  aes(x= date, y = unemploy) +
+  aes(x = date, y = unemploy) +
   geom_line() +
-  transition_reveal(along = date)  +
+  transition_reveal(along = date) +
   labs(title = "now is {frame_along}")
 ```
 
@@ -182,7 +185,7 @@ diamonds %>%
   transition_filter(
     transition_length = 3,
     filter_length = 1,
-    
+
     cut == "Ideal",
     Deep = depth >= 60
   )
@@ -194,13 +197,15 @@ diamonds %>%
 - `transition_layers()`: 依次显示每个图层
 
 ```{r}
-mtcars %>% 
+mtcars %>%
   ggplot(aes(mpg, disp)) +
   geom_point() +
-  geom_smooth(colour = 'grey', se = FALSE) +
+  geom_smooth(colour = "grey", se = FALSE) +
   geom_smooth(aes(colour = factor(gear))) +
-  transition_layers(layer_length = 1, transition_length = 2,
-                    from_blank = FALSE, keep_layers = c(Inf, 0, 0)) +
+  transition_layers(
+    layer_length = 1, transition_length = 2,
+    from_blank = FALSE, keep_layers = c(Inf, 0, 0)
+  ) +
   enter_fade() +
   exit_fade()
 ```
@@ -222,12 +227,13 @@ mtcars %>%
 
 ```{r views-tbl, echo=FALSE}
 tribble(
-  ~ Function, ~ Description,
+  ~Function, ~Description,
   "view_follow", "完全跟随当前数据的范围",
   "view_step", "类似 view_follow, 除了过渡的时候要静止下下",
   "view_step_manual", "类似 view_step, 除了需要手动定义坐标轴的范围",
   "view_zoom", "与view_step一样, 但更变化过程更平滑",
-  "view_zoom_manual", "同上，除了需要手动定义坐标轴的范围" ) 
+  "view_zoom_manual", "同上，除了需要手动定义坐标轴的范围"
+)
 ```
 
 ### view_follow
@@ -260,7 +266,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 ### shadow_wake()
 
 ```{r}
-p + 
+p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
   shadow_wake(wake_length = 0.1, alpha = FALSE)
@@ -277,7 +283,7 @@ ggplot(iris, aes(Petal.Length, Sepal.Length)) +
 
 ### shadow_trail()
 ```{r}
-p + 
+p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
   shadow_trail(distance = 0.1)
@@ -295,7 +301,7 @@ ggplot(iris, aes(Petal.Length, Sepal.Length)) +
 ### shadow_mark()
 
 ```{r}
-p + 
+p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
   shadow_mark(alpha = 0.3, size = 0.5)
@@ -304,9 +310,9 @@ p +
 
 ```{r}
 ggplot(airquality, aes(Day, Temp)) +
-  geom_line(color = 'red', size = 1) +
+  geom_line(color = "red", size = 1) +
   transition_time(Month) +
-  shadow_mark(colour = 'black', size = 0.75)
+  shadow_mark(colour = "black", size = 0.75)
 ```
 
 
@@ -317,7 +323,7 @@ ggplot(airquality, aes(Day, Temp)) +
 
 ```{r enter-exit-tbl, echo=FALSE}
 tribble(
-  ~ Function, ~ Description,
+  ~Function, ~Description,
   "enter_appear/exit_disappear", "突然出现，或者闪退",
   "enter_fade/exit_fade", "使用透明度上的变化",
   "enter_grow/exit_shrink", "使用大小上的变化",
@@ -325,7 +331,7 @@ tribble(
   "enter_fly/exit_fly", "使用位置上飞来飞去的效果",
   "enter_drift/exit_drift", "使用位置上漂移的效果",
   "enter_reset/exit_reset", "使用清空之前的效果"
-) 
+)
 ```
 
 ### enter/exit_fade() 
@@ -333,23 +339,25 @@ tribble(
 透明度上的变化，我这里用柱状图展示，效果要明显一点。
 
 ```{r}
-tibble(x = month.name,
-       y = sample.int(12)
-       ) %>% 
+tibble(
+  x = month.name,
+  y = sample.int(12)
+) %>%
   ggplot(aes(x = x, y = y)) +
   geom_col() +
-  theme(axis.text.x = element_text(angle =45, hjust = 1, vjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
   transition_states(states = month.name)
 ```
 
 
 ```{r}
-tibble(x = month.name,
-       y = sample.int(12)
-       ) %>% 
+tibble(
+  x = month.name,
+  y = sample.int(12)
+) %>%
   ggplot(aes(x = x, y = y)) +
   geom_col() +
-  theme(axis.text.x = element_text(angle =45, hjust = 1, vjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
   transition_states(states = month.name) +
   shadow_mark(past = TRUE) +
   enter_fade()
@@ -357,7 +365,7 @@ tibble(x = month.name,
 
 
 ```{r}
-p + 
+p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
   enter_fade()
@@ -368,12 +376,13 @@ p +
 大小上的变化
 
 ```{r}
-tibble(x = month.name,
-       y = sample.int(12)
-       ) %>% 
+tibble(
+  x = month.name,
+  y = sample.int(12)
+) %>%
   ggplot(aes(x = x, y = y)) +
   geom_col() +
-  theme(axis.text.x = element_text(angle =45, hjust = 1, vjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
   transition_states(states = month.name) +
   shadow_mark(past = TRUE) +
   enter_grow()
@@ -381,7 +390,7 @@ tibble(x = month.name,
 
 
 ```{r}
-p + 
+p +
   transition_time(time = year) +
   labs(title = "year: {frame_time}") +
   enter_grow() +
@@ -410,17 +419,17 @@ Source: https://easings.net/
 
 看下面的案例：
 ```{r}
-diamonds %>% 
+diamonds %>%
   ggplot(aes(carat, price)) +
-  geom_point() + 
+  geom_point() +
   transition_states(color, transition_length = 3, state_length = 1) +
   ease_aes("cubic-in") # Change easing of all aesthetics
 ```
 
 ```{r}
-diamonds %>% 
+diamonds %>%
   ggplot(aes(carat, price)) +
-  geom_point() + 
+  geom_point() +
   transition_states(color, transition_length = 3, state_length = 1) +
   ease_aes(x = "elastic-in") # Only change `x` (others remain “linear”)
 ```
@@ -432,21 +441,21 @@ diamonds %>%
 我们可能需要在标题中加入每张动画的信息，常用罗列如下
 
 ```{r, eval=FALSE}
-transition_states(states =  ) + 
+transition_states(states = ) +
   labs(title = "previous is {previous_state}, 
                 current is {closest_state}, 
                 next is {next_state}")
 
-transition_layers() + 
+transition_layers() +
   labs(title = "previous is {previous_layers}, 
                 current is {closest_layers}, 
                 next is {next_layers}")
 
-transition_time(time =  )  + 
+transition_time(time = ) +
   labs(title = "now is {frame_time}")
 
 
-transition_reveal(along =  ) + 
+transition_reveal(along = ) +
   labs(title = "now is {frame_along}")
 ```
 
@@ -458,14 +467,14 @@ transition_reveal(along =  ) +
 
 ```{r renderer-tbl, echo=FALSE}
 tribble(
-  ~ Function, ~ Description,
+  ~Function, ~Description,
   "gifski_renderer", "Default, super fast gif renderer.",
   "magick_renderer", "Somewhat slower gif renderer.",
   "ffmpeg_renderer", "Uses ffmpeg to create a video from the animation.",
   "av_renderer", "Uses the av package to create a video (using ffmpeg).",
   "file_renderer", "Dumps a list of image frames from the animation.",
   "sprite_renderer", "Creates a spritesheet from frames of the animation."
-)  
+)
 ```
 
 ### 常用方法
@@ -473,11 +482,11 @@ tribble(
 一般用`anim_save()`保存为 gif 格式，方法类似`ggsave()`
 
 ```{r, eval=F}
-animation_to_save <- diamonds %>% 
+animation_to_save <- diamonds %>%
   ggplot(aes(carat, price)) +
-  geom_point() + 
+  geom_point() +
   transition_states(color, transition_length = 3, state_length = 1) +
-  ease_aes("cubic-in") 
+  ease_aes("cubic-in")
 
 anim_save("first_saved_animation.gif", animation = animation_to_save)
 ```
@@ -550,21 +559,21 @@ anim_save("first_saved_animation.gif", animation = animation_to_save)
 这是网上有段时间比较火的racing_bar图
 
 ```{r}
-ranked_by_date <- covdata::covnat %>% 
-  group_by(date) %>% 
+ranked_by_date <- covdata::covnat %>%
+  group_by(date) %>%
   arrange(date, desc(cu_cases)) %>%
   mutate(rank = 1:n()) %>%
-  filter(rank <= 10) %>% 
+  filter(rank <= 10) %>%
   ungroup()
 ```
 
 
 ```{r}
 ranked_by_date %>%
-  filter(date >= "2020-05-01") %>% 
+  filter(date >= "2020-05-01") %>%
   ggplot(
     aes(x = rank, y = cname, group = cname, fill = cname)
-    ) +
+  ) +
   geom_tile(
     aes(
       y = cu_cases / 2,
@@ -592,31 +601,32 @@ ranked_by_date %>%
     caption = "Source: github/kjhealy/covdata"
   ) +
   transition_states(date,
-                    transition_length = 4,
-                    state_length = 1,
-                    wrap = TRUE
+    transition_length = 4,
+    state_length = 1,
+    wrap = TRUE
   ) +
-  ease_aes("cubic-in-out") 
+  ease_aes("cubic-in-out")
 ```
 
 
 ## 案例演示二
 
 ```{r}
-bats <- readr::read_csv("./demo_data/bats-subset.csv") %>% 
-        dplyr::mutate(id = factor(id))
+bats <- readr::read_csv("./demo_data/bats-subset.csv") %>%
+  dplyr::mutate(id = factor(id))
 ```
 
 
 
 ```{r}
-bats %>% 
-  ggplot(aes(x = longitude, 
-             y = latitude,
-             group = id, 
-             color = id)
-         ) +
-  geom_point() 
+bats %>%
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    group = id,
+    color = id
+  )) +
+  geom_point()
 ```
 
 
@@ -625,12 +635,13 @@ bats %>%
 ### 常规的方法
 
 ```{r}
-bats %>% 
-  ggplot(aes(x = longitude, 
-             y = latitude,
-             group = id, 
-             color = id)
-         ) +
+bats %>%
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    group = id,
+    color = id
+  )) +
   geom_point() +
   transition_time(time) +
   shadow_mark(past = TRUE)
@@ -642,12 +653,13 @@ bats %>%
 - geom_line()是按照数据点在x轴的顺序
 
 ```{r}
-bats %>% 
-  ggplot(aes(x = longitude, 
-             y = latitude,
-             group = id, 
-             color = id)
-         ) +
+bats %>%
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    group = id,
+    color = id
+  )) +
   geom_path() +
   transition_time(time) +
   shadow_mark(past = TRUE)
@@ -663,12 +675,13 @@ bats %>%
 bats %>%
   dplyr::mutate(
     image = "images/bat-cartoon.png"
-  ) %>% 
-  ggplot(aes(x = longitude, 
-             y = latitude,
-             group = id, 
-             color = id)
-         ) +
+  ) %>%
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    group = id,
+    color = id
+  )) +
   geom_path() +
   ggimage::geom_image(aes(image = image), size = 0.1) +
   transition_reveal(time)
@@ -685,12 +698,12 @@ rladies
 
 
 ```{r}
-#library(maps)
-#library(ggthemes)
+# library(maps)
+# library(ggthemes)
 
 world <- ggplot() +
   borders("world", colour = "gray85", fill = "gray80") +
-  ggthemes::theme_map() 
+  ggthemes::theme_map()
 world
 ```
 
@@ -701,10 +714,13 @@ world +
   geom_point(
     data = rladies,
     aes(x = lon, y = lat, size = followers),
-    colour = 'purple', alpha = .5) +
-  scale_size_continuous(range = c(1, 8), 
-                        breaks = c(250, 500, 750, 1000)) +
-  labs(size = 'Followers')
+    colour = "purple", alpha = .5
+  ) +
+  scale_size_continuous(
+    range = c(1, 8),
+    breaks = c(250, 500, 750, 1000)
+  ) +
+  labs(size = "Followers")
 ```
 
 
@@ -714,14 +730,16 @@ world +
 ```{r}
 world +
   geom_point(aes(x = lon, y = lat, size = followers),
-             data = rladies,
-             colour = 'purple', alpha = .5
+    data = rladies,
+    colour = "purple", alpha = .5
   ) +
-  scale_size_continuous(range = c(1, 8), 
-                        breaks = c(250, 500, 750, 1000)) +
+  scale_size_continuous(
+    range = c(1, 8),
+    breaks = c(250, 500, 750, 1000)
+  ) +
   transition_states(created_at) +
   shadow_mark(past = TRUE) +
-  labs(title = 'Day: {closest_state}')
+  labs(title = "Day: {closest_state}")
 ```
 
 
@@ -737,9 +755,11 @@ world +
 library(gapminder)
 theme_set(theme_bw())
 
-ggplot(gapminder) + 
-  aes(x = gdpPercap, y=lifeExp, 
-      size = pop, colour = country) +
+ggplot(gapminder) +
+  aes(
+    x = gdpPercap, y = lifeExp,
+    size = pop, colour = country
+  ) +
   geom_point(show.legend = FALSE) +
   scale_x_log10() +
   scale_color_viridis_d() +
@@ -747,7 +767,6 @@ ggplot(gapminder) +
   labs(x = "GDP per capita", y = "Life expectancy") +
   transition_time(year) +
   labs(title = "Year: {frame_time}")
-
 ```
 
 
@@ -758,33 +777,56 @@ ggplot(gapminder) +
 
 那请说说这以下三个的区别？
 ```{r, eval=FALSE}
-bats %>% 
-  dplyr::filter(id == 1) %>%  
+bats %>%
+  dplyr::filter(id == 1) %>%
   ggplot(
-       aes(x = longitude,
-           y = latitude)) + 
+    aes(
+      x = longitude,
+      y = latitude
+    )
+  ) +
   geom_point() +
-  transition_reveal(time) #<<
+  transition_reveal(time) # <<
 
 
 
-bats %>% 
-  dplyr::filter(id == 1) %>%  
+bats %>%
+  dplyr::filter(id == 1) %>%
   ggplot(
-    aes(x = longitude,
-        y = latitude)) + 
+    aes(
+      x = longitude,
+      y = latitude
+    )
+  ) +
   geom_point() +
-  transition_states(time) #<<
+  transition_states(time) # <<
 
 
 
-bats %>% 
-  dplyr::filter(id == 1) %>%  
+bats %>%
+  dplyr::filter(id == 1) %>%
   ggplot(
-    aes(x = longitude,
-        y = latitude)) + 
+    aes(
+      x = longitude,
+      y = latitude
+    )
+  ) +
   geom_point() +
-  transition_time(time) #<<
+  transition_time(time) # <<
 ```
 
 
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(anim, bats, p, ranked_by_date, rladies, world)
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

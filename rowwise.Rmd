@@ -20,42 +20,43 @@ df
 
 dplyr提供了rowwise函数，但大神说不推荐
 ```{r}
-df %>% 
-  rowwise() %>% 
-  mutate( i = sum(x, y) )
+df %>%
+  rowwise() %>%
+  mutate(i = sum(x, y))
 ```
 
 
 ```{r}
-df %>% 
-  rowwise() %>% 
-  mutate( i = mean(c(x, y) ))
+df %>%
+  rowwise() %>%
+  mutate(i = mean(c(x, y)))
 ```
 
 ```{r}
 df %>%
-  rowwise() %>% 
-  mutate(min = min(x,y),
-         max = max(x,y)
-         )
+  rowwise() %>%
+  mutate(
+    min = min(x, y),
+    max = max(x, y)
+  )
 ```
 
 
 ```{r}
-df %>% 
-  rowwise() %>% 
-  do(i = mean(c(.$x, .$y))) %>% 
+df %>%
+  rowwise() %>%
+  do(i = mean(c(.$x, .$y))) %>%
   unnest(i)
 ```
 
 ## Row-wise Summaries
 ```{r}
-df %>% mutate(row_sum = rowSums(.[1:2])  )
+df %>% mutate(row_sum = rowSums(.[1:2]))
 ```
 
 
 ```{r}
-df %>% mutate(row_mean = rowMeans(.[1:2])  ) 
+df %>% mutate(row_mean = rowMeans(.[1:2]))
 ```
 
 ```{r}
@@ -76,7 +77,7 @@ df %>% mutate(t_sum = pmap_dbl(list(x, y), sum))
 
 ```{r}
 df %>%
-	mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
+  mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
 ```
 
 计算均值的时候， 然而报错了
@@ -88,7 +89,7 @@ tidyverse 总会想出办法来解决，把`mean()` 变成 `lift_vd(mean)`
 
 ```{r}
 df %>%
-	mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
+  mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
 ```
 
 
@@ -112,9 +113,9 @@ df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
 
 ```{r}
 new_df <- df %>%
-  mutate(id = row_number()) 
+  mutate(id = row_number())
 
-s <- new_df %>% 
+s <- new_df %>%
   gather("time", "val", -id) %>%
   group_by(id) %>%
   summarize(
@@ -135,7 +136,7 @@ new_df %>%
 ```{r}
 ss <- new_df %>%
   group_by(id) %>%
-  summarise(t_avg = mean(c(x, y)) )
+  summarise(t_avg = mean(c(x, y)))
 
 ss
 ```
@@ -167,8 +168,8 @@ library(slider)
 df <- tibble(a = 1:3, b = 4:6)
 
 slide(
-  select_if(df, is.numeric), 
-  ~.x, 
+  select_if(df, is.numeric),
+  ~.x,
   .before = 1
 )
 ```
@@ -176,11 +177,11 @@ slide(
 
 
 ```{r}
-df %>% 
+df %>%
   mutate(
     r_mean = slide_dbl(
-      select_if(df, is.numeric), 
-      ~mean(unlist(.x)), 
+      select_if(df, is.numeric),
+      ~ mean(unlist(.x)),
       .before = 1
     )
   )
@@ -193,25 +194,24 @@ df %>%
 df <- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 df
 
-df %>% 
-  rowwise(id) %>% 
+df %>%
+  rowwise(id) %>%
   summarise(mean = mean(c(w, x, y, z)))
 
-df %>% 
-  rowwise(id) %>% 
+df %>%
+  rowwise(id) %>%
   mutate(mean = mean(c(w, x, y, z)))
 
-df %>% 
-  rowwise(id) %>% 
+df %>%
+  rowwise(id) %>%
   mutate(total = mean(c_across(w:z)))
 
-df %>% 
-  rowwise(id) %>% 
+df %>%
+  rowwise(id) %>%
   mutate(mean = mean(c_across(is.numeric)))
 
 # across()
 df %>% mutate(mean = rowMeans(across(is.numeric & -id)))
-
 ```
 
 
@@ -224,14 +224,14 @@ library(dplyr, warn.conflicts = FALSE)
 iris <- as_tibble(iris)
 
 # apply mean to each "row"
-iris %>% 
-	mutate(sepal = lay(across(starts_with("Sepal")), mean))
+iris %>%
+  mutate(sepal = lay(across(starts_with("Sepal")), mean))
 ```
 
 
 ```{r, echo = F}
 # remove the objects
-# rm(a, df, l, tb, x, y)
+rm(df, new_df, s, ss)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}

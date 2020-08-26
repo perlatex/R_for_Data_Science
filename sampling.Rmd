@@ -81,13 +81,12 @@ $$ y_i  = 4 + 3.2\, x_i$$
 $$ y_i  = \beta_0 + \beta_1\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) $$
 
 ```{r}
-beta_0  <- 4
-beta_1  <- 3.2
+beta_0 <- 4
+beta_1 <- 3.2
 epsilon <- rnorm(n = 1000, mean = 0, sd = 1)
 
 sim_normal <- tibble(
- # x_vals = runif(1000, 0, 10)
-  
+  # x_vals = runif(1000, 0, 10)
   x_vals = seq(from = 0, to = 5, length.out = 1000),
   y_vals = beta_0 + beta_1 * x_vals + epsilon,
 )
@@ -109,11 +108,10 @@ sim_normal %>%
 ```{r}
 tibble(
   a = runif(1000, 0, 5),
-  b = 4 + rnorm(1000, mean = 3.2 * a, sd = 1) 
-) %>% 
+  b = 4 + rnorm(1000, mean = 3.2 * a, sd = 1)
+) %>%
   ggplot(aes(x = a, y = b)) +
-  geom_point() 
-
+  geom_point()
 ```
 
 
@@ -129,11 +127,11 @@ tibble(
 - `Sigma`: 协方差矩阵，主要这里是大写的S (Sigma)，提醒我们它是一个矩阵，不是一个数值
 
 ```{r}
-a <- 3.5 
-b <- -1 
-sigma_a <- 1 
-sigma_b <- 0.5 
-rho <- -0.7 
+a <- 3.5
+b <- -1
+sigma_a <- 1
+sigma_b <- 0.5
+rho <- -0.7
 
 mu <- c(a, b)
 cov_ab <- sigma_a * sigma_b * rho # 协方差
@@ -143,8 +141,10 @@ cov_ab <- sigma_a * sigma_b * rho # 协方差
 
 ```{r}
 # 构建协方差矩阵
-sigma <- matrix(c(sigma_a^2, cov_ab,
-                  cov_ab, sigma_b^2), ncol = 2)
+sigma <- matrix(c(
+  sigma_a^2, cov_ab,
+  cov_ab, sigma_b^2
+), ncol = 2)
 ```
 
 
@@ -161,33 +161,39 @@ head(d)
 
 
 ```{r}
-d %>% 
+d %>%
   ggplot(aes(x = group_a)) +
-  geom_density(color = "transparent", 
-               fill = "dodgerblue3", 
-               alpha = 1/2) +
-  stat_function(fun = dnorm, 
-                args = list(mean = 3.5, sd = 1),
-                linetype = 2
-                ) 
+  geom_density(
+    color = "transparent",
+    fill = "dodgerblue3",
+    alpha = 1 / 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = 3.5, sd = 1),
+    linetype = 2
+  )
 ```
 
 
 ```{r}
-d %>% 
+d %>%
   ggplot(aes(x = group_b)) +
-  geom_density(color = "transparent", 
-               fill = "dodgerblue3", 
-               alpha = 1/2) +
-  stat_function(fun = dnorm, 
-                args = list(mean = -1, sd = 0.5),
-                linetype = 2
-                ) 
+  geom_density(
+    color = "transparent",
+    fill = "dodgerblue3",
+    alpha = 1 / 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = -1, sd = 0.5),
+    linetype = 2
+  )
 ```
 
 
 ```{r}
-d %>% 
+d %>%
   ggplot(aes(x = group_a, y = group_b)) +
   geom_point() +
   stat_ellipse(type = "norm", level = 0.95)
@@ -203,9 +209,9 @@ d %>% summarise(
   b_mean = mean(group_b),
   a_sd = sd(group_a),
   b_sd = sd(group_b),
-  cor = cor(group_a,group_b),
-  cov = cov(group_a,group_b)
-  )
+  cor = cor(group_a, group_b),
+  cov = cov(group_a, group_b)
+)
 ```
 
 
@@ -233,16 +239,16 @@ points <- tibble("x" = runif(n), "y" = runif(n))
 
 
 ```{r}
-points <- points %>% 
-    mutate(inside = map2_dbl(.x = x, .y = y, ~if_else(.x**2 + .y**2 < 1, 1, 0))) %>% 
-    rowid_to_column("N")
+points <- points %>%
+  mutate(inside = map2_dbl(.x = x, .y = y, ~ if_else(.x**2 + .y**2 < 1, 1, 0))) %>%
+  rowid_to_column("N")
 ```
 
 正方形的面积是1，圆的面积是$\pi r^2 = \frac{1}{4} \pi$，如果知道两者的比例，就可以估算$\pi$
 
 ```{r}
-points <- points %>% 
-    mutate(estimate = 4*cumsum(inside)/N)
+points <- points %>%
+  mutate(estimate = 4 * cumsum(inside) / N)
 ```
 
 ```{r}
@@ -251,10 +257,10 @@ points %>% tail()
 
 
 ```{r}
-points %>% 
-	ggplot() + 
-    geom_line(aes(y = estimate, x = N), colour = "#82518c") + 
-    geom_hline(yintercept = pi) 
+points %>%
+  ggplot() +
+  geom_line(aes(y = estimate, x = N), colour = "#82518c") +
+  geom_hline(yintercept = pi)
 ```
 
 
@@ -541,9 +547,9 @@ $$
 
 ```{r}
 df.se.mean.theory <- tibble(
-  sample.size = seq(10,500,10)
-  ) %>% 
-  mutate(std.error = true.sd/sqrt(sample.size))
+  sample.size = seq(10, 500, 10)
+) %>%
+  mutate(std.error = true.sd / sqrt(sample.size))
 
 df.se.mean.theory
 ```
@@ -554,9 +560,10 @@ df.se.mean.theory
 sampling.distn.mean.table %>%
   ggplot(aes(x = sample.size, y = sd.of.means)) +
   geom_point() +
-  geom_line(aes(x = sample.size, y = std.error), 
-            data = df.se.mean.theory, 
-            color = "red") +
+  geom_line(aes(x = sample.size, y = std.error),
+    data = df.se.mean.theory,
+    color = "red"
+  ) +
   labs(
     x = "Sample size", y = "Std Error of Mean",
     title = "平均值标准误差随样本大小变化（理论值和模拟值对比）"
@@ -601,3 +608,28 @@ sampling.distn.sd.table
 
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(
+  a, b,
+  beta_0, beta_1,
+  cov_ab, d,
+  df.combined, df.samples.of.100,
+  df.samples.of.250, df.samples.of.30,
+  df.samples.of.50, df.samples.of.500,
+  df.se.mean.theory, epsilon,
+  mu, n,
+  points, pop.distn,
+  rho, rnorm.stats,
+  sample.a, sample.b,
+  sampling.distn.mean.table, sampling.distn.sd.table,
+  sigma, sigma_a,
+  sigma_b, sim_normal,
+  true.mean, true.sd
+)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

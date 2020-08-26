@@ -16,7 +16,7 @@ knitr::include_graphics("images/caribou_location.png")
 # devtools::install_github("thebioengineer/tidytuesdayR")
 library(tidytuesdayR)
 
-tuesdata <- tidytuesdayR::tt_load('2020-06-23')
+tuesdata <- tidytuesdayR::tt_load("2020-06-23")
 # or
 # tuesdata <- tidytuesdayR::tt_load(2020, week = 26)
 ```
@@ -28,8 +28,8 @@ library(tidyverse)
 library(lubridate)
 library(gganimate)
 
-individuals <- readr::read_csv('./demo_data/caribou/individuals.csv')
-locations <- readr::read_csv('./demo_data/caribou/locations.csv')
+individuals <- readr::read_csv("./demo_data/caribou/individuals.csv")
+locations <- readr::read_csv("./demo_data/caribou/locations.csv")
 ```
 
 
@@ -53,11 +53,11 @@ individuals %>% janitor::get_dupes(animal_id)
 
 
 ```{r}
-individuals %>% 
-  filter(deploy_on_latitude >50) %>% 
+individuals %>%
+  filter(deploy_on_latitude > 50) %>%
   ggplot(aes(x = deploy_on_longitude, y = deploy_on_latitude)) +
   geom_point(aes(color = study_site)) #+
-  #borders("world", regions = "china")
+# borders("world", regions = "china")
 ```
 
 
@@ -76,9 +76,9 @@ locations
 ```
 
 ```{r}
-locations %>% 
+locations %>%
   ggplot(aes(x = longitude, y = latitude)) +
-  geom_point(aes(color = study_site)) 
+  geom_point(aes(color = study_site))
 ```
 
 
@@ -86,9 +86,10 @@ locations %>%
 ## 被追踪最多次的驯鹿的轨迹
 
 ```{r}
-top_animal_ids <- 
+top_animal_ids <-
   count(locations, animal_id, sort = TRUE) %>%
-  slice(1:10) %>% pull(animal_id)
+  slice(1:10) %>%
+  pull(animal_id)
 
 
 locations %>%
@@ -96,13 +97,15 @@ locations %>%
   arrange(animal_id, timestamp) %>%
   group_by(animal_id) %>%
   mutate(measurement_n = row_number()) %>%
-  ggplot(aes(x = longitude,
-             y = latitude,
-             color = animal_id,
-             alpha = measurement_n))+
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    color = animal_id,
+    alpha = measurement_n
+  )) +
   geom_point(show.legend = FALSE, size = 1) +
-  geom_path( show.legend = FALSE, size = 1) +
-  #scale_color_manual(values = ) +
+  geom_path(show.legend = FALSE, size = 1) +
+  # scale_color_manual(values = ) +
   theme_minimal() +
   theme(
     plot.title = element_text(size = 20, face = "bold"),
@@ -113,27 +116,30 @@ locations %>%
     plot.background = element_rect(fill = "gray10"),
     axis.text = element_text(color = "white")
   ) +
-  labs( x = "\nLongitude", y = "Latitude\n",
-        title = "Caribou movement tracking",
-        subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n",
-        caption = "Tidy Tuesday: Caribou Location Tracking"
+  labs(
+    x = "\nLongitude", y = "Latitude\n",
+    title = "Caribou movement tracking",
+    subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n",
+    caption = "Tidy Tuesday: Caribou Location Tracking"
   )
 ```
 
 
 ## 某一只驯鹿的轨迹
 ```{r}
-locations %>% 
+locations %>%
   filter(animal_id %in% c("QU_car143")) %>%
   arrange(animal_id, timestamp) %>%
   group_by(animal_id) %>%
   mutate(measurement_n = row_number()) %>%
-  ggplot(aes(x = longitude,
-             y = latitude,
-             color = measurement_n,
-             alpha = measurement_n))+
+  ggplot(aes(
+    x = longitude,
+    y = latitude,
+    color = measurement_n,
+    alpha = measurement_n
+  )) +
   geom_point(show.legend = FALSE, size = 1) +
-  geom_path( show.legend = FALSE, size = 1) +
+  geom_path(show.legend = FALSE, size = 1) +
   scale_color_gradient(low = "white", high = "firebrick3") +
   theme_minimal() +
   theme(
@@ -145,10 +151,11 @@ locations %>%
     plot.background = element_rect(fill = "gray10"),
     axis.text = element_text(color = "white")
   ) +
-  labs( x = "\nLongitude", y = "Latitude\n",
-        title = "QU_car143 movement tracking",
-        subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n Ligher colors indicate earlier measurements",
-        caption = "Tidy Tuesday: Caribou Location Tracking"
+  labs(
+    x = "\nLongitude", y = "Latitude\n",
+    title = "QU_car143 movement tracking",
+    subtitle = "Latitude and longitude locations of the animals with the highest number of measurements\n Ligher colors indicate earlier measurements",
+    caption = "Tidy Tuesday: Caribou Location Tracking"
   )
 ```
 
@@ -156,9 +163,9 @@ locations %>%
 ## 选择某个驯鹿，查看他的活动轨迹
 
 ```{r}
-example_animal <- locations %>% 
-  dplyr::filter(animal_id == sample(animal_id, 1)) %>% 
-   dplyr::arrange(timestamp)
+example_animal <- locations %>%
+  dplyr::filter(animal_id == sample(animal_id, 1)) %>%
+  dplyr::arrange(timestamp)
 example_animal
 ```
 
@@ -170,16 +177,15 @@ example_animal
 ```
 
 ```{r}
-example_animal %>% 
-  dplyr::mutate(date = lubridate::as_date(timestamp)) %>% 
+example_animal %>%
+  dplyr::mutate(date = lubridate::as_date(timestamp)) %>%
   ggplot(aes(x = longitude, y = latitude, color = date)) +
   geom_path()
 ```
 
 ```{r}
-example_animal %>% 
-   dplyr::mutate(quarter = lubridate::quarter(timestamp) %>% as.factor()) %>% 
-  
+example_animal %>%
+  dplyr::mutate(quarter = lubridate::quarter(timestamp) %>% as.factor()) %>%
   ggplot(aes(x = longitude, y = latitude, color = quarter)) +
   geom_path() +
   facet_wrap(vars(quarter)) +
@@ -191,74 +197,75 @@ example_animal %>%
 看看驯鹿夏季和冬季运动模式，这段代码来自gkaramanis
 
 ```{r}
-movement <- locations %>% 
-  filter(study_site != "Hart Ranges") %>% 
+movement <- locations %>%
+  filter(study_site != "Hart Ranges") %>%
   mutate(
-    season = fct_rev(season), 
-    longitude = round(longitude, 2), 
+    season = fct_rev(season),
+    longitude = round(longitude, 2),
     latitude = round(latitude, 2)
-  ) %>% 
+  ) %>%
   distinct(season, study_site, longitude, latitude)
 
 
 
 ggplot(movement) +
-  geom_point(aes(longitude, latitude, 
-                 group = study_site, 
-                 colour = study_site), size = 0.1) +
+  geom_point(aes(longitude, latitude,
+    group = study_site,
+    colour = study_site
+  ), size = 0.1) +
   gghighlight::gghighlight(
     unhighlighted_params = list(colour = "grey70"), use_direct_label = FALSE
-    ) +
+  ) +
   scale_colour_manual(
-    values = c('#ffe119', '#4363d8', '#f58231', '#e6194B', '#800000', '#000075', '#f032e6', '#3cb44b'), 
+    values = c("#ffe119", "#4363d8", "#f58231", "#e6194B", "#800000", "#000075", "#f032e6", "#3cb44b"),
     breaks = c("Graham", "Scott", "Moberly", "Burnt Pine", "Kennedy", "Quintette", "Narraway")
-    ) +
+  ) +
   guides(colour = guide_legend(title = "Herd", override.aes = list(size = 3))) +
   coord_fixed(ratio = 1.5) +
   facet_wrap(vars(season), ncol = 2) +
-	# labs(
-	#   title = "Migration patterns of Northern Caribou\nin the South Peace of British Columbia",
-	# 	subtitle = str_wrap("In summer, most caribou migrate towards the central core of the Rocky Mountains where they use alpine and subalpine habitat. The result of this movement to the central core of the Rocky Mountains is that some of the east side herds can overlap with west side herds during the summer.", 100),
-	# 	caption = str_wrap("Source: Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k | Graphic: Georgios Karamanis", 70)
-	# ) +
+  # labs(
+  #   title = "Migration patterns of Northern Caribou\nin the South Peace of British Columbia",
+  # 	subtitle = str_wrap("In summer, most caribou migrate towards the central core of the Rocky Mountains where they use alpine and subalpine habitat. The result of this movement to the central core of the Rocky Mountains is that some of the east side herds can overlap with west side herds during the summer.", 100),
+  # 	caption = str_wrap("Source: Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. https://doi.org/10.5441/001/1.p5bn656k | Graphic: Georgios Karamanis", 70)
+  # ) +
   theme_void() +
   theme(
     legend.position = c(0.5, 0.6),
-		legend.text = element_text(size = 11, colour = "#F9EED9"),
-		legend.title = element_text(size = 16, hjust = 0.5, colour = "#F9EED9"),
-		panel.spacing.x = unit(3, "lines"),
+    legend.text = element_text(size = 11, colour = "#F9EED9"),
+    legend.title = element_text(size = 16, hjust = 0.5, colour = "#F9EED9"),
+    panel.spacing.x = unit(3, "lines"),
     plot.margin = margin(20, 20, 20, 20),
     plot.background = element_rect(fill = "#7A6A4F", colour = NA),
     strip.text = element_text(colour = "#F9EED9", size = 18),
-		plot.title = element_text(colour = "white", size = 20, hjust = 0, lineheight = 1),
-		plot.subtitle = element_text(colour = "white", size = 12, hjust = 0, lineheight = 1, margin = margin(10, 0, 50, 0)),
-		plot.caption = element_text(colour = "grey80", size = 7, hjust = 1, margin = margin(30, 0, 10, 0))
-  ) 
-
+    plot.title = element_text(colour = "white", size = 20, hjust = 0, lineheight = 1),
+    plot.subtitle = element_text(colour = "white", size = 12, hjust = 0, lineheight = 1, margin = margin(10, 0, 50, 0)),
+    plot.caption = element_text(colour = "grey80", size = 7, hjust = 1, margin = margin(30, 0, 10, 0))
+  )
 ```
 
 
 ## 迁移速度
 
 ```{r}
-location_with_speed <- locations %>% 
-   dplyr::group_by(animal_id) %>% 
-   dplyr::mutate(
+location_with_speed <- locations %>%
+  dplyr::group_by(animal_id) %>%
+  dplyr::mutate(
     last_longitude = lag(longitude),
     last_latitude = lag(latitude),
-    hours = as.numeric(difftime(timestamp, lag(timestamp), units = "hours")), 
+    hours = as.numeric(difftime(timestamp, lag(timestamp), units = "hours")),
     km = geosphere::distHaversine(
-      cbind(longitude, latitude), cbind(last_longitude, last_latitude)) /1000, 
-    speed = km/hours
-   ) %>% 
-   dplyr::ungroup()
+      cbind(longitude, latitude), cbind(last_longitude, last_latitude)
+    ) / 1000,
+    speed = km / hours
+  ) %>%
+  dplyr::ungroup()
 
 location_with_speed
 ```
 
 
 ```{r}
-location_with_speed %>% 
+location_with_speed %>%
   ggplot(aes(x = speed)) +
   geom_histogram() +
   scale_x_log10()
@@ -270,29 +277,34 @@ location_with_speed %>%
 ```{r}
 library(gganimate)
 
-example_animal %>% 
+example_animal %>%
   ggplot(aes(x = longitude, y = latitude)) +
   geom_point() +
   transition_time(time = timestamp) +
   shadow_mark(past = TRUE) +
   labs(title = "date is {frame_time}")
-  
 ```
 
 ## 更多
 
 ```{r}
 df <- locations %>%
-  filter(study_site == "Graham",
-         year(timestamp) == 2002) %>%
+  filter(
+    study_site == "Graham",
+    year(timestamp) == 2002
+  ) %>%
   group_by(animal_id) %>%
-  filter(as_date(min(timestamp)) == "2002-01-01",
-         as_date(max(timestamp)) == "2002-12-31") %>%
+  filter(
+    as_date(min(timestamp)) == "2002-01-01",
+    as_date(max(timestamp)) == "2002-12-31"
+  ) %>%
   ungroup() %>%
   mutate(date = as_date(timestamp)) %>%
   group_by(animal_id, date) %>%
-  summarise(longitude_centroid = mean(longitude),
-            latitude_centroid = mean(latitude)) %>%
+  summarise(
+    longitude_centroid = mean(longitude),
+    latitude_centroid = mean(latitude)
+  ) %>%
   ungroup() %>%
   complete(animal_id, date) %>%
   arrange(animal_id, date) %>%
@@ -322,15 +334,12 @@ p
 
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(df, example_animal, individuals, location_with_speed, locations, movement, p, top_animal_ids)
+```
 
-
-
-
-
-
-
-
-
-
-
-
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

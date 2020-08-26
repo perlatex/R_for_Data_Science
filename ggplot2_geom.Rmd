@@ -45,8 +45,8 @@ df
 df %>%
   group_by(dataset) %>%
   summarise(
-    across(everything(), list(mean = mean, sd = sd), .names = "{fn}_{col}") 
-  ) %>% 
+    across(everything(), list(mean = mean, sd = sd), .names = "{fn}_{col}")
+  ) %>%
   mutate(
     across(is.numeric, round, 3)
   )
@@ -195,7 +195,8 @@ gapdata %>%
 
 ```{r}
 gapdata %>%
-  ggplot(aes(x = continent)) + geom_bar()
+  ggplot(aes(x = continent)) +
+  geom_bar()
 ```
 
 
@@ -203,14 +204,16 @@ gapdata %>%
 
 ```{r}
 gapdata %>%
-  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar()
+  ggplot(aes(x = reorder(continent, continent, length))) +
+  geom_bar()
 ```
 
 
 
 ```{r}
 gapdata %>%
-  ggplot(aes(x = reorder(continent, continent, length))) + geom_bar() +
+  ggplot(aes(x = reorder(continent, continent, length))) +
+  geom_bar() +
   coord_flip()
 ```
 
@@ -219,7 +222,8 @@ gapdata %>%
 ```{r}
 # geom_bar vs stat_count
 gapdata %>%
-  ggplot(aes(x = continent)) + stat_count()
+  ggplot(aes(x = continent)) +
+  stat_count()
 ```
 
 
@@ -292,13 +296,15 @@ gapdata %>%
 ```{r}
 #' smooth histogram = densityplot
 gapdata %>%
-  ggplot(aes(x = lifeExp)) + geom_density()
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
 ```
 
 如果不喜欢下面那条线，可以这样
 ```{r}
 gapdata %>%
-  ggplot(aes(x = lifeExp)) + geom_line(stat = "density")
+  ggplot(aes(x = lifeExp)) +
+  geom_line(stat = "density")
 ```
 
 
@@ -307,10 +313,12 @@ gapdata %>%
 # adjust 调节bandwidth,
 # adjust = 1/2 means use half of the default bandwidth.
 gapdata %>%
-  ggplot(aes(x = lifeExp)) + geom_density(adjust = 1)
+  ggplot(aes(x = lifeExp)) +
+  geom_density(adjust = 1)
 
 gapdata %>%
-  ggplot(aes(x = lifeExp)) + geom_density(adjust = 0.2)
+  ggplot(aes(x = lifeExp)) +
+  geom_density(adjust = 0.2)
 ```
 
 
@@ -373,14 +381,16 @@ gapdata %>%
 ```{r}
 #' 思考下结果为什么是这样？
 gapdata %>%
-  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot()
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_boxplot()
 ```
 
 
 ```{r}
 # 数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
 gapdata %>%
-  ggplot(aes(x = as.factor(year), y = lifeExp)) + geom_boxplot()
+  ggplot(aes(x = as.factor(year), y = lifeExp)) +
+  geom_boxplot()
 ```
 
 
@@ -389,7 +399,8 @@ gapdata %>%
 ```{r}
 # 明确指定分组变量
 gapdata %>%
-  ggplot(aes(x = year, y = lifeExp)) + geom_boxplot(aes(group = year))
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_boxplot(aes(group = year))
 ```
 
 
@@ -410,17 +421,20 @@ gapdata %>%
 点重叠的处理方案
 
 ```{r}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_point()
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+  geom_point()
 ```
 
 
 ```{r}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_jitter()
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+  geom_jitter()
 ```
 
 
 ```{r}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) + geom_boxplot()
+gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+  geom_boxplot()
 ```
 
 ```{r}
@@ -476,29 +490,35 @@ gapdata %>%
 常用于一个离散变量 + 一个连续变量
 ```{r}
 gapdata %>%
-  ggplot(aes(x = lifeExp,
-             y = continent,
-             fill = continent)) +
-  ggridges::geom_density_ridges() 
+  ggplot(aes(
+    x = lifeExp,
+    y = continent,
+    fill = continent
+  )) +
+  ggridges::geom_density_ridges()
 ```
 ```{r}
 # https://learnui.design/tools/data-color-picker.html#palette
 gapdata %>%
-  ggplot(aes(x = lifeExp,
-             y = continent,
-             fill = continent)) +
+  ggplot(aes(
+    x = lifeExp,
+    y = continent,
+    fill = continent
+  )) +
   ggridges::geom_density_ridges() +
   scale_fill_manual(
-    values = c("#003f5c","#58508d","#bc5090","#ff6361","#ffa600")
+    values = c("#003f5c", "#58508d", "#bc5090", "#ff6361", "#ffa600")
   )
 ```
 
 
 ```{r}
 gapdata %>%
-  ggplot(aes(x = lifeExp,
-             y = continent,
-             fill = continent)) +
+  ggplot(aes(
+    x = lifeExp,
+    y = continent,
+    fill = continent
+  )) +
   ggridges::geom_density_ridges() +
   scale_fill_manual(
     values = colorspace::sequential_hcl(5, palette = "Peach")
@@ -614,18 +634,18 @@ gapdata %>%
 
 ```{r}
 d1 <- gapdata %>%
-  filter(country %in% jCountries) %>% 
-  group_by(country) %>% 
+  filter(country %in% jCountries) %>%
+  group_by(country) %>%
   mutate(end_label = if_else(year == max(year), country, NA_character_))
 
-d1 
+d1
 ```
 
 
 ```{r}
-d1 %>%  ggplot(aes(
-    x = year, y = lifeExp, color = country
-  )) +
+d1 %>% ggplot(aes(
+  x = year, y = lifeExp, color = country
+)) +
   geom_line() +
   geom_point() +
   geom_label(aes(label = end_label)) +
@@ -638,9 +658,8 @@ d1 %>%  ggplot(aes(
 ```{r}
 gapdata %>%
   filter(country %in% jCountries) %>%
-  
   ggplot(aes(
-    x = year, y = lifeExp,  color = country
+    x = year, y = lifeExp, color = country
   )) +
   geom_line() +
   geom_point() +
@@ -692,9 +711,11 @@ gapdata %>%
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
-  ggforce::geom_mark_ellipse(aes(filter = gdpPercap > 70000,
-                             label = "有钱的国家",
-                             description = "他们是什么国家?"))
+  ggforce::geom_mark_ellipse(aes(
+    filter = gdpPercap > 70000,
+    label = "有钱的国家",
+    description = "他们是什么国家?"
+  ))
 ```
 
 
@@ -824,7 +845,6 @@ gapdata %>%
 gapdata %>%
   group_by(continent, year) %>%
   summarise(mean_lifeExp = mean(lifeExp)) %>%
-  
   ggplot(aes(x = year, y = continent, size = mean_lifeExp)) +
   geom_point(shape = 21, color = "red", fill = "white") +
   scale_size_continuous(range = c(7, 15)) +
@@ -1059,13 +1079,13 @@ p1 / p2
 
 
 ```{r}
-p1 + p2 + 
+p1 + p2 +
   plot_annotation(
-  tag_levels = 'A',
-  title = 'The surprising truth about mtcars',
-  subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
-  caption = 'Disclaimer: None of these plots are insightful'
-)
+    tag_levels = "A",
+    title = "The surprising truth about mtcars",
+    subtitle = "These 3 plots will reveal yet-untold secrets about our beloved data-set",
+    caption = "Disclaimer: None of these plots are insightful"
+  )
 ```
 
 patchwork 使用方法很简单，根本不需要记
@@ -1399,36 +1419,46 @@ font_files()
 font_add("heiti", "simhei.ttf")
 font_add("constan", "constan.ttf", italic = "constani.ttf")
 font_add("kaishu", "simkai.ttf")
-#font_add("Noto", "NotoSansCJKsc-Regular.otf")
+# font_add("Noto", "NotoSansCJKsc-Regular.otf")
 font_add("Yahei", "Yahei.ttf")
 
 # 也可放在指定的目录(尽量英文)
 # https://github.com/yixuan/showtext/issues/18
-font_add("fzfsj",  here::here("myfont", "fzfsj.ttf"))
+font_add("fzfsj", here::here("myfont", "fzfsj.ttf"))
 font_add("fzxbsj", here::here("myfont", "FZXBSJW.ttf"))
-font_add("maoti",  here::here("myfont", "maoti.ttf"))
+font_add("maoti", here::here("myfont", "maoti.ttf"))
 font_add("fzshuliu", here::here("myfont", "fzshuliu.ttf"))
 font_families()
 
 ## maybe, 保存为pdf图，才能看到有效字体
 ggplot(data = mpg) +
-	geom_point(mapping = aes(x = displ, y = hwy)) +
-	ggtitle("这是我的小标宋简体") +
-	theme(
-		plot.title = element_text(family = "fzxbsj")
-	) +
-	geom_text(aes(x = 5, y = 40), label = "方正仿宋简体",
-			  family = "fzfsj") +
-	geom_text(aes(x = 5, y = 38), label = "这是我的雅黑",
-			  family = "Yahei") +
-	geom_text(aes(x = 5, y = 35), label = "方正楷书简体",
-			  family = "kaishu") +
- 	geom_text(aes(x = 5, y = 30), label = "草檀斋毛泽东字体",
- 			  family = "maoti") +
- 	geom_text(aes(x = 5, y = 28), label = "方正苏新诗柳楷简体",
- 			  family = "fzshuliu")
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  ggtitle("这是我的小标宋简体") +
+  theme(
+    plot.title = element_text(family = "fzxbsj")
+  ) +
+  geom_text(aes(x = 5, y = 40),
+    label = "方正仿宋简体",
+    family = "fzfsj"
+  ) +
+  geom_text(aes(x = 5, y = 38),
+    label = "这是我的雅黑",
+    family = "Yahei"
+  ) +
+  geom_text(aes(x = 5, y = 35),
+    label = "方正楷书简体",
+    family = "kaishu"
+  ) +
+  geom_text(aes(x = 5, y = 30),
+    label = "草檀斋毛泽东字体",
+    family = "maoti"
+  ) +
+  geom_text(aes(x = 5, y = 28),
+    label = "方正苏新诗柳楷简体",
+    family = "fzshuliu"
+  )
 
-#ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)
+# ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)
 ```
 
 
@@ -1452,12 +1482,16 @@ library(latex2exp)
 
 ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_point() +
-  annotate("text", x = 4, y = 40,
-  		 label = TeX("$\\alpha^2 + \\theta^2 = \\omega^2 $"),
-  		 size = 9) +
-  labs(title = TeX("The ratio of 1 and 2 is $\\,\\, \\frac{1}{2}$"),
-           x = TeX("$\\alpha$"),
-           y = TeX("$\\alpha^2$") )
+  annotate("text",
+    x = 4, y = 40,
+    label = TeX("$\\alpha^2 + \\theta^2 = \\omega^2 $"),
+    size = 9
+  ) +
+  labs(
+    title = TeX("The ratio of 1 and 2 is $\\,\\, \\frac{1}{2}$"),
+    x = TeX("$\\alpha$"),
+    y = TeX("$\\alpha^2$")
+  )
 ```
 
 
@@ -1544,3 +1578,13 @@ p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 +
 
 
 
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(avg_gapdata, central_park, d, d1, df, drop_facet, gapdata, jCountries, label_colors, myfun, nyc_squirrels, p1, p2, p3, p4, p5, p6, p7, p8, p9, pp, ten_countries)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

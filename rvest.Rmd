@@ -110,3 +110,16 @@ ggplot(data = df) +
 
 
 
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(df, china_uni, china, df_price, tb, scrape_house_info, urls)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
+

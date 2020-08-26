@@ -7,8 +7,8 @@
 
 
 ```{r message = FALSE, warning = FALSE}
-library(tidyverse)  # install.packages("tidyverse")
-library(patchwork)  # install.packages("patchwork")
+library(tidyverse) # install.packages("tidyverse")
+library(patchwork) # install.packages("patchwork")
 ```
 
 
@@ -30,7 +30,9 @@ N <- 100
 Sigma <- matrix(c(1, 0.75, 0.75, 1), 2, 2) * 1.5
 means <- list(c(11, 3), c(9, 5), c(7, 7), c(5, 9), c(3, 11))
 
-data <- means %>% purrr::map(~ MASS::mvrnorm(N, .x, Sigma)) %>% map(as.data.frame)
+data <- means %>%
+  purrr::map(~ MASS::mvrnorm(N, .x, Sigma)) %>%
+  map(as.data.frame)
 dat <- reduce(data, bind_rows) %>%
   mutate(Z = as.character(rep(seq_along(means), each = N))) %>%
   set_names(c("X", "Y", "Z"))
@@ -38,21 +40,27 @@ dat <- reduce(data, bind_rows) %>%
 
 ## First plot
 dat %>%
-  ggplot(aes(X, Y)) + geom_point(alpha = .5) +
+  ggplot(aes(X, Y)) +
+  geom_point(alpha = .5) +
   ggtitle(paste("correlation = ", round(cor(dat$X, dat$Y), 2)))
 
 ## second plot
-means <- means %>% map(~set_names(., c("x", "y"))) %>% reduce(bind_rows) %>% 
+means <- means %>%
+  map(~ set_names(., c("x", "y"))) %>%
+  reduce(bind_rows) %>%
   mutate(z = as.character(seq_along(means)))
 
-  
-  # means %>% map(~set_names(., c("x", "y"))) %>% 
-  #   enframe()  %>% 
-  #   mutate(a = map(value, ~as.data.frame(.)))
-  
 
-    
-corrs <- dat %>% group_by(Z) %>% summarize(cor = cor(X, Y)) %>% .$cor
+# means %>% map(~set_names(., c("x", "y"))) %>%
+#   enframe()  %>%
+#   mutate(a = map(value, ~as.data.frame(.)))
+
+
+
+corrs <- dat %>%
+  group_by(Z) %>%
+  summarize(cor = cor(X, Y)) %>%
+  .$cor
 
 p <- dat %>%
   ggplot(aes(X, Y, color = Z)) +
@@ -63,8 +71,8 @@ p <- dat %>%
 
 ## third plot
 p + annotate("text",
-             x = means$x, y = means$y,
-             label = paste("Z=", means$z), cex = 5
+  x = means$x, y = means$y,
+  label = paste("Z=", means$z), cex = 5
 )
 ```
 
@@ -144,7 +152,7 @@ knitr::include_graphics("images/ggplot_template.png")
 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-d <- read_csv("./demo_data/temp_carbon.csv") 
+d <- read_csv("./demo_data/temp_carbon.csv")
 d
 ```
 
@@ -153,9 +161,9 @@ d
 library(ggplot2)
 ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
   geom_line() +
-   xlab("Year") +
-   ylab("Carbon emissions (metric tons)") +
-   ggtitle("Annual global carbon emissions, 1880-2014")
+  xlab("Year") +
+  ylab("Carbon emissions (metric tons)") +
+  ggtitle("Annual global carbon emissions, 1880-2014")
 ```
 
 是不是很简单?
@@ -207,7 +215,7 @@ str(mpg)
 
 
 ```{r}
-mpg[c("displ", "hwy",  "class")]
+mpg[c("displ", "hwy", "class")]
 ```
 
 ```{r, eval=FALSE}
@@ -241,7 +249,7 @@ knitr::include_graphics("images/a-3.png")
 运行脚本后生成图片：
 
 ```{r echo=FALSE}
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point()
 ```
 
@@ -255,7 +263,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 
 
 ```{r}
-ggplot(data = mpg, aes(x = displ, y = hwy, color = class)   ) + 
+ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point()
 ```
 
@@ -266,19 +274,19 @@ ggplot(data = mpg, aes(x = displ, y = hwy, color = class)   ) +
 
 大家试试下面代码呢，
 ```{r, eval = FALSE}
-ggplot(data = mpg, aes(x = displ, y = hwy, size = class)) + 
+ggplot(data = mpg, aes(x = displ, y = hwy, size = class)) +
   geom_point()
 ```
 
 
 ```{r, eval = FALSE}
-ggplot(data = mpg, aes(x = displ, y = hwy, shape = class)) + 
+ggplot(data = mpg, aes(x = displ, y = hwy, shape = class)) +
   geom_point()
 ```
 
 
 ```{r, eval = FALSE}
-ggplot(data = mpg, aes(x = displ, y = hwy, alpha = class)) + 
+ggplot(data = mpg, aes(x = displ, y = hwy, alpha = class)) +
   geom_point()
 ```
 
@@ -299,7 +307,7 @@ knitr::include_graphics("images/a-14.png")
 想把图中的点指定为某一种颜色，可以使用设置语句，比如
 
 ```{r}
-ggplot(mpg, aes(displ, hwy)) + 
+ggplot(mpg, aes(displ, hwy)) +
   geom_point(color = "blue")
 ```
 
@@ -308,17 +316,20 @@ ggplot(mpg, aes(displ, hwy)) +
 
 大家也可以试试下面
 ```{r, eval = FALSE}
-ggplot(mpg, aes(displ, hwy)) + geom_point(size = 5)
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(size = 5)
 ```
 
 
 ```{r, eval = FALSE}
-ggplot(mpg, aes(displ, hwy)) + geom_point(shape = 2)
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(shape = 2)
 ```
 
 
 ```{r, eval = FALSE}
-ggplot(mpg, aes(displ, hwy)) + geom_point(alpha = 0.5)
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(alpha = 0.5)
 ```
 
 
@@ -332,7 +343,7 @@ knitr::include_graphics("images/a-21.png")
 
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy, color = "ffee")) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = "ffee")) +
   geom_point()
 ```
 
@@ -352,7 +363,7 @@ mpg[c("displ", "hwy", "class", "col")]
 
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy, color = col)) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = col)) +
   geom_point()
 ```
 
@@ -363,14 +374,14 @@ ggplot(mpg, aes(x = displ, y = hwy, color = col)) +
 
 `geom_point()` 可以画散点图，也可以使用`geom_smooth()`绘制平滑曲线，
 ```{r}
-p1 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+p1 <- ggplot(data = mpg, aes(x = displ, y = hwy)) +
   geom_point()
 p1
 ```
 
 
 ```{r}
-p2 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+p2 <- ggplot(data = mpg, aes(x = displ, y = hwy)) +
   geom_smooth()
 
 p2
@@ -380,9 +391,9 @@ p2
 ## 图层叠加
 
 ```{r}
-p3 <- ggplot(data = mpg, aes(x = displ, y = hwy)) + 
-   geom_point() +
-   geom_smooth()
+p3 <- ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth()
 p3
 ```
 
@@ -398,14 +409,14 @@ library(patchwork)
 ## Global vs. Local
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point(aes(x = displ, y = hwy, color = class))
 ```
 
 
 ```{r}
-ggplot(mpg) + 
-  geom_point( aes(x = displ, y = hwy, color = class)  )
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, color = class))
 ```
 
 大家可以看到，以上两段代码出来的图是一样。但背后的含义却不同。
@@ -416,7 +427,7 @@ ggplot(mpg) +
 事实上，如果映射关系`aes()` 写在`ggplot()`里, 
 
 ```{r, eval=FALSE}
-ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_point()
 ```
 
@@ -427,7 +438,7 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
 如果映射关系`aes()` 写在几何对象`geom_point()`里, 那么映射关系就为局部变量, 比如。
 
 ```{r, eval=FALSE}
-ggplot(mpg) + 
+ggplot(mpg) +
   geom_point(aes(x = displ, y = hwy, color = class))
 ```
 
@@ -436,7 +447,7 @@ ggplot(mpg) +
 
 再看下面这个例子，
 ```{r, eval=FALSE, warning=FALSE, message=FALSE}
-ggplot(mpg, aes(x = displ, y = hwy)) + 
+ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_point(aes(color = class)) +
   geom_smooth()
 ```
@@ -448,8 +459,8 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 再看下面这个例子，
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
-  geom_point(aes(color = factor(cyl))) 
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
+  geom_point(aes(color = factor(cyl)))
 ```
 
 局部变量中的映射关系
@@ -459,14 +470,14 @@ ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
 
 大家细细体会下，下面两段代码的区别
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) +
   geom_smooth(method = lm) +
   geom_point()
 ```
 
 
 ```{r}
-ggplot(mpg, aes(x = displ, y = hwy)) + 
+ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_smooth(method = lm) +
   geom_point(aes(color = class))
 ```
@@ -479,18 +490,19 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等
 
 ```{r, eval = FALSE}
-p <- ggplot(mpg, aes(x = displ, y = hwy)) + 
+p <- ggplot(mpg, aes(x = displ, y = hwy)) +
   geom_smooth(method = lm) +
   geom_point(aes(color = class)) +
   ggtitle("This is my first plot")
 
 
-ggsave(filename = "myfirst_plot.pdf", 
-       plot = p, 
-       width = 8, 
-       height = 6, 
-       dpi = 300
-       )
+ggsave(
+  filename = "myfirst_plot.pdf",
+  plot = p,
+  width = 8,
+  height = 6,
+  dpi = 300
+)
 ```
 
 
@@ -500,3 +512,15 @@ ggsave(filename = "myfirst_plot.pdf",
 在第 \@ref(ggplot2-geom) 章到第 \@ref(ggplot2-guides) 章会再讲ggplot2
 
 
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(corrs, d, dat, data, means, mpg, N, p, p1, p2, p3, Sigma)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

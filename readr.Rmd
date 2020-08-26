@@ -76,3 +76,12 @@ d <- read_excel("./data/cfps2010.dta")
 
 ```
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+#rm(ar, df, die, dt, fac, list1, m, n, vec, x, y)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

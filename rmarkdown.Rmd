@@ -271,4 +271,13 @@ xfun::embed_file('./data/my_pdf_document.Rmd')
 * Rmarkdown 手册 https://bookdown.org/yihui/rmarkdown-cookbook/
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+#rm(ar, df, die, dt, fac, list1, m, n, vec, x, y)
+```
 
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

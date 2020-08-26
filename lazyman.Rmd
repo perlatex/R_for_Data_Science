@@ -13,12 +13,12 @@ library(janitor)
 
 ```{r}
 fake_raw <- tibble::tribble(
-    ~id, ~`count/num`, ~W.t, ~Case, ~`time--d`, ~`%percent`,
-     1L,      "china",   3L,   "w",         5L,         25L,
-     2L,         "us",   4L,   "f",         6L,         34L,
-     3L,      "india",   5L,   "q",         8L,         78L
-    )
-fake_raw  
+  ~id, ~`count/num`, ~W.t, ~Case, ~`time--d`, ~`%percent`,
+  1L, "china", 3L, "w", 5L, 25L,
+  2L, "us", 4L, "f", 6L, 34L,
+  3L, "india", 5L, "q", 8L, 78L
+)
+fake_raw
 ```
 
 
@@ -29,12 +29,12 @@ fake_raw %>% janitor::clean_names()
 
 ## 比count()更懂我的心
 ```{r}
-mtcars %>% 
+mtcars %>%
   count(cyl)
 ```
 
 ```{r}
-mtcars %>% 
+mtcars %>%
   janitor::tabyl(cyl)
 ```
 
@@ -132,20 +132,22 @@ library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
 
-gtsummary::trial %>% 
-  dplyr::select(trt, age, grade, response) %>% 
-  gtsummary::tbl_summary(by = trt,
-              missing = "no") %>% 
-  gtsummary::add_p() %>% 
-  gtsummary::add_overall() %>% 
-  gtsummary::add_n() %>% 
+gtsummary::trial %>%
+  dplyr::select(trt, age, grade, response) %>%
+  gtsummary::tbl_summary(
+    by = trt,
+    missing = "no"
+  ) %>%
+  gtsummary::add_p() %>%
+  gtsummary::add_overall() %>%
+  gtsummary::add_n() %>%
   gtsummary::bold_labels()
 ```
 
 
 直接复制到论文即可
 ```{r, results="asis", eval=FALSE, include=TRUE}
-t1 <- 
+t1 <-
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
 
@@ -156,9 +158,9 @@ t2 <-
 
 
 gtsummary::tbl_merge(
-    tbls = list(t1, t2),
-    tab_spanner = c("**Tumor Response**", "**Time to Death**")
-  )
+  tbls = list(t1, t2),
+  tab_spanner = c("**Tumor Response**", "**Time to Death**")
+)
 ```
 
 
@@ -167,7 +169,7 @@ gtsummary::tbl_merge(
 
 ```{r, out.width='99%'}
 library(ggplot2)
-library(statsExpressions) 
+library(statsExpressions)
 # https://github.com/IndrajeetPatil/statsExpressions
 
 
@@ -175,9 +177,9 @@ ggplot(mtcars, aes(x = mpg, y = wt)) +
   geom_point() +
   geom_smooth(method = "lm") +
   labs(
-  title = "Spearman's rank correlation coefficient",
-  subtitle = expr_corr_test(mtcars, mpg, wt, type = "nonparametric")
-)
+    title = "Spearman's rank correlation coefficient",
+    subtitle = expr_corr_test(mtcars, mpg, wt, type = "nonparametric")
+  )
 ```
 
 
@@ -186,7 +188,7 @@ ggplot(mtcars, aes(x = mpg, y = wt)) +
 ## 正则表达式太南了
 
 ```{r}
-library(inferregex) 
+library(inferregex)
 ## remotes::install_github("daranzolin/inferregex")
 ```
 
@@ -202,18 +204,18 @@ infer_regex(s)$regex
 
 ```{r}
 library(ggthemr) ## devtools::install_github('cttobin/ggthemr')
-ggthemr('dust')
+ggthemr("dust")
 ```
 
 
 
 ```{r}
-mtcars %>% 
-  mutate(cyl = factor(cyl)) %>% 
-  ggplot(aes(x = mpg, fill = cyl, colour = cyl)) + 
-      geom_density(alpha = 0.75) + 
-      labs(fill = 'Cylinders', colour = 'Cylinders', x = 'MPG', y = 'Density') +
-      legend_top()
+mtcars %>%
+  mutate(cyl = factor(cyl)) %>%
+  ggplot(aes(x = mpg, fill = cyl, colour = cyl)) +
+  geom_density(alpha = 0.75) +
+  labs(fill = "Cylinders", colour = "Cylinders", x = "MPG", y = "Density") +
+  legend_top()
 ```
 
 用完别忘了
@@ -240,7 +242,7 @@ show_col(viridis_pal()(10))
 ## 宏包太多
 ```{r, eval=FALSE}
 library(pacman)
-##p_load(lattice, foreign, boot, rpart)
+## p_load(lattice, foreign, boot, rpart)
 ```
 
 
@@ -249,17 +251,19 @@ library(pacman)
 
 ## 犹抱琵琶半遮面
 ```{r}
-##https://github.com/EmilHvitfeldt/gganonymize
+## https://github.com/EmilHvitfeldt/gganonymize
 library(ggplot2)
 library(gganonymize)
 
-ggg <- 
+ggg <-
   ggplot(mtcars, aes(as.factor(cyl))) +
   geom_bar() +
-  labs(title = "Test title",
-       subtitle = "Test subtitle, this one have a lot lot lot lot lot more text then the rest",
-       caption = "Test caption",
-       tag = 1) +
+  labs(
+    title = "Test title",
+    subtitle = "Test subtitle, this one have a lot lot lot lot lot more text then the rest",
+    caption = "Test caption",
+    tag = 1
+  ) +
   facet_wrap(~vs)
 
 gganonomize(ggg)
@@ -295,16 +299,19 @@ gganonomize(ggg)
 ## 多张图摆放
 ```{r}
 library(patchwork)
-p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
-p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
-p3 <- ggplot(mtcars) + geom_smooth(aes(disp, qsec))
+p1 <- ggplot(mtcars) +
+  geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) +
+  geom_boxplot(aes(gear, disp, group = gear))
+p3 <- ggplot(mtcars) +
+  geom_smooth(aes(disp, qsec))
 p1 + p2 + p3
 ```
 
 ## 缺失值处理
 ```{r}
 library(naniar)
-##https://github.com/njtierney/naniar
+## https://github.com/njtierney/naniar
 
 airquality %>%
   group_by(Month) %>%
@@ -338,3 +345,17 @@ vis_dat(airquality)
 
 
 
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(df, fake_raw, ggg, mod1, model, p1, p2, p3, s, 
+   scale_color_continuous, 
+   scale_color_discrete, 
+   scale_color_gradient)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

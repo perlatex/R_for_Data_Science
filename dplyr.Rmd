@@ -400,9 +400,9 @@ xfun::embed_file('./data/nycflights.Rmd')
 
 ```{r, echo = F}
 # remove the objects
-# rm(df, df1, df2, s)
+rm(df, df1, df2, score2020)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
-# pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

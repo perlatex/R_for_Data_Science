@@ -116,7 +116,7 @@ dplyr 1.0 之前是需要`group_modify()`来实现`数据框进，数据框出`
 mtcars %>%
   group_by(cyl) %>%
   group_modify(
-    ~broom::tidy(lm(mpg ~ wt, data = .))
+    ~ broom::tidy(lm(mpg ~ wt, data = .))
   )
 ```
 
@@ -403,30 +403,30 @@ df
 
 
 ```{r}
-df %>% 
-  group_by(g) %>% 
+df %>%
+  group_by(g) %>%
   summarise(
     n = n()
-    )
+  )
 ```
 
 
 ```{r}
-df %>% 
-  group_by(g) %>% 
+df %>%
+  group_by(g) %>%
   summarise(
     data = list(cur_group())
-    )
+  )
 ```
 
 
 
 ```{r}
-df %>% 
-  group_by(g) %>% 
+df %>%
+  group_by(g) %>%
   summarise(
     data = list(cur_data())
-    )
+  )
 ```
 
 
@@ -441,8 +441,8 @@ mtcars %>%
 
 
 ```{r}
-df %>% 
-  group_by(g) %>% 
+df %>%
+  group_by(g) %>%
   mutate(across(everything(), ~ paste(cur_column(), round(.x, 2))))
 ```
 
@@ -451,10 +451,10 @@ df %>%
 ```{r}
 wt <- c(x = 0.2, y = 0.8)
 
-df %>% 
+df %>%
   mutate(
     across(c(x, y), ~ .x * wt[cur_column()])
-    )
+  )
 ```
 
 ## 行方向操作
@@ -666,7 +666,7 @@ mtcars %>%
     broom::tidy(lm(mpg ~ wt, data = cur_data()))
   )
 
-# or 
+# or
 mtcars %>%
   group_by(cyl) %>%
   summarise(broom::tidy(lm(mpg ~ wt)))
@@ -685,10 +685,12 @@ mtcars %>%
 
 
 
+
+
 ```{r, echo = F}
 # remove the objects
-# rm(df, df1, df2, s)
 # rm(list=ls())
+rm(df, my_quantile, std, tb, wt)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}

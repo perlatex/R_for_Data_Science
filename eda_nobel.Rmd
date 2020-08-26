@@ -38,15 +38,15 @@ library(lubridate)
 
 ```{r message=FALSE, warning=FALSE}
 df <- read_csv("./demo_data/nobel_winners.csv")
-df 
+df
 ```
 
 
 ```{r, eval = FALSE}
-# 如果是xlsx格式  
+# 如果是xlsx格式
 readxl::read_excel("myfile.xlsx")
 
-# 如果是csv格式   
+# 如果是csv格式
 readr::read_csv("myfile.csv")
 ```
 
@@ -68,7 +68,7 @@ readr::read_csv("myfile.csv")
 
 缺失值及其处理
 ```{r}
-df %>% map_df(~sum(is.na(.)))
+df %>% map_df(~ sum(is.na(.)))
 ```
 
 
@@ -116,25 +116,24 @@ df %>%
 
 
 ```{r, fig.width= 6, fig.height= 4}
-df %>% 
-  count(category) %>% 
+df %>%
+  count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
   geom_col() +
   geom_text(aes(label = n), vjust = -0.25) +
   labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
   theme(legend.position = "none")
-  
 ```
 
 也可以使用别人定义好的配色方案
 
 ```{r, fig.width= 6, fig.height= 4, warning=FALSE, message=FALSE}
 library(ggthemr) # install.packages("devtools")
-                 # devtools::install_github('cttobin/ggthemr')
-ggthemr('dust')
+# devtools::install_github('cttobin/ggthemr')
+ggthemr("dust")
 
-df %>% 
-  count(category) %>% 
+df %>%
+  count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
   geom_col() +
   labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
@@ -152,33 +151,29 @@ ggthemr_reset()
 当然，也可以自己DIY，或者使用配色网站的主题方案(https://learnui.design/tools/data-color-picker.html#palette)
 
 ```{r, fig.width= 6, fig.height= 4}
-df %>% 
-  count(category) %>% 
+df %>%
+  count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n)) +
-  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")
-  ) +
+  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")) +
   labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
   theme(legend.position = "none")
-  
 ```
 
 
 让图骚动起来吧
 ```{r}
-library(gganimate) #install.packages("gganimate", dependencies = T)
+library(gganimate) # install.packages("gganimate", dependencies = T)
 
-df %>% 
-  count(category) %>% 
-  mutate(category = fct_reorder(category, n)) %>% 
+df %>%
+  count(category) %>%
+  mutate(category = fct_reorder(category, n)) %>%
   ggplot(aes(x = category, y = n)) +
   geom_text(aes(label = n), vjust = -0.25) +
-  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")
-  ) +
+  geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")) +
   labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
   theme(legend.position = "none") +
-  transition_states(category)  +
+  transition_states(category) +
   shadow_mark(past = TRUE)
-  
 ```
 
 和ggplot2的分面一样，动态图可以增加数据展示的维度。
@@ -189,8 +184,8 @@ df %>%
 
 ## 看看我们伟大的祖国
 ```{r}
-df %>% 
-  dplyr::filter(birth_country == "China") %>% 
+df %>%
+  dplyr::filter(birth_country == "China") %>%
   dplyr::select(full_name, prize_year, category)
 ```
 
@@ -203,12 +198,12 @@ df %>%
 
 ```{r}
 dt <- tibble::tribble(
-  ~x, ~y,  ~z,
-   1,  1, "a",
-   1,  1, "b",
-   1,  2, "c",
-   1,  2, "d"
-  )
+  ~x, ~y, ~z,
+  1, 1, "a",
+  1, 1, "b",
+  1, 2, "c",
+  1, 2, "d"
+)
 
 dt
 ```
@@ -227,10 +222,12 @@ dt %>% distinct_at(vars(x, y), .keep_all = T)
 
 ```{r}
 nobel_winners <- df %>%
-  mutate_if(is.character, tolower) %>% 
+  mutate_if(is.character, tolower) %>%
   distinct_at(vars(full_name, prize_year, category), .keep_all = TRUE) %>%
-  mutate(decade = 10 * (prize_year %/% 10),
-         prize_age = prize_year - year(birth_date))
+  mutate(
+    decade = 10 * (prize_year %/% 10),
+    prize_age = prize_year - year(birth_date)
+  )
 
 nobel_winners
 ```
@@ -250,18 +247,18 @@ nobel_winners %>%
 
 ## 哪些大神多次获得诺贝尔奖
 ```{r}
-nobel_winners %>% count(full_name, sort =T)
+nobel_winners %>% count(full_name, sort = T)
 ```
 
 ```{r}
 nobel_winners %>%
   group_by(full_name) %>%
-  mutate( 
+  mutate(
     number_prize = n(),
     number_cateory = n_distinct(category)
-    ) %>% 
-  arrange(desc(number_prize), full_name) %>% 
-  dplyr::filter(number_cateory == 2) 
+  ) %>%
+  arrange(desc(number_prize), full_name) %>%
+  dplyr::filter(number_cateory == 2)
 ```
 
 
@@ -271,33 +268,33 @@ nobel_winners %>%
 
 ```{r}
 nobel_winners %>%
-   count(prize_age) %>% 
-   ggplot(aes(x =  prize_age, y = n)) + 
-   geom_col()
+  count(prize_age) %>%
+  ggplot(aes(x = prize_age, y = n)) +
+  geom_col()
 ```
 
 ```{r}
-nobel_winners %>% 
-  group_by(category) %>% 
-  summarise(mean_prize_age = mean(prize_age, na.rm = T)
-            )
+nobel_winners %>%
+  group_by(category) %>%
+  summarise(mean_prize_age = mean(prize_age, na.rm = T))
 ```
 ```{r}
 nobel_winners %>%
   mutate(category = fct_reorder(category, prize_age, median, na.rm = TRUE)) %>%
-  ggplot(aes(category, prize_age)) + 
+  ggplot(aes(category, prize_age)) +
   geom_point() +
   geom_boxplot() +
   coord_flip()
-  
 ```
 
 ```{r}
 nobel_winners %>%
   dplyr::filter(!is.na(prize_age)) %>%
   group_by(decade, category) %>%
-  summarize(average_age = mean(prize_age),
-            median_age = median(prize_age)) %>%
+  summarize(
+    average_age = mean(prize_age),
+    median_age = median(prize_age)
+  ) %>%
   ggplot(aes(decade, average_age, color = category)) +
   geom_line()
 ```
@@ -305,10 +302,12 @@ nobel_winners %>%
 ```{r}
 library(ggridges)
 
-nobel_winners %>% 
-  ggplot(aes(x = prize_age,
-             y = category,
-             fill = category)) +
+nobel_winners %>%
+  ggplot(aes(
+    x = prize_age,
+    y = category,
+    fill = category
+  )) +
   geom_density_ridges()
 ```
 
@@ -317,9 +316,9 @@ nobel_winners %>%
 
 
 ```{r}
-nobel_winners %>% 
-  
-  ggplot(aes(x = prize_age, fill = category, color = category))  +
+nobel_winners %>%
+
+  ggplot(aes(x = prize_age, fill = category, color = category)) +
   geom_density() +
   facet_wrap(vars(category)) +
   theme(legend.position = "none")
@@ -328,7 +327,7 @@ nobel_winners %>%
 
 有同学说要一个个的画，至于`group_split()`函数，下次课在讲
 ```{r}
-nobel_winners %>% 
+nobel_winners %>%
   group_split(category) %>%
   map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
@@ -340,7 +339,7 @@ nobel_winners %>%
 
 也可以用强大的`group_by() + group_map()`组合，我们会在第 \@ref(advR) 章讲到
 ```{r, eval=FALSE}
-nobel_winners %>% 
+nobel_winners %>%
   group_by(category) %>%
   group_map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
@@ -354,12 +353,11 @@ nobel_winners %>%
 
 ## 性别比例
 ```{r}
-nobel_winners %>% 
-  dplyr::filter(laureate_type == "individual") %>% 
-  count(category, gender) %>% 
-  group_by(category) %>% 
-  mutate(prop = n / sum(n)
-         )
+nobel_winners %>%
+  dplyr::filter(laureate_type == "individual") %>%
+  count(category, gender) %>%
+  group_by(category) %>%
+  mutate(prop = n / sum(n))
 ```
 
 各年代性别比例
@@ -372,50 +370,55 @@ nobel_winners %>%
   mutate(prop = n / sum(n)) %>%
   ggplot(aes(decade, category, fill = prop)) +
   geom_tile(size = 0.7) +
-  #geom_text(aes(label = scales::percent(prop, accuracy = .01))) + 
-  geom_text(aes(label = scales::number(prop, accuracy = .01))) + 
+  # geom_text(aes(label = scales::percent(prop, accuracy = .01))) +
+  geom_text(aes(label = scales::number(prop, accuracy = .01))) +
   facet_grid(vars(gender)) +
   scale_fill_gradient(low = "#FDF4E9", high = "#834C0D")
 ```
 
 ```{r}
-library(ggbeeswarm)#install.packages("ggbeeswarm")
+library(ggbeeswarm) # install.packages("ggbeeswarm")
 
-nobel_winners %>% 
-  ggplot(aes(x = category,
-             y = prize_age,
-             colour = gender,
-             alpha = gender)) +
+nobel_winners %>%
+  ggplot(aes(
+    x = category,
+    y = prize_age,
+    colour = gender,
+    alpha = gender
+  )) +
   ggbeeswarm::geom_beeswarm() +
   coord_flip() +
   scale_color_manual(values = c("#BB1288", "#5867A6")) +
   scale_alpha_manual(values = c(1, .4)) +
   theme_minimal() +
   theme(legend.position = "top") +
-  labs(title = "诺奖获得者性别不平衡",
-       subtitle = "1901年-2016年数据",
-       colour = "Gender",
-       alpha = "Gender",
-       x = "学科",
-       y = "获奖年龄")
+  labs(
+    title = "诺奖获得者性别不平衡",
+    subtitle = "1901年-2016年数据",
+    colour = "Gender",
+    alpha = "Gender",
+    x = "学科",
+    y = "获奖年龄"
+  )
 ```
 
 ```{r}
 nobel_winners %>%
   count(decade,
-        category,
-        gender = coalesce(gender, laureate_type)) %>%
-  
-  
+    category,
+    gender = coalesce(gender, laureate_type)
+  ) %>%
   group_by(decade, category) %>%
   mutate(percent = n / sum(n)) %>%
   ggplot(aes(decade, n, fill = gender)) +
   geom_col() +
-  facet_wrap(~ category) +
-  labs(x = "Decade",
-       y = "# of nobel prize winners",
-       fill = "Gender",
-       title = "Nobel Prize gender distribution over time")
+  facet_wrap(~category) +
+  labs(
+    x = "Decade",
+    y = "# of nobel prize winners",
+    fill = "Gender",
+    title = "Nobel Prize gender distribution over time"
+  )
 ```
 
 
@@ -423,17 +426,16 @@ nobel_winners %>%
 
 ## 这些大神都是哪个年代出生的人？
 ```{r, fig.width= 9, fig.height= 6}
-nobel_winners %>% 
-  select(category, birth_date) %>% 
-  mutate(year =  floor(year(birth_date)/10) * 10 ) %>% 
-  count(category, year) %>% 
-  dplyr::filter(!is.na(year)) %>% 
+nobel_winners %>%
+  select(category, birth_date) %>%
+  mutate(year = floor(year(birth_date) / 10) * 10) %>%
+  count(category, year) %>%
+  dplyr::filter(!is.na(year)) %>%
   ggplot(aes(x = year, y = n)) +
   geom_col() +
   scale_x_continuous(breaks = seq(1810, 1990, 20)) +
   geom_text(aes(label = n), vjust = -0.25) +
   facet_wrap(vars(category))
-
 ```
 
 课堂练习，哪位同学能把图弄得好看些？
@@ -442,21 +444,21 @@ nobel_winners %>%
 ## 最年轻的诺奖获得者？
 
 ```{r}
-nobel_winners %>% 
-    dplyr::filter(prize_age == min(prize_age, na.rm = T))
+nobel_winners %>%
+  dplyr::filter(prize_age == min(prize_age, na.rm = T))
 ```
 
 
 ```{r}
-nobel_winners %>% 
+nobel_winners %>%
   dplyr::filter(
-    rank(prize_year - year(birth_date) ) == 1
+    rank(prize_year - year(birth_date)) == 1
   )
 ```
 
 
 ```{r}
-nobel_winners %>% 
+nobel_winners %>%
   arrange(
     prize_year - year(birth_date)
   )
@@ -465,19 +467,19 @@ nobel_winners %>%
 
 
 ```{r}
-nobel_winners %>% 
-  top_n(1, year(birth_date) - prize_year )
+nobel_winners %>%
+  top_n(1, year(birth_date) - prize_year)
 ```
 
 
 ## 平均年龄和获奖数量
 ```{r}
-df1 <- nobel_winners %>% 
-  group_by(category) %>% 
+df1 <- nobel_winners %>%
+  group_by(category) %>%
   summarise(
-   mean_prise_age = mean(prize_age, na.rm = T),
-   total_num = n()
-)
+    mean_prise_age = mean(prize_age, na.rm = T),
+    total_num = n()
+  )
 df1
 ```
 
@@ -493,10 +495,10 @@ df1 %>%
 
 ## 出生地与工作地分布
 ```{r}
-nobel_winners_clean <- nobel_winners %>% 
+nobel_winners_clean <- nobel_winners %>%
   mutate_at(
     vars(birth_country, death_country),
-    ~ ifelse(str_detect(., "\\(" ), str_extract(., "(?<=\\().*?(?=\\))" ), .)
+    ~ ifelse(str_detect(., "\\("), str_extract(., "(?<=\\().*?(?=\\))"), .)
   ) %>%
   mutate_at(
     vars(birth_country, death_country),
@@ -519,7 +521,7 @@ nobel_winners_clean %>% count(death_country, sort = TRUE)
 
 ## 迁移模式
 ```{r, fig.width= 9, fig.height= 8}
-nobel_winners_clean %>% 
+nobel_winners_clean %>%
   mutate(
     colour = case_when(
       death_country == "united states of america" ~ "#FF2B4F",
@@ -538,8 +540,10 @@ nobel_winners_clean %>%
     colour = colour,
     alpha = (colour != "gray60")
   )) +
-  geom_curve(curvature = -0.5,
-             arrow = arrow(length = unit(0.01, "npc"))) +
+  geom_curve(
+    curvature = -0.5,
+    arrow = arrow(length = unit(0.01, "npc"))
+  ) +
   scale_x_discrete() +
   scale_y_discrete() +
   scale_color_identity() +
@@ -551,8 +555,7 @@ nobel_winners_clean %>%
     plot.background = element_rect(fill = "#F0EFF1", colour = "#F0EFF1"),
     legend.position = "none",
     axis.text.x = element_text(angle = 40, hjust = 1)
-  ) 
-
+  )
 ```
 
 
@@ -562,16 +565,17 @@ library(here)
 library(sf)
 library(countrycode)
 
-#countrycode('Albania', 'country.name', 'iso3c')
+# countrycode('Albania', 'country.name', 'iso3c')
 
 nobel_winners_birth_country <- nobel_winners_clean %>%
   count(birth_country) %>%
   filter(!is.na(birth_country)) %>%
-  mutate(ISO3 = countrycode(birth_country, 
-                            origin = "country.name", destination = "iso3c"))
+  mutate(ISO3 = countrycode(birth_country,
+    origin = "country.name", destination = "iso3c"
+  ))
 
 
-global <- 
+global <-
   sf::st_read("./demo_data/worldmap/TM_WORLD_BORDERS_SIMPL-0.3.shp") %>%
   st_transform(4326)
 
@@ -579,8 +583,8 @@ global %>%
   full_join(nobel_winners_birth_country, by = "ISO3") %>%
   ggplot() +
   geom_sf(aes(fill = n),
-          color = "white",
-          size = 0.1
+    color = "white",
+    size = 0.1
   ) +
   labs(
     x = NULL, y = NULL,
@@ -589,14 +593,13 @@ global %>%
     fill = "num of Nobel lauretes",
     caption = "Made: wang_minjie"
   ) +
-  scale_fill_gradientn(colors = c("royalblue1","magenta","orange","gold"), na.value = "white") +
-  #scale_fill_gradient(low = "wheat1", high = "red") +
-  theme_void()  +
+  scale_fill_gradientn(colors = c("royalblue1", "magenta", "orange", "gold"), na.value = "white") +
+  # scale_fill_gradient(low = "wheat1", high = "red") +
+  theme_void() +
   theme(
     legend.position = c(0.1, 0.3),
     plot.background = element_rect(fill = "gray")
   )
-
 ```
 
 
@@ -606,10 +609,10 @@ global %>%
 
 ```{r}
 # Determine to 10 Countries
-topCountries <- nobel_winners_clean  %>%
-    count(birth_country, sort = TRUE) %>%
-    na.omit() %>%
-    top_n(8)
+topCountries <- nobel_winners_clean %>%
+  count(birth_country, sort = TRUE) %>%
+  na.omit() %>%
+  top_n(8)
 
 topCountries
 ```
@@ -617,10 +620,10 @@ topCountries
 
 ```{r}
 df4 <- nobel_winners_clean %>%
-    filter(birth_country %in% topCountries$birth_country) %>%
-    group_by(birth_country, category, prize_year) %>%
-    summarise(prizes = n()) %>%
-    mutate(cumPrizes = cumsum(prizes))
+  filter(birth_country %in% topCountries$birth_country) %>%
+  group_by(birth_country, category, prize_year) %>%
+  summarise(prizes = n()) %>%
+  mutate(cumPrizes = cumsum(prizes))
 
 df4
 ```
@@ -629,23 +632,26 @@ df4
 
 ```{r, fig.width= 12, fig.height= 6}
 library(gganimate)
-df4 %>% 
-  mutate(prize_year = as.integer(prize_year)) %>% 
+df4 %>%
+  mutate(prize_year = as.integer(prize_year)) %>%
   ggplot(aes(x = birth_country, y = category, color = birth_country)) +
-    geom_point(aes(size = cumPrizes), alpha = 0.6) +
-    #geom_text(aes(label = cumPrizes)) +
-    scale_size_continuous(range = c(2, 30)) +
-    transition_reveal(prize_year) +
-    labs(title = '诺奖获得者最多的10个国家',
-         subtitle = "Year: {frame_along}",
-         y = 'Category') +
-    theme_minimal() +
-    theme(
-        plot.title = element_text(size = 22),
-        axis.title = element_blank()) +
-    scale_color_brewer(palette = "RdYlBu") +
-    theme(legend.position = "none") +
-    theme(plot.margin = margin(5.5, 5.5, 5.5, 5.5))
+  geom_point(aes(size = cumPrizes), alpha = 0.6) +
+  # geom_text(aes(label = cumPrizes)) +
+  scale_size_continuous(range = c(2, 30)) +
+  transition_reveal(prize_year) +
+  labs(
+    title = "诺奖获得者最多的10个国家",
+    subtitle = "Year: {frame_along}",
+    y = "Category"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 22),
+    axis.title = element_blank()
+  ) +
+  scale_color_brewer(palette = "RdYlBu") +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(5.5, 5.5, 5.5, 5.5))
 ```
 
 
@@ -653,7 +659,7 @@ df4 %>%
 
 ```{r}
 nobel_winners_clean %>%
-  select(category, birth_country, death_country) %>% 
+  select(category, birth_country, death_country) %>%
   mutate(immigration = if_else(birth_country == death_country, 0, 1))
 ```
 
@@ -662,26 +668,25 @@ nobel_winners_clean %>%
 <!-- # https://github.com/gkaramanis/tidytuesday/blob/master/week-20/nobelShared.R -->
 
 ```{r}
-nobel_winners %>% 
+nobel_winners %>%
   separate(prize_share, into = c("num", "deno"), sep = "/", remove = FALSE)
 ```
 
 ```{r}
-nobel_winners %>% 
+nobel_winners %>%
   filter(category == "medicine") %>%
-  mutate(num_a = as.numeric(str_sub(prize_share, 1, 1)),
-         num_b = as.numeric(str_sub(prize_share, -1)),
-         share = num_a/num_b,
-         year = prize_year %% 10,
-         decade = 10 * (prize_year %/% 10)
-         ) %>% 
-  group_by(prize_year) %>% 
+  mutate(
+    num_a = as.numeric(str_sub(prize_share, 1, 1)),
+    num_b = as.numeric(str_sub(prize_share, -1)),
+    share = num_a / num_b,
+    year = prize_year %% 10,
+    decade = 10 * (prize_year %/% 10)
+  ) %>%
+  group_by(prize_year) %>%
   mutate(n = row_number()) %>%
-
-
   ggplot() +
   geom_col(aes(x = "", y = share, fill = as.factor(n)),
-           show.legend = FALSE
+    show.legend = FALSE
   ) +
   coord_polar("y") +
   facet_grid(decade ~ year, switch = "both") +
@@ -689,12 +694,15 @@ nobel_winners %>%
   theme_void() +
   theme(
     plot.title = element_text(face = "bold", vjust = 8),
-    strip.text.x = element_text(size = 7,
-                                margin = margin(t = 5)),
-    strip.text.y = element_text(size = 7,
-             angle = 180, hjust = 1, margin = margin(r = 10))
+    strip.text.x = element_text(
+      size = 7,
+      margin = margin(t = 5)
+    ),
+    strip.text.y = element_text(
+      size = 7,
+      angle = 180, hjust = 1, margin = margin(r = 10)
     )
-
+  )
 ```
 
 
@@ -713,12 +721,12 @@ nobel_winners %>%
 
        
 
+
 ```{r, echo = F}
 # remove the objects
-#rm(df, df1, df4, dt, global, nobel_winners, 
-#   nobel_winners_birth_country, nobel_winners_clean, topCountries)
+rm(df, df1, df4, dt, global, nobel_winners, nobel_winners_birth_country, nobel_winners_clean, scale_color_continuous, scale_color_discrete, scale_color_gradient, topCountries)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
-#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

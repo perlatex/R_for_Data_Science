@@ -881,6 +881,17 @@ sim_rep %>%
 数值模拟我们会在第 \@ref(sampling) 章专门介绍。
 
 
+
  
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(`%nin%`, dat, dat_wide, df, df_united, dfa, dfb, dfc, dt, long, p_ABCD, p_sane, p1, p2, plant_heigt, rep_sim, sim, sim_rep, tb, v, wide)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
 
 

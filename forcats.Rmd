@@ -12,6 +12,9 @@
 
 
 ## 创建因子
+```{r}
+library(tidyverse)
+```
 
 ```{r}
 income <- c("low", "high", "medium", "medium", "low", "high",  "high")
@@ -164,3 +167,13 @@ d %>%
 ```
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(d, income, x)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

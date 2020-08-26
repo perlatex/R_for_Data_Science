@@ -18,7 +18,6 @@
 
 ```{r}
 create_data <- function() {
-
   df <- tibble(
     ids = 1:100,
     department = rep(c("sociology", "biology", "english", "informatics", "statistics"), 20),
@@ -374,7 +373,6 @@ library(ggrepel)
 
 un_pooling %>%
   dplyr::bind_rows(partial_pooling) %>%
-
   ggplot(aes(x = Intercept, y = slope)) +
   purrr::map(
     c(seq(from = 0.1, to = 0.9, by = 0.1)),
@@ -387,8 +385,8 @@ un_pooling %>%
     }
   ) +
   geom_point(aes(group = pooled, color = pooled)) +
-  geom_line(aes(group = level), size = 1/4) +
-  #geom_point(data = complete_pooling, size = 4, color = "red") +
+  geom_line(aes(group = level), size = 1 / 4) +
+  # geom_point(data = complete_pooling, size = 4, color = "red") +
   geom_text_repel(
     data = . %>% filter(pooled == "no_pool"),
     aes(label = level)
@@ -397,16 +395,16 @@ un_pooling %>%
     name = "信息池",
     values = c(
       "no_pool" = "black",
-      "partial_pool" = "red"#,
-      #"complete_pool" = "#A65141"
+      "partial_pool" = "red" # ,
+      # "complete_pool" = "#A65141"
     ),
     labels = c(
       "no_pool" = "不共享",
-      "partial_pool" = "部分共享"#,
-      #"complete_pool" = "完全共享"
+      "partial_pool" = "部分共享" # ,
+      # "complete_pool" = "完全共享"
     )
   ) #+
-  #theme_classic()
+# theme_classic()
 ```
 
 
@@ -414,19 +412,28 @@ un_pooling %>%
 
 - 解释模型的含义
 ```{r, eval=FALSE}
-lmer(salary ~ 1 +  (0 + experience | department), data = df)
+lmer(salary ~ 1 + (0 + experience | department), data = df)
 # vs
 lmer(salary ~ 1 + experience + (0 + experience | department), data = df)
 ```
 
 
 ```{r}
-lmer(salary ~ 1 +  ( 1  +  experience | department),  data = df)
+lmer(salary ~ 1 + (1 + experience | department), data = df)
 # vs
-lmer(salary ~ 1 +  ( 1 | department) +  (0 +  experience | department),  data = df)
+lmer(salary ~ 1 + (1 | department) + (0 + experience | department), data = df)
 ```
 
 - 课后阅读[文献](https://peerj.com/articles/4794/)，读完后大家一起分享
 
 
- 
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(complete_pooling, create_data, df, m1, m2, m3, m4, no_pool, partial_pooling, un_pooling)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

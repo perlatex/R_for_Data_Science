@@ -153,12 +153,12 @@ mtcars data set: R 的内置数据集，记录了32种不同品牌的轿车的�
 
 ```{r}
 library(corrr)
-res.cor <- mtcars[, c(1, 3:6)] %>%    # (1)
+res.cor <- mtcars[, c(1, 3:6)] %>% # (1)
   t() %>%
-  correlate() %>%                     # (2)
-  shave(upper = TRUE) %>%             # (3)
-  stretch(na.rm = TRUE) %>%           # (4)
-  filter(r >= 0.998)                  # (5)
+  correlate() %>% # (2)
+  shave(upper = TRUE) %>% # (3)
+  stretch(na.rm = TRUE) %>% # (4)
+  filter(r >= 0.998) # (5)
 res.cor
 ```
 
@@ -238,7 +238,7 @@ cars.group
 # Modify the nodes data
 cor.graph <- cor.graph %>%
   activate(nodes) %>%
-  left_join(cars.group, by = "name") %>% 
+  left_join(cars.group, by = "name") %>%
   rename(label = name)
 cor.graph
 ```
@@ -320,7 +320,7 @@ example:
 set.seed(123)
 phone.net %>%
   activate(nodes) %>%
-  mutate(centrality = centrality_authority()) 
+  mutate(centrality = centrality_authority())
 ```
 
 
@@ -362,7 +362,7 @@ example:
 set.seed(123)
 cluster_mtcars <- cor.graph %>%
   activate(nodes) %>%
-  mutate(community = as.factor(group_infomap())) 
+  mutate(community = as.factor(group_infomap()))
 cluster_mtcars
 ```
 
@@ -463,4 +463,12 @@ cluster_mtcars %>%
 
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(cars.group, cluster_mtcars, cor.graph, edge_list, node_list, phone.call2, phone.net, res.cor)
+```
 
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

@@ -327,7 +327,7 @@ iris %>%
   dplyr::group_by(Species) %>%
   dplyr::group_map(
     ~ lm(Petal.Length ~ Sepal.Length, data = .x)
-    )
+  )
 ```
 
 
@@ -365,7 +365,7 @@ iris %>%
 
 我常用的批量出图的语句
 ```{r, eval = FALSE}
-nobel_winners %>% 
+nobel_winners %>%
   dplyr::group_split(category) %>%
   purrr::map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
@@ -376,7 +376,7 @@ nobel_winners %>%
 
 
 ```{r, eval = FALSE}
-nobel_winners %>% 
+nobel_winners %>%
   dplyr::group_by(category) %>%
   dplyr::group_map(
     ~ ggplot(data = .x, aes(x = prize_age)) +
@@ -387,19 +387,18 @@ nobel_winners %>%
 
 
 ```{r, eval = FALSE}
-nobel_winners %>% 
+nobel_winners %>%
   dplyr::group_by(category) %>%
   dplyr::group_walk(
     ~ ggsave(
-      paste0(.y, '.png'), 
-      ggplot(data = .x, aes(x = prize_age) ) +
-      geom_density() +
-      ggtitle(.y), 
-      
-      device = 'png',
+      paste0(.y, ".png"),
+      ggplot(data = .x, aes(x = prize_age)) +
+        geom_density() +
+        ggtitle(.y),
+      device = "png",
       path = temp
     )
-  ) %>% 
+  ) %>%
   invisible()
 ```
 
@@ -484,7 +483,7 @@ airquality %>%
 ```{r}
 airquality %>%
   mutate_all(as.numeric) %>%
-  mutate_all(~ coalesce(., 0)) 
+  mutate_all(~ coalesce(., 0))
 ```
 
 
@@ -581,8 +580,8 @@ funs <- list(
   scaled = ~ . - mean(.) / sd(.) # Purrr-style lambda
 )
 
-iris %>% 
-  mutate_if(is.numeric, funs) 
+iris %>%
+  mutate_if(is.numeric, funs)
 ```
 
 
@@ -649,8 +648,9 @@ weights <- list(x = 0.2, y = 0.3, z = 0.5)
 
 df %>% dplyr::mutate(
   across(all_of(names(weights)),
-         list(wt = ~ .x * weights[[cur_column()]]), 
-         .names = "{col}.{fn}")
+    list(wt = ~ .x * weights[[cur_column()]]),
+    .names = "{col}.{fn}"
+  )
 )
 
 
@@ -663,10 +663,24 @@ cutoffs <- list(x = 2, y = 3, z = 7)
 
 df %>% dplyr::mutate(
   across(all_of(names(cutoffs)), ~ if_else(.x > cutoffs[[cur_column()]], 1, 0))
-  )
+)
 ```
 
 ## 参考资料
 
 - https://dplyr.tidyverse.org/dev/articles/rowwise.html
 - https://dplyr.tidyverse.org/dev/articles/colwise.html
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(df, df_iris, df_mtcars, func, funs, msleep, roster, roster_raw, to_keep, to_want)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

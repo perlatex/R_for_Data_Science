@@ -13,18 +13,18 @@ library(stringr)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 d <- tibble::tribble(
-  ~No,                        ~address,
-   1L,       "Sichuan Univ, Coll Chem",
-   2L, "Sichuan Univ, Coll Elect Engn",
-   3L,       "Sichuan Univ, Dept Phys",
-   4L,   "Sichuan Univ, Coll Life Sci",
-   6L,       "Sichuan Univ, Food Engn",
-   7L,       "Sichuan Univ, Coll Phys",
-   8L,    "Sichuan Univ, Sch Business",
-   9L,           "Wuhan Univ, Mat Sci"
-  )
+  ~No, ~address,
+  1L, "Sichuan Univ, Coll Chem",
+  2L, "Sichuan Univ, Coll Elect Engn",
+  3L, "Sichuan Univ, Dept Phys",
+  4L, "Sichuan Univ, Coll Life Sci",
+  6L, "Sichuan Univ, Food Engn",
+  7L, "Sichuan Univ, Coll Phys",
+  8L, "Sichuan Univ, Sch Business",
+  9L, "Wuhan Univ, Mat Sci"
+)
 
-d 
+d
 ```
 
 **问题**：如何提取`Sichuan Univ`后面的学院？这需要用到正则表达式的知识。
@@ -76,7 +76,7 @@ str_length(c("a", "R for data science", NA))
 ```{r}
 data.frame(
   x = c("a", "R for data science", NA)
-  ) %>%
+) %>%
   mutate(y = str_length(x))
 ```
 
@@ -115,7 +115,7 @@ str_c(c("x", "y", "z"), c("x", "y", "z"), sep = ", ")
 data.frame(
   x = c("I", "love", "you"),
   y = c("you", "like", "me")
-  ) %>%
+) %>%
   mutate(z = str_c(x, y, sep = "|"))
 ```
 
@@ -192,12 +192,12 @@ str_view(x, ".a.")
 这里的`.` 代表任意字符。如果向表达.本身呢？
 
 ```{r}
-c("s.d") %>% 
+c("s.d") %>%
   str_view(".")
 ```
 
 ```{r}
-c("s.d") %>% 
+c("s.d") %>%
   str_view("\\.")
 ```
 
@@ -364,7 +364,7 @@ str_detect(x, "e")
 
 数据框中也是一样
 ```{r echo=FALSE}
-d <- tibble(x = c("apple", "banana", "pear") )
+d <- tibble(x = c("apple", "banana", "pear"))
 d
 ```
 
@@ -496,7 +496,7 @@ more
 ```
 取出sentences中，含有有两种和两种颜色以上的句子。不过，不喜欢这种写法，看着费劲，还是用tidyverse的方法
 ```{r}
-tibble(sentence = sentences) %>% 
+tibble(sentence = sentences) %>%
   filter(str_count(sentences, colour_match) > 1)
 ```
 
@@ -517,7 +517,7 @@ tibble(x = more) %>%
 
 ```{r}
 tibble(x = more) %>%
-  mutate(color = str_extract_all(x, colour_match)) %>% 
+  mutate(color = str_extract_all(x, colour_match)) %>%
   unnest(color)
 ```
 
@@ -642,7 +642,7 @@ dt
 
 
 ```{r, eval=FALSE,include=FALSE}
-dt %>% 
+dt %>%
   mutate(z = parse_number(y))
 ```
 
@@ -658,7 +658,7 @@ dt %>%
 dt %>%
   mutate(
     z = str_extract(y, "[0-9]")
-  ) 
+  )
 ```
 
 
@@ -708,12 +708,12 @@ tb
 
 
 ```{r}
-tb %>% 
+tb %>%
   tidyr::extract(
-  #x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
-  x, c("en", "cn"), "([a-zA-Z]+)([^a-zA-Z]+)",
-  remove = FALSE
-)
+    # x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
+    x, c("en", "cn"), "([a-zA-Z]+)([^a-zA-Z]+)",
+    remove = FALSE
+  )
 ```
 
 
@@ -732,7 +732,7 @@ df
 ```{r}
 df %>% extract(
   x,
-  #c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
+  # c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
   c("start", "end", "cn"), "(\\d+)-(\\d+)(\\D+)",
   remove = FALSE
 )
@@ -754,8 +754,8 @@ df <- tibble(
 
 
 ```{r}
-df %>% 
-  mutate( item =  str_extract_all(x, "(?<=[A-Z])[0-9]")  ) %>% 
+df %>%
+  mutate(item = str_extract_all(x, "(?<=[A-Z])[0-9]")) %>%
   tidyr::unnest(item)
 ```
 
@@ -786,11 +786,11 @@ df
 
 
 ```{r}
-df %>% 
-  mutate(num = str_match_all(x, "\\d")) %>% 
-  unnest(num) %>% 
-  mutate_at(vars(num), as.numeric) %>% 
-  group_by(x) %>% 
+df %>%
+  mutate(num = str_match_all(x, "\\d")) %>%
+  unnest(num) %>%
+  mutate_at(vars(num), as.numeric) %>%
+  group_by(x) %>%
   summarise(sum = sum(num))
 ```
 
@@ -822,25 +822,26 @@ text %>% str_replace_all(pairs)
 回到上课前的提问：如何提取`Sichuan Univ`后面的学院？
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 d <- tibble::tribble(
-  ~No,                        ~address,
-   1L,       "Sichuan Univ, Coll Chem",
-   2L, "Sichuan Univ, Coll Elect Engn",
-   3L,       "Sichuan Univ, Dept Phys",
-   4L,   "Sichuan Univ, Coll Life Sci",
-   6L,       "Sichuan Univ, Food Engn",
-   7L,       "Sichuan Univ, Coll Phys",
-   8L,    "Sichuan Univ, Sch Business",
-   9L,           "Wuhan Univ, Mat Sci"
-  )
+  ~No, ~address,
+  1L, "Sichuan Univ, Coll Chem",
+  2L, "Sichuan Univ, Coll Elect Engn",
+  3L, "Sichuan Univ, Dept Phys",
+  4L, "Sichuan Univ, Coll Life Sci",
+  6L, "Sichuan Univ, Food Engn",
+  7L, "Sichuan Univ, Coll Phys",
+  8L, "Sichuan Univ, Sch Business",
+  9L, "Wuhan Univ, Mat Sci"
+)
 
-d 
+d
 ```
 
 
 ```{r}
-d %>% dplyr::mutate(
-  coll = str_extract(address, "(?<=Sichuan Univ,).*") 
-) %>% 
+d %>%
+  dplyr::mutate(
+    coll = str_extract(address, "(?<=Sichuan Univ,).*")
+  ) %>%
   tidyr::unnest(coll, keep_empty = TRUE)
 ```
 
@@ -849,22 +850,23 @@ d %>% dplyr::mutate(
 ```{r eval=FALSE}
 d %>% mutate(
   coll = str_remove_all(address, ".*,")
-  ) 
+)
 ```
 
 ```{r eval=FALSE}
 d %>% tidyr::separate(
-  address, into = c("univ", "coll"), sep = ",", remove = FALSE
+  address,
+  into = c("univ", "coll"), sep = ",", remove = FALSE
 )
 ```
 
 
 ```{r eval=FALSE}
-d %>% 
+d %>%
   tidyr::extract(
-  address, c("univ", "coll"), "(Sichuan Univ), (.+)",
-  remove = FALSE
-)
+    address, c("univ", "coll"), "(Sichuan Univ), (.+)",
+    remove = FALSE
+  )
 ```
 
 
@@ -887,11 +889,11 @@ infer_regex(s)$regex
 
 ```{r, echo = F}
 # remove the objects
-#rm(colour_match, colours, df, dt, fields, ft, lines, more, pairs, tb, text, win, x)
+rm(colour_match, colours, d, df, dt, fields, ft, lines, more, pairs, s, tb, text, win, x)
 ```
 
 
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
-#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

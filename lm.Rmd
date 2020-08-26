@@ -14,8 +14,8 @@ library(tidyverse)
 ```{r message = FALSE, warning = FALSE}
 wages <- read_csv("./demo_data/wages.csv")
 
-wages %>% 
-  head() 
+wages %>%
+  head()
 ```
 
 
@@ -34,32 +34,30 @@ wages %>% colnames()
 
 ```{r}
 # 如何检查数据是否有缺失值？
-wages %>% 
+wages %>%
   summarise(
-     earn_na =  sum(is.na(earn)),
-     height_na =  sum(is.na(height)),
-     sex_na =  sum(is.na(sex)),
-     race_na =  sum(is.na(race)),
-     ed_na =  sum(is.na(ed)),
-     age_na =  sum(is.na(age))
-)
+    earn_na = sum(is.na(earn)),
+    height_na = sum(is.na(height)),
+    sex_na = sum(is.na(sex)),
+    race_na = sum(is.na(race)),
+    ed_na = sum(is.na(ed)),
+    age_na = sum(is.na(age))
+  )
 ```
 
 
 程序员都是偷懒的，所以也可以写的简便一点。大家在学习的过程中，也会慢慢的发现tidyverse的函数很贴心，很周到。
 ```{r}
-wages %>% 
+wages %>%
   summarise_all(
-     ~ sum(is.na(.))
-)
-
+    ~ sum(is.na(.))
+  )
 ```
 
 当然，也可以用`purrr::map()`的方法。这部分我会在后面的章节中逐步介绍。
 ```{r}
 wages %>%
   map_df(~ sum(is.na(.)))
-
 ```
 
 
@@ -72,8 +70,8 @@ wages %>% count(sex)
 ```
 男女这两组的身高均值分别是多少？收入的均值分别是多少？
 ```{r}
-wages %>% 
-  group_by(sex) %>% 
+wages %>%
+  group_by(sex) %>%
   summarise(
     n = n(),
     mean_height = mean(height),
@@ -83,7 +81,7 @@ wages %>%
 
 也有可以用可视化的方法，呈现男女收入的分布情况
 ```{r}
-wages %>% 
+wages %>%
   ggplot(aes(x = earn, color = sex)) +
   geom_density()
 ```
@@ -153,7 +151,7 @@ lm(formula = y ~ x, data)
 在运行`lm()`之前，先画出身高和收入的散点图(记在我们想干什么，寻找身高和收入的关系)
 
 ```{r}
-wages %>% 
+wages %>%
   ggplot(aes(x = height, y = earn)) +
   geom_point()
 ```
@@ -161,8 +159,10 @@ wages %>%
 
 等不及了，就运行代码吧
 ```{r}
-mod1 <- lm(formula = earn ~ height, 
-          data = wages)
+mod1 <- lm(
+  formula = earn ~ height,
+  data = wages
+)
 ```
 
 
@@ -197,9 +197,9 @@ wages %>% modelr::add_predictions(mod1)
 
 查看残差值
 ```{r}
-# resid(mod1) 
-wages %>% 
-  modelr::add_predictions(mod1) %>% 
+# resid(mod1)
+wages %>%
+  modelr::add_predictions(mod1) %>%
   modelr::add_residuals(mod1)
 ```
 
@@ -226,7 +226,7 @@ wages %>%
 
 
 ```{r}
-wages %>% 
+wages %>%
   ggplot(aes(x = height, y = earn)) +
   geom_point(alpha = 0.25) +
   geom_smooth(method = "lm", se = FALSE)
@@ -302,15 +302,15 @@ lm(earn ~ height + sex + ed + age + race, data = wages)
 
 哪个变量对收入的影响最大？
 ```{r, eval=FALSE}
-lm(earn ~ height + ed + age, data = wages) 
+lm(earn ~ height + ed + age, data = wages)
 ```
 
 - 方法一，变量都做**标准化处理**后，再放到模型中计算，然后对比系数的绝对值
 
 ```{r}
-fit <- wages %>% 
-  mutate_at(vars(earn, height, ed, age), scale) %>% 
-  lm(earn ~ 1 + height + ed + age, data = .) 
+fit <- wages %>%
+  mutate_at(vars(earn, height, ed, age), scale) %>%
+  lm(earn ~ 1 + height + ed + age, data = .)
 
 summary(fit)
 ```
@@ -370,8 +370,8 @@ wages %>% distinct(race)
 
 
 ```{r}
-wages %>% 
-  ggplot(aes(x = race, y = earn, fill = race)) + 
+wages %>%
+  ggplot(aes(x = race, y = earn, fill = race)) +
   geom_boxplot(position = position_dodge()) +
   scale_y_continuous(limits = c(0, 20000))
 ```
@@ -412,8 +412,8 @@ broom::tidy(mod3)
 
 hispanic组的估计最低，适合做基线，因此可以将race转换为因子变量，这样方便调整因子先后顺序
 ```{r}
-wages_fct <- wages %>% 
-  mutate(race = factor(race, levels = c("hispanic", "white", "black", "other"))) %>% 
+wages_fct <- wages %>%
+  mutate(race = factor(race, levels = c("hispanic", "white", "black", "other"))) %>%
   select(earn, race)
 
 head(wages_fct)
@@ -567,8 +567,8 @@ mod6
 
 事实上，对于男性和女性，截距和系数都不同，因此这种情形**等价于**，按照sex分成两组，男性算男性的斜率，女性算女性的斜率
 ```{r}
-wages %>% 
-  group_by(sex) %>% 
+wages %>%
+  group_by(sex) %>%
   group_modify(
     ~ broom::tidy(lm(earn ~ height, data = .))
   )
@@ -581,7 +581,7 @@ wages %>%
 ```{r}
 wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
-  geom_smooth(method = lm, se = F) 
+  geom_smooth(method = lm, se = F)
 ```
 
 ```{r}
@@ -658,16 +658,16 @@ $$
 
 比如：计算身高和收入两者的Pearson相关系数的平方
 ```{r}
-r <- cor(wages$height, wages$earn)  
-print( r^2 ) 
+r <- cor(wages$height, wages$earn)
+print(r^2)
 ```
 
 
 然后看看，身高和收入的线性模型
 
 ```{r}
-lm(formula = earn ~ height, data = wages) %>% 
-  broom::glance() %>% 
+lm(formula = earn ~ height, data = wages) %>%
+  broom::glance() %>%
   pull(r.squared)
 ```
 相关系数的平方 和 线性模型的$R^2$是相等的
@@ -679,3 +679,12 @@ lm(formula = earn ~ height, data = wages) %>%
 
 
 
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(combined, fit, mod1, mod2, mod3, mod4, mod5, mod6, mod7, p1, p2, r, wages, wages_fct)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

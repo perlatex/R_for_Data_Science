@@ -42,9 +42,9 @@ head(d)
 或者说怎么样把数据弄成tidy呢。这里有个技巧，你可以想象，数据能`ggplot()`可视化的基本上就是tidy的。
 
 ```{r, eval=FALSE}
-d %>% 
-  ggplot(aes(x = x, y = y)) + 
-  geom_point() + 
+d %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
   facet_wrap(~set)
 ```
 
@@ -70,40 +70,41 @@ knitr::include_graphics("images/pivot.png")
 dt <- tibble(id = c("a", "b"), x_1 = 1:2, x_2 = 3:4, y_1 = 5:6, y_2 = 8:9)
 dt
 dt %>% pivot_longer(-id,
-                    names_to = "name",
-                    values_to = "vaules")
+  names_to = "name",
+  values_to = "vaules"
+)
 ```
 
 有时候，我们不想要下划线后面的编号，只想保留前面的第一个字母
 ```{r}
 dt %>% pivot_longer(
-       cols = -id, 
-       names_to = "name",
-       names_pattern = "(.)_.",
-       values_to = "vaules"
-       )
+  cols = -id,
+  names_to = "name",
+  names_pattern = "(.)_.",
+  values_to = "vaules"
+)
 ```
 
 
 有时候人的需求是多样的，比如不想要前面的第一个字母，只要下划线后面的编号
 ```{r}
 dt %>% pivot_longer(
-       cols = -id, 
-       names_to = "name",
-       names_pattern = "._(.)",
-       values_to = "vaules"
-       )
+  cols = -id,
+  names_to = "name",
+  names_pattern = "._(.)",
+  values_to = "vaules"
+)
 ```
 
 
 有时候我们都想要呢？
 ```{r}
 dt %>% pivot_longer(
-       cols = -id, 
-       names_to = c("name", "group"),
-       names_pattern = "(.)_(.)",
-       values_to = "vaules"
-       )
+  cols = -id,
+  names_to = c("name", "group"),
+  names_pattern = "(.)_(.)",
+  values_to = "vaules"
+)
 ```
 
 
@@ -111,11 +112,11 @@ dt %>% pivot_longer(
 
 ```{r}
 dt %>% pivot_longer(
-       cols = -id, 
-       names_to = c(".value", "group"),
-       names_pattern = "(.)_(.)",
-       values_to = "vaules"
-       )
+  cols = -id,
+  names_to = c(".value", "group"),
+  names_pattern = "(.)_(.)",
+  values_to = "vaules"
+)
 ```
 是不是觉得很强大？
 
@@ -132,7 +133,7 @@ knitr::include_graphics("images/pivot_longer_values.jpg")
 那么和上面的情况一样，使用`tidyr::pivot_longer()`函数
 
 ```{r}
-tidy_d <- d %>% 
+tidy_d <- d %>%
   pivot_longer(
     cols = everything(),
     names_to = c(".value", "set"),
@@ -157,10 +158,11 @@ tidy_d
 ```{r}
 tidy_d_summary <- tidy_d %>%
   group_by(set) %>%
-  summarise(across(.cols = everything(),
-                   .fns = lst(mean, sd, var),
-                   .names = "{col}_{fn}")
-            )
+  summarise(across(
+    .cols = everything(),
+    .fns = lst(mean, sd, var),
+    .names = "{col}_{fn}"
+  ))
 tidy_d_summary
 ```
 
@@ -170,21 +172,21 @@ tidy_d_summary
 
 
 ```{r, eval=FALSE}
-tidy_d %>% 
-  group_nest(set) %>% 
-  mutate(fit = map(data, ~lm(y ~ x, data = .x)),
-         tidy = map(fit, broom::tidy),
-         glance = map(fit, broom::glance)
-         ) %>% 
+tidy_d %>%
+  group_nest(set) %>%
+  mutate(
+    fit = map(data, ~ lm(y ~ x, data = .x)),
+    tidy = map(fit, broom::tidy),
+    glance = map(fit, broom::glance)
+  ) %>%
   unnest(tidy)
-
 ```
 
 
 感觉大家更喜欢这种
 ```{r}
-tidy_d %>% 
-  group_by(set) %>% 
+tidy_d %>%
+  group_by(set) %>%
   group_modify(
     ~ broom::tidy(lm(y ~ x, data = .))
   )
@@ -203,7 +205,7 @@ tidy_d %>%
 ## 可视化看看
 
 ```{r}
-tidy_d %>% 
+tidy_d %>%
   ggplot(aes(x = x, y = y, colour = set)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -211,3 +213,15 @@ tidy_d %>%
   facet_wrap(~set)
 ```
 
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(d, dt, tidy_d, tidy_d_summary)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

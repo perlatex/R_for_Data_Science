@@ -103,7 +103,7 @@ density_colors <- c(
 
 
 ```{r, eval = FALSE}
-d %>% 
+d %>%
   ggplot(aes(x = Height, y = after_stat(count))) +
   geom_density(
     data = df %>% select(-Gender),
@@ -134,7 +134,7 @@ scales::show_col(density_colors)
 
 
 ```{r}
-d %>% 
+d %>%
   ggplot(aes(x = Height, y = after_stat(count))) +
   geom_density(
     data = d %>% dplyr::select(-Gender),
@@ -225,4 +225,16 @@ d %>%
   ggplot(aes(x = Height, y = Weight, group = Gender)) +
   geom_point(aes(color = Gender)) +
   geom_smooth(method = lm)
+```
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(d, fit, density_colors)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

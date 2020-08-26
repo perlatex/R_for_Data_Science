@@ -448,10 +448,10 @@ sym("height")
 
 
 
+
 ```{r, echo = F}
 # remove the objects
-# rm(df, df1, df2, s)
-rm(list=ls())
+rm(a, b, d, df, filter_which, group_var, grouped_mean, grouped_mean2, grouped_mean3, grouped_mean4, jetlag, my_summarise, summary_var, var, vars)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}

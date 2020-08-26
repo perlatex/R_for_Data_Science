@@ -3,7 +3,7 @@
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
-library(tibble)  #事实上，library(tidyverse)已经加装了library(tibble)
+library(tibble) # 事实上，library(tidyverse)已经加装了library(tibble)
 ```
 
 ## tidyverse 家族
@@ -53,16 +53,20 @@ tibble对data.frame做了重新的设定：
 传统创建数据框
 
 ```{r}
-data.frame(a = 1:5, 
-           b = letters[1:5])
+data.frame(
+  a = 1:5,
+  b = letters[1:5]
+)
 ```
 
 发现，`data.frame()`会自动将**字符串型**的变量转换成**因子型**，如果想保持原来的字符串型，就得
 
 ```{r}
-data.frame(a = 1:5, 
-           b = letters[1:5],
-		   stringsAsFactors = FALSE)
+data.frame(
+  a = 1:5,
+  b = letters[1:5],
+  stringsAsFactors = FALSE
+)
 ```
 ```{block, type="danger"}
 Note：
@@ -75,8 +79,10 @@ Note：
 
 用tibble创建数据框，不会这么麻烦，输出的就是原来的字符串类型
 ```{r}
-tibble(a = 1:5, 
-       b = letters[1:5])
+tibble(
+  a = 1:5,
+  b = letters[1:5]
+)
 ```
 
 
@@ -216,8 +222,10 @@ tibble转回matrix? `as.matrix(df)`
 
 构建一个简单的数据框
 ```{r}
-df <- tibble(x = 1:2, 
-			 y = 2:1)
+df <- tibble(
+  x = 1:2,
+  y = 2:1
+)
 
 df
 ```
@@ -396,7 +404,7 @@ tibble(x = 1, x = 2, .name_repair = make.unique)
 
 
 ```{r}
-tibble(x = 1, x = 2, .name_repair = ~make.unique(.x, sep = "_"))
+tibble(x = 1, x = 2, .name_repair = ~ make.unique(.x, sep = "_"))
 ```
 
 
@@ -426,7 +434,7 @@ tibble(`year 1` = 1, `year 2` = 2, .name_repair = fix_names)
 
 ```{r}
 library(janitor)
-tibble(`year 1` = 1, `year 2` = 2) %>% 
+tibble(`year 1` = 1, `year 2` = 2) %>%
   clean_names()
 ```
 
@@ -439,9 +447,9 @@ tibble(`year 1` = 1, `year 2` = 2) %>%
 `nested tibble` 和 `List-columns` (列表列) 会在后面的章节详细介绍。
 
 ```{r}
-iris %>% 
-	group_by(Species) %>% 
-	nest()
+iris %>%
+  group_by(Species) %>%
+  nest()
 ```
 
 
@@ -462,10 +470,9 @@ iris %>%
 
 ```{r, echo = F}
 # remove the objects
-#rm(df, m, d, t1, tb, x, fix_names)
+rm(df, m, t1, tb, x, fix_names)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
-#pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
-
