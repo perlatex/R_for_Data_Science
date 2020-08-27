@@ -1,4 +1,4 @@
-# 探索性数据分析6 {#eda-caribou}
+# 探索性数据分析-驯鹿迁移 {#eda-caribou}
 
 本章我们分析加拿大哥伦比亚林地**驯鹿追踪数据**，数据包含了从1988年到2016年期间260只驯鹿，近250000个位置标签。
 
@@ -71,9 +71,7 @@ individuals %>%
 
 简单点说，就是哪个驯鹿在什么时间出现在什么地方
 
-```{r}
-locations
-```
+
 
 ```{r}
 locations %>%
@@ -128,10 +126,10 @@ locations %>%
 ## 某一只驯鹿的轨迹
 ```{r}
 locations %>%
-  filter(animal_id %in% c("QU_car143")) %>%
-  arrange(animal_id, timestamp) %>%
-  group_by(animal_id) %>%
-  mutate(measurement_n = row_number()) %>%
+  dplyr::filter(animal_id %in% c("QU_car143")) %>%
+  dplyr::arrange(animal_id, timestamp) %>%
+  dplyr::group_by(animal_id) %>%
+  dplyr::mutate(measurement_n = row_number()) %>%
   ggplot(aes(
     x = longitude,
     y = latitude,
@@ -274,7 +272,7 @@ location_with_speed %>%
 
 ## 动态展示
 
-```{r}
+```{r, eval=FALSE}
 library(gganimate)
 
 example_animal %>%
@@ -287,32 +285,32 @@ example_animal %>%
 
 ## 更多
 
-```{r}
+```{r, eval=FALSE}
 df <- locations %>%
-  filter(
+  dplyr::filter(
     study_site == "Graham",
     year(timestamp) == 2002
   ) %>%
-  group_by(animal_id) %>%
-  filter(
+  dplyr::group_by(animal_id) %>%
+  dplyr::filter(
     as_date(min(timestamp)) == "2002-01-01",
     as_date(max(timestamp)) == "2002-12-31"
   ) %>%
-  ungroup() %>%
-  mutate(date = as_date(timestamp)) %>%
-  group_by(animal_id, date) %>%
-  summarise(
+  dplyr::ungroup() %>%
+  dplyr::mutate(date = as_date(timestamp)) %>%
+  dplyr::group_by(animal_id, date) %>%
+  dplyr::summarise(
     longitude_centroid = mean(longitude),
     latitude_centroid = mean(latitude)
   ) %>%
-  ungroup() %>%
-  complete(animal_id, date) %>%
-  arrange(animal_id, date) %>%
-  fill(longitude_centroid, latitude_centroid, .direction = "down")
+  dplyr::ungroup() %>%
+  tidyr::complete(animal_id, date) %>%
+  dplyr::arrange(animal_id, date) %>%
+  tidyr::fill(longitude_centroid, latitude_centroid, .direction = "down")
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 p <- df %>%
   ggplot(aes(longitude_centroid, latitude_centroid, colour = animal_id)) +
   geom_point(size = 2) +

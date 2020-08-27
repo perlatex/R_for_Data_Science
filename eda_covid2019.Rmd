@@ -1,4 +1,4 @@
-# 探索性数据分析3 {#eda-covid2019}
+# 探索性数据分析-新冠疫情 {#eda-covid2019}
 
 
 ```{r message = FALSE, warning = FALSE}

@@ -78,7 +78,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(forcats) 章介绍因子类型数据
    - 第 \@ref(purrr) 章介绍函数式编程
    - 第 \@ref(tibble) 章介绍简单数据框
-   - 第 \@ref(ggplot2-geom) 章再讲ggplot2
+   - 第 \@ref(ggplot2-geom) 章ggplot2几何对象
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
@@ -98,13 +98,13 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidymodels) 章介绍机器学习
    - 第 \@ref(tidyeval) 章介绍非标准性评估
 - 应用篇
-   - 第 \@ref(eda-nobel) 章介绍探索性数据分析1   
-   - 第 \@ref(eda-olympics) 章介绍探索性数据分析2   
-   - 第 \@ref(eda-covid2019) 章介绍探索性数据分析3   
-   - 第 \@ref(eda-anscombe) 章介绍探索性数据分析4   
-   - 第 \@ref(eda-height) 章介绍探索性数据分析5   
-   - 第 \@ref(eda-caribou) 章介绍探索性数据分析6   
-   - 第 \@ref(eda-penguins) 章介绍探索性数据分析7 
+   - 第 \@ref(eda-nobel) 章介绍探索性数据分析-诺奖获得者  
+   - 第 \@ref(eda-olympics) 章介绍探索性数据分析-奥林匹克  
+   - 第 \@ref(eda-covid2019) 章介绍探索性数据分析-新冠疫情  
+   - 第 \@ref(eda-anscombe) 章介绍探索性数据分析-anscombe数据集  
+   - 第 \@ref(eda-height) 章介绍探索性数据分析-身高体重 
+   - 第 \@ref(eda-caribou) 章介绍探索性数据分析-驯鹿迁移  
+   - 第 \@ref(eda-penguins) 章介绍探索性数据分析-企鹅的故事
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘

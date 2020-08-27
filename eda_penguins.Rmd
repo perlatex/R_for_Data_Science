@@ -1,4 +1,4 @@
-# 探索性数据分析7 {#eda-penguins}
+# 探索性数据分析-企鹅的故事 {#eda-penguins}
 
 
 今天讲一个关于企鹅的数据故事。数据来源[这里](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
@@ -174,7 +174,7 @@ penguins %>%
 但，这样一个变量一个变量的画，可能会比较麻烦。于是我们可以这样
 ```{r}
 penguins %>%
-  select(species, bill_length_mm:body_mass_g) %>%
+  dplyr::select(species, bill_length_mm:body_mass_g) %>%
   pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
   ggplot(aes(x = value)) +
   geom_density(aes(color = species, fill = species), size = 1.2, alpha = 0.2) +
@@ -183,7 +183,7 @@ penguins %>%
 
 ```{r}
 penguins %>%
-  select(species, bill_length_mm:body_mass_g) %>%
+  dplyr::select(species, bill_length_mm:body_mass_g) %>%
   pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
   ggplot(aes(x = species, y = value)) +
   geom_boxplot(aes(color = species, fill = species), size = 1.2, alpha = 0.2) +
@@ -193,7 +193,7 @@ penguins %>%
 
 ```{r}
 penguins %>%
-  select(species, bill_length_mm:body_mass_g) %>%
+  dplyr::select(species, bill_length_mm:body_mass_g) %>%
   pivot_longer(-species, names_to = "measurement", values_to = "value") %>%
   ggplot(aes(x = value, y = species, fill = species)) +
   ggridges::geom_density_ridges() +
@@ -326,11 +326,13 @@ stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
 ```
 
 
-```{r}
+推荐使用`ggstatsplot`，可以帮助我们验证我们的想法和结果
+
+```{r, eval=FALSE}
 library(ggstatsplot)
 
 penguins %>%
-  ggbetweenstats(
+  ggstatsplot::ggbetweenstats(
     x = species, # > 2 groups
     y = body_mass_g,
     type = "parametric",
@@ -346,9 +348,9 @@ penguins %>%
 kruskal.test(body_mass_g ~ species, data = penguins)
 ```
 
-```{r}
+```{r, eval=FALSE}
 penguins %>%
-  ggbetweenstats(
+  ggstatsplot::ggbetweenstats(
     x = species,
     y = body_mass_g,
     type = "nonparametric",

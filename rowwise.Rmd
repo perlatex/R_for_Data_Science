@@ -1,5 +1,7 @@
 # tidyverse中行方向的操作 {#rowwise}
 
+dplyr 1.0 推出之后，数据框**行方向**的操作得到完美解决，因此本章的内容已经过时，大家可以跳出本章，直接阅读第\@ref(colwise) 章。（留着本章，主要是让自己时常回顾下之前的探索。让自己最难忘的，或许就是曾经的痛点吧）
+
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
@@ -9,7 +11,7 @@ tidyverse 喜欢数据框，因为一列就是一个向量，一列一列的处�
 
 ## 问题
 
-```{r}
+```{r, eval=FALSE}
 df <- tibble(x = 1:3, y = 4:6)
 df
 ```
@@ -19,20 +21,20 @@ df
 ## rowwise函数
 
 dplyr提供了rowwise函数，但大神说不推荐
-```{r}
+```{r, eval=FALSE}
 df %>%
   rowwise() %>%
   mutate(i = sum(x, y))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   rowwise() %>%
   mutate(i = mean(c(x, y)))
 ```
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   rowwise() %>%
   mutate(
@@ -42,7 +44,7 @@ df %>%
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   rowwise() %>%
   do(i = mean(c(.$x, .$y))) %>%
@@ -50,16 +52,16 @@ df %>%
 ```
 
 ## Row-wise Summaries
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(row_sum = rowSums(.[1:2]))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(row_mean = rowMeans(.[1:2]))
 ```
 
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(t_sum = rowSums(select_if(., is.numeric)))
 ```
 
@@ -70,12 +72,12 @@ df %>% mutate(t_sum = rowSums(select_if(., is.numeric)))
 
 按照Jenny Bryan的方案
 
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(t_sum = pmap_dbl(list(x, y), sum))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
 ```
@@ -87,19 +89,19 @@ df %>% mutate(t_sum = pmap_dbl(select_if(., is.numeric), mean))
 
 tidyverse 总会想出办法来解决，把`mean()` 变成 `lift_vd(mean)`
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
 ```
 
 
 同理
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(t_median = pmap_dbl(select_if(., is.numeric), lift_vd(median)))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
 ```
 
@@ -111,7 +113,7 @@ df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
 
 我个人推荐的方法(Gather, group, summarize, left_join)
 
-```{r}
+```{r, eval=FALSE}
 new_df <- df %>%
   mutate(id = row_number())
 
@@ -126,14 +128,14 @@ s <- new_df %>%
 s
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 new_df %>%
   left_join(s)
 ```
 
 有点繁琐，但思路清晰
 
-```{r}
+```{r, eval=FALSE}
 ss <- new_df %>%
   group_by(id) %>%
   summarise(t_avg = mean(c(x, y)))
@@ -142,7 +144,7 @@ ss
 ```
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 new_df %>%
   left_join(ss)
 ```
@@ -162,7 +164,7 @@ new_df %>%
 - 与`purrr::map`不同，因为map把数据框看作列方向的向量， 然后迭代
 - 如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 library(slider)
 
 df <- tibble(a = 1:3, b = 4:6)
@@ -176,7 +178,7 @@ slide(
 
 
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   mutate(
     r_mean = slide_dbl(
@@ -231,7 +233,7 @@ iris %>%
 
 ```{r, echo = F}
 # remove the objects
-rm(df, new_df, s, ss)
+# rm(df, new_df, s, ss)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}

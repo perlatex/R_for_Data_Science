@@ -1,4 +1,4 @@
-# ggplot2 {#ggplot2-geom}
+# ggplot2之几何对象 {#ggplot2-geom}
 
 > 采菊东篱下，悠然见南山。
 >
@@ -1413,7 +1413,7 @@ showtext_auto()
 
 font_families()
 font_paths()
-font_files()
+# font_files()
 
 ## Add fonts that are available on Windows(默认路径"C:\\Windows\\Fonts")
 font_add("heiti", "simhei.ttf")
@@ -1498,7 +1498,7 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 
 ## 你喜欢哪个图
 
-```{r}
+```{r, out.width="100%"}
 library(tidyverse)
 library(ggridges)
 library(patchwork)

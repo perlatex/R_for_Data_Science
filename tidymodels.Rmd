@@ -18,7 +18,7 @@ penguins %>%
   head()
 ```
 
-```{r}
+```{r, eval=FALSE}
 penguins %>%
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm, 
              color = species, shape = species)
