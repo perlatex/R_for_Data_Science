@@ -44,7 +44,8 @@ scrape_house_info  <- function(url) {
 ```{r}
 tb <- urls %>% map_df(scrape_house_info)
 
-tb
+tb %>% 
+  head()
 ```
 
 

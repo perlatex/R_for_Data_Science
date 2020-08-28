@@ -86,7 +86,7 @@ mutate(.data = df, newscore = score2020)
 - 第二个参数是`newscore = score2020`，等号左边的`newscore`是我们打算创建一个新列，而取的列名；
 等号右边是装着学生成绩的**向量**（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '60%', echo = FALSE}
 knitr::include_graphics("images/dplyr-mutate.png")
 ```
 
@@ -163,7 +163,7 @@ df
 `select() `顾名思义`选择`，就是选择数据框的某一列，
 
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '80%', echo = FALSE}
 knitr::include_graphics("images/dplyr-select.png")
 ```
 
@@ -205,7 +205,7 @@ df %>% select(-type)
 
 `select`是列方向的选择， 我们还可以对数据行方向的选择和筛选，
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-filter.png")
 ```
 
@@ -228,7 +228,7 @@ df %>% filter(type == "english", newscore >= 90)
 ## `summarise() `统计
 
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/dplyr-summarize.png")
 ```
 
@@ -287,7 +287,7 @@ df %>%
 
 ## `arrange() `排序
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-arrange.png")
 ```
 

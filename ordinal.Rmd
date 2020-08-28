@@ -243,7 +243,8 @@ coef(mod_mass) %>% exp()
 library(margins)
 # me_mass <- marginal_effects(mod_mass, variables = "sex")
 me_mass <- marginal_effects(mod_mass, variables = "edu_m")
-me_mass
+me_mass %>% 
+  head()
 ```
 
 

@@ -374,7 +374,8 @@ margins::marginal_effects(m, type = "response", se = TRUE) %>%
 ### 拟合
 
 ```{r}
-fitted(m)
+fitted(m) %>% 
+  head()
 ```
 
 
@@ -403,7 +404,8 @@ df %>%
 
 ```{r}
 pred <- predict(m, type = "response", se = TRUE) %>% as.data.frame()
-pred
+pred %>% 
+  head()
 ```
  
 

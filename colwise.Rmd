@@ -276,6 +276,7 @@ df %>% relocate(grp, .after = last_col())
 我们经常需要对数据框的**多列**执行相同的操作。比如
 
 ```{r}
+iris <- iris %>% as_tibble()
 iris
 ```
 
@@ -584,6 +585,7 @@ tb %>%
 
 ### 行方向上的建模
 ```{r}
+mtcars <- mtcars %>% as_tibble()
 mtcars
 ```
 

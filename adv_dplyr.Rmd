@@ -36,10 +36,9 @@ library(tidyverse)
 ### mutate_if
 
 ```{r}
-df_iris <- iris %>%
-  head(5)
+iris <- iris %>% as_tibble() 
 
-df_iris
+df_iris <- iris %>% head(5)
 ```
 
 ```{r}
@@ -178,6 +177,7 @@ mtcars是 R内置数据集，记录了32种不同品牌的轿车的的11个属�
 
 
 ```{r}
+mtcars <- mtcars %>% as_tibble()
 mtcars
 ```
 

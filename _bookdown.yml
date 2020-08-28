@@ -12,12 +12,12 @@ rmd_files: [
   "index.Rmd",
   "author.Rmd",
 
-  "intro_ds.Rmd",        # 基础篇
-  "intro_R.Rmd",
-  "subsetting.Rmd",
+   "intro_ds.Rmd",        # 基础篇
+   "intro_R.Rmd",
+   "subsetting.Rmd",
 
-  "rmarkdown.Rmd",       # tidyverse篇
-  "readr.Rmd",
+   "rmarkdown.Rmd",       # tidyverse篇
+   "readr.Rmd",
   "dplyr.Rmd",
   "ggplot2_aes.Rmd",
   "stringr.Rmd",
@@ -34,6 +34,7 @@ rmd_files: [
   "colwise.Rmd",
   "tidyverse_tips.Rmd",
   "dot.Rmd",
+  "tidyeval.Rmd",
 
 
   "sampling.Rmd",       # 建模篇
@@ -43,7 +44,6 @@ rmd_files: [
   "glm.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
-  "tidyeval.Rmd",
 
 
   "eda_nobel.Rmd",     # 应用篇
