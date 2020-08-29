@@ -22,7 +22,8 @@ d %>%
   head()
 ```
 
-```{r}
+
+```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 penguins <- read_csv("./demo_data/penguins.csv") %>%
   janitor::clean_names()

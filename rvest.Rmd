@@ -64,7 +64,8 @@ df_price <-
   mutate_at(vars(name), ~str_remove_all(., " ") ) %>% 
   mutate_at(vars(name), ~if_else( name == "黑龙江", "黑龙江省", .))
 
-df_price
+df_price %>% 
+  head()
 ```
 
 

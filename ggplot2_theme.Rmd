@@ -40,7 +40,8 @@ glimpse(mpg)
 
 稍微做点数据整理
 ```{r}
-df <- mpg %>%
+df <- mpg %>% 
+  as_tibble() %>% 
   filter(class != "2seater", manufacturer %in% c("toyota", "volkswagen"))
 df
 ```

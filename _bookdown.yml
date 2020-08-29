@@ -35,8 +35,8 @@ rmd_files: [
   "tidyverse_tips.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",
-
-
+  #
+  #                     #work
   "sampling.Rmd",       # 建模篇
   "tidystats.Rmd",
   "lm.Rmd",
@@ -44,8 +44,8 @@ rmd_files: [
   "glm.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
-
-
+  #
+  #
   "eda_nobel.Rmd",     # 应用篇
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",

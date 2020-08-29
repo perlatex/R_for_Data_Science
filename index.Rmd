@@ -159,7 +159,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r, eval = FALSE}
 my_packages <- c(
-"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggstatsplot", "ggeffects", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "geoshpere", "ggstatsplot", "datasauRus", "ggimage", "ggthemes", "pacman"
+"brms", "broom", "broom.mixed", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "devtools", "dplyr", "forcats", "gapminder", "gganimate", "ggstatsplot", "ggeffects", "ggbeeswarm", "ggforce", "gghighlight", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggtext", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer",  "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "geoshpere", "ggstatsplot", "datasauRus", "ggimage", "ggthemes", "pacman", "equatiomatic"
 )
 ```
 
@@ -173,7 +173,7 @@ install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = 
 可能用到的开发版本的宏包
 
 ```{r, eval = FALSE}
-remotes::install_github("datalorax/equatiomatic")
+#remotes::install_github("datalorax/equatiomatic")
 devtools::install_github("easystats/report")
 devtools::install_github("kassambara/navdata")
 devtools::install_github('cttobin/ggthemr')

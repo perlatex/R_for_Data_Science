@@ -38,7 +38,7 @@ $$
 
 
 把这**四个前提**画在一张图中
-```{r}
+```{r out.width = '80%', fig.align='center', echo = FALSE}
 knitr::include_graphics(path = "images/LINE.png")
 ```
 
@@ -50,7 +50,7 @@ knitr::include_graphics(path = "images/LINE.png")
 
 > 在受污染的岛屿附近，金枪鱼出现次数
 
-```{r}
+```{r out.width = '50%', fig.align='center', echo = FALSE}
 knitr::include_graphics(path = "images/fishes.png")
 ```
 
@@ -104,6 +104,7 @@ df %>%
     title = "number of fishes (Poisson distribution)"
   )
 ```
+
 这是典型的泊松分布。
 
 ```{r}

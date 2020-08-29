@@ -444,6 +444,8 @@ glimpse(roster)
 ### purrr & dplyr 技巧
 ```{r message=FALSE, warning=FALSE}
 library(purrr)
+airquality <- as_tibble(airquality)
+
 airquality %>% purrr::map(~ sum(is.na(.)))
 ```
 
@@ -612,7 +614,7 @@ iris %>%
 
 ### across函数替代scope函数
 
-强大的`across()`函数，替代以上`scope`函数(_if, _at, 和 _all函数), 同时`slice_max()`, `slice_min()`, `slice_n()` 将替代 `top_n()`函数。
+强大的`across()`函数，替代以上`scope`函数(_if, _at, 和 _all函数), 同时`slice_max()`, `slice_min()`, `slice_n()` 将替代 `top_n()`函数。请参考阅读第\@ref(colwise) 章。
 
 ```{r, eval = FALSE}
 df %>% mutate_if(is.numeric, mean, na.rm = TRUE)

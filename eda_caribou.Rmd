@@ -335,7 +335,7 @@ p
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(df, example_animal, individuals, location_with_speed, locations, movement, p, top_animal_ids)
+rm(example_animal, individuals, location_with_speed, locations, movement, top_animal_ids)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
