@@ -698,19 +698,18 @@ rladies
 
 
 ```{r}
-# library(maps)
-# library(ggthemes)
+library(maps)
 
-world <- ggplot() +
-  borders("world", colour = "gray85", fill = "gray80") +
+world_map <- ggplot() +
+  ggplot2::borders("world", colour = "gray85", fill = "gray80") +
   ggthemes::theme_map()
-world
+world_map
 ```
 
 
 
 ```{r}
-world +
+world_map +
   geom_point(
     data = rladies,
     aes(x = lon, y = lat, size = followers),
@@ -728,7 +727,7 @@ world +
 用动图展示（这种方法可以用在流行病传播的展示上）
 
 ```{r}
-world +
+world_map +
   geom_point(aes(x = lon, y = lat, size = followers),
     data = rladies,
     colour = "purple", alpha = .5
@@ -822,7 +821,7 @@ bats %>%
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(anim, bats, p, ranked_by_date, rladies, world)
+rm(anim, bats, p, ranked_by_date, rladies, world_map)
 ```
 
 

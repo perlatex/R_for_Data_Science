@@ -91,6 +91,26 @@ mpg %>%
 ```
 
 
+## 删除其中一个图例
+
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = class, size = cyl)) +
+  geom_point()
+```
+
+比如，我们想删除size这个图例，那么需要这样做
+
+```{r}
+mpg %>%
+  ggplot(aes(x = displ, y = hwy, color = class, size = cyl)) +
+  geom_point() +
+  guides(color = guide_legend("汽车类型"),  # keep
+         size = FALSE                       # remove
+         )
+```
+
+
 
 
 ```{r, echo = F}

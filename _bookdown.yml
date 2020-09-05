@@ -32,7 +32,6 @@ rmd_files: [
   "ggplot2_theme.Rmd",
   "ggplot2_scales.Rmd",
   "ggplot2_guides.Rmd",
-  "ggplot2_gganimate.Rmd",
   "adv_dplyr.Rmd",
   "rowwise.Rmd",
   "colwise.Rmd",
@@ -45,6 +44,7 @@ rmd_files: [
   "sampling.Rmd",
   "tidystats.Rmd",
   "lm.Rmd",
+  "broom.Rmd",
   "lmm.Rmd",
   "glm.Rmd",
   "ordinal.Rmd",
@@ -65,6 +65,8 @@ rmd_files: [
   "slider.Rmd",
   "stars.Rmd",
   "ggplot2_academic.Rmd",
+  "ggplot2_colors.Rmd",
+  "ggplot2_gganimate.Rmd",
   "lazyman.Rmd",
 
 

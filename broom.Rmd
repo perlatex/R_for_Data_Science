@@ -1,0 +1,14 @@
+# 模型输出结果的规整 {#broom}
+
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(broom)
+```
+
+`broom` 将常用的100+种模型的输出结果规整成数据框 `tibble()`的形式，目的是方便模型比较和可视化.
+`broom` 提供了三个主要的函数:
+
+- `tidy()` 提取模型输出结果的主要信息
+- `glance()` 提取模型输出结果的完整信息
+- `augment()` 模型输出的信息添加到建模用的数据集中
