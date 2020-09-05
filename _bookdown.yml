@@ -12,12 +12,16 @@ rmd_files: [
   "index.Rmd",
   "author.Rmd",
 
-   "intro_ds.Rmd",        # 基础篇
-   "intro_R.Rmd",
-   "subsetting.Rmd",
 
-   "rmarkdown.Rmd",       # tidyverse篇
-   "readr.Rmd",
+  # 基础篇
+  "intro_ds.Rmd",
+  "intro_R.Rmd",
+  "subsetting.Rmd",
+
+
+  # tidyverse篇
+  "rmarkdown.Rmd",
+  "readr.Rmd",
   "dplyr.Rmd",
   "ggplot2_aes.Rmd",
   "stringr.Rmd",
@@ -35,18 +39,20 @@ rmd_files: [
   "tidyverse_tips.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",
-  #
-  #                     #work
-  "sampling.Rmd",       # 建模篇
+
+
+  # 建模篇
+  "sampling.Rmd",
   "tidystats.Rmd",
   "lm.Rmd",
   "lmm.Rmd",
   "glm.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
-  #
-  #
-  "eda_nobel.Rmd",     # 应用篇
+
+
+  # 应用篇
+  "eda_nobel.Rmd",
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",
   "eda_anscombe.Rmd",
@@ -58,6 +64,7 @@ rmd_files: [
   "tidytext.Rmd",
   "slider.Rmd",
   "stars.Rmd",
+  "ggplot2_academic.Rmd",
   "lazyman.Rmd",
 
 

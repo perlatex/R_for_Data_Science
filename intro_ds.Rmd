@@ -17,7 +17,7 @@ knitr::include_graphics("images/data_science.png", dpi = 300)
 
 从数据科学所涉及的学科领域来看，其知识结构不仅仅包括数学、统计学、计算机科学、信息科学等在内的基础性理论，还应该包括社会学、物理学、情报学、生物医学等在内的专业性领域理论。
 
-（事实上，最重要的最下面那个部分，专业领域的知识）
+（事实上，**编程是工具，统计是灵魂，专业是核心**，最重要的最下面那个部分，专业领域的知识）
 
 ## 什么是R
 
@@ -49,21 +49,14 @@ knitr::include_graphics("images/Rinventor.png")
 knitr::include_graphics("images/what_is_R.png")
 ```
 
-R语言是用于统计分析，图形表示和报告的编程语言:
+R语言是用于统计分析、图形表示和报告的编程语言:
 
--   R 是一个\textcolor{red}{统计编程}语言（statistical programming）
+-   R 是一个**统计编程**语言（statistical programming）
 -   R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X
--   R 拥有顶尖水准的\textcolor{red}{制图}功能
+-   R 拥有顶尖水准的**制图**功能
 -   R 是免费的
--   R 应用广泛，拥有丰富的\textcolor{red}{库包}
--   活跃的\textcolor{red}{社区}
-
-<!-- -   R 是一个**统计编程**语言（statistical programming） -->
-<!-- -   R 可运行于多种平台之上，包括Windows、UNIX 和 Mac OS X -->
-<!-- -   R 拥有顶尖水准的**制图**功能 -->
-<!-- -   R 是免费的 -->
-<!-- -   R 应用广泛，拥有丰富的**库包** -->
-<!-- -   活跃的**社区** -->
+-   R 应用广泛，拥有丰富的**库包**
+-   活跃的**社区**
 
 ### R语言发展趋势
 

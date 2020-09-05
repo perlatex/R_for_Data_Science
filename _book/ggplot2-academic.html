@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>第 1 章 科研数据可视化 | 数据科学中的 R 语言</title>
+  <meta name="description" content="一个简单的中文书示例。" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="第 1 章 科研数据可视化 | 数据科学中的 R 语言" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="一个简单的中文书示例。" />
+  <meta name="github-repo" content="perlatex/R_for_data_science" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 1 章 科研数据可视化 | 数据科学中的 R 语言" />
+  
+  <meta name="twitter:description" content="一个简单的中文书示例。" />
+  
+
+<meta name="author" content="王敏杰" />
+
+
+<meta name="date" content="2020-09-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="author.html"/>
+<link rel="next" href="exams.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css\psyteachr.css" type="text/css" />
+<link rel="stylesheet" href="css\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">数据科学中的R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>前言</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#关于课程"><i class="fa fa-check"></i>关于课程</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#课件中用到的宏包"><i class="fa fa-check"></i>课件中用到的宏包</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#ryouwithme"><i class="fa fa-check"></i>RYouWithMe</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#致谢"><i class="fa fa-check"></i>致谢</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="chapter" data-level="1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html"><i class="fa fa-check"></i><b>1</b> 科研数据可视化</a><ul>
+<li class="chapter" data-level="1.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#统计分布图"><i class="fa fa-check"></i><b>1.1</b> 统计分布图</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#points-errorbars"><i class="fa fa-check"></i><b>1.1.1</b> points-errorbars</a></li>
+<li class="chapter" data-level="1.1.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#箱线图"><i class="fa fa-check"></i><b>1.1.2</b> 箱线图</a></li>
+<li class="chapter" data-level="1.1.3" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#小提琴图"><i class="fa fa-check"></i><b>1.1.3</b> 小提琴图</a></li>
+<li class="chapter" data-level="1.1.4" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#sina-图"><i class="fa fa-check"></i><b>1.1.4</b> sina 图</a></li>
+<li class="chapter" data-level="1.1.5" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#山峦图"><i class="fa fa-check"></i><b>1.1.5</b> 山峦图</a></li>
+<li class="chapter" data-level="1.1.6" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#有颜色山峦图"><i class="fa fa-check"></i><b>1.1.6</b> 有颜色山峦图</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#说明"><i class="fa fa-check"></i><b>1.2</b> 说明</a></li>
+</ul></li>
+<li class="appendix"><span><b>附录</b></span></li>
+<li class="chapter" data-level="A" data-path="exams.html"><a href="exams.html"><i class="fa fa-check"></i><b>A</b> 期末考试</a><ul>
+<li class="chapter" data-level="A.1" data-path="exams.html"><a href="exams.html#方式"><i class="fa fa-check"></i><b>A.1</b> 方式</a></li>
+<li class="chapter" data-level="A.2" data-path="exams.html"><a href="exams.html#要求"><i class="fa fa-check"></i><b>A.2</b> 要求</a></li>
+<li class="chapter" data-level="A.3" data-path="exams.html"><a href="exams.html#数据集"><i class="fa fa-check"></i><b>A.3</b> 数据集</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">数据科学中的 R 语言</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ggplot2-academic" class="section level1">
+<h1><span class="header-section-number">第 1 章</span> 科研数据可视化</h1>
+<div id="统计分布图" class="section level2">
+<h2><span class="header-section-number">1.1</span> 统计分布图</h2>
+<p>很多情形下，我们都需要画出统计分布图。比如，天气温度数据(美国内布拉斯加州东部，林肯市， 2016年)，我们想看每个月份里气温的分布情况</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="ggplot2-academic.html#cb5-1"></a>lincoln_df &lt;-<span class="st"> </span>ggridges<span class="op">::</span>lincoln_weather <span class="op">%&gt;%</span></span>
+<span id="cb5-2"><a href="ggplot2-academic.html#cb5-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb5-3"><a href="ggplot2-academic.html#cb5-3"></a>    <span class="dt">month_short =</span> <span class="kw">fct_recode</span>(</span>
+<span id="cb5-4"><a href="ggplot2-academic.html#cb5-4"></a>      Month,</span>
+<span id="cb5-5"><a href="ggplot2-academic.html#cb5-5"></a>      <span class="dt">Jan =</span> <span class="st">&quot;January&quot;</span>,</span>
+<span id="cb5-6"><a href="ggplot2-academic.html#cb5-6"></a>      <span class="dt">Feb =</span> <span class="st">&quot;February&quot;</span>,</span>
+<span id="cb5-7"><a href="ggplot2-academic.html#cb5-7"></a>      <span class="dt">Mar =</span> <span class="st">&quot;March&quot;</span>,</span>
+<span id="cb5-8"><a href="ggplot2-academic.html#cb5-8"></a>      <span class="dt">Apr =</span> <span class="st">&quot;April&quot;</span>,</span>
+<span id="cb5-9"><a href="ggplot2-academic.html#cb5-9"></a>      <span class="dt">May =</span> <span class="st">&quot;May&quot;</span>,</span>
+<span id="cb5-10"><a href="ggplot2-academic.html#cb5-10"></a>      <span class="dt">Jun =</span> <span class="st">&quot;June&quot;</span>,</span>
+<span id="cb5-11"><a href="ggplot2-academic.html#cb5-11"></a>      <span class="dt">Jul =</span> <span class="st">&quot;July&quot;</span>,</span>
+<span id="cb5-12"><a href="ggplot2-academic.html#cb5-12"></a>      <span class="dt">Aug =</span> <span class="st">&quot;August&quot;</span>,</span>
+<span id="cb5-13"><a href="ggplot2-academic.html#cb5-13"></a>      <span class="dt">Sep =</span> <span class="st">&quot;September&quot;</span>,</span>
+<span id="cb5-14"><a href="ggplot2-academic.html#cb5-14"></a>      <span class="dt">Oct =</span> <span class="st">&quot;October&quot;</span>,</span>
+<span id="cb5-15"><a href="ggplot2-academic.html#cb5-15"></a>      <span class="dt">Nov =</span> <span class="st">&quot;November&quot;</span>,</span>
+<span id="cb5-16"><a href="ggplot2-academic.html#cb5-16"></a>      <span class="dt">Dec =</span> <span class="st">&quot;December&quot;</span></span>
+<span id="cb5-17"><a href="ggplot2-academic.html#cb5-17"></a>    )</span>
+<span id="cb5-18"><a href="ggplot2-academic.html#cb5-18"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb5-19"><a href="ggplot2-academic.html#cb5-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">month_short =</span> <span class="kw">fct_rev</span>(month_short)) <span class="op">%&gt;%</span></span>
+<span id="cb5-20"><a href="ggplot2-academic.html#cb5-20"></a><span class="st">  </span><span class="kw">select</span>(Month, month_short, <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)</span>
+<span id="cb5-21"><a href="ggplot2-academic.html#cb5-21"></a></span>
+<span id="cb5-22"><a href="ggplot2-academic.html#cb5-22"></a>lincoln_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-23"><a href="ggplot2-academic.html#cb5-23"></a><span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>) </span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Month"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["month_short"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["Mean Temperature [F]"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"January","2":"Jan","3":"24"},{"1":"January","2":"Jan","3":"23"},{"1":"January","2":"Jan","3":"23"},{"1":"January","2":"Jan","3":"17"},{"1":"January","2":"Jan","3":"29"},{"1":"January","2":"Jan","3":"33"},{"1":"January","2":"Jan","3":"30"},{"1":"January","2":"Jan","3":"25"},{"1":"January","2":"Jan","3":"9"},{"1":"January","2":"Jan","3":"11"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>统计分布图的方法很多，我们下面比较各种方法的优劣。</p>
+<div id="points-errorbars" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> points-errorbars</h3>
+<p>画分布图的最简单的方法，就是计算每个月的气温均值或者中位数，并在均值或者中位数位置标出误差棒(error bars)，比如图 <a href="ggplot2-academic.html#fig:lincoln-temp-points-errorbars">1.1</a> 。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="ggplot2-academic.html#cb6-1"></a>lincoln_errbar &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb6-2"><a href="ggplot2-academic.html#cb6-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb6-3"><a href="ggplot2-academic.html#cb6-3"></a><span class="st">  </span><span class="kw">stat_summary</span>(</span>
+<span id="cb6-4"><a href="ggplot2-academic.html#cb6-4"></a>    <span class="dt">fun.y =</span> mean, <span class="dt">fun.ymax =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-5"><a href="ggplot2-academic.html#cb6-5"></a>      <span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
+<span id="cb6-6"><a href="ggplot2-academic.html#cb6-6"></a>    },</span>
+<span id="cb6-7"><a href="ggplot2-academic.html#cb6-7"></a>    <span class="dt">fun.ymin =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb6-8"><a href="ggplot2-academic.html#cb6-8"></a>      <span class="kw">mean</span>(x) <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x)</span>
+<span id="cb6-9"><a href="ggplot2-academic.html#cb6-9"></a>    }, <span class="dt">geom =</span> <span class="st">&quot;pointrange&quot;</span>,</span>
+<span id="cb6-10"><a href="ggplot2-academic.html#cb6-10"></a>    <span class="dt">fatten =</span> <span class="dv">5</span></span>
+<span id="cb6-11"><a href="ggplot2-academic.html#cb6-11"></a>  ) <span class="op">+</span></span>
+<span id="cb6-12"><a href="ggplot2-academic.html#cb6-12"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb6-13"><a href="ggplot2-academic.html#cb6-13"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb6-14"><a href="ggplot2-academic.html#cb6-14"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb6-15"><a href="ggplot2-academic.html#cb6-15"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb6-16"><a href="ggplot2-academic.html#cb6-16"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb6-17"><a href="ggplot2-academic.html#cb6-17"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb6-18"><a href="ggplot2-academic.html#cb6-18"></a>  )</span>
+<span id="cb6-19"><a href="ggplot2-academic.html#cb6-19"></a></span>
+<span id="cb6-20"><a href="ggplot2-academic.html#cb6-20"></a>lincoln_errbar</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-points-errorbars"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-points-errorbars-1.png" alt="林肯市2016年气温变化图" width="576" />
+<p class="caption">
+图 1.1: 林肯市2016年气温变化图
+</p>
+</div>
+<p><strong>但这个图有很多问题，或者说是错误的</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>图中只用了一个点和两个误差棒，丢失了很多分布信息。</p></li>
+<li><p>读者不能很直观的读出这个点的含义（是均值还是中位数？）</p></li>
+<li><p>误差棒代表的含义不明确（标准差？标准误？还是其他？）</p></li>
+</ol>
+<blockquote>
+<blockquote>
+<p>通过看代码，知道这里用的是，均值加减2倍的<strong>标准差</strong>，其目的是想表达这个范围涵盖了95%的的数据。 事实上，误差棒一般用于<strong>标准误</strong>（或者加减2倍的标准误来代表估计均值的95%置信区间），所以这里使用标准差就造成了混淆。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>( 标准误：对样本均值估计的不确定性; 标准差：对偏离均值的分散程度 )</p>
+</blockquote>
+</blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>现实的数据往往是偏态的，但这个图的误差棒几乎是对称，会让人觉得产生怀疑。</li>
+</ol>
+</div>
+<div id="箱线图" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> 箱线图</h3>
+<p>为了解决以上问题，可以使用箱线图（boxplot），箱线图将数据分成若干段，如图 <a href="ggplot2-academic.html#fig:boxplot-schematic">1.2</a>.</p>
+<div class="figure"><span id="fig:boxplot-schematic"></span>
+<img src="images/boxplot-schematic-1.png" alt="箱线图示意图" width="100%" />
+<p class="caption">
+图 1.2: 箱线图示意图
+</p>
+</div>
+<ul>
+<li>盒子中间的横线是中位数(50th percentile)，底部的横线代表第一分位数(25th
+percentile)，顶部的横线代表第三分位数(75th percentile)</li>
+<li>盒子的范围覆盖了50%的数据，每个小盒子是25%的数据，盒子高度越短，
+说明数据越集中，盒子高度越长，数据越分散。</li>
+<li>上面的这条竖线的长度 = 从盒子上边缘开始，延伸到<em>1.5倍盒子高度的范围中</em>最远的点</li>
+<li>下面的这条竖线的长度 = 从盒子下边缘开始，延伸到<em>1.5倍盒子高度的范围中</em>最远的点</li>
+<li>在线条之外的点就是 outlies</li>
+</ul>
+<p>那么气温分布用箱线图画出来 (图 <a href="ggplot2-academic.html#fig:lincoln-temp-boxplots">1.3</a>). 我们可以看到12月份数据
+偏态（绝大部分时候中等的冷，少部分是极度寒冷），其他月份，比如7月份，数据分布的比较正态</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="ggplot2-academic.html#cb7-1"></a>lincoln_box &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb7-2"><a href="ggplot2-academic.html#cb7-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb7-3"><a href="ggplot2-academic.html#cb7-3"></a><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">fill =</span> <span class="st">&quot;grey90&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-4"><a href="ggplot2-academic.html#cb7-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-5"><a href="ggplot2-academic.html#cb7-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-6"><a href="ggplot2-academic.html#cb7-6"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb7-7"><a href="ggplot2-academic.html#cb7-7"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb7-8"><a href="ggplot2-academic.html#cb7-8"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb7-9"><a href="ggplot2-academic.html#cb7-9"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb7-10"><a href="ggplot2-academic.html#cb7-10"></a>  )</span>
+<span id="cb7-11"><a href="ggplot2-academic.html#cb7-11"></a></span>
+<span id="cb7-12"><a href="ggplot2-academic.html#cb7-12"></a>lincoln_box</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-boxplots"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-boxplots-1.png" alt="林肯市2016年气温分布箱线图" width="576" />
+<p class="caption">
+图 1.3: 林肯市2016年气温分布箱线图
+</p>
+</div>
+</div>
+<div id="小提琴图" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> 小提琴图</h3>
+<p>箱线图是1970年代统计学家发明的一种可视化方法，这种图可以很方便地用手工画出，所以当时很流行，现在计算机性能大大提升了，所以大家喜欢用视觉上更直观的<strong>小提琴图</strong>取代箱线图</p>
+<div class="figure"><span id="fig:unnamed-chunk-10"></span>
+<img src="images/violin-schematic-1.png" alt="小提琴图示意图" width="80%" />
+<p class="caption">
+图 1.4: 小提琴图示意图
+</p>
+</div>
+<ul>
+<li>小提琴图相当于密度分布图旋转90度，然后再做个对称的镜像</li>
+<li>最宽或者最厚的地方，对应着数据密度最大的地方</li>
+<li>箱线图能用的地方小提琴图都能用，而且小提琴图可以很好的展示bimodal data的情况（箱线图做不到）</li>
+</ul>
+<div class="figure"><span id="fig:unnamed-chunk-11"></span>
+<img src="images/boxplot.png" alt="图片来源：nature methods, VOL.11, NO.2, FEBRUARY 2014" width="100%" />
+<p class="caption">
+图 1.5: 图片来源：nature methods, VOL.11, NO.2, FEBRUARY 2014
+</p>
+</div>
+<p>在图 <a href="ggplot2-academic.html#fig:lincoln-temp-violins">1.6</a>， 我们使用小提琴图画图气温分布，可以看到，11月份的时候，有两个高密度区间（两个峰，50 degrees 和 35 degrees Fahrenheit），注意，这个信息在前面两个图中是没有的。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="ggplot2-academic.html#cb8-1"></a>lincoln_violin &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb8-2"><a href="ggplot2-academic.html#cb8-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb8-3"><a href="ggplot2-academic.html#cb8-3"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">fill =</span> <span class="st">&quot;grey90&quot;</span>) <span class="op">+</span></span>
+<span id="cb8-4"><a href="ggplot2-academic.html#cb8-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb8-5"><a href="ggplot2-academic.html#cb8-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb8-6"><a href="ggplot2-academic.html#cb8-6"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb8-7"><a href="ggplot2-academic.html#cb8-7"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb8-8"><a href="ggplot2-academic.html#cb8-8"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb8-9"><a href="ggplot2-academic.html#cb8-9"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb8-10"><a href="ggplot2-academic.html#cb8-10"></a>  )</span>
+<span id="cb8-11"><a href="ggplot2-academic.html#cb8-11"></a></span>
+<span id="cb8-12"><a href="ggplot2-academic.html#cb8-12"></a>lincoln_violin</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-violins"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-violins-1.png" alt="林肯市2016年气温分布小提琴图" width="576" />
+<p class="caption">
+图 1.6: 林肯市2016年气温分布小提琴图
+</p>
+</div>
+<p>事实上，小提琴图也是不完美的，用的是密度分布图，会造成没有数据点的地方，也会有分布。怎么解决呢？</p>
+</div>
+<div id="sina-图" class="section level3">
+<h3><span class="header-section-number">1.1.4</span> sina 图</h3>
+<p>解决办法就是，把原始数据点打上去，</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="ggplot2-academic.html#cb9-1"></a>lincoln_points &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb9-2"><a href="ggplot2-academic.html#cb9-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb9-3"><a href="ggplot2-academic.html#cb9-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">0.75</span>) <span class="op">+</span></span>
+<span id="cb9-4"><a href="ggplot2-academic.html#cb9-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-5"><a href="ggplot2-academic.html#cb9-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-6"><a href="ggplot2-academic.html#cb9-6"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb9-7"><a href="ggplot2-academic.html#cb9-7"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb9-8"><a href="ggplot2-academic.html#cb9-8"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb9-9"><a href="ggplot2-academic.html#cb9-9"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb9-10"><a href="ggplot2-academic.html#cb9-10"></a>  )</span>
+<span id="cb9-11"><a href="ggplot2-academic.html#cb9-11"></a></span>
+<span id="cb9-12"><a href="ggplot2-academic.html#cb9-12"></a>lincoln_points</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-all-points"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-all-points-1.png" alt="林肯市2016年气温分布散点图" width="576" />
+<p class="caption">
+图 1.7: 林肯市2016年气温分布散点图
+</p>
+</div>
+<p>但问题又来了，这样会有大量重叠的点。有时候会采用透明度的办法，即给每个点设置透明度，某个位置颜色越深，说明这个位置重叠的越多。当然，最好的办法是，给每个点增加一个随机的很小的“偏移”，即抖散图。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="ggplot2-academic.html#cb10-1"></a>lincoln_jitter &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb10-2"><a href="ggplot2-academic.html#cb10-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb10-3"><a href="ggplot2-academic.html#cb10-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> <span class="kw">position_jitter</span>(<span class="dt">width =</span> <span class="fl">.15</span>, <span class="dt">height =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">320</span>), <span class="dt">size =</span> <span class="fl">0.75</span>) <span class="op">+</span></span>
+<span id="cb10-4"><a href="ggplot2-academic.html#cb10-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-5"><a href="ggplot2-academic.html#cb10-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-6"><a href="ggplot2-academic.html#cb10-6"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb10-7"><a href="ggplot2-academic.html#cb10-7"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb10-8"><a href="ggplot2-academic.html#cb10-8"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(</span>
+<span id="cb10-9"><a href="ggplot2-academic.html#cb10-9"></a>      <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb10-10"><a href="ggplot2-academic.html#cb10-10"></a>      <span class="dt">size =</span> <span class="dv">12</span></span>
+<span id="cb10-11"><a href="ggplot2-academic.html#cb10-11"></a>    ),</span>
+<span id="cb10-12"><a href="ggplot2-academic.html#cb10-12"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb10-13"><a href="ggplot2-academic.html#cb10-13"></a>  )</span>
+<span id="cb10-14"><a href="ggplot2-academic.html#cb10-14"></a></span>
+<span id="cb10-15"><a href="ggplot2-academic.html#cb10-15"></a>lincoln_jitter</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-jittered"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-jittered-1.png" alt="林肯市2016年气温分布抖散图" width="576" />
+<p class="caption">
+图 1.8: 林肯市2016年气温分布抖散图
+</p>
+</div>
+<p>于是，（小提琴图 + 抖散图）= <a href="https://www.tandfonline.com/doi/abs/10.1080/10618600.2017.1366914?journalCode=ucgs20">sina 图</a>，这样既可以看到原始的点，又可以看到统计分布，见图 <a href="ggplot2-academic.html#fig:lincoln-temp-sina">1.9</a>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="ggplot2-academic.html#cb11-1"></a>lincoln_sina &lt;-<span class="st"> </span>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb11-2"><a href="ggplot2-academic.html#cb11-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> month_short, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb11-3"><a href="ggplot2-academic.html#cb11-3"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;gray90&quot;</span>) <span class="op">+</span></span>
+<span id="cb11-4"><a href="ggplot2-academic.html#cb11-4"></a><span class="st">  </span><span class="co"># dviz.supp::stat_sina(size = 0.85) +</span></span>
+<span id="cb11-5"><a href="ggplot2-academic.html#cb11-5"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.25</span>, <span class="dt">size =</span> <span class="fl">0.85</span>) <span class="op">+</span></span>
+<span id="cb11-6"><a href="ggplot2-academic.html#cb11-6"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;month&quot;</span>) <span class="op">+</span></span>
+<span id="cb11-7"><a href="ggplot2-academic.html#cb11-7"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;mean temperature (°F)&quot;</span>) <span class="op">+</span></span>
+<span id="cb11-8"><a href="ggplot2-academic.html#cb11-8"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb11-9"><a href="ggplot2-academic.html#cb11-9"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb11-10"><a href="ggplot2-academic.html#cb11-10"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(</span>
+<span id="cb11-11"><a href="ggplot2-academic.html#cb11-11"></a>      <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb11-12"><a href="ggplot2-academic.html#cb11-12"></a>      <span class="dt">size =</span> <span class="dv">12</span></span>
+<span id="cb11-13"><a href="ggplot2-academic.html#cb11-13"></a>    ),</span>
+<span id="cb11-14"><a href="ggplot2-academic.html#cb11-14"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb11-15"><a href="ggplot2-academic.html#cb11-15"></a>  )</span>
+<span id="cb11-16"><a href="ggplot2-academic.html#cb11-16"></a></span>
+<span id="cb11-17"><a href="ggplot2-academic.html#cb11-17"></a>lincoln_sina</span></code></pre></div>
+<div class="figure"><span id="fig:lincoln-temp-sina"></span>
+<img src="R4DS_files/figure-html/lincoln-temp-sina-1.png" alt="林肯市2016年气温分布 sina 图" width="576" />
+<p class="caption">
+图 1.9: 林肯市2016年气温分布 sina 图
+</p>
+</div>
+</div>
+<div id="山峦图" class="section level3">
+<h3><span class="header-section-number">1.1.5</span> 山峦图</h3>
+<p>前面的图，分组变量（月份）是顺着<em>x</em>轴，这里介绍的<strong>山峦图</strong>（重山叠叠的感觉）分组变量是顺着<em>y</em>轴，这种图，在画不同时间的分布图的时候，效果非常不错。 比如图 <a href="ggplot2-academic.html#fig:temp-ridgeline">1.10</a>， 展示气温分布的山峦图。同样，图中很直观地展示了11月份的气温分布有两个峰值。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="ggplot2-academic.html#cb12-1"></a>bandwidth &lt;-<span class="st"> </span><span class="fl">3.4</span></span>
+<span id="cb12-2"><a href="ggplot2-academic.html#cb12-2"></a></span>
+<span id="cb12-3"><a href="ggplot2-academic.html#cb12-3"></a>lincoln_df <span class="op">%&gt;%</span></span>
+<span id="cb12-4"><a href="ggplot2-academic.html#cb12-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Month</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb12-5"><a href="ggplot2-academic.html#cb12-5"></a><span class="st">  </span><span class="kw">geom_density_ridges</span>(</span>
+<span id="cb12-6"><a href="ggplot2-academic.html#cb12-6"></a>    <span class="dt">scale =</span> <span class="dv">3</span>, <span class="dt">rel_min_height =</span> <span class="fl">0.01</span>,</span>
+<span id="cb12-7"><a href="ggplot2-academic.html#cb12-7"></a>    <span class="dt">bandwidth =</span> bandwidth, <span class="dt">fill =</span> colorspace<span class="op">::</span><span class="kw">lighten</span>(<span class="st">&quot;#56B4E9&quot;</span>, <span class="fl">.3</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span></span>
+<span id="cb12-8"><a href="ggplot2-academic.html#cb12-8"></a>  ) <span class="op">+</span></span>
+<span id="cb12-9"><a href="ggplot2-academic.html#cb12-9"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(</span>
+<span id="cb12-10"><a href="ggplot2-academic.html#cb12-10"></a>    <span class="dt">name =</span> <span class="st">&quot;mean temperature (°F)&quot;</span>,</span>
+<span id="cb12-11"><a href="ggplot2-academic.html#cb12-11"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>)</span>
+<span id="cb12-12"><a href="ggplot2-academic.html#cb12-12"></a>  ) <span class="op">+</span></span>
+<span id="cb12-13"><a href="ggplot2-academic.html#cb12-13"></a><span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">name =</span> <span class="ot">NULL</span>, <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.2</span>, <span class="dv">0</span>, <span class="fl">2.6</span>)) <span class="op">+</span></span>
+<span id="cb12-14"><a href="ggplot2-academic.html#cb12-14"></a><span class="st">  </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb12-15"><a href="ggplot2-academic.html#cb12-15"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb12-16"><a href="ggplot2-academic.html#cb12-16"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb12-17"><a href="ggplot2-academic.html#cb12-17"></a>    <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">vjust =</span> <span class="dv">0</span>),</span>
+<span id="cb12-18"><a href="ggplot2-academic.html#cb12-18"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb12-19"><a href="ggplot2-academic.html#cb12-19"></a>  )</span></code></pre></div>
+<div class="figure"><span id="fig:temp-ridgeline"></span>
+<img src="R4DS_files/figure-html/temp-ridgeline-1.png" alt="林肯市2016年气温分布山峦图" width="576" />
+<p class="caption">
+图 1.10: 林肯市2016年气温分布山峦图
+</p>
+</div>
+<p>但这种图，也有一个问题，<em>y</em>轴是分组变量，<em>x</em>轴是数据的密度分布，缺少了密度分布的标度（即，缺少了密度图的高度，事实上，小提琴图也有这个毛病），所以这种图不适合比较精确的密度分布展示，但在探索性分析中，比较不同分组的密度分布，可以很方便获取直观的认知感受。</p>
+</div>
+<div id="有颜色山峦图" class="section level3">
+<h3><span class="header-section-number">1.1.6</span> 有颜色山峦图</h3>
+<p>我们看到</p>
+<ul>
+<li>温度值越高，<em>x</em>轴坐标越靠右；</li>
+<li>温度值越高，颜色更亮；</li>
+</ul>
+<p>因此，可以将<strong>气温变量</strong>映射到<strong>位置</strong>属性和<strong>颜色</strong>属性，见图 <a href="ggplot2-academic.html#fig:temp-ridgeline-colorbar">1.11</a></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="ggplot2-academic.html#cb13-1"></a>bandwidth &lt;-<span class="st"> </span><span class="fl">3.4</span></span>
+<span id="cb13-2"><a href="ggplot2-academic.html#cb13-2"></a></span>
+<span id="cb13-3"><a href="ggplot2-academic.html#cb13-3"></a>lincoln_base &lt;-<span class="st"> </span>lincoln_weather <span class="op">%&gt;%</span></span>
+<span id="cb13-4"><a href="ggplot2-academic.html#cb13-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Month</span><span class="st">`</span>, <span class="dt">fill =</span> ..x..)) <span class="op">+</span></span>
+<span id="cb13-5"><a href="ggplot2-academic.html#cb13-5"></a><span class="st">  </span><span class="kw">geom_density_ridges_gradient</span>(</span>
+<span id="cb13-6"><a href="ggplot2-academic.html#cb13-6"></a>    <span class="dt">scale =</span> <span class="dv">3</span>, <span class="dt">rel_min_height =</span> <span class="fl">0.01</span>, <span class="dt">bandwidth =</span> bandwidth,</span>
+<span id="cb13-7"><a href="ggplot2-academic.html#cb13-7"></a>    <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">0.25</span></span>
+<span id="cb13-8"><a href="ggplot2-academic.html#cb13-8"></a>  ) <span class="op">+</span></span>
+<span id="cb13-9"><a href="ggplot2-academic.html#cb13-9"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(</span>
+<span id="cb13-10"><a href="ggplot2-academic.html#cb13-10"></a>    <span class="dt">name =</span> <span class="st">&quot;mean temperature (°F)&quot;</span>,</span>
+<span id="cb13-11"><a href="ggplot2-academic.html#cb13-11"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>), <span class="dt">labels =</span> <span class="ot">NULL</span></span>
+<span id="cb13-12"><a href="ggplot2-academic.html#cb13-12"></a>  ) <span class="op">+</span></span>
+<span id="cb13-13"><a href="ggplot2-academic.html#cb13-13"></a><span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">name =</span> <span class="ot">NULL</span>, <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.2</span>, <span class="dv">0</span>, <span class="fl">2.6</span>)) <span class="op">+</span></span>
+<span id="cb13-14"><a href="ggplot2-academic.html#cb13-14"></a><span class="st">  </span>colorspace<span class="op">::</span><span class="kw">scale_fill_continuous_sequential</span>(</span>
+<span id="cb13-15"><a href="ggplot2-academic.html#cb13-15"></a>    <span class="dt">palette =</span> <span class="st">&quot;Heat&quot;</span>,</span>
+<span id="cb13-16"><a href="ggplot2-academic.html#cb13-16"></a>    <span class="dt">l1 =</span> <span class="dv">20</span>, <span class="dt">l2 =</span> <span class="dv">100</span>, <span class="dt">c2 =</span> <span class="dv">0</span>,</span>
+<span id="cb13-17"><a href="ggplot2-academic.html#cb13-17"></a>    <span class="dt">rev =</span> <span class="ot">FALSE</span></span>
+<span id="cb13-18"><a href="ggplot2-academic.html#cb13-18"></a>  ) <span class="op">+</span></span>
+<span id="cb13-19"><a href="ggplot2-academic.html#cb13-19"></a><span class="st">  </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span></span>
+<span id="cb13-20"><a href="ggplot2-academic.html#cb13-20"></a><span class="st">  </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">14</span>) <span class="op">+</span></span>
+<span id="cb13-21"><a href="ggplot2-academic.html#cb13-21"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb13-22"><a href="ggplot2-academic.html#cb13-22"></a>    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="dv">12</span>),</span>
+<span id="cb13-23"><a href="ggplot2-academic.html#cb13-23"></a>    <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">vjust =</span> <span class="dv">0</span>),</span>
+<span id="cb13-24"><a href="ggplot2-academic.html#cb13-24"></a>    <span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="fl">1.5</span>)</span>
+<span id="cb13-25"><a href="ggplot2-academic.html#cb13-25"></a>  )</span>
+<span id="cb13-26"><a href="ggplot2-academic.html#cb13-26"></a></span>
+<span id="cb13-27"><a href="ggplot2-academic.html#cb13-27"></a></span>
+<span id="cb13-28"><a href="ggplot2-academic.html#cb13-28"></a><span class="co"># x axis labels</span></span>
+<span id="cb13-29"><a href="ggplot2-academic.html#cb13-29"></a>temps &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">temp =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>))</span>
+<span id="cb13-30"><a href="ggplot2-academic.html#cb13-30"></a></span>
+<span id="cb13-31"><a href="ggplot2-academic.html#cb13-31"></a><span class="co"># calculate corrected color ranges</span></span>
+<span id="cb13-32"><a href="ggplot2-academic.html#cb13-32"></a><span class="co"># stat_joy uses the +/- 3*bandwidth calculation internally</span></span>
+<span id="cb13-33"><a href="ggplot2-academic.html#cb13-33"></a>tmin &lt;-<span class="st"> </span><span class="kw">min</span>(lincoln_weather<span class="op">$</span><span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>) <span class="op">-</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>bandwidth</span>
+<span id="cb13-34"><a href="ggplot2-academic.html#cb13-34"></a>tmax &lt;-<span class="st"> </span><span class="kw">max</span>(lincoln_weather<span class="op">$</span><span class="st">`</span><span class="dt">Mean Temperature [F]</span><span class="st">`</span>) <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>bandwidth</span>
+<span id="cb13-35"><a href="ggplot2-academic.html#cb13-35"></a></span>
+<span id="cb13-36"><a href="ggplot2-academic.html#cb13-36"></a>xax &lt;-<span class="st"> </span><span class="kw">axis_canvas</span>(lincoln_base, <span class="dt">axis =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2</span>)) <span class="op">+</span></span>
+<span id="cb13-37"><a href="ggplot2-academic.html#cb13-37"></a><span class="st">  </span><span class="kw">geom_ridgeline_gradient</span>(</span>
+<span id="cb13-38"><a href="ggplot2-academic.html#cb13-38"></a>    <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">temp =</span> <span class="kw">seq</span>(tmin, tmax, <span class="dt">length.out =</span> <span class="dv">100</span>)),</span>
+<span id="cb13-39"><a href="ggplot2-academic.html#cb13-39"></a>    <span class="kw">aes</span>(<span class="dt">x =</span> temp, <span class="dt">y =</span> <span class="fl">1.1</span>, <span class="dt">height =</span> <span class="fl">.9</span>, <span class="dt">fill =</span> temp),</span>
+<span id="cb13-40"><a href="ggplot2-academic.html#cb13-40"></a>    <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span></span>
+<span id="cb13-41"><a href="ggplot2-academic.html#cb13-41"></a>  ) <span class="op">+</span></span>
+<span id="cb13-42"><a href="ggplot2-academic.html#cb13-42"></a><span class="st">  </span><span class="kw">geom_text</span>(</span>
+<span id="cb13-43"><a href="ggplot2-academic.html#cb13-43"></a>    <span class="dt">data =</span> temps, <span class="kw">aes</span>(<span class="dt">x =</span> temp, <span class="dt">label =</span> temp),</span>
+<span id="cb13-44"><a href="ggplot2-academic.html#cb13-44"></a>    <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="co"># family = &quot;Myriad Pro&quot;,</span></span>
+<span id="cb13-45"><a href="ggplot2-academic.html#cb13-45"></a>    <span class="dt">y =</span> <span class="fl">0.9</span>, <span class="dt">hjust =</span> <span class="fl">0.5</span>, <span class="dt">vjust =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">14</span> <span class="op">/</span><span class="st"> </span>.pt</span>
+<span id="cb13-46"><a href="ggplot2-academic.html#cb13-46"></a>  ) <span class="op">+</span></span>
+<span id="cb13-47"><a href="ggplot2-academic.html#cb13-47"></a><span class="st">  </span>colorspace<span class="op">::</span><span class="kw">scale_fill_continuous_sequential</span>(</span>
+<span id="cb13-48"><a href="ggplot2-academic.html#cb13-48"></a>    <span class="dt">palette =</span> <span class="st">&quot;Heat&quot;</span>,</span>
+<span id="cb13-49"><a href="ggplot2-academic.html#cb13-49"></a>    <span class="dt">l1 =</span> <span class="dv">20</span>, <span class="dt">l2 =</span> <span class="dv">100</span>, <span class="dt">c2 =</span> <span class="dv">0</span>,</span>
+<span id="cb13-50"><a href="ggplot2-academic.html#cb13-50"></a>    <span class="dt">rev =</span> <span class="ot">FALSE</span></span>
+<span id="cb13-51"><a href="ggplot2-academic.html#cb13-51"></a>  )</span>
+<span id="cb13-52"><a href="ggplot2-academic.html#cb13-52"></a></span>
+<span id="cb13-53"><a href="ggplot2-academic.html#cb13-53"></a>lincoln_final &lt;-<span class="st"> </span>cowplot<span class="op">::</span><span class="kw">insert_xaxis_grob</span>(lincoln_base, xax, <span class="dt">position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="dt">height =</span> <span class="kw">unit</span>(<span class="fl">0.1</span>, <span class="st">&quot;null&quot;</span>))</span>
+<span id="cb13-54"><a href="ggplot2-academic.html#cb13-54"></a></span>
+<span id="cb13-55"><a href="ggplot2-academic.html#cb13-55"></a><span class="kw">ggdraw</span>(lincoln_final)</span></code></pre></div>
+<div class="figure"><span id="fig:temp-ridgeline-colorbar"></span>
+<img src="R4DS_files/figure-html/temp-ridgeline-colorbar-1.png" alt="林肯市2016年气温分布山峦图（颜色越亮，温度越高）" width="576" />
+<p class="caption">
+图 1.11: 林肯市2016年气温分布山峦图（颜色越亮，温度越高）
+</p>
+</div>
+</div>
+</div>
+<div id="说明" class="section level2">
+<h2><span class="header-section-number">1.2</span> 说明</h2>
+<p>本章的数据和代码来源于Claus O. Wilke的<a href="https://clauswilke.com/dataviz/">《Fundamentals of Data Visualization》</a>的第9章和第20章.</p>
+
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="author.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exams.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-chinese/edit/master/ggplot2_academic.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R4DS.pdf", "R4DS.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

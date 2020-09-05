@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>数据科学中的 R 语言</title>
+  <meta name="description" content="一个简单的中文书示例。" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="数据科学中的 R 语言" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="一个简单的中文书示例。" />
+  <meta name="github-repo" content="perlatex/R_for_data_science" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="数据科学中的 R 语言" />
+  
+  <meta name="twitter:description" content="一个简单的中文书示例。" />
+  
+
+<meta name="author" content="王敏杰" />
+
+
+<meta name="date" content="2020-09-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="author.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css\psyteachr.css" type="text/css" />
+<link rel="stylesheet" href="css\style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">数据科学中的R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>前言</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#关于课程"><i class="fa fa-check"></i>关于课程</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#课件中用到的宏包"><i class="fa fa-check"></i>课件中用到的宏包</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#ryouwithme"><i class="fa fa-check"></i>RYouWithMe</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#致谢"><i class="fa fa-check"></i>致谢</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="chapter" data-level="1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html"><i class="fa fa-check"></i><b>1</b> 科研数据可视化</a><ul>
+<li class="chapter" data-level="1.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#统计分布图"><i class="fa fa-check"></i><b>1.1</b> 统计分布图</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#points-errorbars"><i class="fa fa-check"></i><b>1.1.1</b> points-errorbars</a></li>
+<li class="chapter" data-level="1.1.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#箱线图"><i class="fa fa-check"></i><b>1.1.2</b> 箱线图</a></li>
+<li class="chapter" data-level="1.1.3" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#小提琴图"><i class="fa fa-check"></i><b>1.1.3</b> 小提琴图</a></li>
+<li class="chapter" data-level="1.1.4" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#sina-图"><i class="fa fa-check"></i><b>1.1.4</b> sina 图</a></li>
+<li class="chapter" data-level="1.1.5" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#山峦图"><i class="fa fa-check"></i><b>1.1.5</b> 山峦图</a></li>
+<li class="chapter" data-level="1.1.6" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#有颜色山峦图"><i class="fa fa-check"></i><b>1.1.6</b> 有颜色山峦图</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#说明"><i class="fa fa-check"></i><b>1.2</b> 说明</a></li>
+</ul></li>
+<li class="appendix"><span><b>附录</b></span></li>
+<li class="chapter" data-level="A" data-path="exams.html"><a href="exams.html"><i class="fa fa-check"></i><b>A</b> 期末考试</a><ul>
+<li class="chapter" data-level="A.1" data-path="exams.html"><a href="exams.html#方式"><i class="fa fa-check"></i><b>A.1</b> 方式</a></li>
+<li class="chapter" data-level="A.2" data-path="exams.html"><a href="exams.html#要求"><i class="fa fa-check"></i><b>A.2</b> 要求</a></li>
+<li class="chapter" data-level="A.3" data-path="exams.html"><a href="exams.html#数据集"><i class="fa fa-check"></i><b>A.3</b> 数据集</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">数据科学中的 R 语言</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">数据科学中的 R 语言</h1>
+<p class="author"><em>王敏杰</em></p>
+<p class="date"><em>2020-09-05</em></p>
+</div>
+<div id="前言" class="section level1 unnumbered">
+<h1>前言</h1>
+<p>你好，这里是四川师范大学研究生公选课《数据科学中的R语言》的课程内容。考虑到大家来自不同的学院，有着不同的学科背景，因此讲授的内容不会太深奥（要有信心喔）。</p>
+<p>比如在课程中以下内容就不会出现</p>
+<p><span class="math display">\[
+f(x)=\frac{1}{\sqrt{2 \pi}} e^{-\frac{1}{2} x^{2}}
+\]</span></p>
+<p>而出现更多的是</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="index.html#cb1-2"></a>summary_monthly_temp &lt;-<span class="st"> </span>weather <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-3"><a href="index.html#cb1-3"></a><span class="st">  </span><span class="kw">group_by</span>(month) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-4"><a href="index.html#cb1-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(temp), </span>
+<span id="cb1-5"><a href="index.html#cb1-5"></a>            <span class="dt">std_dev =</span> <span class="kw">sd</span>(temp))</span></code></pre></div>
+<p>在<strong>跟进</strong>本课程的同时， 我强烈推荐大家阅读Hadley Wickham的
+<a href="https://r4ds.had.co.nz/">r4ds</a>这本书 <span class="citation">(Grolemund and Wickham <a href="#ref-Wickham2017" role="doc-biblioref">2017</a>)</span>。作者可是2019年8月刚刚获得考普斯总统奖（被誉为统计学的诺贝尔奖）的大神喔，点击<a href="http://hadley.nz/">这里</a>可以看他照片。</p>
+<p><img src="images/rbook1.png" width="35%" /></p>
+<div id="关于课程" class="section level2 unnumbered">
+<h2>关于课程</h2>
+<p>1、课程安排是这样的，每个章节研究的内容都是彼此独立的，大家可以单独阅读每章及运行代码。</p>
+<ul>
+<li>基础篇
+<ul>
+<li>第 <a href="#intro-ds"><strong>??</strong></a> 章介绍数据科学基础</li>
+<li>第 <a href="#intro-R"><strong>??</strong></a> 章介绍R语言基本概念</li>
+<li>第 <a href="#subsetting"><strong>??</strong></a> 章介绍R语言中的子集选取</li>
+</ul></li>
+<li>tidyverse篇
+<ul>
+<li>第 <a href="#rmarkdown"><strong>??</strong></a> 章介绍可重复性研究</li>
+<li>第 <a href="#readr"><strong>??</strong></a> 章介绍数据读入</li>
+<li>第 <a href="#dplyr"><strong>??</strong></a> 章介绍数据规整与数据处理</li>
+<li>第 <a href="#ggplot2-aes"><strong>??</strong></a> 章介绍数据可视化</li>
+<li>第 <a href="#stringr"><strong>??</strong></a> 章介绍字符串处理</li>
+<li>第 <a href="#forcats"><strong>??</strong></a> 章介绍因子类型数据</li>
+<li>第 <a href="#purrr"><strong>??</strong></a> 章介绍函数式编程</li>
+<li>第 <a href="#tibble"><strong>??</strong></a> 章介绍简单数据框</li>
+<li>第 <a href="#ggplot2-geom"><strong>??</strong></a> 章ggplot2几何对象</li>
+<li>第 <a href="#ggplot2-theme"><strong>??</strong></a> 章ggplot2的主题</li>
+<li>第 <a href="#ggplot2-scales"><strong>??</strong></a> 章ggplot2的标度</li>
+<li>第 <a href="#ggplot2-guides"><strong>??</strong></a> 章ggplot2的图例</li>
+<li>第 <a href="#ggplot2-gganimate"><strong>??</strong></a> 章让你的数据骚动起来</li>
+<li>第 <a href="#advR"><strong>??</strong></a> 章介绍tidyverse进阶</li>
+<li>第 <a href="#rowwise"><strong>??</strong></a> 章介绍tidyverse中行方向的操作</li>
+<li>第 <a href="#colwise"><strong>??</strong></a> 章介绍数据框列方向和行方向</li>
+<li>第 <a href="#tips"><strong>??</strong></a> 章介绍tidyverse中常用技巧</li>
+<li>第 <a href="#dot"><strong>??</strong></a> 章介绍tidyverse中的dot</li>
+<li>第 <a href="#tidyeval"><strong>??</strong></a> 章介绍非标准性评估</li>
+</ul></li>
+<li>建模篇
+<ul>
+<li>第 <a href="#sampling"><strong>??</strong></a> 章介绍模拟与抽样</li>
+<li>第 <a href="#tidystats"><strong>??</strong></a> 章介绍方差分析</li>
+<li>第 <a href="#lm"><strong>??</strong></a> 章介绍线性模型</li>
+<li>第 <a href="#lmm"><strong>??</strong></a> 章介绍多层线性模型</li>
+<li>第 <a href="#glm"><strong>??</strong></a> 章介绍广义线性模型</li>
+<li>第 <a href="#ordinal"><strong>??</strong></a> 章介绍有序logistic回归模型</li>
+<li>第 <a href="#tidymodels"><strong>??</strong></a> 章介绍机器学习</li>
+</ul></li>
+<li>应用篇
+<ul>
+<li>第 <a href="#eda-nobel"><strong>??</strong></a> 章介绍探索性数据分析-诺奖获得者<br />
+</li>
+<li>第 <a href="#eda-olympics"><strong>??</strong></a> 章介绍探索性数据分析-奥林匹克<br />
+</li>
+<li>第 <a href="#eda-covid2019"><strong>??</strong></a> 章介绍探索性数据分析-新冠疫情<br />
+</li>
+<li>第 <a href="#eda-anscombe"><strong>??</strong></a> 章介绍探索性数据分析-anscombe数据集<br />
+</li>
+<li>第 <a href="#eda-height"><strong>??</strong></a> 章介绍探索性数据分析-身高体重</li>
+<li>第 <a href="#eda-caribou"><strong>??</strong></a> 章介绍探索性数据分析-驯鹿迁移<br />
+</li>
+<li>第 <a href="#eda-penguins"><strong>??</strong></a> 章介绍探索性数据分析-企鹅的故事</li>
+<li>第 <a href="#rvest"><strong>??</strong></a> 章介绍网页爬虫</li>
+<li>第 <a href="#tidygraph"><strong>??</strong></a> 章介绍社会网络分析</li>
+<li>第 <a href="#tidytext"><strong>??</strong></a> 章介绍文本挖掘</li>
+<li>第 <a href="#tibbletime"><strong>??</strong></a> 章介绍时间序列分析</li>
+<li>第 <a href="#stars"><strong>??</strong></a> 章介绍地理数据处理</li>
+<li>第 <a href="#lazyman"><strong>??</strong></a> 章介绍我收集的一些有用和有趣的宏包</li>
+</ul></li>
+</ul>
+<p>2、<strong>课件源代码和数据</strong></p>
+<p>我将持续改进课件，所以欢迎大家提出建议</p>
+<ul>
+<li><a href="https://github.com/perlatex/R_for_Data_Science" class="uri">https://github.com/perlatex/R_for_Data_Science</a></li>
+</ul>
+<p>3、课程视频</p>
+<ul>
+<li>部分课程视频放在<a href="https://space.bilibili.com/627373342/video">bilibili</a>网站</li>
+</ul>
+<p>4、<strong>关于课程目标</strong></p>
+<ul>
+<li><p>课程目标: 熟悉数据科学流程，掌握统计编程技能，能运用探索性分析方法，解决基本的实际应用问题，做到学以致用，<strong>不是 learning R，而是 learning with R</strong></p></li>
+<li><p>授课方式:</p>
+<ul>
+<li>边写<strong>代码</strong>边讲</li>
+<li>通过案例式、问题式的方法，增强参与感和目标感</li>
+</ul></li>
+<li><p>课堂要求</p>
+<ul>
+<li>自带电脑，配好运行环境</li>
+<li>光看李小龙的电影，是学不会功夫的</li>
+</ul></li>
+<li><p>知识脚手架</p>
+<ul>
+<li>知识脚手架，我个人比较喜欢这个比喻。在教育中，各种知识或技巧就好比建房子用的脚手架，它帮助我们加深理解，逐渐获得独立自主学习的能力。</li>
+</ul></li>
+</ul>
+<p>5、<strong>关于如何提问</strong></p>
+<p>有的同学，这样一上来就问：<strong>老师，我的代码怎么运行不出来呢？</strong>或者图省事，干脆手机拍个照片一发。</p>
+<ul>
+<li>我想说，要想获得快速的帮助，在问问题之前，请先告诉对方三个信息：
+<ul>
+<li>想解决的问题是什么？</li>
+<li>代码是什么？</li>
+<li>报错信息是什么？</li>
+</ul></li>
+</ul>
+</div>
+<div id="课件中用到的宏包" class="section level2 unnumbered">
+<h2>课件中用到的宏包</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="index.html#cb2-1"></a>my_packages &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb2-2"><a href="index.html#cb2-2"></a><span class="st">&quot;brms&quot;</span>, <span class="st">&quot;broom&quot;</span>, <span class="st">&quot;broom.mixed&quot;</span>, <span class="st">&quot;corrr&quot;</span>, <span class="st">&quot;countrycode&quot;</span>, <span class="st">&quot;cowplot&quot;</span>, <span class="st">&quot;cranlogs&quot;</span>, <span class="st">&quot;datapasta&quot;</span>, <span class="st">&quot;devtools&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;forcats&quot;</span>, <span class="st">&quot;gapminder&quot;</span>, <span class="st">&quot;gganimate&quot;</span>, <span class="st">&quot;ggstatsplot&quot;</span>, <span class="st">&quot;ggeffects&quot;</span>, <span class="st">&quot;ggbeeswarm&quot;</span>, <span class="st">&quot;ggforce&quot;</span>, <span class="st">&quot;gghighlight&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;ggpubr&quot;</span>, <span class="st">&quot;ggraph&quot;</span>, <span class="st">&quot;ggrepel&quot;</span>, <span class="st">&quot;ggridges&quot;</span>, <span class="st">&quot;ggtext&quot;</span>, <span class="st">&quot;gt&quot;</span>, <span class="st">&quot;gtsummary&quot;</span>, <span class="st">&quot;haven&quot;</span>, <span class="st">&quot;here&quot;</span>, <span class="st">&quot;janitor&quot;</span>, <span class="st">&quot;knitr&quot;</span>, <span class="st">&quot;latex2exp&quot;</span>, <span class="st">&quot;lme4&quot;</span>, <span class="st">&quot;lubridate&quot;</span>, <span class="st">&quot;maps&quot;</span>, <span class="st">&quot;margins&quot;</span>, <span class="st">&quot;MASS&quot;</span>, <span class="st">&quot;modelr&quot;</span>, <span class="st">&quot;naniar&quot;</span>, <span class="st">&quot;nycflights13&quot;</span>, <span class="st">&quot;ordinal&quot;</span>, <span class="st">&quot;pacman&quot;</span>, <span class="st">&quot;paletteer&quot;</span>,  <span class="st">&quot;patchwork&quot;</span>, <span class="st">&quot;performance&quot;</span>, <span class="st">&quot;purrr&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;readxl&quot;</span>, <span class="st">&quot;remotes&quot;</span>, <span class="st">&quot;reprex&quot;</span>, <span class="st">&quot;rlang&quot;</span>, <span class="st">&quot;rmarkdown&quot;</span>, <span class="st">&quot;rstan&quot;</span>, <span class="st">&quot;rvest&quot;</span>, <span class="st">&quot;scales&quot;</span>, <span class="st">&quot;sf&quot;</span>, <span class="st">&quot;shadowtext&quot;</span>, <span class="st">&quot;showtext&quot;</span>, <span class="st">&quot;slider&quot;</span>, <span class="st">&quot;stars&quot;</span>, <span class="st">&quot;statsExpressions&quot;</span>, <span class="st">&quot;stringr&quot;</span>, <span class="st">&quot;styler&quot;</span>, <span class="st">&quot;tibble&quot;</span>, <span class="st">&quot;tibbletime&quot;</span>, <span class="st">&quot;tidybayes&quot;</span>, <span class="st">&quot;tidygraph&quot;</span>, <span class="st">&quot;tidymodels&quot;</span>, <span class="st">&quot;tidyr&quot;</span>, <span class="st">&quot;tidytext&quot;</span>, <span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;tinytex&quot;</span>, <span class="st">&quot;viridis&quot;</span>, <span class="st">&quot;visdat&quot;</span>, <span class="st">&quot;geoshpere&quot;</span>, <span class="st">&quot;ggstatsplot&quot;</span>, <span class="st">&quot;datasauRus&quot;</span>, <span class="st">&quot;ggimage&quot;</span>, <span class="st">&quot;ggthemes&quot;</span>, <span class="st">&quot;pacman&quot;</span>, <span class="st">&quot;equatiomatic&quot;</span></span>
+<span id="cb2-3"><a href="index.html#cb2-3"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="index.html#cb3-1"></a><span class="kw">install.packages</span>(my_packages, <span class="dt">repos =</span> <span class="st">&quot;http://cran.rstudio.com&quot;</span>, <span class="dt">dependencies =</span> T)</span></code></pre></div>
+<p>可能用到的开发版本的宏包</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="index.html#cb4-1"></a><span class="co">#remotes::install_github(&quot;datalorax/equatiomatic&quot;)</span></span>
+<span id="cb4-2"><a href="index.html#cb4-2"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;easystats/report&quot;</span>)</span>
+<span id="cb4-3"><a href="index.html#cb4-3"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kassambara/navdata&quot;</span>)</span>
+<span id="cb4-4"><a href="index.html#cb4-4"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;cttobin/ggthemr&#39;</span>)</span>
+<span id="cb4-5"><a href="index.html#cb4-5"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;daranzolin/inferregex&quot;</span>)</span>
+<span id="cb4-6"><a href="index.html#cb4-6"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;EmilHvitfeldt/gganonymize&quot;</span>)</span>
+<span id="cb4-7"><a href="index.html#cb4-7"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ThinkR-open/remedy&quot;</span>) </span>
+<span id="cb4-8"><a href="index.html#cb4-8"></a>remotes<span class="op">::</span><span class="kw">install_git</span>(<span class="st">&quot;https://git.rud.is/hrbrmstr/hrbraddins.git&quot;</span>) </span>
+<span id="cb4-9"><a href="index.html#cb4-9"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;hadley/emo&quot;</span>) </span>
+<span id="cb4-10"><a href="index.html#cb4-10"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;romainfrancois/lay&quot;</span>)</span>
+<span id="cb4-11"><a href="index.html#cb4-11"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;kjhealy/covdata&quot;</span>)</span></code></pre></div>
+</div>
+<div id="ryouwithme" class="section level2 unnumbered">
+<h2>RYouWithMe</h2>
+<p><img src="images/QQgroup.png" width="30%" /></p>
+</div>
+<div id="致谢" class="section level2 unnumbered">
+<h2>致谢</h2>
+<p>非常感谢川师研究生院的信任， 有了您的支持，才会有更多的川师学子了解R的美！</p>
+
+<p class="flushright">
+王敏杰<br />
+于 川师图书馆某角落
+</p>
+
+
+</div>
+</div>
+<h3>参考文献</h3>
+<div id="refs" class="references">
+<div id="ref-Wickham2017">
+<p>Grolemund, Garrett, and Hadley Wickham. 2017. <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em>. 1 edition. Houston: O’Reilly Media. <a href="http://r4ds.had.co.nz/">http://r4ds.had.co.nz/</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="author.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-chinese/edit/master/index.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R4DS.pdf", "R4DS.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
