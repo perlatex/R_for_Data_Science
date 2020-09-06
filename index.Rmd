@@ -90,9 +90,10 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyeval) 章介绍非标准性评估
 - 建模篇 
    - 第 \@ref(sampling) 章介绍模拟与抽样
-   - 第 \@ref(tidystats) 章介绍方差分析
    - 第 \@ref(lm) 章介绍线性模型
    - 第 \@ref(broom) 章介绍模型输出结果的规整
+   - 第 \@ref(tidystats) 章介绍方差分析
+   - 第 \@ref(tests-as-linear) 章介绍统计检验与线性模型的等价性
    - 第 \@ref(lmm) 章介绍多层线性模型
    - 第 \@ref(glm) 章介绍广义线性模型
    - 第 \@ref(ordinal) 章介绍有序logistic回归模型

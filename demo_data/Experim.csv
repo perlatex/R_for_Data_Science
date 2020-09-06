@@ -1,0 +1,31 @@
+id,sex,age,group,fost1,confid1,depress1,fost2,confid2,depress2,fost3,confid3,depress3,exam,mah_1,DepT1gp2,DepT2Gp2,DepT3gp2
+4,male,23,confidence building,50,15,44,48,16,44,45,14,40,52,0.569984186,not depressed,not depressed,not depressed
+10,male,21,confidence building,47,14,42,45,15,42,44,18,40,55,1.659403052,not depressed,not depressed,not depressed
+9,male,25,maths skills,44,12,40,39,18,40,36,19,38,58,3.54047153,not depressed,not depressed,not depressed
+3,male,30,maths skills,47,11,43,42,16,43,41,20,43,60,2.454214337,not depressed,not depressed,not depressed
+12,male,45,confidence building,46,16,44,45,16,45,43,20,43,58,0.944303577,not depressed,depressed,not depressed
+11,male,22,maths skills,39,13,43,40,20,42,39,22,38,62,1.625705776,not depressed,not depressed,not depressed
+6,male,22,confidence building,32,21,37,33,22,36,32,23,35,59,4.174471732,not depressed,not depressed,not depressed
+5,male,26,maths skills,44,17,46,37,20,47,32,26,42,70,1.026105894,depressed,depressed,not depressed
+8,male,23,confidence building,40,22,37,40,23,37,40,26,35,60,1.705310341,not depressed,not depressed,not depressed
+13,male,21,maths skills,47,20,50,45,25,48,46,27,46,70,3.087321393,depressed,depressed,depressed
+14,male,23,confidence building,38,28,39,37,27,36,32,29,34,72,2.914016344,not depressed,not depressed,not depressed
+1,male,19,maths skills,32,20,44,28,25,43,23,30,40,82,0.346997769,not depressed,not depressed,not depressed
+15,male,23,maths skills,39,21,47,35,26,47,35,30,47,79,1.58862406,depressed,depressed,depressed
+7,male,19,maths skills,36,24,38,32,28,35,30,32,35,80,1.507658161,not depressed,not depressed,not depressed
+2,male,21,confidence building,37,29,50,36,30,47,34,34,45,90,10.24018036,depressed,depressed,depressed
+27,female,20,maths skills,41,16,45,40,14,44,38,18,40,56,1.17764669,depressed,not depressed,not depressed
+25,female,24,maths skills,38,14,42,37,14,40,35,19,39,53,1.056466823,not depressed,not depressed,not depressed
+19,female,27,maths skills,42,15,49,41,13,49,40,20,44,59,3.874891022,depressed,depressed,not depressed
+18,female,23,confidence building,44,13,39,39,20,30,34,22,30,64,2.710164051,not depressed,not depressed,not depressed
+23,female,22,maths skills,32,22,39,31,18,38,32,22,36,63,3.548859418,not depressed,not depressed,not depressed
+21,female,46,maths skills,39,21,44,40,19,44,38,23,44,64,0.500719166,not depressed,not depressed,not depressed
+26,female,19,confidence building,42,13,43,38,20,39,36,23,37,63,1.473911792,not depressed,not depressed,not depressed
+29,female,22,maths skills,37,28,33,38,22,33,36,26,32,67,9.129575797,not depressed,not depressed,not depressed
+17,female,37,maths skills,41,29,39,40,22,40,40,27,40,71,6.206584194,not depressed,not depressed,not depressed
+20,female,32,confidence building,43,17,47,36,26,45,34,28,42,73,1.719098071,depressed,depressed,not depressed
+28,female,30,confidence building,46,20,38,40,28,30,37,29,29,80,1.501553346,not depressed,not depressed,not depressed
+22,female,25,confidence building,30,24,45,28,28,40,25,30,38,83,1.924037634,depressed,not depressed,not depressed
+24,female,21,confidence building,33,12,50,29,20,48,25,30,50,85,7.557641134,depressed,depressed,depressed
+16,female,45,confidence building,40,22,45,30,35,40,25,32,42,78,1.188492235,depressed,not depressed,not depressed
+30,female,21,confidence building,39,21,34,36,30,30,30,32,32,84,6.045590111,not depressed,not depressed,not depressed

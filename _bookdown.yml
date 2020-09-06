@@ -42,9 +42,10 @@ rmd_files: [
 
   # 建模篇
   "sampling.Rmd",
-  "tidystats.Rmd",
   "lm.Rmd",
   "broom.Rmd",
+  "tidystats.Rmd",
+  "tests_as_linear.Rmd",
   "lmm.Rmd",
   "glm.Rmd",
   "ordinal.Rmd",

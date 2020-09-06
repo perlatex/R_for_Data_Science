@@ -696,19 +696,32 @@ rladies <- read_csv("./demo_data/rladies.csv")
 rladies
 ```
 
-
-```{r}
-library(maps)
-
-world_map <- ggplot() +
+这里需要一个地图，可以这样
+```{r, eval=FALSE}
+ggplot() +
   ggplot2::borders("world", colour = "gray85", fill = "gray80") +
   ggthemes::theme_map()
-world_map
 ```
 
 
+当然，最好是这样
+```{r, eval=FALSE}
+library(maps)
+world <- map_data("world") 
 
-```{r}
+world_map <- ggplot() +
+  geom_polygon(data = world, 
+               aes(x = long, y = lat, group = group),
+               color = "white", fill = "gray80"
+               ) +
+  ggthemes::theme_map()
+
+world_map 
+```
+
+
+然后把点打上去
+```{r, eval=FALSE}
 world_map +
   geom_point(
     data = rladies,
@@ -726,7 +739,7 @@ world_map +
 
 用动图展示（这种方法可以用在流行病传播的展示上）
 
-```{r}
+```{r, eval=FALSE}
 world_map +
   geom_point(aes(x = lon, y = lat, size = followers),
     data = rladies,
@@ -821,7 +834,8 @@ bats %>%
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(anim, bats, p, ranked_by_date, rladies, world_map)
+#rm(anim, bats, p, ranked_by_date, rladies, world, world_map)
+rm(anim, bats, p, ranked_by_date, rladies)
 ```
 
 
