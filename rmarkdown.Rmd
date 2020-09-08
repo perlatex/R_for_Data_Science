@@ -81,8 +81,8 @@ output:
 
 ## 生成word文档
 
-rmarkdown 生成的word功能不是很多，推荐使用[officedown宏包](https://github.com/davidgohel/officedown)
-
+rmarkdown 生成的word功能不是很多，推荐使用[officedown](https://davidgohel.github.io/officedown/)
+, [officer](https://davidgohel.github.io/officer/), [flextable](https://davidgohel.github.io/flextable/)宏包
 
 ## 生成pdf文档
 

@@ -160,7 +160,7 @@ df
 
 ## `select() `
 
-`select() `顾名思义`选择`，就是选择数据框的某一列，
+`select() `顾名思义`选择`，就是选择数据框的某一列，或者某几列
 
 
 ```{r out.width = '80%', echo = FALSE}
@@ -203,7 +203,7 @@ df %>% select(-type)
 
 ## `filter() `
 
-`select`是列方向的选择， 我们还可以对数据行方向的选择和筛选，
+`select`是列方向的选择，我们还可以对数据行方向的选择和筛选，选出符合我们条件的某些行
 
 ```{r out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-filter.png")
@@ -259,7 +259,7 @@ df %>% summarise(
 ```
 
 
-
+注意，`mutate()`, `select()` 和 `filter()`是在原数据框的基础上增减, 而`summarise()`返回的是一个新的数据框。
 
 
 ## `group_by()`分组
