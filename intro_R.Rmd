@@ -443,7 +443,7 @@ knitr::include_graphics("images/dont-load-data.png")
 ```
 
 
-Rstudio的更多的使用，可参考这的[gif]( https://www.pipinghotdata.com/posts/2020-09-07-introducing-the-rstudio-ide-and-r-markdown/)
+更多Rstudio的使用，可参考这里[introducing-the-rstudio]( https://www.pipinghotdata.com/posts/2020-09-07-introducing-the-rstudio-ide-and-r-markdown/)。
 
 
 ## 如何获取帮助
