@@ -82,6 +82,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
+   - 第 \@ref(ggplot2-customize) 章ggplot2扩展内容
    - 第 \@ref(advR) 章介绍tidyverse进阶
    - 第 \@ref(rowwise) 章介绍tidyverse中行方向的操作
    - 第 \@ref(colwise) 章介绍数据框列方向和行方向
@@ -163,7 +164,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r, eval = FALSE}
 my_packages <- 
-   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "pacman", "paletteer", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat")
+   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat")
 ```
 
 

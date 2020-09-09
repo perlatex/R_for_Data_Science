@@ -214,6 +214,93 @@ df %>%
   )
 ```
 
+## 案例
+```{r}
+diamonds %>%
+  ggplot(aes(carat, price)) +
+  geom_hex() +
+  labs(title = "Diamond") +
+  theme(
+    axis.title.x = element_text(
+      size = 30,
+      color = "red",
+      face = "bold",
+      angle = 10
+    ),
+    legend.title = element_text(
+      size = 25,
+      color = "#ff6361",
+      margin = margin(b = 5)
+    ),
+    plot.title = element_text(
+      size = 35,
+      face = "bold",
+      color = "blue"
+    )
+  )
+```
+你肯定不会觉得这图好看。
+
+
+```{r}
+library(palmerpenguins)
+penguins %>%
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() +
+  theme(
+    axis.line.y = element_line(
+      color = "black",
+      size = 1.2,
+      arrow = grid::arrow()
+    ),
+    axis.line.x = element_line(
+      linetype = "dashed",
+      color = "brown",
+      size = 1.2
+    ),
+    axis.ticks = element_line(color = "red", size = 1.1),
+    axis.ticks.length = unit(3, "mm"),
+    panel.grid.major = element_line(
+      color = "blue",
+      size = 1.2
+    ),
+    panel.grid.minor = element_line(
+      color = "#58508d",
+      size = 1.2,
+      linetype = "dotted"
+    )
+  )
+```
+
+
+```{r}
+penguins %>%
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  theme(
+    legend.background = element_rect(
+      fill = "#fff6c2",
+      color = "black",
+      linetype = "dashed"
+    ),
+    legend.key = element_rect(fill = "grey", color = "brown"),
+    panel.background = element_rect(
+      fill = "#005F59",
+      color = "red", size = 3
+    ),
+    panel.border = element_rect(
+      color = "black",
+      fill = "transparent",
+      linetype = "dashed", size = 3
+    ),
+    plot.background = element_rect(
+      fill = "#a1dce9",
+      color = "black",
+      size = 1.3
+    ),
+    legend.position = "bottom"
+  )
+```
 
 ## 小结
 

@@ -3,6 +3,65 @@
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
+library(palmerpenguins)
 ```
 
-确定要讲色调、饱和度、亮度？
+
+为了让图更好看，需要在画图中使用配色，但如果从颜色的色相、色度、明亮度三个属性（Hue-Chroma-Luminance ）开始学，感觉这样要学的东西太多了 `r emo::ji("disappointed")`. 事实上，大神们已经为我们准备好了很多好看的模板，我们可以偷懒直接拿来用`r emo::ji("musical_note")`.
+
+
+我个人比较喜欢[colorspace](http://colorspace.r-forge.r-project.org/articles/color_spaces.html)中的配色，今天我们就讲讲如何使用这个宏包！
+
+```{r}
+library(colorspace)    
+```
+
+
+
+`colorspace` 宏包提供了三种类型的配色模板:
+
+```{r out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/hcl-palettes-principles.png")
+```
+
+- Qualitative: 分类，用于呈现分类信息，比如不同种类用不同的颜色，颜色之间一般对比鲜明。
+- Sequential: 序列，用于呈现有序/连续的数值信息，比如为了展示某地区黑人比例，比例越高颜色越深，比例越低颜色越浅。
+- Diverging: 分歧，用于呈现有序/连续的数值信息，这些数值围绕着一个中心值，比中心值越大的方向用一种渐变色，比中心值越小用另一种渐变色。
+
+三种类型对应着三个函数 `qualitative_hcl()`, `sequential_hcl()`, 和 `diverging_hcl()`. 
+
+
+## 配色模板
+
+```{r, out.width = '100%'}
+hcl_palettes(plot = TRUE)
+```
+
+## 使用案例
+
+ggplot2默认
+```{r}
+penguins %>% 
+   ggplot(aes(bill_length_mm, fill = species)) +
+   geom_density(alpha = 0.6)
+```
+
+手动修改
+```{r}
+penguins %>% 
+   ggplot(aes(bill_length_mm, fill = species)) +
+   geom_density(alpha = 0.6) +
+   scale_fill_manual(
+     breaks = c("Adelie", "Chinstrap", "Gentoo"), 
+     values = c("darkorange", "purple", "cyan4")
+  )
+```
+
+
+模板配色
+```{r}
+penguins %>% 
+   ggplot(aes(bill_length_mm, fill = species)) +
+   geom_density(alpha = 0.6) +
+   scale_fill_discrete_qualitative(palette = "cold")
+```

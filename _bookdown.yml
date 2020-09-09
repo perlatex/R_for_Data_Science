@@ -32,6 +32,7 @@ rmd_files: [
   "ggplot2_theme.Rmd",
   "ggplot2_scales.Rmd",
   "ggplot2_guides.Rmd",
+  "ggplot2_customize.Rmd",
   "adv_dplyr.Rmd",
   "rowwise.Rmd",
   "colwise.Rmd",

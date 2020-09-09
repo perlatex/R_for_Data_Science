@@ -509,7 +509,7 @@ ggsave(
 
 ## 延伸阅读 
 
-在第 \@ref(ggplot2-geom) 章到第 \@ref(ggplot2-guides) 章会再讲ggplot2
+在第 \@ref(ggplot2-geom) 章到第 \@ref(ggplot2-customize) 章会再讲ggplot2
 
 
 

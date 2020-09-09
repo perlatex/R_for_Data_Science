@@ -111,6 +111,36 @@ mpg %>%
 ```
 
 
+## 小结
+
+到了这里，ggplot2内容的差不多介绍完了，最后做下自我测试，能读懂下面代码(来源 Emi Tanaka)的意思？
+
+```{r, eval=FALSE}
+mtcars %>%
+  as_tibble() %>%
+  ggplot(aes(x = wt, y = mpg, shape = factor(vs), color = hp)) +
+  geom_point(size = 3) +
+  colorspace::scale_color_continuous_sequential(palette = "Dark Mint") +
+  scale_shape_discrete(labels = c("V-shaped", "Straight")) +
+  labs(
+    x = "Weight (1000 lbs)", y = "Miles per gallon",
+    title = "Motor Trend Car Road Tests",
+    shape = "Engine", color = "Horsepower"
+  ) +
+  theme(
+    text = element_text(size = 18, color = "white"),
+    rect = element_rect(fill = "black"),
+    panel.background = element_rect(fill = "black"),
+    legend.key = element_rect(fill = "black"),
+    axis.text = element_text(color = "white"),
+    plot.title.position = "plot",
+    plot.margin = margin(10, 10, 10, 10)
+  ) +
+  guides(
+    shape =
+      guide_legend(override.aes = list(color = "white"))
+  )
+```
 
 
 ```{r, echo = F}
