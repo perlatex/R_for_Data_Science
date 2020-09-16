@@ -1,14 +1,5 @@
 # 数据处理 {#dplyr}
 
-Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
-
-```{r out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/import_datatype01.png")
-```
-
-- 一切都是数据框，任何数据都可以规整
-- 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
-- 函数处理数据时，数据框进数据框出（函数的第一个参数始终为**数据框**）
 
 
 本章我们介绍tidyverse里数据处理的神器dplyr宏包。首先，我们加载该宏包

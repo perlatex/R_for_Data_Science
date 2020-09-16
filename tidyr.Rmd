@@ -6,7 +6,10 @@
 library(tidyverse)
 ```
 
-这里我们有一个植物生成的数据，有三列
+
+## 提问
+
+假定这里有 `A` 和 `B` 两种植物生长的记录，有这样三列
 
 ```{r}
 plant_heigt <- data.frame(
@@ -27,7 +30,7 @@ plant_heigt
 - 用不同的颜色画出两种植物**生长曲线**，怎么写语句?
 ```
 
-
+很显然，我们用第 \@ref(dplyr) 章数据处理和第 \@ref(ggplot2-aes) 章数据可视化的技术，可以写成这样
 ```{r, eval = FALSE}
 plant_heigt %>% 
   filter( ___ >= 0.8)
@@ -40,53 +43,63 @@ plant_heigt %>%
   geom_line()
 ```
 
+然而，发现遇到了问题？
 
-想用上面的语句，数据就得变形。那么怎么变形呢？ 
+
+怎么解决呢？想用上面的语句，数据就得变形。那么怎么变形呢？ 
 
 ```{r out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/make_data_tidy.png")
 ```
 
-
-```{r eval=FALSE, include=FALSE}
+下面任意一种都行：
+```{r eval=FALSE}
 melted <- gather(plant_heigt, variable, value, 2:3)
 
 ## Column names instead of indices
-melted <- gather(plant_heigt, variable, value, variable1, variable2)
+melted <- gather(plant_heigt, variable, value, A, B)
 
 ## Excluding instead of including
 melted <- gather(plant_heigt, variable, value, -1)
 
 ## Excluding using column name
-melted <- gather(plant_heigt, variable, value, -id)
+melted <- gather(plant_heigt, variable, value, -Day)
 ```
 
 
+但我更推荐大家使用`tidyr::pivot_longer()`, 这是2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增的一组函数`pivot_longer()/pivot_wider()`，用来补充和完善原来的`gather()/spread()` 
 
 
-从2019年9月份，[tidyr](<https://tidyr.tidyverse.org/>) 1.0.0新增了一组函数`pivot_longer()/pivot_wider()`，用来补充和完善原来的`gather()/spread()` 
+
+* `gather()/pivot_longer ` 宽表格变成长表格
+* `spread()/pivot_wider`   长表格变成宽表格
 
 
-* `gather()/pivot_longer `  it makes “wide” data longer.
-* `spread()/pivot_wider`  it makes “long” data wider.
 
 
 ```{r out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/tidyr-fig.png")
 ```
 
+
+## 宽表格变成长表格
+
 所以现在使用`pivot_longer()`函数
+
 ```{r}
-long <- pivot_longer(plant_heigt, 2:3,
-  names_to = "plant",
-  values_to = "height"
-)
+long <- plant_heigt %>%
+  pivot_longer(
+    cols = c(A, B),
+    names_to = "plant",
+    values_to = "height"
+  )
 long
 ```
 
 
+当然这里`cols`参数的写法是可以多种形式的，见第 \@ref(colwise) 章select函数.
 
-```{r}
+```{r, eval=FALSE}
 plant_heigt %>% 
   pivot_longer(
   cols = -Day,                 # A:B 或者 c(A, B) 或者 c("A", "B")
@@ -98,11 +111,19 @@ plant_heigt %>%
 
 
 
+画图的问题也就解决了
+
 ```{r}
 long %>% 
   ggplot(aes(x = Day, y = height, color = plant)) +
   geom_line()
 ```
+
+
+
+## 长表格变成宽表格
+
+如果，长表格变回宽表格呢？需要用到`pivot_wider()`
 
 ```{r}
 wide <- long %>% 
@@ -115,19 +136,49 @@ wide
 
 
 
-##  From `gather()` to `pivot()`
 
-make data tidy
+##  tidy data
 
-```{r out.width = '100%', fig.align='left', echo = FALSE}
+
+Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
+
+```{r out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/import_datatype01.png")
 ```
 
-VARIABLE, OBSERVATION, VALUE
-
-- Each variable is a column
-- Each observation is a row
-- Each type of observational unit is a table
+- 一切都是数据框，任何数据都可以规整
+- 数据框的一列代表一个**变量**，数据框的一行代表一次**观察**
+- 函数处理数据时，数据框进数据框出（函数的第一个参数始终为**数据框**）
 
 
+根据Hadley Wickham的思想，这里的宽表格(`plant_heigt`和 `wide`)不是tidy的，只有长表格(`long`)才是tidy的，
 
+```{r}
+long
+```
+
+
+
+```{block, type="danger"}
+以后，我们会意识到tidyverse中的很多函数都喜欢tidy的（尤其是ggplot2时）！
+```
+
+
+
+
+
+## 案例
+
+请见第 \@ref(eda-olympics) 章、第 \@ref(eda-covid2019) 章和第 \@ref(eda-anscombe) 章.
+
+
+
+
+```{r, echo = F}
+# remove the objects
+rm(long, wide, plant_heigt)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

@@ -9,17 +9,17 @@ dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley  Wickham
 
 New dplyr - 8 things to know:
 
-1) Built in tidyselect 
-2) relocate() 
-3) Superpowered summarise() 
-4) colwise using across() 
-5) cur_data() cur_group() and cur_column()
-6) new rowwise() grammar 
+1) Built in `tidyselect` 
+2) `relocate()` 
+3) Superpowered `summarise()` 
+4) colwise using `across()` 
+5) `cur_data()`, `cur_group()` and `cur_column()`
+6) new `rowwise()` grammar 
 7) easy modeling inside dataframes 
-8) nest_by()  
+8) `nest_by()`  
 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 devtools::install_github("tidyverse/dplyr")
 ```
 
