@@ -102,7 +102,7 @@ knitr::include_graphics("images/data-science-explore.png")
 knitr::include_graphics("images/tidyverse.png")
 ```
 
-前面陆续介绍了[tidyverse](https://www.tidyverse.org/)家族，家庭主要成员包括
+[tidyverse](https://www.tidyverse.org/)套餐，其主要成员包括
 
 
 | 功能 | 宏包        |
@@ -145,13 +145,16 @@ knitr::include_graphics("images/night_king.jpg")
 ## 为什么选择 R
 
 
-### 数据科学是为社会科学服务的
+### 社会科学需要统计
 
 ```{r echo=FALSE, fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/social_science.jpg")
 ```
 
-### 选择 R & tidyverse 的理由
+社会科学需要统计，尽管**用统计的，往往不是学统计的**。
+
+
+### 挖掘机技术到底哪家强？
 
 2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
 
@@ -175,7 +178,7 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 
 
   
-* tidyverse
+* tidyverse 相比 base R 的优势
   + 语法一致性（学习一个宏包，可以帮助理解其他宏包）
   + 代码可读性，接近人类语言 ( `%>%` 太酷了 )
 
@@ -191,7 +194,7 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 ```
 
 
-你心动了？
+一见钟情，还是相见恨晚？
 
 ```{r echo=FALSE,  fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/meme.png")

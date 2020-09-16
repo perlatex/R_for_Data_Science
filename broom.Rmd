@@ -12,3 +12,75 @@ library(broom)
 - `tidy()` 提取模型输出结果的主要信息
 - `glance()` 提取模型输出结果的完整信息
 - `augment()` 模型输出的信息添加到建模用的数据集中
+
+
+```{r}
+penguins_adelie <- palmerpenguins::penguins %>% 
+  drop_na() %>% 
+  filter(species == "Adelie")
+
+model <- lm(bill_depth_mm ~ bill_length_mm, data = penguins_adelie)
+model
+```
+
+
+
+## tidy
+
+```{r}
+tidy(model)
+```
+
+## glance
+
+```{r}
+glance(model)
+```
+
+
+
+## augment
+
+```{r}
+augment(model)
+```
+## 应用
+
+用在分组建模时，格外方便
+
+```{r}
+penguins <- 
+  palmerpenguins::penguins %>% 
+  drop_na() 
+```
+
+
+```{r}
+penguins %>%
+  group_nest(species) %>%
+  mutate(model = purrr::map(data, ~ lm(bill_depth_mm ~ bill_length_mm, data = .))) %>%
+  mutate(tidy = purrr::map(model, ~ broom::tidy(.))) %>%
+  tidyr::unnest(tidy)
+```
+
+```{r}
+penguins %>%
+  group_nest(species) %>%
+  mutate(model = purrr::map(data, ~ lm(bill_depth_mm ~ bill_length_mm, data = .))) %>%
+  mutate(glance = purrr::map(model, ~ broom::glance(.))) %>%
+  tidyr::unnest(glance)
+```
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(model, penguins, penguins_adelie)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
