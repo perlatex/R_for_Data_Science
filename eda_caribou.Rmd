@@ -4,7 +4,7 @@
 
 ## 驯鹿位置跟踪
 
-```{r, out.width='85%', fig.align='left'}
+```{r, out.width='85%', fig.align='left', echo=FALSE}
 knitr::include_graphics("images/caribou_location.png")
 ```
 
