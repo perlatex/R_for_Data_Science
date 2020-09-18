@@ -1,7 +1,7 @@
 # 探索性数据分析-企鹅的故事 {#eda-penguins}
 
 
-今天讲一个关于企鹅的数据故事。数据来源[这里](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
+今天讲一个关于企鹅的数据故事。这些数据来源于科考人员记录的大量企鹅体征[数据](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
 
 ```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/penguins.png")
@@ -51,12 +51,23 @@ knitr::include_graphics("images/culmen_depth.png")
 ```
 
 ### 数据清洗
+
+检查缺省值(NA)这个很重要！
+
+```{r}
+penguins %>% summarise(
+  across(everything(), ~ sum(is.na(.)))
+)
+```
+
+
+有缺失值的地方找出来看看
 ```{r}
 penguins %>% filter_all(
   any_vars(is.na(.))
 )
 ```
-发现有11行至少有一处有缺失值，于是我们就删除这些行
+发现共有11行至少有一处有缺失值，于是我们就删除这些行
 
 
 
@@ -69,7 +80,16 @@ penguins
 
 ## 探索性分析
 
-大家可以提出自己想探索的内容
+大家可以提出自己想探索的内容：
+
+- 每种类型企鹅有多少只？
+- 每种类型企鹅各种属性的均值和分布？
+- 嘴峰长度和深度的关联？
+- 体重与翅膀长度的关联？
+- 嘴峰长度与嘴峰深度的比例？
+- 不同种类的宝宝，体重具有显著性差异？
+- 这体征中哪个因素对性别影响最大？
+- ...
 
 
 ### 每种类型企鹅有多少只
@@ -78,13 +98,14 @@ penguins %>%
   count(species, sort = T)
 ```
 
+### 每个岛屿有多少企鹅？
 ```{r}
 penguins %>%
   count(island, sort = T)
 ```
 
 
-### 每种类型企鹅各种属性的均值和分布
+### 每种类型企鹅各种体征属性的均值和分布
 ```{r}
 penguins %>%
   group_by(species) %>%
@@ -94,13 +115,26 @@ penguins %>%
 
 
 
+### 每种类型企鹅的嘴峰长度的分布
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm)) +
+  geom_density() +
+  facet_wrap(vars(species), scales = "free")
+```
+
+### 每种类型企鹅的嘴峰长度的分布（分性别）
+
 
 ```{r}
 penguins %>%
   ggplot(aes(x = bill_length_mm)) +
-  geom_histogram(aes(fill = sex)) +
+  geom_density(aes(fill = sex)) +
   facet_wrap(vars(species), scales = "free")
 ```
+男宝宝的嘴巴要长些，哈哈。
+
+
 
 来张更好看点的
 ```{r}
@@ -126,18 +160,9 @@ penguins %>%
   ) +
   facet_wrap(vars(species), scales = "free")
 ```
-同理可以画出其他属性的分布
 
 
-```{r}
-penguins %>%
-  ggplot(aes(x = bill_length_mm)) +
-  geom_density() +
-  facet_wrap(vars(species))
-```
-
-
-我更喜欢这样，方便比较均值
+同理，可以画出其他属性的分布。当然，我更喜欢用山峦图来呈现不同分组的分布，因为竖直方向可以更方便比较
 ```{r}
 library(ggridges)
 penguins %>%
@@ -146,9 +171,16 @@ penguins %>%
 ```
 
 
+同样，我们也用颜色区分下性别，这样不同种类、不同性别企鹅的嘴峰长度分布一目了然
+
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = species, fill = sex)) +
+  geom_density_ridges(alpha = 0.5)
+```
 
 
-同理，我们可以画出嘴峰深度的分布
+同样的代码，类似地画个其他体征的分布，
 
 ```{r}
 penguins %>%
@@ -172,7 +204,7 @@ penguins %>%
 ```
 
 
-但，这样一个变量一个变量的画，可能会比较麻烦。于是我们可以这样
+但这样一个特征一个特征的画，好麻烦。你知道程序员都是偷懒的，于是我们还有更骚的操作
 ```{r}
 penguins %>%
   dplyr::select(species, bill_length_mm:body_mass_g) %>%
@@ -202,7 +234,23 @@ penguins %>%
 ```
 
 
+```{r}
+penguins %>%
+  dplyr::select(species,sex, bill_length_mm:body_mass_g) %>%
+  pivot_longer(-c(species, sex), names_to = "measurement", values_to = "value") %>%
+  ggplot(aes(x = value, y = species, fill = sex)) +
+  ggridges::geom_density_ridges() +
+  facet_wrap(vars(measurement), scales = "free")
+```
+
+我若有所思的看着这张图，似乎看到了一些特征（pattern）了。
+
+
+
 ### 嘴峰长度和深度的关联
+
+嘴巴越长，嘴巴也会越厚？
+
 ```{r}
 penguins %>%
   ggplot(aes(
@@ -212,6 +260,8 @@ penguins %>%
   geom_point()
 ```
 
+
+我们把不同的种类，用不同的颜色区分看看
 ```{r}
 penguins %>%
   ggplot(aes(
@@ -241,6 +291,7 @@ penguins %>%
 
 ### 体重与翅膀长度的关联
 
+翅膀越长，体重越大？
 
 ```{r}
 penguins %>%
@@ -283,16 +334,8 @@ penguins %>%
 
 
 ### 不同种类的宝宝，体重具有显著性差异？
-```{r}
-penguins %>%
-  ggplot(aes(x = species, y = body_mass_g)) +
-  geom_boxplot() +
-  geom_jitter()
-```
 
-
-这里推荐**可视化学统计**的宏包[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（使用这个宏包辅助我们学习统计） 
-
+先分组计算体重的均值和标准差
 
 ```{r}
 penguins %>%
@@ -304,6 +347,18 @@ penguins %>%
   )
 ```
 
+
+```{r}
+penguins %>%
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+
+用统计方法验证下我们的猜测吧。记住，我们是有科学精神的的人！
+
+
 #### 参数检验
 
 - one-way ANOVA(要求等方差)
@@ -313,6 +368,7 @@ stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
   summary()
 ```
 
+p-value 很小，说明不同种类企鹅之间体重是有显著差异的，但aov只给出了species在整体上引起了体重差异（只要有任意两组之间有显著差异，aov给出的p-value都很小），如果想知道不同种类两两之间是否有显著差异，这就需要用到TukeyHSD().
 
 
 - one-way ANOVA(不要求等方差)，相关介绍看[here](http://www.sthda.com/english/wiki/one-way-anova-test-in-r)
@@ -326,8 +382,12 @@ stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
   broom::tidy()
 ```
 
+表格第一行instrap-Adelie 的 p-value = 0.916，没通过显著性检验；而Gentoo-Adelie 和 Gentoo-Chinstrap 他们的p-value都接近0，通过显著性检验，这和图中的结果是一致的。
 
-推荐使用`ggstatsplot`，可以帮助我们验证我们的想法和结果
+
+作为统计出生的R语言，有很多宏包可以帮助我们验证我们的结论，我这里推荐**可视化学统计**的宏包[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（使用这个宏包辅助我们学习统计） 
+
+
 
 ```{r, eval=FALSE}
 library(ggstatsplot)
@@ -337,6 +397,8 @@ penguins %>%
     x = species, # > 2 groups
     y = body_mass_g,
     type = "parametric",
+    pairwise.comparisons = TRUE, 
+    pairwise.display = "all",
     messages = FALSE,
     var.equal = FALSE
   )
@@ -363,6 +425,8 @@ penguins %>%
   )
 ```
 
+哇，原来统计可以这样学！
+
 
 ### 嘴峰长度与嘴峰深度的比例
 ```{r}
@@ -379,11 +443,16 @@ penguins %>%
   ggridges::geom_density_ridges(aes(y = species))
 ```
 
+男宝宝和女宝宝颜色区分下，代码只需要修改一个地方，留给大家自己实践下吧。
+
+
 
 ### 建立模型
 
+建模需要标准化数据，并对分类变量（比如sex）编码为 1 和 0; （这是第二个好习惯）
+
 ```{r}
-scale_fun <- function(x) {
+scale_fun <- function(x) {  # 标准化的子函数
   (x - mean(x)) / sd(x)
 }
 
@@ -410,6 +479,8 @@ penguins %>%
 
 
 #### model_01
+我们将性别sex视为响应变量，其他变量为预测变量。这里性别变量是二元的（0 或者 1），所以我们用logistic回归
+
 ```{r, eval=FALSE}
 logit_mod1 <- glm(
   male ~ 1 + species + bill_length_mm + bill_depth_mm +
