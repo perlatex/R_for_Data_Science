@@ -154,6 +154,38 @@ knitr::include_graphics("images/social_science.jpg")
 社会科学需要统计，尽管**用统计的，往往不是学统计的**。
 
 
+### 社会科学需要可视化
+
+```{r echo=FALSE, out.width = '50%'}
+knitr::include_graphics("images/R4art.png")
+```
+
+我们不是学美术的，但要可视化
+
+
+
+### 社会科学需要编程
+
+```{r echo=FALSE, out.width = '80%'}
+knitr::include_graphics("images/Coding-Lab.jpg")
+```
+
+我们不是学计算机的，但需要编程（小学生已经开始学编程了）
+
+
+
+
+### 你的论文需要排版
+
+```{r echo=FALSE, out.width = '60%'}
+knitr::include_graphics("images/latex-tweak.gif")
+```
+
+我们不是学设计的，但要操心**交叉引用**的事
+
+
+
+
 ### 挖掘机技术到底哪家强？
 
 2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
