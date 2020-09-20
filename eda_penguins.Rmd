@@ -1,7 +1,7 @@
 # 探索性数据分析-企鹅的故事 {#eda-penguins}
 
 
-今天讲一个关于企鹅的数据故事。这些数据来源于科考人员记录的大量企鹅体征[数据](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
+今天讲一个关于企鹅的数据故事。这个故事来源于科考人员记录的大量企鹅体征[数据](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
 
 ```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/penguins.png")
@@ -31,6 +31,8 @@ penguins <- read_csv("./demo_data/penguins.csv") %>%
 penguins %>%
   head()
 ```
+
+
 ### 变量含义
 
 |variable          |class   |description |
@@ -52,7 +54,7 @@ knitr::include_graphics("images/culmen_depth.png")
 
 ### 数据清洗
 
-检查缺省值(NA)这个很重要！
+检查缺失值(NA)这个很重要！
 
 ```{r}
 penguins %>% summarise(
@@ -388,7 +390,6 @@ stats::aov(formula = body_mass_g ~ species, data = penguins) %>%
 作为统计出生的R语言，有很多宏包可以帮助我们验证我们的结论，我这里推荐**可视化学统计**的宏包[ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/)宏包将统计分析的结果写在图片里，统计结果和图形融合在一起，让统计结果更容易懂了。（使用这个宏包辅助我们学习统计） 
 
 
-
 ```{r, eval=FALSE}
 library(ggstatsplot)
 
@@ -411,6 +412,8 @@ penguins %>%
 kruskal.test(body_mass_g ~ species, data = penguins)
 ```
 
+
+
 ```{r, eval=FALSE}
 penguins %>%
   ggstatsplot::ggbetweenstats(
@@ -419,8 +422,8 @@ penguins %>%
     type = "nonparametric",
     mean.ci = TRUE,
     pairwise.comparisons = TRUE, # <<
-    pairwise.display = "all", # ns = only non-significant
-    p.adjust.method = "fdr", # <<
+    pairwise.display = "all",    # ns = only non-significant
+    p.adjust.method = "fdr",     # <<
     messages = FALSE
   )
 ```
@@ -479,9 +482,10 @@ penguins %>%
 
 
 #### model_01
+
 我们将性别sex视为响应变量，其他变量为预测变量。这里性别变量是二元的（0 或者 1），所以我们用logistic回归
 
-```{r, eval=FALSE}
+```{r}
 logit_mod1 <- glm(
   male ~ 1 + species + bill_length_mm + bill_depth_mm +
     flipper_length_mm + body_mass_g,
@@ -493,11 +497,42 @@ summary(logit_mod1)
 ```
 
 
+
+
+计算每个变量的平均边际效应
+```{r}
+library(margins)
+
+logit_mod1_m <- logit_mod1 %>% 
+ margins() %>% 
+ summary() %>% 
+ as_tibble()
+
+logit_mod1_m
+```
+
+
+
+```{r}
+logit_mod1_m %>%
+  ggplot(aes(
+    x = reorder(factor, AME),
+    y = AME, ymin = lower, ymax = upper
+  )) +
+  geom_hline(yintercept = 0, color = "gray80") +
+  geom_pointrange() +
+  coord_flip() +
+  labs(x = NULL, y = "Average Marginal Effect")
+```
+
+
+
+
 ```{r, eval=FALSE}
 library(ggeffects)
-ggpredict(logit_mod1, "bill_depth_mm [all]") %>%
-  plot()
+ggpredict(logit_mod1, terms = "bill_length_mm") 
 ```
+
 
 
 
@@ -527,6 +562,8 @@ ggpredict(brms_mod2, "bill_depth_mm [all]") %>%
 
 
 
+
+
 #### model_03
 
 ```{r, eval=FALSE}
@@ -538,7 +575,7 @@ penguins %>%
 
 
 ```{r, eval=FALSE}
-brms_mod3 <- brm(bill_length_mm ~ flipper_length_mm + (1 + species),
+brms_mod3 <- brm(bill_length_mm ~ flipper_length_mm + (1|species),
   data = penguins
 )
 ```
@@ -563,8 +600,10 @@ penguins %>%
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(d, penguins, scale_fun)
+rm(d, logit_mod1, logit_mod1_m, penguins, scale_fun)
 ```
+
+
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
