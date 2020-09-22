@@ -352,15 +352,15 @@ knitr::include_graphics("images/script1.png")
 ```
 
 
-
-
 - 点击 `Run` 或者 `Source` 运行脚本
 
+  
 ```{r out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/script2.png")
 ```
 
-
+  - 点击 `Run`, 运行光标所在行的代码
+  - 点击 `Source`，从头到尾运行全部代码
 
 
 ## 宏包
@@ -395,21 +395,22 @@ my_packages <- c("ggplot2", "dplyr", "tidyr", "stringr", "widyr", "ggRadar",
 
 
 
+## 可能的问题
 
-如果下载速度太慢，可以选择国内镜像
+- 问题1：如果下载速度太慢，可以选择国内镜像，
+
 ```{r out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/mirror1.png")
 knitr::include_graphics("images/mirror2.png")
 ```
 
-如果安装宏包过程中出错，可以试试这样
+然后再输入命令`install.packages("tidyverse")`，或者直接指定清华大学镜像
 ```{r, eval = FALSE }
-install.packages("tidyverse", repos = "http://cran.rstudio.com")
-# 或者
-install.packages("tidyverse", repos = "https://CRAN.R-project.org")
+install.packages("tidyverse", repos = "http://mirrors.tuna.tsinghua.edu.cn/CRAN")
 ```
 
-如果遇到如下报错信息
+
+- 问题2：如果遇到如下报错信息
 ```{r, eval = FALSE }
 Warning in install.packages :
   unable to access index for repository http://cran.rstudio.com/src/contrib:
@@ -430,17 +431,28 @@ local({r <- getOption("repos")
 options(download.file.method="libcurl")
 ```
 
-
-如果打开代码是乱码，可以试试修改如下设置
+- 问题3：如果打开代码是乱码，可以试试修改如下设置
 
 ```{r out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/code_utf_8.png")
 ```
 
-如果加载太慢，可以在Rstudio里将这几个选项取消
+
+- 问题4：如果每次打开Rstudio非常慢，可以在Rstudio里将这几个选项取消
 ```{r out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/dont-load-data.png")
 ```
+
+- 问题5：如果 Rstudio 打开是空白
+
+很大的可能是你的电脑用户名是中文的，修改用户名再试试
+
+
+
+- 问题6：安装过程中提示，我的系统不能兼容 64 位的 Rstudio。
+
+可能你是低版本的windows系统，建议安装旧版本的Rstudio，可以在[这里](https://rstudio.com/products/rstudio/older-versions/)找到旧版本.
+
 
 
 更多Rstudio的使用，可参考这里[introducing-the-rstudio]( https://www.pipinghotdata.com/posts/2020-09-07-introducing-the-rstudio-ide-and-r-markdown/)。

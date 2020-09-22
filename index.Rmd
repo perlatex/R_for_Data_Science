@@ -128,9 +128,9 @@ knitr::include_graphics("images/rbook1.png")
 - <https://github.com/perlatex/R_for_Data_Science>
 
 
-3、课程视频
+<!-- 3、课程视频 -->
 
-- 部分课程视频放在[bilibili](https://space.bilibili.com/627373342/video)网站
+<!-- - 部分课程视频放在[bilibili](https://space.bilibili.com/627373342/video)网站 -->
 
 
 
