@@ -90,7 +90,8 @@ lincoln_errbar
 为了解决以上问题，可以使用箱线图（boxplot），箱线图将数据分成若干段，如图 \@ref(fig:boxplot-schematic).
 
 ```{r boxplot-schematic, out.width = '100%', echo = FALSE, fig.cap = '箱线图示意图'}
-knitr::include_graphics("images/boxplot-schematic-1.png")
+#knitr::include_graphics("images/boxplot-schematic-1.png")
+knitr::include_graphics("images/boxplot-schematic.png")
 ```
 
 - 盒子中间的横线是中位数(50th percentile)，底部的横线代表第一分位数(25th

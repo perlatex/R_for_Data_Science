@@ -14,15 +14,15 @@ classoptions: "hyperref, 12pt, a4paper"
 
 # Loading dplyr and the nycflights13 dataset
 
-
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # load packages
-suppressMessages(library(dplyr))
+library(dplyr)
 library(nycflights13)
 
 # print the flights dataset from nycflights13
 flights
 ```
+
 
 
 # Choosing columns: select, rename
@@ -58,7 +58,7 @@ flights %>% rename(tail = tailnum)
 ```
 
 
-# Choosing rows: filter, between, slice, sample_n, top_n, distinct
+# Choosing rows: filter, between, slice, slice_sample, slice_max, distinct
 
 ```{r}
 # filter() supports the use of multiple conditions
@@ -86,17 +86,17 @@ flights %>%
 # sample three rows from each group
 flights %>%
   group_by(month, day) %>%
-  sample_n(3)
+  slice_sample(n = 3)
 
 # keep three rows from each group with the top dep_delay
 flights %>%
   group_by(month, day) %>%
-  top_n(3, dep_delay)
+  slice_max(dep_delay, n = 3)
 
 # also sort by dep_delay within each group
 flights %>%
   group_by(month, day) %>%
-  top_n(3, dep_delay) %>%
+  slice_max(dep_delay, n = 3) %>%
   arrange(desc(dep_delay))
 ```
 
@@ -176,6 +176,7 @@ flights %>%
 flights %>%
   group_by(month) %>%
   tally(sort = TRUE)
+
 flights %>% count(month, sort = TRUE)
 ```
 
@@ -212,7 +213,7 @@ flights %>%
   group_by(month, day) %>%
   summarise(cnt = n()) %>%
   arrange(desc(cnt)) %>%
-  print(n = 40)
+  print(n = 10)
 
 # ungroup() before arranging to arrange across all groups
 flights %>%
@@ -223,9 +224,9 @@ flights %>%
 ```
 
 
-# Creating data frames: data_frame
+# Creating data frames: tibble()
 
-`data_frame()` is a better way than `data.frame()` for creating data frames. Benefits of `data_frame()`:
+`tibble()` is a better way than `data.frame()` for creating data frames. Benefits of `tibble()()`:
 
 * You can use previously defined columns to compute new columns.
 * It never coerces column types.
@@ -235,8 +236,8 @@ flights %>%
 * It returns a local data frame (a tbl_df).
 
 ```{r}
-# data_frame() example
-data_frame(a = 1:6, b = a * 2, c = "string", "d+e" = 1) %>% glimpse()
+# tibble() example
+tibble(a = 1:6, b = a * 2, c = "string", "d+e" = 1) %>% glimpse()
 
 # data.frame() example
 data.frame(a = 1:6, c = "string", "d+e" = 1) %>% glimpse()
@@ -284,7 +285,7 @@ flights %>%
     dist = mean(distance, na.rm = TRUE),
     delay = mean(arr_delay, na.rm = TRUE)
   ) %>%
-  filter(delay, count > 20, dest != "HNL") %>%
+  filter(delay > 0, count > 20, dest != "HNL") %>%
   ggplot(mapping = aes(x = dist, y = delay)) +
   geom_point(aes(size = count), alpha = 1 / 3) +
   geom_smooth(se = FALSE)

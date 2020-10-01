@@ -84,6 +84,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
    - 第 \@ref(ggplot2-customize) 章ggplot2扩展内容
+   - 第 \@ref(ggplot2-stat-layer) 章ggplot2统计图层
    - 第 \@ref(workflow) 章回望tidyverse之旅
    - 第 \@ref(tips) 章介绍tidyverse常用技巧
    - 第 \@ref(advR) 章介绍tidyverse进阶技巧

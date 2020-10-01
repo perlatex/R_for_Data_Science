@@ -34,6 +34,7 @@ rmd_files: [
   "ggplot2_scales.Rmd",
   "ggplot2_guides.Rmd",
   "ggplot2_customize.Rmd",
+  "ggplot2_stat_layer.Rmd",
   "tidyverse_workflow.Rmd",
   "tidyverse_tips.Rmd",
   "adv_dplyr.Rmd",
