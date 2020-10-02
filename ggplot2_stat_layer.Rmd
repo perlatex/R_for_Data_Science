@@ -3,7 +3,7 @@
 
 ## 导言
 
-**美学映射**是图形语法中非常重要的一个概念，**变量**映射到**视觉元素**，然后通过几何对象`GEOM`画出图形。
+**美学映射**是图形语法中非常重要的一个概念，**变量**映射到**视觉元素**，然后通过几何对象`GEOM`画出图形。（下图是每个几何对象所对应的视觉元素）
 
 ```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
@@ -84,7 +84,7 @@ simple_data
 
 假定我们现在想画一个柱状图，一个柱子代表每一组group，柱子的高度代表的score的均值。
 
-好比，按照我们的想法，我们首先规整(tidy)数据，并且确保数据包含每个geom所需的美学映射，最后传递给ggplot()
+好比，按照我们的想法，我们首先规整(tidy)数据，并且确保数据包含每个geom所需的美学映射，最后传递给`ggplot()`
 
 ```{r}
 simple_data %>%
@@ -98,7 +98,7 @@ simple_data %>%
 ```
 
 
-那么，传递给ggplot()的数据是
+那么，传递给`ggplot()`的数据是
 ```{r}
 simple_data %>%
   group_by(group) %>% 
@@ -107,7 +107,7 @@ simple_data %>%
     .groups = 'drop' 
   ) 
 ```
-需求很简单，很容易搞定。但如果我们想加误差棒(stand error)呢? 那我们需要再对数据整理统计，然后再传给ggplot().
+需求很简单，很容易搞定。但如果我们想加误差棒(stand error)呢? 那我们需要再对数据整理统计，然后再传给`ggplot()`.
 
 于是，我们再计算误差棒，这里变型的数据是这个样子的
 ```{r}
@@ -125,7 +125,7 @@ simple_data %>%
 ```
 
 
-然后把变型的数据传递给ggplot()
+然后把变型的数据传递给`ggplot()`
 ```{r}
 simple_data %>% 
   group_by(group) %>% 
@@ -184,7 +184,11 @@ OMG, 为了画一个简单的图，我们需要写这么长的一段代码。究
 而这里的柱子的高度以及误差棒的两端不是观察出来的，而是统计计算出来的。
 
 
+```{block, type="danger"}
 所以我们的观点是，辛辛苦苦创建一个（包含每个几何对象所需的美学映射）的数据框，太低效了，而且这种方法也不支持tidy原则。
+
+```
+
 
 
 既然 `simple_data_bar` 和 `simple_data_errorbar`都来源于`simple_data`，那为何不直接传递`simple_data`给`ggplot()`，让数据在内部转换，得到每个几何对象所需的美学映射呢？
@@ -198,7 +202,7 @@ simple_data %>%
   stat_summary(geom = "errorbar")
 ```
 
-bingo
+Bingo
 
 ### 小结
 这一节，我们用一个很长的数据整理的代码，借助`geom_*()`画了一张含有误差棒的柱状图，而用`stat_summary()`不需要数据整理，只需要两行代码就实现相同效果。
@@ -259,8 +263,22 @@ No summary function supplied, defaulting to `mean_se()`
 - 首先，对于`stat_summary()`中的`fun.data`参数，它的默认值是`mean_se()`
 - 其次，我们看看这个函数
 
-```{r, results= "asis"}
+```{r, eval=FALSE}
 mean_se
+```
+
+
+```{r, echo=TRUE, eval=FALSE}
+function (x, mult = 1) 
+{
+    x <- stats::na.omit(x)
+    se <- mult * sqrt(stats::var(x)/length(x))
+    mean <- mean(x)
+    new_data_frame(list(y = mean, ymin = mean - se, ymax = mean + 
+        se), n = 1)
+}
+<bytecode: 0x0000021aef28aa10>
+<environment: namespace:ggplot2>
 ```
 
 这个`mean_se()`函数有两个参数，一个是`x`，一个是`mult`（默认为1）， 那么这个函数的功能，一步步来说
@@ -413,7 +431,7 @@ my_penguins %>%
 
 ```{r}
 my_penguins %>% 
-group_split(species) %>%
+  group_split(species) %>%
   map(~ pull(., bill_depth_mm)) %>% 
   map_dfr(
     function(x) {
