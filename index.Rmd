@@ -191,6 +191,7 @@ remotes::install_git("https://git.rud.is/hrbrmstr/hrbraddins.git")
 devtools::install_github("hadley/emo") 
 remotes::install_github("romainfrancois/lay")
 remotes::install_github("kjhealy/covdata")
+devtools::install_github("kbodwin/flair")
 ```
 
 
