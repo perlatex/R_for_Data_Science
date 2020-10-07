@@ -10,14 +10,15 @@
 
 文件格式                       |       **R** 函数 
 :---------------------------   |       :----------------------
-.txt                           |       read.table()
-.csv                           |       read.csv() and readr::read_csv()
-.xls and .xlsx                 |       readxl::read_excel() and openxlsx::read.xlsx()
-.sav                           |       foreign::read.spss()
-.Rdata or rda                  |       load()
-.rds                           |       readRDS() and readr::read_rds() 
-.dta                           |       haven::read_dta() and haven::read_stata()
-Internet                       |       download.file()
+.txt                           |       `read.table()`
+.csv                           |       `read.csv()` and `readr::read_csv()`
+.xls and .xlsx                 |       `readxl::read_excel()` and `openxlsx::read.xlsx()`
+.sav(SPSS files)               |       `haven::read_sav()` and `foreign::read.spss()`
+.Rdata or rda                  |       `load()`
+.rds                           |       `readRDS()` and `readr::read_rds()` 
+.dta                           |       `haven::read_dta()` and `haven::read_stata()`
+.sas7bdat(SAS files)           |       `haven::read_sas()`
+Internet                       |       `download.file()`
 
 
 

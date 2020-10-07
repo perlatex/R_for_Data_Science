@@ -5,7 +5,7 @@
 
 **美学映射**是图形语法中非常重要的一个概念，**变量**映射到**视觉元素**，然后通过几何对象`GEOM`画出图形。（下图是每个几何对象所对应的视觉元素）
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot-aesthetics-cheatsheet, out.width = '100%', echo = FALSE, fig.cap = 'ggplot2中的几何对象与美学映射'}
 knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 ```
 
@@ -243,7 +243,7 @@ height_df %>%
 ```
 
 看到了一个点和经过这个点的一条线，实际上，它也是一个几何对象pointrange.
-那么`geom_pointrange()` 是怎么数据转换的呢？回答这个问题，我们需要了解下`geom_pointrange()`需要哪些美学映射：
+那么`geom_pointrange()` 是怎么数据转换的呢？回答这个问题，我们需要了解下`geom_pointrange()`需要哪些美学映射（参见图 \@ref(fig:ggplot-aesthetics-cheatsheet)）：
 
 - x or y
 - ymin or xmin
