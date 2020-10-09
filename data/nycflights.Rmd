@@ -46,8 +46,17 @@ flights %>% select(-contains("time"))
 ```{r}
 # pick columns using a character vector of column names
 cols <- c("carrier", "flight", "tailnum")
-flights %>% select(one_of(cols))
+flights %>% select(all_of(cols))
 ```
+
+
+```{r}
+# all_of()  vs any_of()
+cols <- c("carrier", "flight", "tailnum_ttt")
+flights %>% select(any_of(cols))
+```
+
+
 
 ```{r}
 # select() can be used to rename columns, though all columns not mentioned are dropped
@@ -142,7 +151,7 @@ mtcars %>%
   head()
 
 # side note: dplyr no longer prints row names (ever) for local data frames
-mtcars %>% tbl_df()
+mtcars %>% as_tibble()
 ```
 
 
@@ -160,6 +169,7 @@ flights %>%
 flights %>%
   group_by(month) %>%
   tally()
+
 flights %>% count(month)
 ```
 
@@ -192,6 +202,7 @@ flights %>%
 flights %>%
   group_by(month) %>%
   tally(wt = distance)
+
 flights %>% count(month, wt = distance)
 ```
 
@@ -226,7 +237,7 @@ flights %>%
 
 # Creating data frames: tibble()
 
-`tibble()` is a better way than `data.frame()` for creating data frames. Benefits of `tibble()()`:
+`tibble()` is a better way than `data.frame()` for creating data frames. Benefits of `tibble()`:
 
 * You can use previously defined columns to compute new columns.
 * It never coerces column types.
