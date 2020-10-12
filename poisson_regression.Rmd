@@ -1,4 +1,4 @@
-# 广义线性模型 {#glm}
+# 广义线性模型 {#poisson-regression}
 
 
 ## 线性回归回顾
@@ -649,7 +649,7 @@ glm(number_of_fish ~ 1 + (1 | pollution_level),
 knitr::include_graphics(path = "images/One_Picture.png")
 ```
 
-
+第 \@ref(logistic-regression) 章接着讲广义线性模型中的logistic回归模型。
 
 
 <!-- ## 贝叶斯泊松回归 -->

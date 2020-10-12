@@ -50,7 +50,8 @@ rmd_files: [
   "tidystats.Rmd",
   "tests_as_linear.Rmd",
   "lmm.Rmd",
-  "glm.Rmd",
+  "poisson_regression.Rmd",
+  "logistic_regression.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
 

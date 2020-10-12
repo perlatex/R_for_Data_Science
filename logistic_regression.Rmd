@@ -1,0 +1,356 @@
+# logistic回归模型 {#logistic-regression}
+
+本章讲广义线性模型中的logistic回归模型。
+
+## 问题
+
+假定这里有一组数据，包含学生GRE成绩和被录取的状态(admit = 1，就是被录取；admit = 0，没有被录取)
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+gredata <- read_csv("demo_data/gredata.csv")
+gredata
+```
+
+我们能用学生GRE的成绩**预测**录取状态吗？回答这个问题需要用到logistic回归模型， 
+
+
+$$
+\begin{align*}
+\text{admit}_{i} &\sim \mathrm{Binomial}(1, p_{i}) \\
+logit(p_{i}) &= log\Big(\frac{p_{i}}{1 - p_{i}}\Big) = \alpha + \beta \cdot \text{gre}_{i} 
+\end{align*}
+$$
+
+
+
+这里 $p_i$ 就是被录取的概率。预测因子 $gre$ 的线性组合**模拟**的是 $log\Big(\frac{p_{i}}{1 - p_{i}}\Big)$ ，即对数比率(log-odds).
+
+
+按照上面表达式，用**glm**函数写代码，
+
+```{r}
+model_logit <- glm(admit ~ gre,
+  data = gredata,
+  family = binomial(link = "logit")
+)
+
+summary(model_logit)
+```
+
+得到gre的系数是
+
+```{r}
+coef(model_logit)[2]
+```
+
+怎么理解这个0.003582呢？
+
+
+
+## 模型的输出
+
+为了更好地理解模型的输出，这里用三种不同的度量方式(scales)来计算系数。
+
+假定 $p$ 为录取的概率
+
+| num | scale                 | formula               |
+|:----|:----------------------|:----------------------|
+| 1   | The log-odds scale    | $log \frac{p}{1 - p}$ |
+| 2   | The odds scale        | $\frac{p}{1 -p}$      |
+| 3   | The probability scale | $p$                   |
+
+### The log-odds scale
+
+模型给出**系数**（0.003582）事实上就是log-odds度量方式的结果，具体来说， 这里系数（0.003582）代表着： GRE考试成绩每增加1个单位，那么`log-odds(录取概率)`就会增加0.003582. （注意，不是录取概率增加0.003582，而是`log-odds(录取概率)`增加0.003582）
+
+```{r eval=FALSE, include=FALSE}
+library(effects)
+
+effect_link <- Effect("gre", mod = model_logit)
+
+plot(effect_link,
+  type = "link",
+  main = "gre effect plot\n(log odds scale)"
+)
+```
+
+为了更清楚的理解，我们把log-odds的结果与gre成绩画出来看看
+
+```{r}
+logit_log_odds <- broom::augment_columns(
+  model_logit,
+  data = gredata,
+  type.predict = c("link")
+) %>%
+  rename(log_odds = .fitted) 
+```
+
+
+
+```{r}
+library(latex2exp)
+logit_log_odds %>% 
+    ggplot(aes(x = gre, y = log_odds)) +
+    geom_path(color = "#771C6D", size = 2) +
+    labs(title = "Log odds (β)", 
+        subtitle = "This is linear!",
+        x = NULL,
+        y = TeX("$log \\frac{p}{1 - p}$")) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(face = "bold"),
+      axis.title.y = element_text(angle = 90)
+          )
+```
+
+由图看到，GRE成绩 与`log-odds(录取概率)`这个值的关系是线性的，斜率就是模型给出的系数0.003582
+
+
+
+### The odds scale
+
+第二种odds scale度量方式可能要比第一种要好理解点，我们先求系数的指数，`exp(0.003582) = 1.003588`
+
+```{r}
+exp(0.003582)
+```
+
+1.003588的含义是: GRE考试成绩每增加1个单位，那么`odds(录取概率)`就会增大1.003588倍；若增加2个单位，那么`odds(录取概率)`就会增大(1.003588 * 1.003588)倍，也就说是个乘法关系。
+
+有时候，大家喜欢用`增长百分比`表述，那么就是
+
+(exp(0.003582) - 1) x 100% = (1.003588 - 1) x 100% = 0.36%
+
+即，GRE考试成绩每增加1个点，那么`odds(录取概率)`就会增长百分之0.36.
+
+
+同样，我们把`odds(录取概率)`的结果与GRE成绩画出来看看
+
+```{r}
+logit_odds <- broom::augment_columns(
+  model_logit,
+  data = gredata,
+  type.predict = c("link")
+) %>%
+  rename(log_odds = .fitted) %>%
+  mutate(odds_ratio = exp(log_odds))
+```
+
+
+```{r}
+logit_odds %>% 
+    ggplot(aes(x = gre, y = odds_ratio)) +
+    geom_line(color = "#FB9E07", size = 2) +
+    labs(title = "Odds (exp(β))", 
+        subtitle = "This is curvy, but it's a mathy transformation of a linear value",
+        x = NULL,
+        y = TeX("$\\frac{p}{1 - p}$")) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(face = "bold"),
+      axis.title.y = element_text(angle = 90)
+    )
+```
+
+
+
+
+
+
+### The probability scale.
+
+第三种度量方式是概率度量(probability scale)，因为模型假定的是，GRE的分数与`log-odds(录取概率)`呈线性关系，那么很显然GRE的分数与`录取概率`就不可能是线性关系了，而是呈非线性关系。我们先看下非线性关系长什么样。
+
+```{r eval=FALSE, include=FALSE}
+library(effects)
+
+effect_response <- Effect("gre", mod = model)
+
+plot(effect_response,
+  type = "response",
+  main = "gre effect plot\n(probability scale)"
+)
+```
+
+
+
+```{r}
+logit_probs <- broom::augment_columns(
+  model_logit,
+  data = gredata,
+  type.predict = c("response")
+) %>% 
+  rename(pred_prob = .fitted)
+```
+
+
+
+```{r}
+logit_probs %>% 
+    ggplot(aes(x = gre, y = pred_prob)) +
+    #geom_point(aes(x = gre, y = admit)) +
+    geom_line(color = "#CF4446", size = 2) +
+    labs(title = "Predicted probabilities", 
+        sutitle = "Plug values of X into ",
+        x = "X (value of explanatory variable)",
+        y = TeX("\\hat{P(Y)} ")) +
+    theme_minimal() +
+    theme(plot.title = element_text(face = "bold"))
+```
+
+可以看到，GRE分数对录取的概率的影响是**正的且非线性的**，具体来说，
+
+-   GRE分数200分左右，录取概率约0.1；
+-   GRE分数500分左右，录取概率约0.25；
+-   GRE分数800分左右，录取概率接近0.5；
+
+
+```{block, type="danger"}
+提请注意的是，以上三种度量的方式中：
+
+- `log_odds scale`，预测因子与`log_odds()`的关系是一个固定值，具有可加性
+- `odds scale`， 预测因子与`odds()`的关系是一个固定值，具有乘法性
+- `probability`，预测因子与`probability`的关系不再是一个固定值了
+```
+
+
+
+用哪种度量方式来理解模型的输出，取决不同的场景。第一种方式容易计算但理解较为困难，第三种方式最容易理解，但不再是线性关系了。
+
+
+## 预测
+
+### 预测与拟合
+
+先认识下两个常用的函数`predict()`和`fitted()`.
+
+
+```{r}
+gredata %>%
+  mutate(
+    pred = predict(model_logit),
+    fitted = fitted(model_logit)
+    )
+```
+
+线性模型中，`predict()`和`fitted()`这种写法的返回结果是一样的。但在glm模型中，两者的结果是不同的。`predict()`返回的是`log_odds(录取概率)`度量的结果；而`fitted()`返回的是`录取概率`。如果想保持一致，需要对`predict()`返回结果做`反向的log_odds`计算
+
+
+$$p = \exp(\alpha) / (1 + \exp(\alpha) )$$
+
+
+
+具体如下
+
+
+```{r}
+gredata %>%
+  mutate(
+    pred = predict(model_logit),
+    fitted = fitted(model_logit),
+    pred2 = exp(pred) / (1 + exp(pred) )
+    )
+```
+
+我这样折腾无非是想让大家知道，在glm中`predict()`和`fit()`是不同的。
+
+如果想让`predict()`也返回`录取概率`，也可以不用那么麻烦，事实上`predict`的`type = "response")` 选项已经为我们准备好了。
+
+```{r}
+gredata %>%
+  mutate(
+    pred = predict(model_logit, type = "response"),
+    fitted = fitted(model_logit)
+    )
+```
+
+### 预测
+
+有时候，我们需要对给定的GRE分数，用建立的模型**预测**被录取的概率
+
+```{r}
+newdata <- tibble(
+  gre = c(550, 660, 700, 780)
+)
+newdata
+```
+
+
+
+前面讲到`predict()`中`type`参数有若干选项`type = c("link", "response", "terms")`,
+
+
+
+- `type = "link"`，预测的是log_odds，实际上就是`coef(model_logit)[1] + gre * coef(model_logit)[2]`
+
+
+```{r}
+newdata %>% 
+  mutate(
+    pred_log_odds = predict(model_logit, newdata = newdata, type = "link"),
+    #
+    pred_log_odds2 = coef(model_logit)[1] + gre * coef(model_logit)[2]
+    
+  )
+```
+
+
+
+- `type = "response""`，预测的是probabilities， 实际上就是`exp(pred_log_odds) / (1 + exp(pred_log_odds) )`
+
+
+```{r}
+newdata %>% 
+  mutate(
+    pred_log_odds = predict(model_logit, newdata = newdata, type = "link")
+    ) %>% 
+  mutate(
+    pred_prob = predict(model_logit, newdata = newdata, type = "response"),
+    #
+    pred_prob2 = exp(pred_log_odds) / (1 + exp(pred_log_odds) )
+  )
+```
+
+
+- `type = "terms"`，返回一个矩阵，具体计算为：模型的**设计矩阵**中心化以后，与模型返回的系数相乘而得到的新矩阵^[https://stackoverflow.com/questions/37963904/what-does-predict-glm-type-terms-actually-do]。
+
+
+```{r}
+predict(model_logit, gredata, type = 'terms') %>% 
+  as_tibble() %>% 
+  head()
+```
+
+
+我们复盘一次
+
+```{r}
+X <- model.matrix(admit ~ gre, data = gredata)
+
+X %>% 
+  as.data.frame() %>% 
+  mutate(
+    across(everything(), ~ .x - mean(.x))
+  ) %>% 
+  transmute(
+    term = coef(model_logit)[2] * gre
+    ) %>% 
+  head()
+```
+
+
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(gredata, logit_log_odds, logit_odds, logit_probs, model_logit, newdata, X)
+```
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
