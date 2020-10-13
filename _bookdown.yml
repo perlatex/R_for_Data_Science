@@ -23,7 +23,7 @@ rmd_files: [
   "rmarkdown.Rmd",
   "readr.Rmd",
   "dplyr.Rmd",
-  "ggplot2_aes.Rmd",
+  "ggplot2_aes2.Rmd",
   "tidyr.Rmd",
   "stringr.Rmd",
   "forcats.Rmd",
