@@ -117,15 +117,15 @@ knitr::include_graphics("images/tidyverse.png")
 因子处理   | forcats |
 
 
-
+ 
 ###  R & tidyverse 四大优势
 
 | 序号 | 内容   |  代码演示   |
 |:---|:---|:---|
-| 1     |  统计           |   1_stats.R         |
-| 2     |  可视化         |   2_visual.R        |
-| 3     |  探索性分析     |   3_eda.R           |
-| 4     |   可重复性报告  |   4_reproducible.R  |
+| 1     |  统计           |   `r xfun::embed_file('./exercises/1_stats.R')` |
+| 2     |  可视化         |   `r xfun::embed_file('./exercises/2_visual.R')` |
+| 3     |  探索性分析     |   `r xfun::embed_file('./exercises/3_eda.R')` |
+| 4     |  可重复性报告   |   `r xfun::embed_file('./exercises/4_reproducible.Rmd')` |
 
 
 看了这些代码，可能第一眼感觉是这样的
@@ -175,15 +175,15 @@ knitr::include_graphics("images/Coding-Lab.jpg")
 
 
 
-### 你的论文需要排版
+### 社会科学需要可重复性
 
 ```{r echo=FALSE, out.width = '60%'}
 knitr::include_graphics("images/latex-tweak.gif")
 ```
 
-我们不是学设计的，但要操心**交叉引用**的事
+<!-- ~我们不是学设计的，但要操心**交叉引用**的事~  -->
 
-
+社会科学领域的研究是需要可重复性的，包括可重复性的分析文档。
 
 
 ### 挖掘机技术到底哪家强？

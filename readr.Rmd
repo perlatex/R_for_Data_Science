@@ -1,11 +1,32 @@
 # 读取数据 {#readr}
 
-本章介绍如何读取数据到 **R**。事实上，R语言提供了很多读取数据的函数。
+在学习R语言过程中，除了使用内置的数据集外，我们更多的需要导入外部数据，
+比如实验观察数据、社会调研的数据等等。
+在讲如何读取数据到 **R**之前，先介绍下数据科学中的项目管理。
+
+## 数据科学中的文件管理
+
+把项目所需的文件（代码、数据、图片等），放在一个文件夹里
+
+### 文件夹命名
+
+**推荐**我自己的文件夹命名习惯 (项目名+日期)，注意这里不要有**中文和空格**, 比如下面风格的就比较好 
+
+- `homework20201014`
+- `project20201014`
+- `Emotional_experiment20201014` 
 
 
-## 常见格式
 
-下表列出了常见文件格式的读取方法
+### 项目文件结构
+
+```{r, out.width='50%', fig.align='left', echo=FALSE}
+knitr::include_graphics("./images/Rproject.png")
+```
+
+## 读取文件
+
+事实上，R语言提供了很多读取数据的函数。下表列出了常见文件格式的读取方法
 
 
 文件格式                       |       **R** 函数 
@@ -63,7 +84,7 @@ d <- read_excel("./data/vowel_data.xlsx")
 
 ```{r, eval=FALSE, warning=FALSE}
 library(haven)
-d <- read_excel("./data/cfps2010.dta")
+d <- read_dta("./data/cfps2010.dta")
 ```
 
 
