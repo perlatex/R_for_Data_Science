@@ -81,6 +81,19 @@ p + annotate("text",
 
 辛普森悖论在日常生活中层出不穷。 那么如何避免辛普森悖论呢？我们能做的，就是仔细地研究分析各种影响因素，不要笼统概括地、浅尝辄止地看问题。其中，可视化分析为我们提供了一个好的方法。
 
+## 什么是数据可视化
+
+### 图形属性
+
+我们在图中画一个点，那么这个**点**就有（形状，大小，颜色，位置，透明度）等属性，
+这些属性就是**图形属性**（有时也称之为图形元素或者视觉元素），下图 \@ref(fig:common-aesthetics)列出了常用的图形属性。
+
+```{r common-aesthetics, out.width = '98%', echo = FALSE, fig.cap= "常用的图形元素"}
+knitr::include_graphics("./images/common-aesthetics.png")
+```
+
+数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，即，数值到图形属性的转换（映射）过程。
+
 
 ## 宏包ggplot2 
 
@@ -125,9 +138,9 @@ knitr::include_graphics("images/mapping.png")
 其中前三个是必需的。
 
 
-Hadley Wickham将这套语法诠释为:
+Hadley Wickham将这套可视化语法诠释为:
 
-一张统计图形就是从数据到几何对象(geometric object，缩写geom)的图形属性(aesthetic attribute，缩写aes)的一个映射。
+一张统计图形就是从**数据**到几何对象(geometric object，缩写geom)的**图形属性**(aesthetic attribute，缩写aes)的一个映射。
 
 ```{r out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/grammar-of-graphics.png")

@@ -94,7 +94,7 @@ df <- left_join(china_uni, df_price, by = c("NAME" = "name"))
 
 
 
-```{r,fig.width= 8, fig.height= 8}
+```{r,fig.width= 8, fig.height= 8, eval=FALSE}
 ggplot(data = df) + 
   geom_sf( aes(fill = price_today < 28), show.legend = FALSE) + 
   geom_sf_text(aes(label = NAME),
