@@ -208,16 +208,16 @@ df %>% select(matches("x"))
 
 - 通过类型
 ```{r}
-df %>% select(is.character)
-df %>% select(is.numeric)
+df %>% select(where(is.character))
+df %>% select(where(is.numeric))
 ```
 
 
 
 - 通过各种组合
 ```{r}
-df %>% select(!is.character)
-df %>% select(is.numeric & starts_with("x"))
+df %>% select(!where(is.character))
+df %>% select(where(is.numeric) & starts_with("x"))
 df %>% select(starts_with("g") | ends_with("y"))
 ```
 

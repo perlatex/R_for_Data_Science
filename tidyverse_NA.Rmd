@@ -1,0 +1,335 @@
+# tidyverse中的缺失值 {#tidyverse-NA}
+
+
+今天我们聊聊数据处理中的缺失值。
+
+
+
+## 什么是缺失值?
+
+我们先导入企鹅数据
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+penguins <- read_csv(here::here("demo_data", "penguins.csv"))
+penguins
+```
+
+我们看到第4行第3列开始，出现若干`NA`，这里的`NA`就是**缺失值**，`NA`的意思就是 not available.
+
+
+```{block, type="danger"}
+注意区分 "NA" 和 NA
+
+- "NA" 有引号的是字符串  
+-  NA  是R里的特殊标记
+```
+
+
+
+在R console中执行 `?"NA"`，我们看到第一行
+
+> NA is a logical constant of length 1 which contains a missing value indicator.
+
+也就说，NA代表了数据缺失的一种逻辑状态（另外两个逻辑值是TRUE， FALSE），NA有两层含义：
+
+- 它是逻辑值
+- 代表着缺失值
+
+
+
+
+
+## 有关NA的计算
+
+- 数值运算时
+
+一般情况下，与 `NA` 的数值计算结果也是 `NA`，
+
+```{r}
+c(NA, 1) + 2
+```
+- 逻辑运算时
+
+逻辑运算中`TRUE`为真，`FALSE`为假，而`NA`会被认为未知（即真假难辨）^[https://tianyishi2001.github.io/r-and-tidyverse-book/logical-operation.html]。
+
+
+```{r}
+isTRUE(NA)
+isFALSE(NA)
+```
+
+既不是真，也不是假，真假难辨。因此，在逻辑运算时，可以按下表指引
+
+
+| TRUE 	| NA           	| FALSE 	|
+|------	|:------------:	|-------	|
+| 真   	| 不能确定真假 	| 假    	|
+
+
+```{r}
+# Some logical operations do not return NA
+c(TRUE, FALSE) & NA
+c(TRUE, FALSE) | NA
+```
+
+可以看到，TRUE & NA 的结果为 NA（而不是FALSE），是因为NA的意思是“不能确定真假”，即有可能真也有可能假。因此TRUE & NA也无法辨真假。其它情形也是类似。
+
+
+## 如何判断NA?
+
+找出数据中的缺失值，可以用`is.na()`函数
+
+```{r}
+c(1, 2, NA, 4) %>% is.na()
+```
+
+
+
+
+
+## 强制转换
+
+前面提到 `NA` 是一个与`TRUE`和`FALSE`并列的逻辑值，比如
+
+```{r}
+c(TRUE, FALSE, NA) %>% class()
+```
+它的结果变成了"logical".
+
+
+
+但如果 NA 放在数值型的向量中，
+```{r}
+c(1, 2, NA, 4) %>% class()
+```
+它的结果却变成了"numeric"
+
+
+
+如果 NA 放在字符串的向量中，
+```{r}
+c("1", "2", NA, "4") %>% class()
+```
+它的结果却变成了"character"
+
+
+为什么会出现这种诡异的现象？究其原因，还在于NA的属性上，代表数据缺失的逻辑值，即数据类型是逻辑型。
+```{r}
+c(TRUE, NA, FALSE) 
+c(TRUE, NA, FALSE) %>% class()
+```
+
+
+在第 \@ref(intro-R) 章中，我们提到，把不同类型的数据用`c()`组合成向量时，因为`c()` 函数要求数据类型必须一致，因此就会发生**强制转换**。比如当逻辑型变量和数值型变量组合在一起时，**逻辑型**会强制转换成**数值型**。
+
+
+```{r}
+c(1, 2, TRUE, 4) 
+c(1, 2, TRUE, 4) %>% class()
+```
+
+TRUE会转换成1，FALSE会转换成0. 那么此时逻辑型的 NA 会转换成数值型的 NA_real_
+
+| 逻辑型 	| 转换成数值型 	|
+|--------	|--------------	|
+| TRUE   	| 1            	|
+| NA     	| NA_real_     	|
+| FALSE  	| 0            	|
+
+
+
+```{r}
+c(1, 2, NA, 4) 
+c(1, 2, NA, 4) %>% class()
+c(1, 2, NA_real_, 4)
+c(1, 2, NA_real_, 4) %>% class()
+```
+
+
+当逻辑型变量和字符串型变量组合在一起时，**逻辑型**会强制转换成**字符串型**。
+
+| 逻辑型 	| 转换成字符串型 	|
+|--------	|----------------	|
+| TRUE   	| "TRUE"         	|
+| NA     	| NA_character_  	|
+| FALSE  	| "FALSE"        	|
+
+
+
+```{r}
+c("1", "2", TRUE, "4")
+c("1", "2", NA, "4")
+c("1", "2", NA_character_, "4") 
+```
+
+除了逻辑型`NA`, 数值型`NA_real_`, 字符串型`NA_character_`外, 还有整数型`NA_integer_`, 和复数型`NA_complex`. 我们再看下面的例子
+
+```{r}
+c(TRUE, NA) %>%
+  purrr::map(., ~is.logical(.))
+
+c("a", NA, NA_character_) %>% 
+  purrr::map(., ~is.character(.))
+
+c(123, NA, NA_real_) %>% 
+  purrr::map(., ~is.numeric(.))
+
+c(NA_real_, NA_complex_, NA_character_, NA_integer_, NA) %>% #被强制转换成character类型
+  purrr::map(., ~is.character(.))
+```
+
+
+
+## 如果统计有多少NA?
+
+在实际的数据处理中，没有人愿意把问题搞复杂，一般情况下会先**预处理**，比如，剔除掉或者用其他值替换掉。不管是一删了之，还是采用插值替换，都有必要了解下数据中多少NA，这样才决定采用什么样的预处理办法。
+
+
+```{r}
+c(TRUE, TRUE, FALSE, FALSE) %>% as.integer() %>% sum()
+c(TRUE, TRUE, FALSE, FALSE) %>% sum()
+```
+
+```{block, type="danger"}
+常用的方法：
+
+先用`is.na()`判断出是否为缺失值，缺失值是TRUE，不是缺失值为FALSE；然后TRUE/FALSE转换成数值，即TRUE -> 1; FALSE -> 0；最后把所有的1加起来，就知道数据中有多少个缺失值。
+```
+
+
+具体代码为
+```{r}
+c(1, 2, NA, 4) %>% is.na() %>% as.integer() %>% sum()
+```
+
+
+偷懒可以这样写
+```{r}
+c(1, 2, NA, 4) %>% is.na() %>% sum()
+```
+
+
+当然也可以自定义一个函数，
+```{r}
+sum_of_na <- function(x){
+  sum(is.na(x))
+}
+
+c(1, 2, NA, 4) %>% sum_of_na()
+```
+
+
+
+
+
+
+## 应用到tidyverse中
+
+回到本章开始的企鹅数据
+```{r}
+penguins$bill_length_mm %>% sum_of_na()
+```
+
+用到dplyr函数中
+
+```{r}
+penguins %>% summarise(
+  N1 = sum_of_na(bill_length_mm),
+  N2 = sum_of_na(bill_depth_mm)
+)
+
+```
+
+一次性统计所有列
+```{r}
+penguins %>% summarise(
+  across(everything(), sum_of_na)
+)
+```
+
+
+更偷懒的办法，也更直观（再次感受到R的美！）
+```{r}
+penguins %>% summarise(
+  across(everything(), ~sum(is.na(.x)))
+)
+```
+
+
+
+
+数据框的一列中每个元素的数据类型是要求相同的，这是构建数据框的基本要求。因此，在dplyr中`mutate()`函数创建数据框的**新列**时， 这一列的元素必须是同一种类型，如果遇到新列中包含NA，也要确保NA的类型与其它元素的类型要一致，比如其它元素是字符串，那么就应该使用字符串类型的缺失值，即NA_character_.
+
+
+
+
+
+我来看下面这个例子：
+
+```{r}
+d <- tibble(x = c(1, 3, 6, NA, 8, NA))
+d
+```
+
+
+
+```{r, which-NA-use, eval=FALSE}
+d %>% mutate(
+  is_even = case_when(
+    x %% 2 == 0 ~ "even",
+    x %% 2 == 1 ~ "not even",
+    TRUE ~ NA                 # wrong
+  )
+)
+```
+
+
+上面这个代码中，本意是希望构建一个新列存储("even", "not even")字符串；而`NA`是逻辑型的，类型不一致，因此会报错。
+正确的写法是使用`NA_character_`
+
+```{r}
+d %>% mutate(
+  is_even = case_when(
+    x %% 2 == 0 ~ "even",
+    x %% 2 == 1 ~ "not even",
+    TRUE ~ NA_character_
+  )
+)
+```
+
+
+## 思考
+
+- 上面例子中的`dplyr::case_when()`换做`dplyr::if_else()`函数，应该怎么写?
+
+- 企鹅数据中，找出有缺失值的行，有一个NA也算。
+```{r eval=FALSE, include=FALSE}
+penguins %>% filter_all(
+  any_vars(is.na(.))
+)
+```
+
+
+
+## 更多
+
+```{block, type="danger"}
+注意区分NA 和 Inf, NaN, NULL
+
+- Inf = 无穷大，比如 `pi / 0 %>% is.infinite()` 
+- NaN = 不是一个数（Not a Number）, 比如 `0 / 0  %>% is.nan() `
+- NULL = 空值，比如 `c() %>% is.null()` 
+```
+
+
+```{r, echo = F}
+# remove the objects
+rm(penguins, d, sum_of_na)
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

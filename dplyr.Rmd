@@ -140,11 +140,13 @@ df %>% mutate(newscore = score2020)
 是不是很赞？
 
 
+注意此时`df`没有变化喔。好比把`df` 传给了`f()` 执行了`f(df)`, 但`df`本身没有变化。
+如果想保留`f(df)`结果，需要把`f(df)`赋值给新的对象，当然也可以赋值给`df`, 即替换.
+
 ```{r}
 df <- df %>% mutate(newscore = score2020)
 df
 ```
-
 
 
 
