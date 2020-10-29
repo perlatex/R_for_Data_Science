@@ -63,7 +63,7 @@ isFALSE(NA)
 
 
 | TRUE 	| NA           	| FALSE 	|
-|------	|:------------:	|-------	|
+|:-----	|:-------------:|:-------	|
 | 真   	| 不能确定真假 	| 假    	|
 
 
@@ -73,7 +73,7 @@ c(TRUE, FALSE) & NA
 c(TRUE, FALSE) | NA
 ```
 
-可以看到，TRUE & NA 的结果为 NA（而不是FALSE），是因为NA的意思是“不能确定真假”，即有可能真也有可能假。因此TRUE & NA也无法辨真假。其它情形也是类似。
+可以看到，TRUE & NA 的结果为 NA（而不是FALSE），是因为NA的意思是“不能确定真假”，即有可能真也有可能假，介于真和假之间。因此TRUE 与 NA的逻辑和(即TRUE & NA)返回NA；而FALSE 与 NA的逻辑和(即FALSE & NA) 则返回FALSE。逻辑或的情形也是类似的。
 
 
 ## 如何判断NA?
@@ -114,7 +114,7 @@ c("1", "2", NA, "4") %>% class()
 它的结果却变成了"character"
 
 
-为什么会出现这种诡异的现象？究其原因，还在于NA的属性上，代表数据缺失的逻辑值，即数据类型是逻辑型。
+为什么会出现这种**诡异**的现象？究其原因，还在于NA的属性上，代表数据缺失的逻辑值，即数据类型是逻辑型。
 ```{r}
 c(TRUE, NA, FALSE) 
 c(TRUE, NA, FALSE) %>% class()
@@ -132,7 +132,7 @@ c(1, 2, TRUE, 4) %>% class()
 TRUE会转换成1，FALSE会转换成0. 那么此时逻辑型的 NA 会转换成数值型的 NA_real_
 
 | 逻辑型 	| 转换成数值型 	|
-|--------	|--------------	|
+|:-------	|:-------------	|
 | TRUE   	| 1            	|
 | NA     	| NA_real_     	|
 | FALSE  	| 0            	|
@@ -150,7 +150,7 @@ c(1, 2, NA_real_, 4) %>% class()
 当逻辑型变量和字符串型变量组合在一起时，**逻辑型**会强制转换成**字符串型**。
 
 | 逻辑型 	| 转换成字符串型 	|
-|--------	|----------------	|
+|:-------	|:---------------	|
 | TRUE   	| "TRUE"         	|
 | NA     	| NA_character_  	|
 | FALSE  	| "FALSE"        	|
@@ -186,7 +186,7 @@ c(NA_real_, NA_complex_, NA_character_, NA_integer_, NA) %>% #被强制转换成
 在实际的数据处理中，没有人愿意把问题搞复杂，一般情况下会先**预处理**，比如，剔除掉或者用其他值替换掉。不管是一删了之，还是采用插值替换，都有必要了解下数据中多少NA，这样才决定采用什么样的预处理办法。
 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 c(TRUE, TRUE, FALSE, FALSE) %>% as.integer() %>% sum()
 c(TRUE, TRUE, FALSE, FALSE) %>% sum()
 ```
@@ -304,6 +304,7 @@ d %>% mutate(
 - 上面例子中的`dplyr::case_when()`换做`dplyr::if_else()`函数，应该怎么写?
 
 - 企鹅数据中，找出有缺失值的行，有一个NA也算。
+
 ```{r eval=FALSE, include=FALSE}
 penguins %>% filter_all(
   any_vars(is.na(.))

@@ -513,6 +513,22 @@ ggsave(
 )
 ```
 
+## 课堂作业
+
+补充代码，要求在一张图中画出
+
+- 企鹅嘴巴长度和嘴巴厚度的散点图
+- 不同企鹅种类用不同的颜色
+- 整体的线性拟合
+- 不同种类分别线性拟合
+
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = ___, y = ___)) +
+  geom_point() +
+  geom_smooth() +
+  geom_smooth() 
+```
+
 
 
 ## 延伸阅读 

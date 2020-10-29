@@ -25,7 +25,7 @@ rnorm(n = 5, mean = 0, sd = 1)
 事实上，R内置了很多随机数产生的函数
 
 | Distrution 	| Notation 		| R |
-|----------	|:-------------:|:-------------:|
+|:----------	|:-----------:|:-------------:|
 |Uniform | $\text{U}(a, b)$ | `runif`|
 |Normal  | $\text{N}(\mu, \sigma)$ | `rnorm`|
 |Binormal  | $\text{Bin}(n, p)$ | `rbinorm`|
