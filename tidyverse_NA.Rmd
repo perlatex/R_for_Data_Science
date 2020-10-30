@@ -319,7 +319,7 @@ penguins %>% filter_all(
 注意区分NA 和 Inf, NaN, NULL
 
 - Inf = 无穷大，比如 `pi / 0 %>% is.infinite()` 
-- NaN = 不是一个数（Not a Number）, 比如 `0 / 0  %>% is.nan() `
+- NaN = 不是一个数（Not a Number）, 比如 `0 / 0  %>% is.nan() `, `sqrt(-1) %>% is.nan() `
 - NULL = 空值，比如 `c() %>% is.null()` 
 ```
 
