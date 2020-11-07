@@ -20,8 +20,9 @@ R 软件是一个自由、开源软件平台，具有统计分析、可视化和
 ## 安装 RStudio
 安装完R， 还需要安装RStudio。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。但我更觉得 R 是有趣的灵魂，而 Rstudio 是好看的皮囊。
 
-```{r out.width = '50%', echo = FALSE}
-knitr::include_graphics(c("images/engine.jpg", "images/dashboard.jpg"))
+```{r out.width = '100%', echo = FALSE}
+#knitr::include_graphics(c("images/engine.jpg", "images/dashboard.jpg"))
+knitr::include_graphics("images/engine_dashboard.png")
 ```
 
 

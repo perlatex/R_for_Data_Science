@@ -1,0 +1,411 @@
+# 探索性数据分析-大学生职业决策 {#eda-career-decision}
+
+## 预备知识
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+example <- 
+ tibble::tribble(
+   ~name, ~english, ~chinese, ~math, ~sport, ~psy, ~edu,
+     "A",     133,    100,    102,     56,    89,   89,
+     "B",     120,    120,     86,     88,    45,   75,
+     "C",      98,    109,    114,     87,    NA,   84,
+     "D",     120,     78,    106,     68,    86,   69,
+     "E",     110,     99,    134,     98,    75,   70,
+     "F",      NA,    132,    130,     NA,    68,   88
+   )
+
+example
+```
+
+### 缺失值检查
+
+我们需要判断每一列的缺失值
+
+```{r}
+example %>% 
+  summarise(
+    na_in_english = sum(is.na(english)),
+    na_in_chinese = sum(is.na(chinese)),
+    na_in_math    = sum(is.na(math)),
+    na_in_sport   = sum(is.na(sport)),
+    na_in_psy     = sum(is.na(math)),   # tpyo here
+    na_in_edu     = sum(is.na(edu))
+  )
+```
+
+我们发现，这种写法比较笨，而且容易出错，比如`na_in_psy = sum(is.na(math))` 就写错了。那么有没有`既偷懒又安全`的方法呢？有的。但代价是需要学会`across()`函数，大家可以在Console中输入`?dplyr::across`查看帮助文档，或者看第 \@ref(colwise) 章。
+
+```{r}
+example %>% 
+  summarise(
+    across(everything(), mean)
+  )
+
+
+example %>% 
+  summarise(
+    across(everything(), function(x) sum(is.na(x)) )
+  )
+```
+
+
+### 数据预处理
+
+- 直接**丢弃**缺失值所在的行
+
+```{r}
+example %>% drop_na()
+```
+
+
+
+- 用**均值**代替缺失值
+
+```{r eval=FALSE, include=FALSE}
+example %>% 
+  mutate(
+    english_new = if_else(is.na(english), mean(english, na.rm = T), english)
+    )
+```
+
+
+
+```{r}
+d <- example %>% 
+  mutate(
+    across(where(is.numeric), ~ if_else(is.na(.), mean(., na.rm = T), .))
+  )
+d
+```
+
+
+
+
+- 计算总分/均值
+
+```{r}
+d %>% 
+  rowwise() %>% 
+  mutate(
+    total = sum(c_across(-name))
+  )
+
+d %>% 
+  rowwise() %>% 
+  mutate(
+    mean = mean(c_across(-name))
+  )
+```
+
+
+
+
+- **数据标准化**处理
+
+```{r}
+standard <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+
+```
+
+
+
+
+```{r}
+d %>% 
+  mutate(
+    across(where(is.numeric), standard)
+  )
+```
+
+
+
+
+## 开始
+
+### 文件管理中需要注意的地方
+
+感谢康钦虹同学提供的数据，但这里有几点需要注意的地方：
+
+| 事项     	| 问题                      	| 解决办法                                    	|
+|----------	|---------------------------	|-----------------------------------------------|
+| 文件名   	| excel的文件名是中文       	| 用英文，比如 `data.xlsx`                     	|
+| 列名     	| 列名中有-号，大小写不统一 	| 规范列名，或用`janitor::clean_names()`偷懒   	|
+| 预处理   	| 直接在原始数据中新增      	| 不要在原始数据上改动，统计工作可以在R里实现 	|
+| 文件管理 	| 没有层级                  	| 新建`data`文件夹装数据，与`code.Rmd`并列     	|
+
+
+
+
+```{r, message=FALSE, warning=FALSE}
+data <- readxl::read_excel("demo_data/career-decision.xlsx", skip = 1) %>% 
+        janitor::clean_names()
+
+#glimpse(data)
+```
+
+
+
+```{r}
+d <- data %>% select(1:61)
+#glimpse(d)
+```
+
+
+
+
+
+### 缺失值检查
+
+```{r}
+d %>% 
+  summarise(
+    across(everything(), ~sum(is.na(.)))
+  )
+```
+
+没有缺失值，挺好
+
+
+### 数据预处理
+
+采用利克特式 5 点计分... (这方面你们懂得比我多)
+
+```{r}
+d <- d %>%
+  rowwise() %>%
+  mutate(
+    environment_exploration          = sum(c_across(z1:z5)),
+    self_exploration                 = sum(c_across(z6:z9)),
+    objective_system_exploration     = sum(c_across(z10:z15)),
+    info_quantity_exploration        = sum(c_across(z16:z18)),
+    
+    self_evaluation                  = sum(c_across(j1:j6)),
+    information_collection           = sum(c_across(j7:j15)),
+    target_select                    = sum(c_across(j16:j24)),
+    formulate                        = sum(c_across(j25:j32)),
+    problem_solving                  = sum(c_across(j33:j39)),
+
+    career_exploration               = sum(c_across(z1:z18)),
+    career_decision_making           = sum(c_across(j1:j39))
+  ) %>% 
+  select(-starts_with("z"), -starts_with("j")) %>% 
+  ungroup() %>% 
+  mutate(pid = 1:n(), .before = sex) %>%
+  mutate(
+    across(c(pid, sex, majoy, grade, from), as_factor)
+  )
+
+#glimpse(d)
+```
+
+### 标准化
+
+
+```{r}
+standard <- function(x) {
+  (x - mean(x)) / sd(x)
+}
+
+d <- d %>% 
+  mutate(
+    across(where(is.numeric), standard)
+  )
+d
+```
+
+
+## 探索
+
+### 想探索的问题
+
+- 不同性别（或者年级，生源地，专业）下，各指标分值的差异性
+- 两个变量的相关分析和回归分析
+- 更多（欢迎大家提出了喔）
+
+
+### 男生女生在职业探索上有所不同？
+
+以性别为例。因为性别变量是男女，仅仅2组，所以检查男女**在各自指标上的均值差异**，可以用T检验。
+
+```{r}
+d %>% 
+  group_by(sex) %>% 
+  summarise(
+   across(where(is.numeric), mean)
+)
+```
+
+你可以给这个图颜色弄得更好看点？
+```{r, fig.width=4, fig.height=3.5, fig.align="center"}
+library(ggridges)
+d %>% 
+  ggplot(aes(x = career_exploration, y = sex, fill = sex)) +
+  geom_density_ridges()
+```
+
+
+
+
+```{r}
+t_test_eq <- t.test(career_exploration ~ sex, data = d, var.equal = TRUE) %>% 
+  broom::tidy()
+t_test_eq
+```
+
+
+
+```{r}
+t_test_uneq <- t.test(career_exploration ~ sex, data = d, var.equal = FALSE) %>% 
+  broom::tidy()
+t_test_uneq 
+```
+
+
+
+当然，也可以用第 \@ref(infer) 章介绍的统计推断的方法
+
+
+```{r}
+library(infer)
+
+obs_diff <- d %>% 
+  specify(formula = career_exploration ~ sex) %>% 
+  calculate("diff in means", order = c("1", "2"))
+obs_diff
+```
+
+
+
+
+```{r}
+null_dist <- d %>% 
+  specify(formula = career_exploration ~ sex) %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 5000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("1", "2"))
+null_dist
+```
+
+
+
+```{r}
+null_dist %>%  
+  visualize() +
+  shade_p_value(obs_stat = obs_diff, direction = "two_sided")
+```
+
+
+
+```{r}
+null_dist %>%  
+  get_p_value(obs_stat = obs_diff, direction = "two_sided") %>% 
+  #get_p_value(obs_stat = obs_diff, direction = "less") %>% 
+  mutate(p_value_clean = scales::pvalue(p_value))
+```
+
+
+
+
+
+也可以用tidyverse的方法一次性的搞定**所有指标**
+
+```{r}
+d %>%
+  pivot_longer(
+    cols = -c(pid, sex, majoy, grade, from),
+    names_to = "index",
+    values_to = "value"
+  ) %>% 
+  group_by(index) %>% 
+  summarise(
+    broom::tidy( t.test(value ~ sex, data = cur_data()))
+  ) %>% 
+  select(index, estimate, statistic, p.value) %>% 
+  arrange(p.value)
+```
+
+
+
+
+
+### 来自不同地方的学生在职业探索上有所不同？
+
+以生源地为例。因为生源地有3类，所以可以使用方差分析。
+
+```{r}
+aov(career_exploration ~ from, data = d) %>%
+  TukeyHSD(which = "from") %>%
+  broom::tidy()
+```
+
+
+
+```{r, eval=FALSE, include=FALSE}
+lm(career_exploration ~ from, data = d) %>% 
+  broom::tidy()
+```
+
+
+
+```{r, fig.width=4, fig.height=3.5, fig.align="center"}
+library(ggridges)
+d %>% 
+  ggplot(aes(x = career_exploration, y = from, fill = from)) +
+  geom_density_ridges()
+```
+
+
+
+也可以一次性的搞定**所有指标**
+
+```{r}
+d %>%
+  pivot_longer(
+    cols = -c(pid, sex, majoy, grade, from),
+    names_to = "index",
+    values_to = "value"
+  ) %>% 
+  group_by(index) %>% 
+  summarise(
+    broom::tidy( aov(value ~ from, data = cur_data()))
+  ) %>% 
+  select(index, term, statistic, p.value) %>% 
+  filter(term != "Residuals") %>% 
+  arrange(p.value)
+```
+
+
+### 职业探索和决策之间有关联？
+
+可以用第 \@ref(lm) 章线性模型来探索
+
+```{r}
+lm(career_decision_making  ~ career_exploration, data = d)
+```
+
+
+
+
+不要因为我讲课讲的很垃圾，就错过了R的美，瑕不掩瑜啦。要相信自己，你们是川师研究生中最聪明的。
+
+
+```{r echo=FALSE, fig.align='center', out.width='90%'}
+knitr::include_graphics("images/support.jpg")
+```
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(d, data, example, null_dist, obs_diff, standard, t_test_eq, t_test_uneq)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

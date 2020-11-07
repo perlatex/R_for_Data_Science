@@ -122,10 +122,10 @@ knitr::include_graphics("images/tidyverse.png")
 
 | 序号 | 内容   |  代码演示   |
 |:---|:---|:---|
-| 1     |  统计           |   `r xfun::embed_file('./exercises/1_stats.R')` |
-| 2     |  可视化         |   `r xfun::embed_file('./exercises/2_visual.R')` |
-| 3     |  探索性分析     |   `r xfun::embed_file('./exercises/3_eda.R')` |
-| 4     |  可重复性报告   |   `r xfun::embed_file('./exercises/4_reproducible.Rmd')` |
+| 1     |  统计           |   `r xfun::embed_file('./exercises/01_stats.R')` |
+| 2     |  可视化         |   `r xfun::embed_file('./exercises/02_visual.R')` |
+| 3     |  探索性分析     |   `r xfun::embed_file('./exercises/03_eda.R')` |
+| 4     |  可重复性报告   |   `r xfun::embed_file('./exercises/04_reproducible.Rmd')` |
 
 
 看了这些代码，可能第一眼感觉是这样的
@@ -156,8 +156,9 @@ knitr::include_graphics("images/social_science.jpg")
 
 ### 社会科学需要可视化
 
-```{r echo=FALSE, out.width = '50%'}
-knitr::include_graphics("images/R4art.png")
+
+```{r echo=FALSE, out.width = '100%'}
+knitr::include_graphics("images/BBC-style-Plot.png")
 ```
 
 我们不是学美术的，但要可视化
@@ -166,11 +167,19 @@ knitr::include_graphics("images/R4art.png")
 
 ### 社会科学需要编程
 
-```{r echo=FALSE, out.width = '80%'}
+```{r eval=FALSE, include=FALSE}
 knitr::include_graphics("images/Coding-Lab.jpg")
 ```
 
-我们不是学计算机的，但需要编程（小学生已经开始学编程了）
+为什么不能用excel做数据分析？画个图说明下
+
+```{r out.width = '70%', fig.align='center', echo = FALSE}
+knitr::include_graphics("images/R_Excel.png", dpi = 150)
+```
+
+对于数据量不大，或者复杂程度不高的需求来说，excel很方便也很直观。但随着数据量或复杂程度不断增大，excel解决起来难度系数就陡增，或者无法搞定，这就需要借助编程完成。也就说，掌握了编程技能，对于简单的问题和复杂的问题，难度系数是差不多了。
+
+<!-- 我们不是学计算机的，但需要编程（小学生已经开始学编程了） -->
 
 
 
@@ -178,7 +187,8 @@ knitr::include_graphics("images/Coding-Lab.jpg")
 ### 社会科学需要可重复性
 
 ```{r echo=FALSE, out.width = '60%'}
-knitr::include_graphics("images/latex-tweak.gif")
+#knitr::include_graphics("images/latex-tweak.gif")
+knitr::include_graphics("images/nature_editorial.png")
 ```
 
 <!-- ~我们不是学设计的，但要操心**交叉引用**的事~  -->
@@ -218,15 +228,6 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 
 
 ### 一见钟情，还是相见恨晚？
-
-为什么不能用excel做数据分析？画个图说明下
-
-```{r out.width = '70%', fig.align='center', echo = FALSE}
-knitr::include_graphics("images/R_Excel.png", dpi = 150)
-```
-
-
-一见钟情，还是相见恨晚？
 
 ```{r echo=FALSE,  fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/meme.png")
