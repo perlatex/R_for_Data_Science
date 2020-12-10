@@ -9,36 +9,38 @@ library(tidyverse)
 
 ## 提问
 
-假定这里有 `A` 和 `B` 两种植物生长的记录，有这样三列
+假定这里有 `A`, `B`, `C` 和 `D` 四种植物每天生长的记录，
 
 ```{r}
-plant_heigt <- data.frame(
+plant_height <- data.frame(
   Day = 1:5,
   A = c(0.7, 1.0, 1.5, 1.8, 2.2),
-  B = c(0.5, 0.7, 0.9, 1.3, 1.8)
+  B = c(0.5, 0.7, 0.9, 1.3, 1.8),
+  C = c(0.3, 0.6, 1.0, 1.2, 2.2),
+  D = c(0.4, 0.7, 1.2, 1.5, 3.2)
 )
 
-plant_heigt
-```
 
+plant_height
+```
 
 
 ```{block, type="danger"}
 大家想想，
 
 - 把植物高度大于或等于0.8cm的时刻**筛选**出来，怎么写语句?
-- 用不同的颜色画出两种植物**生长曲线**，怎么写语句?
+- 用不同的颜色画出四种植物**生长曲线**，怎么写语句?
 ```
 
 很显然，我们用第 \@ref(dplyr) 章数据处理和第 \@ref(ggplot2-aes) 章数据可视化的技术，可以写成这样
 ```{r, eval = FALSE}
-plant_heigt %>% 
+plant_height %>% 
   filter( ___ >= 0.8)
 ```
 
 
 ```{r, eval = FALSE}
-plant_heigt %>% 
+plant_height %>% 
   ggplot(aes(x = Day, y = ___, color = ___)) +
   geom_line()
 ```
@@ -54,16 +56,16 @@ knitr::include_graphics("images/make_data_tidy.png")
 
 下面任意一种都行：
 ```{r eval=FALSE}
-melted <- gather(plant_heigt, variable, value, 2:3)
+melted <- gather(plant_height, variable, value, 2:3)
 
 ## Column names instead of indices
-melted <- gather(plant_heigt, variable, value, A, B)
+melted <- gather(plant_height, variable, value, A, B)
 
 ## Excluding instead of including
-melted <- gather(plant_heigt, variable, value, -1)
+melted <- gather(plant_height, variable, value, -1)
 
 ## Excluding using column name
-melted <- gather(plant_heigt, variable, value, -Day)
+melted <- gather(plant_height, variable, value, -Day)
 ```
 
 
@@ -87,9 +89,9 @@ knitr::include_graphics("images/tidyr-fig.png")
 所以现在使用`pivot_longer()`函数
 
 ```{r, how-to-pivot, include=FALSE, eval=FALSE}
-long <- plant_heigt %>%
+long <- plant_height %>%
   pivot_longer(
-    cols = c(A, B),
+    cols = A:D,
     names_to = "plant",
     values_to = "height"
   )
@@ -116,9 +118,9 @@ flair::decorate("how-to-pivot") %>%
 
 当然，参数`cols` 的写法可以多种形式的，具体见第 \@ref(colwise) 章`select()`函数.
 ```{r, eval=FALSE}
-plant_heigt %>% 
+plant_height %>% 
   pivot_longer(
-  cols = -Day,                 # A:B 或者 c(A, B) 或者 c("A", "B")
+  cols = -Day,         # A:D 或者 c(A, B, C, D) 或者 c("A", "B", "C", "D")
   names_to = "plant",
   values_to = "height"
 )
@@ -192,7 +194,7 @@ long
 
 ```{r, echo = F}
 # remove the objects
-rm(long, wide, plant_heigt)
+rm(long, wide, plant_height)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}

@@ -64,7 +64,7 @@ ggplot(df, aes(x = x, y = y, colour = dataset)) +
 
 ## 学习目标
 
-1. Grammer of Graphics
+### 图形语法
 
 ```{r out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/ggplot_template.png")
@@ -75,10 +75,11 @@ knitr::include_graphics("images/ggplot_template.png")
 knitr::include_graphics("images/how_to_plot.png")
 ```
 
+### 图形部件
 
-2. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
+1. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
 
-3. `aes`: 数据框中的数据变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
+2. `aes`: 数据框中的数据变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
     + x（x轴方向的位置）
     + y（y轴方向的位置）
     + color（点或者线等元素的颜色）
@@ -86,7 +87,7 @@ knitr::include_graphics("images/how_to_plot.png")
     + shape（点或者线等元素的形状）
     + alpha（点或者线等元素的透明度）
     
-4. `geoms`: 几何对象，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何对象推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
+3. `geoms`: 几何对象，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何对象推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
 
     + `geom_bar()`
     + `geom_density()`
@@ -105,14 +106,19 @@ knitr::include_graphics("images/how_to_plot.png")
     + `geom_text()`
     + `geom_sf()`
     
+    
+```{r out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
+```
 
-5. `stats`:   统计变换
-6. `scales`:  标度
-7. `coord`:   坐标系统
-8. `facet`:   分面
-9. `layer`：  增加图层
-10. `theme`:   主题风格
-11. `save`:    保存图片
+
+4. `stats`:   统计变换
+5. `scales`:  标度
+6. `coord`:   坐标系统
+7. `facet`:   分面
+8. `layer`：  增加图层
+9. `theme`:   主题风格
+10. `save`:   保存图片
 
 
 ggplot2图层语法框架
@@ -649,7 +655,7 @@ gapdata %>%
   gghighlight::gghighlight()
 ```
 
-###  点线图
+### 点线图
 ```{r}
 gapdata %>%
   filter(continent == "Asia" & year == 2007) %>%

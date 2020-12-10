@@ -112,12 +112,174 @@ predict(model_decision, new_data = testing_data) %>%
 ```
 
 
+## workflow
+
+### 使用 recipes
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(workflows)
+
+penguins <- readr::read_csv("./demo_data/penguins.csv") %>%
+  janitor::clean_names() 
+
+
+split <- penguins %>% 
+  tidyr::drop_na() %>% 
+  rsample::initial_split(prop = 3/4)
+
+training_data <- rsample::training(split)
+testing_data  <- rsample::testing(split)
+```
+
+
+
+
+
+参考(tidy modeling in R)[https://www.tmwr.org/recipes.html], 被预测变量在分割前，应该先处理，比如标准化。
+但这里的案例，我为了偷懒，被预测变量`bill_length_mm`，暂时保留**不变**。
+预测变量做标准处理。
+
+
+```{r}
+penguins_lm <- 
+  parsnip::linear_reg() %>% 
+  #parsnip::set_engine("lm") 
+  parsnip::set_engine("stan") 
+
+penguins_recipe  <- 
+  recipes::recipe(bill_length_mm ~ bill_depth_mm + sex, data = training_data) %>% 
+  recipes::step_normalize(all_numeric(), -all_outcomes()) %>% 
+  recipes::step_dummy(all_nominal())
+
+
+broom::tidy(penguins_recipe)
+```
+
+
+
+
+```{r out.width='20%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/recipes-process.png")
+```
+
+
+```{r, eval=FALSE}
+penguins_recipe %>% 
+  recipes::prep(data = training_data) %>%  #or prep(retain = TRUE)
+  recipes::juice()
+
+
+penguins_recipe %>%   
+  recipes::prep(data = training_data) %>% 
+  recipes::bake(new_data = testing_data)   # recipe used in new_data
+
+
+
+train_data <- 
+  penguins_recipe %>%   
+  recipes::prep(data = training_data) %>% 
+  recipes::bake(new_data = NULL) 
+
+
+test_data <- 
+  penguins_recipe %>%   
+  recipes::prep(data = training_data) %>% 
+  recipes::bake(new_data = testing_data)   
+```
+
+
+
+
+### workflows的思路更清晰
+
+workflows的思路让模型结构更清晰。 这样`prep()`, `bake()`, and `juice()` 就可以省略了，只需要recipe和model，他们往往是成对出现的
+
+
+```{r}
+wflow <- 
+  workflows::workflow() %>% 
+  workflows::add_recipe(penguins_recipe) %>% 
+  workflows::add_model(penguins_lm) 
+
+
+wflow_fit <- 
+  wflow %>% 
+  parsnip::fit(data = training_data)
+```
+
+
+
+```{r}
+wflow_fit %>% 
+  workflows::pull_workflow_fit() %>% 
+  broom.mixed::tidy()
+
+wflow_fit %>% 
+  workflows::pull_workflow_prepped_recipe() 
+```
+
+
+先提取模型，用在predict() 是可以的，但这样太麻烦了
+
+```{r, eval=FALSE}
+wflow_fit %>% 
+  workflows::pull_workflow_fit() %>% 
+  stats::predict(new_data = test_data) # note: test_data not testing_data
+```
+
+
+
+因为，`predict()` 会自动的将recipes(对training_data的操作)，应用到testing_data
+(https://www.tidymodels.org/start/recipes/)
+
+```{r}
+penguins_pred <- 
+  predict(
+    wflow_fit, 
+    new_data = testing_data %>% select(-bill_length_mm),
+    type= "numeric"
+  ) %>% 
+  dplyr::bind_cols(testing_data %>% select(bill_length_mm))
+
+penguins_pred
+```
+
+
+```{r}
+penguins_pred %>% 
+  ggplot(aes(x = bill_length_mm, y = .pred)) + 
+  geom_abline(linetype = 2) + 
+  geom_point(alpha = 0.5) + 
+  labs(y = "Predicted ", x = "bill_length_mm") 
+```
+
+### 模型评估
+
+<https://www.tmwr.org/performance.html#regression-metrics>
+
+```{r}
+penguins_pred %>%
+  yardstick::rmse(truth = bill_length_mm, estimate = .pred) 
+```
+```{r}
+# 自定义一个指标评价函数my_multi_metric，就是放一起，感觉不够tidyverse
+my_multi_metric <- yardstick::metric_set(rmse, rsq, mae, ccc)
+
+penguins_pred %>%
+  my_multi_metric(truth = bill_length_mm, estimate = .pred) 
+```
 
 
 ```{r, echo = F}
 # remove the objects
-# rm(list=ls())
+# ls() %>% stringr::str_flatten(collapse = ", ")
+
+rm(my_multi_metric, penguins, penguins_lm, penguins_pred, penguins_recipe, split, testing_data, training_data, wflow, wflow_fit)
 ```
+
+
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
