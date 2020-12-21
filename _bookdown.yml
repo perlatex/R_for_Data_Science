@@ -39,6 +39,7 @@ rmd_files: [
   "tidyverse_tips.Rmd",
   "adv_dplyr.Rmd",
   "colwise.Rmd",
+  "beatuty_of_across.Rmd",
   "tidyverse_NA.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",

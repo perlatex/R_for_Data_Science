@@ -137,7 +137,7 @@ testing_data  <- rsample::testing(split)
 
 
 
-参考(tidy modeling in R)[https://www.tmwr.org/recipes.html], 被预测变量在分割前，应该先处理，比如标准化。
+参考[tidy modeling in R](https://www.tmwr.org/recipes.html), 被预测变量在分割前，应该先处理，比如标准化。
 但这里的案例，我为了偷懒，被预测变量`bill_length_mm`，暂时保留**不变**。
 预测变量做标准处理。
 
@@ -160,7 +160,7 @@ broom::tidy(penguins_recipe)
 
 
 
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r out.width='80%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/recipes-process.png")
 ```
 
@@ -221,7 +221,7 @@ wflow_fit %>%
 ```
 
 
-先提取模型，用在predict() 是可以的，但这样太麻烦了
+先提取模型，用在 `predict()` 是可以的，但这样太麻烦了
 
 ```{r, eval=FALSE}
 wflow_fit %>% 
@@ -232,7 +232,7 @@ wflow_fit %>%
 
 
 因为，`predict()` 会自动的将recipes(对training_data的操作)，应用到testing_data
-(https://www.tidymodels.org/start/recipes/)
+这个不错，参考[这里](https://www.tidymodels.org/start/recipes/)
 
 ```{r}
 penguins_pred <- 
@@ -257,12 +257,15 @@ penguins_pred %>%
 
 ### 模型评估
 
-<https://www.tmwr.org/performance.html#regression-metrics>
+参考<https://www.tmwr.org/performance.html#regression-metrics>
 
 ```{r}
 penguins_pred %>%
   yardstick::rmse(truth = bill_length_mm, estimate = .pred) 
 ```
+
+
+
 ```{r}
 # 自定义一个指标评价函数my_multi_metric，就是放一起，感觉不够tidyverse
 my_multi_metric <- yardstick::metric_set(rmse, rsq, mae, ccc)

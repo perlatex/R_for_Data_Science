@@ -89,6 +89,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tips) 章介绍tidyverse常用技巧
    - 第 \@ref(advR) 章介绍tidyverse进阶技巧
    - 第 \@ref(colwise) 章介绍数据框的列方向和行方向
+   - 第 \@ref(beatuty-of-across) 章介绍tidyverse中的across()之美
    - 第 \@ref(tidyverse-NA) 章介绍tidyverse中的NA
    - 第 \@ref(dot) 章介绍tidyverse中的dot
    - 第 \@ref(tidyeval) 章介绍非标准性评估

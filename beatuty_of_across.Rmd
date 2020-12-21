@@ -1,0 +1,442 @@
+# tidyverse中的across()之美 {#beatuty-of-across}
+
+
+dplyr 1.0版本增加了`across()`函数，这个函数集中体现了dplyr宏包的强大和简约，今天我用企鹅数据，来领略它的美。
+
+
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+penguins
+```
+
+看到数据框里有很多缺失值，需要统计每一列缺失值的数量，按照常规的写法
+
+
+```{r}
+penguins %>%
+  summarise(
+    na_in_species = sum(is.na(species)),
+    na_in_island  = sum(is.na(island)),
+    na_in_length  = sum(is.na(bill_length_mm)),
+    na_in_depth   = sum(is.na(bill_depth_mm)),
+    na_in_flipper = sum(is.na(flipper_length_mm)),
+    na_in_body    = sum(is.na(body_mass_g)),
+    na_in_sex     = sum(is.na(sex)),
+    na_in_year    = sum(is.na(year))
+  )
+```
+幸亏数据框的列数不够多，只有8列，如果数据框有几百列，那就成体力活了，同时代码复制粘贴也容易出错。想偷懒，我们自然想到用`summarise_all()`，
+
+```{r}
+penguins %>%
+  summarise_all(
+    ~ sum(is.na(.))
+  )
+```
+
+挺好。接着探索，我们想先按企鹅类型分组，然后统计出各体征数据的均值，这个好说，直接写代码
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    mean_length   = mean(bill_length_mm, na.rm = TRUE),
+    mean_depth    = mean(bill_depth_mm, na.rm = TRUE),
+    mean_flipper  = mean(flipper_length_mm, na.rm = TRUE),
+    mean_body     = mean(body_mass_g, na.rm = TRUE)
+  )
+```
+
+或者用`summarise_if()`偷懒
+
+
+```{r}
+d1 <- penguins %>%
+  group_by(species) %>%
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+d1
+```
+
+
+方法不错，从语义上还算很好理解。 但多了一列`year`, 我想在`summarise_if()`中用 `is.numeric & !year`去掉`year`，却没成功。人类的欲望是无穷的，我们还需要统计每组下企鹅的个数，然后合并到一起。因此，我们再接再厉
+
+
+```{r}
+d2 <- penguins %>%
+  group_by(species) %>%
+  summarise(
+    n = n()
+  )
+d2
+```
+
+最后合并
+```{r}
+d1 %>% left_join(d2, by = "species")
+```
+
+结果应该没问题，然鹅，总让人感觉怪怪的，过程有点折腾，希望不这么麻烦。
+
+
+
+## across()横空出世
+
+`across()`的出现，让这一切变得简单和清晰，上面三步完成的动作，一步搞定
+
+```{r out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/across_cover.jpg")
+```
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    across(where(is.numeric) & !year, mean, na.rm = TRUE),
+    n = n()
+  )
+```
+是不是很强大。大爱Hadley Wickham !!!
+
+## across()函数形式
+
+`across()`函数，它有三个主要的参数：
+```{r, eval = FALSE}
+across(.cols = , .fns = , .names = )
+```
+
+- 第一个参数.cols，选取我们要需要的若干列，选取多列的语法与`select()`的语法一致
+- 第二个参数.fns，我们要执行的函数（或者多个函数），函数的语法有三种形式可选：
+  - A function, e.g. mean.
+  - A purrr-style lambda, e.g. ~ mean(.x, na.rm = TRUE)
+  - A list of functions/lambdas, e.g. list(mean = mean, n_miss = ~ sum(is.na(.x))
+- 第三个参数.names, .fns是单个函数就默认保留原来数据列的名称，即`"{.col}"` ；如果.fns是多个函数，就在数据列的列名后面跟上函数名，比如`"{.col}_{.fn}"`；当然，我们也可以简单调整列名和函数之间的顺序或者增加一个标识的字符串，比如弄成`"{.fn}_{.col}"`，`"{.col}_{.fn}_aa"`
+
+
+
+## across()应用举例
+
+下面通过一些小案例，继续呈现`across()`函数的功能
+
+
+### 求每一列的缺失值数量
+
+就是本章开始的需求
+```{r, eval=FALSE}
+penguins %>%
+  summarise(
+    na_in_species = sum(is.na(species)),
+    na_in_island  = sum(is.na(island)),
+    na_in_length  = sum(is.na(bill_length_mm)),
+    na_in_depth   = sum(is.na(bill_depth_mm)),
+    na_in_flipper = sum(is.na(flipper_length_mm)),
+    na_in_body    = sum(is.na(body_mass_g)),
+    na_in_sex     = sum(is.na(sex)),
+    na_in_year    = sum(is.na(year))
+  )
+```
+
+
+```{r}
+# using across()
+penguins %>%
+  summarise(
+    across(everything(), function(x) sum(is.na(x)))
+  )
+
+
+# or
+penguins %>%
+  summarise(
+    across(everything(), ~ sum(is.na(.)))
+  )
+```
+
+
+
+
+
+### 每个类型变量下有多少组？
+
+```{r}
+penguins %>%
+  summarise(
+    distinct_species = n_distinct(species),
+    distinct_island  = n_distinct(island),
+    distinct_sex     = n_distinct(sex)
+  )
+
+# using across()
+penguins %>%
+  summarise(
+    across(c(species, island, sex), n_distinct)
+  )
+```
+
+
+
+
+
+
+
+
+### 多列多个统计函数
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    length_mean  = mean(bill_length_mm, na.rm = TRUE),
+    length_sd    = sd(bill_length_mm, na.rm = TRUE),
+    depth_mean   = mean(bill_depth_mm, na.rm = TRUE),
+    depth_sd     = sd(bill_depth_mm, na.rm = TRUE),
+    flipper_mean = mean(flipper_length_mm, na.rm = TRUE),
+    flipper_sd   = sd(flipper_length_mm, na.rm = TRUE),
+    n            = n()
+  )
+
+
+# using across()
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    across(ends_with("_mm"), list(mean = mean, sd = sd), na.rm = TRUE),
+    n = n()
+  )
+```
+
+
+
+
+
+### 不同分组下数据变量的多个分位数
+
+事实上，这里是`across()`与`summarise()`的强大结合起来
+
+
+```{r}
+penguins %>%
+  group_by(species, island) %>%
+  summarise(
+    prob    = c(.25, .75),
+    length  = quantile(bill_length_mm, prob, na.rm = TRUE),
+    depth   = quantile(bill_depth_mm, prob, na.rm = TRUE),
+    flipper = quantile(flipper_length_mm, prob, na.rm = TRUE)
+  )
+
+
+# using across()
+penguins %>%
+  group_by(species, island) %>%
+  summarise(
+    prob = c(.25, .75),
+    across(
+      c(bill_length_mm, bill_depth_mm, flipper_length_mm),
+      ~ quantile(., prob, na.rm = TRUE)
+    )
+  )
+
+
+# or
+penguins %>%
+  group_by(species, island) %>%
+  summarise(
+    prob = c(.25, .75),
+    across(where(is.numeric) & !year, ~ quantile(., prob, na.rm = TRUE))
+  )
+```
+
+
+
+
+### 不同分组下更复杂的统计
+
+```{r}
+# using across()
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    n = n(),
+    across(starts_with("bill_"), mean, na.rm = TRUE),
+    Area = mean(bill_length_mm * bill_depth_mm, na.rm = TRUE),
+    across(ends_with("_g"), mean, na.rm = TRUE),
+  )
+```
+
+
+
+### 数据标准化处理
+
+```{r}
+std <- function(x) {
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
+
+# using across()
+penguins %>%
+  summarise(
+    across(where(is.numeric), std),
+    across(where(is.character), as.factor)
+  )
+
+
+# using across() and purrr style
+penguins %>%
+  drop_na() %>% 
+  summarise(
+    across(starts_with("bill_"), ~ (.x - mean(.x)) / sd(.x))
+  )
+```
+
+
+
+
+
+### 数据对数化处理
+
+```{r}
+# using across()
+penguins %>%
+  drop_na() %>%
+  mutate(
+    across(where(is.numeric), log),
+    across(where(is.character), as.factor)
+  )
+
+# using across()
+penguins %>%
+  drop_na() %>%
+  mutate(
+    across(where(is.numeric), .fns = list(log = log), .names = "{.fn}_{.col}"),
+    across(where(is.character), as.factor)
+  )
+```
+
+
+
+
+
+### 在分组建模中与`cur_data()`配合使用
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    broom::tidy(lm(bill_length_mm ~ bill_depth_mm, data = cur_data()))
+  )
+
+
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    broom::tidy(lm(bill_length_mm ~ ., data = cur_data() %>% select(is.numeric)))
+  )
+
+
+
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    broom::tidy(lm(bill_length_mm ~ .,
+                data = cur_data() %>% transmute(across(is.numeric))
+    ))
+  )
+
+
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    broom::tidy(lm(bill_length_mm ~ ., data = across(is.numeric)))
+  )
+```
+
+
+
+### 与`cur_column()`配合使用
+
+
+```{r}
+# 每一列乘以各自的系数
+df   <- tibble(x = 1:3, y = 3:5, z = 5:7)
+mult <- list(x = 1, y = 10, z = 100)
+
+df %>% 
+  mutate(across(all_of(names(mult)), ~ .x * mult[[cur_column()]]))
+
+
+
+
+# 每一列乘以各自的权重
+df      <- tibble(x = 1:3, y = 3:5, z = 5:7)
+weights <- list(x = 0.2, y = 0.3, z = 0.5)
+
+df %>%
+  mutate(
+    across(all_of(names(weights)),
+           list(wt = ~ .x * weights[[cur_column()]]),
+          .names = "{col}.{fn}"
+    )
+  )
+
+
+
+# 每一列有各自的阈值，如果在阈值之上为1，否则为 0
+df      <- tibble(x = 1:3, y = 3:5, z = 5:7)
+cutoffs <- list(x = 2, y = 3, z = 7)
+
+df %>% mutate(
+  across(all_of(names(cutoffs)), ~ if_else(.x > cutoffs[[cur_column()]], 1, 0))
+)
+```
+
+
+
+
+### 与`c_across()`配合也挺默契
+
+```{r}
+df <- tibble(x = 1:3, y = 3:5, z = 5:7)
+
+df %>%
+  rowwise() %>%
+  mutate(total = sum(c_across(x:z))) %>%
+  ungroup() %>%
+  mutate(across(x:z, ~ . / total))
+```
+
+
+
+
+
+
+
+## across()总结
+
+我们看到了，`across()`函数在`summarise()/mutate()/transmute()/condense()`中使用，它能实现以下几个功能：
+
+- 数据框中的多列执行相同操作
+- 不同性质的操作，有时可以一起写出，不用再`left_join()`
+
+```{r out.width = '90%', echo = FALSE, fig.cap = "across()函数总结图"}
+knitr::include_graphics("images/across.png")
+```
+
+
+
+```{r, echo = F}
+# remove the objects
+# ls() %>% stringr::str_flatten(collapse = ", ")
+
+rm(cutoffs, d1, d2, df, mult, std, weights)
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
