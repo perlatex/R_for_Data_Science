@@ -68,6 +68,8 @@ rmd_files: [
   "eda_caribou.Rmd",
   "eda_penguins.Rmd",
   "eda_career_decision.Rmd",
+  "eda_ames_houseprice.Rmd",
+  "eda_vaccine_effectiveness.Rmd",
   "rvest.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",

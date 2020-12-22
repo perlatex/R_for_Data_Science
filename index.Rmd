@@ -114,6 +114,8 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-caribou) 章介绍探索性数据分析-驯鹿迁移  
    - 第 \@ref(eda-penguins) 章介绍探索性数据分析-企鹅的故事
    - 第 \@ref(eda-career-decision) 章介绍探索性数据分析-大学生职业决策
+   - 第 \@ref(eda-ames-houseprice) 章介绍探索性数据分析-ames房屋价格
+   - 第 \@ref(eda-vaccine) 章模拟新冠疫苗有效率的计算
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘
