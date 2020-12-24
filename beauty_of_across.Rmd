@@ -1,4 +1,4 @@
-# tidyverse中的across()之美 {#beatuty-of-across}
+# tidyverse中的across()之美 {#beauty-of-across}
 
 
 dplyr 1.0版本增加了`across()`函数，这个函数集中体现了dplyr宏包的强大和简约，今天我用企鹅数据，来领略它的美。

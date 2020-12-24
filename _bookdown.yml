@@ -18,7 +18,6 @@ rmd_files: [
   "intro_R.Rmd",
   "subsetting.Rmd",
 
-
   # tidyverse篇
   "rmarkdown.Rmd",
   "readr.Rmd",
@@ -39,11 +38,10 @@ rmd_files: [
   "tidyverse_tips.Rmd",
   "adv_dplyr.Rmd",
   "colwise.Rmd",
-  "beatuty_of_across.Rmd",
+  "beauty_of_across.Rmd",
   "tidyverse_NA.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",
-
 
   # 建模篇
   "sampling.Rmd",
@@ -57,7 +55,6 @@ rmd_files: [
   "logistic_regression.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
-
 
   # 应用篇
   "eda_nobel.Rmd",

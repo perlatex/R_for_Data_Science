@@ -4,7 +4,7 @@
 R社区上很多大神，贡献了很多非常优秀的工具，节省了我们的时间，也给我们的生活增添了无限乐趣。我平时逛github的时候时整理一些，现在分享出来供像我一样的懒人用，因此本文档叫“懒人系列”。欢迎大家补充。
 
 ## 列名太乱了
-```{r message = FALSE, warning = FALSE}
+```{r lazyman01, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(janitor)
 ## install.packages("janitor")
@@ -30,7 +30,7 @@ fake_raw %>% janitor::clean_names()
 ## 比count()更懂我的心
 ```{r}
 mtcars %>%
-  count(cyl)
+  dplyr::count(cyl)
 ```
 
 ```{r}
@@ -110,14 +110,14 @@ library(report)
 ```
 
 
-```{r, results="asis"}
+```{r lazyman-report, results="asis"}
 model <- lm(Sepal.Length ~ Species, data = iris)
 report(model)
 ```
 
 
 ## 模型评估一步到位
-```{r}
+```{r lazyman-performance, eval=FALSE}
 library(performance)
 
 model <- lm(mpg ~ wt * cyl + gear, data = mtcars)
@@ -127,7 +127,7 @@ performance::check_model(model)
 
 
 ## 统计表格不用愁
-```{r, results="asis", eval=FALSE, include=TRUE}
+```{r lazyman-gtsummary1, results="asis", eval=FALSE, include=TRUE}
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
@@ -146,7 +146,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r, results="asis", eval=FALSE, include=TRUE}
+```{r lazyman-gtsummary2, results="asis", eval=FALSE, include=TRUE}
 t1 <-
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -167,7 +167,7 @@ gtsummary::tbl_merge(
 
 ## 统计结果写图上
 
-```{r, out.width='99%'}
+```{r lazyman-statsExpressions, out.width='99%', eval=FALSE, include=TRUE}
 library(ggplot2)
 library(statsExpressions)
 # https://github.com/IndrajeetPatil/statsExpressions
@@ -250,7 +250,7 @@ library(pacman)
 
 
 ## 犹抱琵琶半遮面
-```{r}
+```{r lazyman-gganonymize}
 ## https://github.com/EmilHvitfeldt/gganonymize
 library(ggplot2)
 library(gganonymize)
@@ -297,7 +297,7 @@ gganonomize(ggg)
 你听到了声音吗?
 
 ## 多张图摆放
-```{r}
+```{r lazyman-patchwork, eval=FALSE}
 library(patchwork)
 p1 <- ggplot(mtcars) +
   geom_point(aes(mpg, disp))
@@ -309,7 +309,7 @@ p1 + p2 + p3
 ```
 
 ## 缺失值处理
-```{r}
+```{r lazyman-naniar}
 library(naniar)
 ## https://github.com/njtierney/naniar
 
@@ -350,10 +350,7 @@ vis_dat(airquality)
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(df, fake_raw, ggg, mod1, model, p1, p2, p3, s, 
-   scale_color_continuous, 
-   scale_color_discrete, 
-   scale_color_gradient)
+rm(df, fake_raw, ggg, mod1, model, p1, p2, p3, s, scale_color_continuous, scale_color_discrete, scale_color_gradient)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
