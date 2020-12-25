@@ -6,7 +6,7 @@
 
 
 
-```{r message = FALSE, warning = FALSE}
+```{r ggplot2-aes2-1, message = FALSE, warning = FALSE}
 library(tidyverse) # install.packages("tidyverse")
 library(patchwork) # install.packages("patchwork")
 ```
@@ -17,14 +17,14 @@ library(patchwork) # install.packages("patchwork")
 
 
 
-```{r out.width = '50%', echo = FALSE}
+```{r ggplot2-aes2-2, out.width = '50%', echo = FALSE}
 knitr::include_graphics(c("images/Cholera1.png", "images/Cholera2.png"))
 ```
 
 
 另一个有趣的例子就是辛普森悖论（Simpson's Paradox）。比如我们想研究下，学习时间和考试成绩的关联。结果发现两者呈负相关性，即补课时间越长，考试成绩反而越差（下图横坐标是学习时间，纵坐标是考试成绩），很明显这个结果有违生活常识。
 
-```{r echo=FALSE}
+```{r ggplot2-aes2-3, echo=FALSE}
 ## simulate data
 N <- 100
 Sigma <- matrix(c(1, 0.75, 0.75, 1), 2, 2) * 1.5
@@ -102,7 +102,7 @@ ggplot2已经发展成为最受欢迎的R宏包，没有之一。
 
 
 我们可以看看它2019年cran的下载量
-```{r}
+```{r ggplot2-aes2-4}
 library(cranlogs)
 
 d <- cran_downloads(package = "ggplot2", from = "2019-01-01", to = "2019-12-31")
@@ -119,7 +119,7 @@ ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics�
 <!-- knitr::include_graphics("images/visualization-grammar-3.png") -->
 <!-- ``` -->
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/mapping.png")
 ```
 
@@ -142,7 +142,7 @@ Hadley Wickham将这套可视化语法诠释为:
 
 一张统计图形就是从**数据**到几何对象(geometric object，缩写geom)的**图形属性**(aesthetic attribute，缩写aes)的一个映射。
 
-```{r out.width = '85%', echo = FALSE}
+```{r ggplot2-aes2-6, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/grammar-of-graphics.png")
 ```
 
@@ -153,7 +153,7 @@ system，缩写coord)中，而分面(facet)则可以用来生成数据不同子�
 
 ### 语法模板
 
-```{r out.width = '85%', echo = FALSE}
+```{r ggplot2-aes2-7, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/ggplot_template.png")
 ```
 
@@ -163,14 +163,14 @@ knitr::include_graphics("images/ggplot_template.png")
 
 先看一个简单的案例（1880-2014年温度变化和二氧化碳排放量）
 
-```{r, warning = FALSE, message = FALSE}
+```{r ggplot2-aes2-8, warning = FALSE, message = FALSE}
 library(tidyverse)
 d <- read_csv("./demo_data/temp_carbon.csv")
 d
 ```
 
 
-```{r}
+```{r ggplot2-aes2-9}
 library(ggplot2)
 ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
   geom_line() +
@@ -188,14 +188,14 @@ ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
 我们这里用科考人员收集的企鹅体征[数据](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)来演示。
 
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-aes2-10, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/penguins.png")
 ```
 
 
 
 
-```{r message = FALSE, warning = FALSE}
+```{r ggplot2-aes2-11, message = FALSE, warning = FALSE}
 library(tidyverse)
 penguins <- read_csv("./demo_data/penguins.csv") %>%
   janitor::clean_names() %>% 
@@ -222,13 +222,13 @@ penguins %>%
 
 这里提出一个问题，嘴巴越长，嘴巴也会越厚？
 
-```{r out.width = '86%', echo = FALSE}
+```{r ggplot2-aes2-12, out.width = '86%', echo = FALSE}
 knitr::include_graphics("images/culmen_depth.png")
 ```
 
 回答这个问题，我们用到penguins数据集其中的四个变量
 
-```{r, eval=FALSE}
+```{r ggplot2-aes2-13, eval=FALSE}
 penguins %>%
   select(species, sex, bill_length_mm, bill_depth_mm) %>%
   head(4)
@@ -238,7 +238,7 @@ penguins %>%
 
 为考察嘴峰长度(bill_length_mm)与嘴峰深度(bill_depth_mm)之间的关联，先绘制这两个变量的散点图，
 
-```{r out.width = '85%', echo = FALSE}
+```{r ggplot2-aes2-14, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/a-3new.png")
 ```
 
@@ -259,7 +259,7 @@ knitr::include_graphics("images/a-3new.png")
 运行脚本后生成图片：
 
 
-```{r echo=FALSE}
+```{r ggplot2-aes2-15, echo=FALSE}
 ggplot(penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point()
 ```
@@ -271,7 +271,7 @@ ggplot(penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
 比如我们在`aes()`里增加一个颜色映射` color = species`, 这样做就是希望，**不同的企鹅类型**, 用**不同的颜色**来表现。这里，企鹅类型有三组，那么就用三种不同的颜色来表示
 
 
-```{r}
+```{r ggplot2-aes2-16}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point()
@@ -283,21 +283,21 @@ ggplot(penguins,
 
 
 大家试试下面代码呢，
-```{r, eval = FALSE}
+```{r ggplot2-aes2-17, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm, size = species)) +
   geom_point()
 ```
 
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-18, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm, shape = species)) +
   geom_point()
 ```
 
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-19, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm, alpha = species)) +
   geom_point()
@@ -307,7 +307,7 @@ ggplot(penguins,
 
 为什么图中是这样的颜色呢？那是因为`ggplot()`内部有一套默认的设置
 
-```{r out.width = '85%', echo = FALSE}
+```{r ggplot2-aes2-20, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/a-14.png")
 ```
 
@@ -319,7 +319,7 @@ knitr::include_graphics("images/a-14.png")
 
 想把图中的点指定为某一种颜色，可以使用设置语句，比如
 
-```{r}
+```{r ggplot2-aes2-21}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(color = "blue")
@@ -329,21 +329,21 @@ ggplot(penguins,
 
 
 大家也可以试试下面
-```{r, eval = FALSE}
+```{r ggplot2-aes2-22, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(size = 5)
 ```
 
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-23, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(shape = 2)
 ```
 
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-24, eval = FALSE}
 ggplot(penguins, 
        aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(alpha = 0.5)
@@ -352,7 +352,7 @@ ggplot(penguins,
 
 
 ### 提问
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-aes2-25, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/a-21new.png")
 ```
 
@@ -360,7 +360,7 @@ knitr::include_graphics("images/a-21new.png")
 
 
 
-```{r eval=FALSE, include=FALSE}
+```{r ggplot2-aes2-26, eval=FALSE, include=FALSE}
 ggplot(penguins) +
   geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = "blue"))
 
@@ -378,7 +378,7 @@ ggplot(penguins) +
 ## 几何对象
 
 `geom_point()` 可以画散点图，也可以使用`geom_smooth()`绘制平滑曲线，
-```{r}
+```{r ggplot2-aes2-27}
 p1 <- 
   ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point()
@@ -386,7 +386,7 @@ p1
 ```
 
 
-```{r}
+```{r ggplot2-aes2-28}
 p2 <- 
   ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_smooth()
@@ -396,7 +396,7 @@ p2
 
 ## 图层叠加
 
-```{r}
+```{r ggplot2-aes2-29}
 p3 <- 
   ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point() +
@@ -405,7 +405,7 @@ p3
 ```
 
 
-```{r}
+```{r ggplot2-aes2-30}
 library(patchwork)
 (p1 / p2) | p3
 ```
@@ -415,13 +415,13 @@ library(patchwork)
 
 ## Global vs. Local
 
-```{r}
+```{r ggplot2-aes2-31}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point()
 ```
 
 
-```{r}
+```{r ggplot2-aes2-32}
 ggplot(penguins) +
   geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species))
 ```
@@ -433,7 +433,7 @@ ggplot(penguins) +
 
 事实上，如果映射关系`aes()` 写在`ggplot()`里, 
 
-```{r, eval=FALSE}
+```{r ggplot2-aes2-33, eval=FALSE}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point()
 ```
@@ -444,7 +444,7 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
 
 如果映射关系 `aes()` 写在几何对象`geom_point()`里, 那么此处的映射关系就为局部变量, 比如。
 
-```{r, eval=FALSE}
+```{r ggplot2-aes2-34, eval=FALSE}
 ggplot(penguins) +
   geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species))
 ```
@@ -453,7 +453,7 @@ ggplot(penguins) +
 
 
 再看下面这个例子，
-```{r, eval=FALSE, warning=FALSE, message=FALSE}
+```{r ggplot2-aes2-35, eval=FALSE, warning=FALSE, message=FALSE}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(aes(color = species)) +
   geom_smooth()
@@ -465,7 +465,7 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 再看下面这个例子，
 
-```{r}
+```{r ggplot2-aes2-36}
 ggplot(penguins,aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point(aes(color = sex))
 ```
@@ -476,14 +476,14 @@ ggplot(penguins,aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
 
 
 大家细细体会下，下面两段代码的区别
-```{r}
+```{r ggplot2-aes2-37}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_smooth(method = lm) +
   geom_point()
 ```
 
 
-```{r}
+```{r ggplot2-aes2-38}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_smooth(method = lm) +
   geom_point(aes(color = species))
@@ -496,7 +496,7 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-39, eval = FALSE}
 p <- penguins %>% 
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_smooth(method = lm) +
@@ -522,7 +522,7 @@ ggsave(
 - 整体的线性拟合
 - 不同种类分别线性拟合
 
-```{r, eval = FALSE}
+```{r ggplot2-aes2-40, eval = FALSE}
 ggplot(penguins, aes(x = ___, y = ___)) +
   geom_point() +
   geom_smooth() +
@@ -538,13 +538,13 @@ ggplot(penguins, aes(x = ___, y = ___)) +
 
 
 
-```{r, echo = F}
+```{r ggplot2-aes2-41, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(corrs, d, dat, data, means, penguins, N, p, p1, p2, p3, Sigma)
 ```
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-aes2-42, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

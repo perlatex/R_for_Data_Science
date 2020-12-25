@@ -25,7 +25,8 @@ options(
   htmltools.dir.version = FALSE, formatR.indent = 2, width = 55, digits = 4
 )
 
-knitr::opts_chunk$set(echo = TRUE, 
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE, 
                       warning = FALSE, 
                       message = FALSE,
                       fig.width = 6, 
@@ -45,7 +46,7 @@ $$
 
 而出现更多的是
 
-```{r, eval = FALSE}
+```{r index-1, eval = FALSE}
 library(tidyverse)
 summary_monthly_temp <- weather %>% 
   group_by(month) %>% 
@@ -57,7 +58,7 @@ summary_monthly_temp <- weather %>%
 在**跟进**本课程的同时， 我强烈推荐大家阅读Hadley Wickham的
 [r4ds](https://r4ds.had.co.nz/)这本书 [@Wickham2017]。作者可是2019年8月刚刚获得考普斯总统奖（被誉为统计学的诺贝尔奖）的大神喔，点击[这里](http://hadley.nz/)可以看他照片。
 
-```{r echo = FALSE, out.width = "35%"}
+```{r index-2, echo = FALSE, out.width = "35%"}
 knitr::include_graphics("images/rbook1.png")
 ```
 
@@ -115,7 +116,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-penguins) 章介绍探索性数据分析-企鹅的故事
    - 第 \@ref(eda-career-decision) 章介绍探索性数据分析-大学生职业决策
    - 第 \@ref(eda-ames-houseprice) 章介绍探索性数据分析-ames房屋价格
-   - 第 \@ref(eda-vaccine) 章模拟新冠疫苗有效率的计算
+   - 第 \@ref(eda-vaccine) 章介绍探索性数据分析-新冠疫苗有效率的计算
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘
@@ -172,13 +173,13 @@ knitr::include_graphics("images/rbook1.png")
 
 ## 课件中用到的宏包 {-}
 
-```{r, eval = FALSE}
+```{r index-3, eval = FALSE}
 my_packages <- 
-   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat")
+   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "namer")
 ```
 
 
-```{r, eval = FALSE}
+```{r index-4, eval = FALSE}
 install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = T)
 ```
 
@@ -186,7 +187,7 @@ install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = 
 
 可能用到的开发版本的宏包
 
-```{r, eval = FALSE}
+```{r index-5, eval = FALSE}
 #remotes::install_github("datalorax/equatiomatic")
 devtools::install_github("easystats/report")
 devtools::install_github("kassambara/navdata")
@@ -208,7 +209,7 @@ devtools::install_github("seasmith/AlignAssign")
 
 ## RYouWithMe {-}
 
-```{r echo = FALSE, out.width = "30%"}
+```{r index-6, echo = FALSE, out.width = "30%"}
 knitr::include_graphics("images/QQgroup.png")
 ```
 
@@ -218,7 +219,7 @@ knitr::include_graphics("images/QQgroup.png")
 
 非常感谢川师研究生院的信任，有了您的支持，才会有更多的川师学子了解R的美！
 
-```{block2, type='flushright', html.tag='p'}
+```{block2 index-7, type='flushright', html.tag='p'}
 王敏杰  
 于 川师图书馆某角落
 ```

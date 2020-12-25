@@ -4,7 +4,7 @@
 
 本章通过tidygraph宏包介绍社会网络分析。社会网络分析涉及的知识比较多，而tidygraph将网络结构规整地比较清晰，降低了学习难度，很适合入门学习。
 
-```{r message = FALSE, warning = FALSE}
+```{r tidygraph-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(tidygraph)
 library(ggraph)
@@ -20,7 +20,7 @@ library(ggraph)
 
 - **edges**: 
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-2, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/node_edge01.png")
 ```
 
@@ -40,12 +40,12 @@ knitr::include_graphics("images/node_edge01.png")
  
  
 有向图  
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-3, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/node_edge02.png")
 ```
 
 无向图 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-4, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/node_edge03.png")
 ```
 
@@ -62,7 +62,7 @@ knitr::include_graphics("images/node_edge03.png")
 
 
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-5, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/workflow_c.png")
 ```
 
@@ -98,20 +98,20 @@ knitr::include_graphics("images/workflow_c.png")
 
 
 案例: 欧盟总统之间通话以及次数。
-```{r}
+```{r tidygraph-6}
 library("navdata") # devtools::install_github("kassambara/navdata")
 data("phone.call2")
 ```
 
 
-```{r}
+```{r tidygraph-7}
 node_list <- phone.call2$nodes
 node_list
 ```
 
 
 
-```{r}
+```{r tidygraph-8}
 edge_list <- phone.call2$edges
 edge_list
 ```
@@ -132,7 +132,7 @@ phone.net <- tbl_graph(nodes = node_list, edges = edge_list, directed = TRUE)
 
 - Visualize the network graph
 
-```{r out.width = '50%', fig.align='center'}
+```{r tidygraph-9, out.width = '50%', fig.align='center'}
 ggraph(phone.net, layout = "graphopt") +
   geom_edge_link(width = 1, colour = "lightgray") +
   geom_node_point(size = 4, colour = "red") +
@@ -151,7 +151,7 @@ mtcars data set: R 的内置数据集，记录了32种不同品牌的轿车的�
 
 1、we create a correlation matrix network graph
 
-```{r}
+```{r tidygraph-10}
 library(corrr)
 res.cor <- datasets::mtcars[, c(1, 3:6)] %>% # (1)
   t() %>%
@@ -166,7 +166,7 @@ res.cor
 
 2、Create the correlation network graph:
 
-```{r}
+```{r tidygraph-11}
 set.seed(1)
 cor.graph <- as_tbl_graph(res.cor, directed = FALSE)
 ```
@@ -174,7 +174,7 @@ cor.graph <- as_tbl_graph(res.cor, directed = FALSE)
 
 
 
-```{r out.width = '50%', fig.align='center'}
+```{r tidygraph-12, out.width = '50%', fig.align='center'}
 ggraph(cor.graph) +
   geom_edge_link() +
   geom_node_point() +
@@ -190,7 +190,7 @@ ggraph(cor.graph) +
 
 ### Print out a network object
 
-```{r}
+```{r tidygraph-13}
 cor.graph
 ```
 
@@ -203,7 +203,7 @@ cor.graph
 
 
 
-```{r}
+```{r tidygraph-14}
 cor.graph %>%
   activate(edges) %>%
   arrange(desc(r))
@@ -220,7 +220,7 @@ Note that, to extract the current active data as a tibble, you can use the funct
 
 ###  Car groups info (Number of cylinders)
 
-```{r}
+```{r tidygraph-15}
 # Car groups info
 cars.group <- tibble(
   name = rownames(datasets::mtcars),
@@ -235,7 +235,7 @@ cars.group
 
 ###  Modify the nodes data:
 
-```{r}
+```{r tidygraph-16}
 # Modify the nodes data
 cor.graph <- cor.graph %>%
   activate(nodes) %>%
@@ -248,7 +248,7 @@ cor.graph
 
 
 ###  Modify the edge data.
-```{r}
+```{r tidygraph-17}
 # Modify the edge data.
 cor.graph <- cor.graph %>%
   activate(edges) %>%
@@ -260,7 +260,7 @@ cor.graph
 
 
 ###  Display the final modified graphs object:
-```{r}
+```{r tidygraph-18}
 cor.graph
 ```
 
@@ -269,7 +269,7 @@ cor.graph
 
 
 ###  Visualize the correlation network
-```{r , message=FALSE, warning=FALSE, out.width='50%'}
+```{r tidygraph-19, message=FALSE, warning=FALSE, out.width='50%'}
 set.seed(1)
 ggraph(cor.graph) +
   geom_edge_link(aes(width = weight), alpha = 0.2) +
@@ -297,7 +297,7 @@ ggraph(cor.graph) +
 Centrality is an important concept when analyzing network graph. 
 
 The `tidygraph` package contains more than 10 centrality measures, prefixed with the term `centrality_` :
-```{r echo=TRUE}
+```{r tidygraph-20, echo=TRUE}
 # centrality_alpha()
 # centrality_power()
 # centrality_authority()
@@ -317,7 +317,7 @@ example:
 - compute nodes centrality
 
 
-```{r}
+```{r tidygraph-21}
 set.seed(123)
 phone.net %>%
   activate(nodes) %>%
@@ -326,7 +326,7 @@ phone.net %>%
 
 
 
-```{r , message=FALSE, warning=FALSE, out.width='90%'}
+```{r tidygraph-22, message=FALSE, warning=FALSE, out.width='90%'}
 set.seed(123)
 phone.net %>%
   activate(nodes) %>%
@@ -359,7 +359,7 @@ example:
 - use the correlation network graphs (记录了32种不同品牌的轿车的的11个属性)
 - detect clusters or communities
 
-```{r}
+```{r tidygraph-23}
 set.seed(123)
 cluster_mtcars <- cor.graph %>%
   activate(nodes) %>%
@@ -370,7 +370,7 @@ cluster_mtcars
 
 
 
-```{r, message=FALSE, warning=FALSE, out.width='90%'}
+```{r tidygraph-24, message=FALSE, warning=FALSE, out.width='90%'}
 cluster_mtcars %>%
   ggraph(layout = "graphopt") +
   geom_edge_link(width = 1, colour = "lightgray") +
@@ -383,7 +383,7 @@ cluster_mtcars %>%
 
 ### More Algorithms
 
-```{r out.width = '90%', fig.align='center', echo = FALSE}
+```{r tidygraph-25, out.width = '90%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/Algorithms.png")
 ```
 
@@ -394,7 +394,7 @@ knitr::include_graphics("images/Algorithms.png")
 ## 小结
 
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-26, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/tbl_graph02.png")
 ```
 
@@ -402,7 +402,7 @@ knitr::include_graphics("images/tbl_graph02.png")
 tidybayes很聪明地将复杂的网络结构用两个数据框表征出来，node 数据框负责**节点**的属性，edge 数据框负责**网络连接**的属性，调整其中的一个数据框，另一个也会相应的调整，比如node数据框中删除一个节点，edge数据框就会自动地删除该节点的所有连接。
 
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r tidygraph-27, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/tbl_graph04.png")
 ```
 
@@ -425,7 +425,7 @@ knitr::include_graphics("images/tbl_graph04.png")
  
 ggraph 沿袭了ggplot2的语法规则，
 
-```{r message=FALSE, warning=FALSE}
+```{r tidygraph-28, message=FALSE, warning=FALSE}
 cluster_mtcars %>%
   # Layout
   ggraph(layout = "graphopt") +
@@ -464,12 +464,12 @@ cluster_mtcars %>%
 
 
 
-```{r, echo = F}
+```{r tidygraph-29, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(cars.group, cluster_mtcars, cor.graph, edge_list, node_list, phone.call2, phone.net, res.cor)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidygraph-30, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

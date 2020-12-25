@@ -2,19 +2,19 @@
 
 
 ggplot2的强大，还在于它的扩展包。本章在介绍ggplot2新的内容的同时还会引入一些新的宏包，需要提前安装
-```{r, eval=FALSE}
+```{r ggplot2-customize-1, eval=FALSE}
 install.packages(c("sf", "cowplot", "patchwork", "gghighlight", "ggforce"))
 ```
 
 如果安装不成功，请先update宏包，再执行上面安装命令
 
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-customize-2, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/update_packages.png")
 ```
 
 
 
-```{r,warning = FALSE, message = FALSE}
+```{r ggplot2-customize-3,warning = FALSE, message = FALSE}
 library(tidyverse)
 library(gghighlight)
 library(cowplot)
@@ -26,7 +26,7 @@ library(ggridges)
 
 ## 你喜欢哪个图
 
-```{r, out.width="100%"}
+```{r ggplot2-customize-4, out.width="100%"}
 p1 <- ggplot(mpg, aes(x = cty, y = hwy)) +
   geom_point() +
   geom_smooth() +
@@ -88,13 +88,13 @@ p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 +
 
 ### 标签 
 
-```{r}
+```{r ggplot2-customize-5}
 gapdata <- read_csv("./demo_data/gapminder.csv")
 gapdata
 ```
 
 
-```{r}
+```{r ggplot2-customize-6}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -106,7 +106,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-customize-7}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -127,7 +127,7 @@ gapdata %>%
 
  我喜欢用这两个函数定制喜欢的绘图色彩，`scale_colour_manual()` 和 `scale_fill_manual()`. 更多方法可以参考 [Colours chapter in Cookbook for R](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/) 
 
-```{r}
+```{r ggplot2-customize-8}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -146,7 +146,7 @@ gapdata %>%
 
 可以使用 [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html) 宏包的`plot_grid()`函数完成多张图片的组合，使用方法很简单。
 
-```{r}
+```{r ggplot2-customize-9}
 p1 <- gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point(aes(color = lifeExp > mean(lifeExp))) +
@@ -161,7 +161,7 @@ p1 <- gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-customize-10}
 p2 <- gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -178,7 +178,7 @@ p2 <- gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-customize-11}
 cowplot::plot_grid(
   p1,
   p2,
@@ -188,18 +188,18 @@ cowplot::plot_grid(
 
 
 也可以使用patchwork宏包，更简单的方法
-```{r}
+```{r ggplot2-customize-12}
 library(patchwork)
 p1 + p2
 ```
 
 
-```{r}
+```{r ggplot2-customize-13}
 p1 / p2
 ```
 
 
-```{r}
+```{r ggplot2-customize-14}
 p1 + p2 +
   plot_annotation(
     tag_levels = "A",
@@ -211,7 +211,7 @@ p1 + p2 +
 
 再来一个
 
-```{r, out.width = '100%'}
+```{r ggplot2-customize-15, out.width = '100%'}
 library(palmerpenguins)
 
 g1 <- penguins %>% 
@@ -231,7 +231,7 @@ g1 + g2 + patchwork::plot_layout(guides = "collect")
 
 patchwork 使用方法很简单，根本不需要记
 
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-customize-16, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/patchwork.png")
 ```
 
@@ -264,7 +264,7 @@ pp <- gapdata %>%
 
 
 ## 中文字体
-```{r}
+```{r ggplot2-customize-17}
 library(showtext)
 showtext_auto()
 
@@ -298,7 +298,7 @@ gapdata %>%
 
 这种方法是将**背景部分**和**高亮部分**分两步来画
 
-```{r}
+```{r ggplot2-customize-18}
 drop_facet <- function(x) select(x, -continent)
 
 gapdata %>%
@@ -313,7 +313,7 @@ gapdata %>%
 ```
 
 再来一个
-```{r, fig.width= 8, fig.height= 8}
+```{r ggplot2-customize-19, fig.width= 8, fig.height= 8}
 gapdata %>%
   mutate(group = country) %>%
   filter(continent == "Asia") %>%
@@ -337,11 +337,11 @@ gapdata %>%
 - dplyr has filter()
 - ggplot has Highlighting
 
-```{r}
+```{r ggplot2-customize-20}
 gapdata %>% filter(country == "China")
 ```
 
-```{r}
+```{r ggplot2-customize-21}
 gapdata %>%
   ggplot(
     aes(x = year, y = lifeExp, color = continent, group = country)
@@ -354,13 +354,13 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-customize-22}
 gapdata %>% filter(continent == "Asia")
 ```
 
 
 
-```{r}
+```{r ggplot2-customize-23}
 gapdata %>%
   filter(continent == "Asia") %>%
   ggplot(aes(year, lifeExp, color = country, group = country)) +
@@ -384,7 +384,7 @@ gapdata %>%
 
 有时候我们想画一个函数图，比如正态分布的函数，可能会想到先产生数据，然后画图，比如下面的代码
 
-```{r}
+```{r ggplot2-customize-24}
 tibble(x = seq(from = -3, to = 3, by = .01)) %>%
   mutate(y = dnorm(x, mean = 0, sd = 1)) %>%
   ggplot(aes(x = x, y = y)) +
@@ -393,14 +393,14 @@ tibble(x = seq(from = -3, to = 3, by = .01)) %>%
 
 
 事实上，`stat_function()`可以简化这个过程
-```{r}
+```{r ggplot2-customize-25}
 ggplot(data = data.frame(x = c(-3, 3)), aes(x = x)) +
   stat_function(fun = dnorm)
 ```
 
 
 当然我们也可以绘制自定义函数
-```{r}
+```{r ggplot2-customize-26}
 myfun <- function(x) {
   (x - 1)**2
 }
@@ -411,7 +411,7 @@ ggplot(data = data.frame(x = c(-1, 3)), aes(x = x)) +
 
 
 下面这是一个很不错的例子，细细体会下
-```{r}
+```{r ggplot2-customize-27}
 d <- tibble(x = rnorm(2000, mean = 2, sd = 4))
 
 ggplot(data = d, aes(x = x)) +
@@ -430,7 +430,7 @@ ggplot(data = d, aes(x = x)) +
 
 这是一个公园[`r emo::ji("park")`]{style="font-size: 3em;"}地图和公园里松鼠[`r emo::ji("squirrel")`]{style="font-size: 4em;"}数量的数据集
 
-```{r}
+```{r ggplot2-customize-28}
 nyc_squirrels <- read_csv("./demo_data/nyc_squirrels.csv")
 central_park <- sf::read_sf("./demo_data/central_park")
 ```
@@ -438,7 +438,7 @@ central_park <- sf::read_sf("./demo_data/central_park")
 
 先来一个地图，
 
-```{r}
+```{r ggplot2-customize-29}
 ggplot() +
   geom_sf(data = central_park)
 ```
@@ -447,7 +447,7 @@ ggplot() +
 
 
 
-```{r}
+```{r ggplot2-customize-30}
 nyc_squirrels %>%
   drop_na(primary_fur_color) %>%
   ggplot() +
@@ -459,7 +459,7 @@ nyc_squirrels %>%
 ```
 
 分开画呢
-```{r, out.width = '100%'}
+```{r ggplot2-customize-31, out.width = '100%'}
 nyc_squirrels %>%
   drop_na(primary_fur_color) %>%
   ggplot() +
@@ -476,7 +476,7 @@ nyc_squirrels %>%
 
 
 
-```{r, out.width = '100%'}
+```{r ggplot2-customize-32, out.width = '100%'}
 label_colors <-
   c("all squirrels" = "grey75", "highlighted group" = "#0072B2")
 
@@ -503,13 +503,13 @@ nyc_squirrels %>%
   guides(color = guide_legend(override.aes = list(size = 2)))
 ```
 
-```{r}
+```{r ggplot2-customize-33}
 # ggsave("Squirrels.pdf", width = 9, height = 6)
 ```
 
 
 当然，也可以用`gghighlight`的方法
-```{r, out.width = '100%'}
+```{r ggplot2-customize-34, out.width = '100%'}
 nyc_squirrels %>%
   drop_na(primary_fur_color) %>%
   ggplot() +
@@ -548,7 +548,7 @@ nyc_squirrels %>%
 
 
 
-```{r message=FALSE, warning=FALSE}
+```{r ggplot2-customize-35, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(showtext)
 showtext_auto()
@@ -618,7 +618,7 @@ ggplot(data = mpg) +
 
 ### latex公式
 
-```{r message=FALSE, warning=FALSE}
+```{r ggplot2-customize-36, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(latex2exp)
 
@@ -645,12 +645,12 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 
 
 
-```{r, echo = F}
+```{r ggplot2-customize-37, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(central_park, d, drop_facet, gapdata, label_colors, myfun, nyc_squirrels, p1, p2, p3, p4, p5, p6, p7, p8, p9, pp, g1, g2)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-customize-38, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

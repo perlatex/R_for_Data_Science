@@ -8,7 +8,7 @@
 ## 什么是缺失值?
 
 我们先导入企鹅数据
-```{r, message=FALSE, warning=FALSE}
+```{r tidyverse-NA-1, message=FALSE, warning=FALSE}
 library(tidyverse)
 
 penguins <- read_csv(here::here("demo_data", "penguins.csv"))
@@ -18,7 +18,7 @@ penguins
 我们看到第4行第3列开始，出现若干`NA`，这里的`NA`就是**缺失值**，`NA`的意思就是 not available.
 
 
-```{block, type="danger"}
+```{block tidyverse-NA-2, type="danger"}
 注意区分 "NA" 和 NA
 
 - "NA" 有引号的是字符串  
@@ -46,7 +46,7 @@ penguins
 
 一般情况下，与 `NA` 的数值计算结果也是 `NA`，
 
-```{r}
+```{r tidyverse-NA-3}
 c(NA, 1) + 2
 ```
 - 逻辑运算时
@@ -54,7 +54,7 @@ c(NA, 1) + 2
 逻辑运算中`TRUE`为真，`FALSE`为假，而`NA`会被认为未知（即真假难辨）^[https://tianyishi2001.github.io/r-and-tidyverse-book/logical-operation.html]。
 
 
-```{r}
+```{r tidyverse-NA-4}
 isTRUE(NA)
 isFALSE(NA)
 ```
@@ -67,7 +67,7 @@ isFALSE(NA)
 | 真   	| 不能确定真假 	| 假    	|
 
 
-```{r}
+```{r tidyverse-NA-5}
 # Some logical operations do not return NA
 c(TRUE, FALSE) & NA
 c(TRUE, FALSE) | NA
@@ -80,7 +80,7 @@ c(TRUE, FALSE) | NA
 
 找出数据中的缺失值，可以用`is.na()`函数
 
-```{r}
+```{r tidyverse-NA-6}
 c(1, 2, NA, 4) %>% is.na()
 ```
 
@@ -92,7 +92,7 @@ c(1, 2, NA, 4) %>% is.na()
 
 前面提到 `NA` 是一个与`TRUE`和`FALSE`并列的逻辑值，比如
 
-```{r}
+```{r tidyverse-NA-7}
 c(TRUE, FALSE, NA) %>% class()
 ```
 它的结果变成了"logical".
@@ -100,7 +100,7 @@ c(TRUE, FALSE, NA) %>% class()
 
 
 但如果 NA 放在数值型的向量中，
-```{r}
+```{r tidyverse-NA-8}
 c(1, 2, NA, 4) %>% class()
 ```
 它的结果却变成了"numeric"
@@ -108,14 +108,14 @@ c(1, 2, NA, 4) %>% class()
 
 
 如果 NA 放在字符串的向量中，
-```{r}
+```{r tidyverse-NA-9}
 c("1", "2", NA, "4") %>% class()
 ```
 它的结果却变成了"character"
 
 
 为什么会出现这种**诡异**的现象？究其原因，还在于NA的属性上，代表数据缺失的逻辑值，即数据类型是逻辑型。
-```{r}
+```{r tidyverse-NA-10}
 c(TRUE, NA, FALSE) 
 c(TRUE, NA, FALSE) %>% class()
 ```
@@ -124,7 +124,7 @@ c(TRUE, NA, FALSE) %>% class()
 在第 \@ref(intro-R) 章中，我们提到，把不同类型的数据用`c()`组合成向量时，因为`c()` 函数要求数据类型必须一致，因此就会发生**强制转换**。比如当逻辑型变量和数值型变量组合在一起时，**逻辑型**会强制转换成**数值型**。
 
 
-```{r}
+```{r tidyverse-NA-11}
 c(1, 2, TRUE, 4) 
 c(1, 2, TRUE, 4) %>% class()
 ```
@@ -139,7 +139,7 @@ TRUE会转换成1，FALSE会转换成0. 那么此时逻辑型的 NA 会转换成
 
 
 
-```{r}
+```{r tidyverse-NA-12}
 c(1, 2, NA, 4) 
 c(1, 2, NA, 4) %>% class()
 c(1, 2, NA_real_, 4)
@@ -157,7 +157,7 @@ c(1, 2, NA_real_, 4) %>% class()
 
 
 
-```{r}
+```{r tidyverse-NA-13}
 c("1", "2", TRUE, "4")
 c("1", "2", NA, "4")
 c("1", "2", NA_character_, "4") 
@@ -165,7 +165,7 @@ c("1", "2", NA_character_, "4")
 
 除了逻辑型`NA`, 数值型`NA_real_`, 字符串型`NA_character_`外, 还有整数型`NA_integer_`, 和复数型`NA_complex`. 我们再看下面的例子
 
-```{r}
+```{r tidyverse-NA-14}
 c(TRUE, NA) %>%
   purrr::map(., ~is.logical(.))
 
@@ -186,12 +186,12 @@ c(NA_real_, NA_complex_, NA_character_, NA_integer_, NA) %>% #被强制转换成
 在实际的数据处理中，没有人愿意把问题搞复杂，一般情况下会先**预处理**，比如，剔除掉或者用其他值替换掉。不管是一删了之，还是采用插值替换，都有必要了解下数据中多少NA，这样才决定采用什么样的预处理办法。
 
 
-```{r eval=FALSE, include=FALSE}
+```{r tidyverse-NA-15, eval=FALSE, include=FALSE}
 c(TRUE, TRUE, FALSE, FALSE) %>% as.integer() %>% sum()
 c(TRUE, TRUE, FALSE, FALSE) %>% sum()
 ```
 
-```{block, type="danger"}
+```{block tidyverse-NA-16, type="danger"}
 常用的方法：
 
 先用`is.na()`判断出是否为缺失值，缺失值是TRUE，不是缺失值为FALSE；然后TRUE/FALSE转换成数值，即TRUE -> 1; FALSE -> 0；最后把所有的1加起来，就知道数据中有多少个缺失值。
@@ -199,19 +199,19 @@ c(TRUE, TRUE, FALSE, FALSE) %>% sum()
 
 
 具体代码为
-```{r}
+```{r tidyverse-NA-17}
 c(1, 2, NA, 4) %>% is.na() %>% as.integer() %>% sum()
 ```
 
 
 偷懒可以这样写
-```{r}
+```{r tidyverse-NA-18}
 c(1, 2, NA, 4) %>% is.na() %>% sum()
 ```
 
 
 当然也可以自定义一个函数，
-```{r}
+```{r tidyverse-NA-19}
 sum_of_na <- function(x){
   sum(is.na(x))
 }
@@ -227,13 +227,13 @@ c(1, 2, NA, 4) %>% sum_of_na()
 ## 应用到tidyverse中
 
 回到本章开始的企鹅数据
-```{r}
+```{r tidyverse-NA-20}
 penguins$bill_length_mm %>% sum_of_na()
 ```
 
 用到dplyr函数中
 
-```{r}
+```{r tidyverse-NA-21}
 penguins %>% summarise(
   N1 = sum_of_na(bill_length_mm),
   N2 = sum_of_na(bill_depth_mm)
@@ -242,7 +242,7 @@ penguins %>% summarise(
 ```
 
 一次性统计所有列
-```{r}
+```{r tidyverse-NA-22}
 penguins %>% summarise(
   across(everything(), sum_of_na)
 )
@@ -250,7 +250,7 @@ penguins %>% summarise(
 
 
 更偷懒的办法，也更直观（再次感受到R的美！）
-```{r}
+```{r tidyverse-NA-23}
 penguins %>% summarise(
   across(everything(), ~sum(is.na(.x)))
 )
@@ -267,14 +267,14 @@ penguins %>% summarise(
 
 我来看下面这个例子：
 
-```{r}
+```{r tidyverse-NA-24}
 d <- tibble(x = c(1, 3, 6, NA, 8, NA))
 d
 ```
 
 
 
-```{r, which-NA-use, eval=FALSE}
+```{r tidyverse-NA-25, which-NA-use, eval=FALSE}
 d %>% mutate(
   is_even = case_when(
     x %% 2 == 0 ~ "even",
@@ -288,7 +288,7 @@ d %>% mutate(
 上面这个代码中，本意是希望构建一个新列存储("even", "not even")字符串；而`NA`是逻辑型的，类型不一致，因此会报错。
 正确的写法是使用`NA_character_`
 
-```{r}
+```{r tidyverse-NA-26}
 d %>% mutate(
   is_even = case_when(
     x %% 2 == 0 ~ "even",
@@ -305,7 +305,7 @@ d %>% mutate(
 
 - 企鹅数据中，找出有缺失值的行，有一个NA也算。
 
-```{r eval=FALSE, include=FALSE}
+```{r tidyverse-NA-27, eval=FALSE, include=FALSE}
 penguins %>% filter_all(
   any_vars(is.na(.))
 )
@@ -315,7 +315,7 @@ penguins %>% filter_all(
 
 ## 更多
 
-```{block, type="danger"}
+```{block tidyverse-NA-28, type="danger"}
 注意区分NA 和 Inf, NaN, NULL
 
 - Inf = 无穷大，比如 `pi / 0 %>% is.infinite()` 
@@ -324,13 +324,13 @@ penguins %>% filter_all(
 ```
 
 
-```{r, echo = F}
+```{r tidyverse-NA-29, echo = F}
 # remove the objects
 rm(penguins, d, sum_of_na)
 ```
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidyverse-NA-30, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

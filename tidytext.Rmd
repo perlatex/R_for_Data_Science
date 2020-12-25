@@ -1,13 +1,13 @@
 # 文本挖掘 {#tidytext}
 
 
-```{r message = FALSE, warning = FALSE, eval = FALSE}
+```{r tidytext-1, message = FALSE, warning = FALSE, eval = FALSE}
 library(tidyverse)
 library(tidytext)
 ```
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidytext-2, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

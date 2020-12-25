@@ -4,7 +4,7 @@ Statistical Inference: A Tidy Approach
 
 ## 案例1:你会给爱情片还是动作片高分？
 
-```{r out.width = '65%', fig.align='left', echo = FALSE}
+```{r infer-1, out.width = '65%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/imdb.png")
 ```
 
@@ -12,7 +12,7 @@ knitr::include_graphics("images/imdb.png")
 
 [^1]: <https://github.com/hadley/ggplot2movies/blob/master/R/movies.R>
 
-```{r}
+```{r infer-2}
 library(tidyverse)
 d <- ggplot2movies::movies
 d
@@ -38,7 +38,7 @@ d
 | romance     | 爱情片           |
 | short       | 短片             |
 
-```{r, eval=FALSE, include=FALSE}
+```{r infer-3, eval=FALSE, include=FALSE}
 d %>%
   rowwise() %>%
   mutate(
@@ -50,7 +50,7 @@ d %>%
 
 -   首先我们简单的整理下数据，主要是剔除既是爱情片又是动作片的电影
 
-```{r}
+```{r infer-4}
 movies_genre_sample <- d %>%
   select(title, year, rating, Action, Romance) %>%
   filter(!(Action == 1 & Romance == 1)) %>% # 既是爱情片又是动作片的，删去
@@ -70,7 +70,7 @@ movies_genre_sample
 
 -   先看下图形
 
-```{r message=FALSE, warning=FALSE}
+```{r infer-5, message=FALSE, warning=FALSE}
 movies_genre_sample %>%
   ggplot(aes(x = genre, y = rating)) +
   geom_boxplot() +
@@ -79,7 +79,7 @@ movies_genre_sample %>%
 
 -   看下两种题材电影评分的分布
 
-```{r}
+```{r infer-6}
 movies_genre_sample %>%
   ggplot(mapping = aes(x = rating)) +
   geom_histogram(binwidth = 1, color = "white") +
@@ -88,7 +88,7 @@ movies_genre_sample %>%
 
 -   统计两种题材电影评分的均值
 
-```{r}
+```{r infer-7}
 summary_ratings <- movies_genre_sample %>%
   group_by(genre) %>%
   summarize(
@@ -116,7 +116,7 @@ summary_ratings
 -   拒绝 $H_0$
 -   不能拒绝 $H_0$
 
-```{r}
+```{r infer-8}
 t_test_eq <- t.test(rating ~ genre,
   data = movies_genre_sample,
   var.equal = TRUE
@@ -125,7 +125,7 @@ t_test_eq <- t.test(rating ~ genre,
 t_test_eq
 ```
 
-```{r}
+```{r infer-9}
 t_test_uneq <- t.test(rating ~ genre,
   data = movies_genre_sample,
   var.equal = FALSE
@@ -140,13 +140,13 @@ t_test_uneq
 
 [^2]: <http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html>
 
-```{r out.width = '85%', fig.align='left', echo = FALSE, fig.cap = "Hypothesis Testing Framework"}
+```{r infer-10, out.width = '85%', fig.align='left', echo = FALSE, fig.cap = "Hypothesis Testing Framework"}
 knitr::include_graphics("images/downey.png")
 ```
 
 -   实际观察的差别
 
-```{r}
+```{r infer-11}
 library(infer)
 
 obs_diff <- movies_genre_sample %>%
@@ -160,7 +160,7 @@ obs_diff
 
 -   模拟
 
-```{r}
+```{r infer-12}
 null_dist <- movies_genre_sample %>%
   specify(formula = rating ~ genre) %>%
   hypothesize(null = "independence") %>%
@@ -174,12 +174,12 @@ head(null_dist)
 
 -   可视化
 
-```{r}
+```{r infer-13}
 null_dist %>%
   visualize()
 ```
 
-```{r}
+```{r infer-14}
 null_dist %>%
   visualize() +
   shade_p_value(obs_stat = obs_diff, direction = "both")
@@ -188,7 +188,7 @@ null_dist %>%
 
 -   计算p值
 
-```{r}
+```{r infer-15}
 pvalue <- null_dist %>%
   get_pvalue(obs_stat = obs_diff, direction = "two_sided")
 
@@ -203,7 +203,7 @@ pvalue
 
 美国国家航空航天局的预算是否存在党派门户之见？
 
-```{r}
+```{r infer-16}
 gss <- read_rds("./demo_data/gss.rds")
 
 gss %>%
@@ -212,7 +212,7 @@ gss %>%
   head(8)
 ```
 
-```{r}
+```{r infer-17}
 gss %>%
   ggplot(aes(x = party, fill = NASA)) +
   geom_bar()
@@ -235,13 +235,13 @@ gss %>%
 
 ### 传统的方法
 
-```{r}
+```{r infer-18}
 chisq.test(gss$party, gss$NASA)
 ```
 
 或者
 
-```{r}
+```{r infer-19}
 gss %>%
   chisq_test(NASA ~ party) %>%
   dplyr::select(p_value) %>%
@@ -250,14 +250,14 @@ gss %>%
 
 ### infer:Simulation-based tests
 
-```{r}
+```{r infer-20}
 obs_stat <- gss %>%
   specify(NASA ~ party) %>%
   calculate(stat = "Chisq")
 obs_stat
 ```
 
-```{r}
+```{r infer-21}
 null_dist <- gss %>%
   specify(NASA ~ party) %>%                     # (1)
   hypothesize(null = "independence") %>%        # (2)
@@ -266,20 +266,20 @@ null_dist <- gss %>%
 null_dist
 ```
 
-```{r}
+```{r infer-22}
 null_dist %>%
   visualize() +
   shade_p_value(obs_stat = obs_stat, method = "both", direction = "right")
 ```
 
-```{r}
+```{r infer-23}
 null_dist %>%
   get_pvalue(obs_stat = obs_stat, direction = "greater")
 ```
 
 看到 `p_value > 0.05`，不能拒绝 $H_0$，我们没有足够的证据证明党派之间有显著差异
 
-```{r out.width = '50%', fig.align='center', echo = FALSE}
+```{r infer-24, out.width = '50%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/fail_to_reject_you.png")
 ```
 
@@ -294,7 +294,7 @@ knitr::include_graphics("images/fail_to_reject_you.png")
 -   Days：一年中缺勤天数
 
 
-```{r}
+```{r infer-25}
 td <- MASS::quine %>%
   as_tibble() %>%
   mutate(
@@ -307,19 +307,19 @@ td
 
 从民族背景有两组（A， N）来看，性别为 F 的占比 是否有区别？
 
-```{r}
+```{r infer-26}
 td %>% count(Eth, Sex)
 ```
 
 ### 传统方法
 
-```{r}
+```{r infer-27}
 prop.test(table(td$Eth, td$Sex), correct = FALSE)
 ```
 
 ### 基于模拟的方法
 
-```{r}
+```{r infer-28}
 
 obs_diff <- td %>%
   specify(Sex ~ Eth, success = "F") %>% # #被解释变量 sex中F的占比
@@ -331,7 +331,7 @@ obs_diff <- td %>%
 obs_diff
 ```
 
-```{r}
+```{r infer-29}
 null_distribution <- td %>%
   specify(Sex ~ Eth, success = "F") %>%
   hypothesize(null = "independence") %>%
@@ -339,19 +339,19 @@ null_distribution <- td %>%
   calculate(stat = "diff in props", order = c("A", "N"))
 ```
 
-```{r}
+```{r infer-30}
 null_distribution %>%
   visualize()
 ```
 
-```{r}
+```{r infer-31}
 pvalue <- null_distribution %>%
   get_pvalue(obs_stat = obs_diff, direction = "both")
 
 pvalue
 ```
 
-```{r}
+```{r infer-32}
 null_distribution %>%
   get_ci(level = 0.95, type = "percentile")
 ```
@@ -362,13 +362,13 @@ null_distribution %>%
 
 我比较喜欢[infer](https://github.com/tidymodels/infer)宏包的[设计思想](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html)，它把统计推断分成了四个步骤
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r infer-33, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/infer-ht-diagram.png")
 ```
 
 
 下图可以更好的帮助我们理解infer的工作流程
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r infer-34, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/infer_workflow.jpeg")
 ```
 
@@ -386,7 +386,7 @@ knitr::include_graphics("images/infer_workflow.jpeg")
 
 
 下面是我自己对重抽样的理解
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r infer-35, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/Resampling.jpg")
 ```
 
@@ -401,7 +401,7 @@ knitr::include_graphics("images/Resampling.jpg")
 
 
 
-```{r, echo = F}
+```{r infer-36, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(d, gss, movies_genre_sample, null_dist, null_distribution, obs_diff, obs_stat, pvalue, summary_ratings, t_test_eq, t_test_uneq, td)
@@ -409,6 +409,6 @@ rm(d, gss, movies_genre_sample, null_dist, null_distribution, obs_diff, obs_stat
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r infer-37, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

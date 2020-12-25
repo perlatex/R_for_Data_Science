@@ -2,7 +2,7 @@
 
 线性模型是数据分析中最常用的一种分析方法。最基础的往往最深刻。
 
-```{r message = FALSE, warning = FALSE}
+```{r lm-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
@@ -11,7 +11,7 @@ library(tidyverse)
 这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集。数据在课件首页提供了下载链接。
 
 首先，我们下载后导入数据
-```{r message = FALSE, warning = FALSE}
+```{r lm-2, message = FALSE, warning = FALSE}
 wages <- read_csv("./demo_data/wages.csv")
 
 wages %>%
@@ -25,14 +25,14 @@ wages %>%
 
 一般情况下，拿到一份数据，首先要了解数据，知道每个变量的含义，
 
-```{r}
+```{r lm-3}
 wages %>% colnames()
 ```
 
 同时检查数据是否有缺失值，这点很重要。在R中 NA（not available，不可用）表示缺失值, 比如可以这样检查是否有缺失值。
 
 
-```{r}
+```{r lm-4}
 # 如何检查数据是否有缺失值？
 wages %>%
   summarise(
@@ -47,7 +47,7 @@ wages %>%
 
 
 程序员都是偷懒的，所以也可以写的简便一点。大家在学习的过程中，也会慢慢的发现tidyverse的函数很贴心，很周到。
-```{r}
+```{r lm-5}
 wages %>%
   summarise_all(
     ~ sum(is.na(.))
@@ -55,7 +55,7 @@ wages %>%
 ```
 
 当然，也可以用`purrr::map()`的方法。这部分我会在后面的章节中逐步介绍。
-```{r}
+```{r lm-6}
 wages %>%
   map_df(~ sum(is.na(.)))
 ```
@@ -65,11 +65,11 @@ wages %>%
 ###  变量简单统计
 
 然后探索下每个变量的分布。比如调研数据中男女的数量分别是多少？
-```{r}
+```{r lm-7}
 wages %>% count(sex)
 ```
 男女这两组的身高均值分别是多少？收入的均值分别是多少？
-```{r}
+```{r lm-8}
 wages %>%
   group_by(sex) %>%
   summarise(
@@ -80,7 +80,7 @@ wages %>%
 ```
 
 也有可以用可视化的方法，呈现男女收入的分布情况
-```{r}
+```{r lm-9}
 wages %>%
   ggplot(aes(x = earn, color = sex)) +
   geom_density()
@@ -116,7 +116,7 @@ $\epsilon$ 代表误差项，它与$x$ 无关，且服从正态分布。
 就是我们估算的$\hat\alpha$和$\hat\beta$, 要使得残差的平方和最小，即$\sum_i(y_i - \hat y_i)^2$或者叫$\sum_i \epsilon_i^2$最小。
 
 
-```{r out.width = '85%', echo = FALSE}
+```{r lm-10, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/best_fit.png")
 ```
 
@@ -130,14 +130,14 @@ knitr::include_graphics("images/best_fit.png")
 
 `lm`参数很多, 但很多我们都用不上，所以我们只关注其中重要的两个参数
 
-```{r, eval = FALSE}
+```{r lm-11, eval = FALSE}
 lm(formula = y ~ x, data)
 ```
 
 `lm(y ~ x, data)` 是最常用的线性模型函数(lm是linear model的缩写)。参数解释说明
 
 
-```{block, type="danger"}
+```{block lm-12, type="danger"}
 * formula：指定回归模型的公式，对于简单的线性回归模型`y ~ x`. 
 * ~ 符号：代表“预测”，可以读做“y由x预测”。有些学科不同的表述，比如下面都是可以的
   - `response ~ explanatory`  
@@ -150,7 +150,7 @@ lm(formula = y ~ x, data)
 
 在运行`lm()`之前，先画出身高和收入的散点图(记在我们想干什么，寻找身高和收入的关系)
 
-```{r}
+```{r lm-13}
 wages %>%
   ggplot(aes(x = height, y = earn)) +
   geom_point()
@@ -158,7 +158,7 @@ wages %>%
 
 
 等不及了，就运行代码吧
-```{r}
+```{r lm-14}
 mod1 <- lm(
   formula = earn ~ height,
   data = wages
@@ -168,13 +168,13 @@ mod1 <- lm(
 
 这里我们将`earn`作为响应变量，`height`为预测变量。`lm()`返回赋值给`mod1`. `mod1`现在是个什么东东呢？ mod1是一个叫`lm object`或者叫`类`的东西，
 
-```{r}
+```{r lm-15}
 names(mod1)
 ```
 
 我们打印看看，会发生什么
 
-```{r}
+```{r lm-16}
 print(mod1)
 ```
 
@@ -185,18 +185,18 @@ $$
 $$
 
 查看详细信息
-```{r}
+```{r lm-17}
 summary(mod1)
 ```
 
 查看拟合值
-```{r}
+```{r lm-18}
 # predict(mod1) # predictions at original x values
 wages %>% modelr::add_predictions(mod1)
 ```
 
 查看残差值
-```{r}
+```{r lm-19}
 # resid(mod1)
 wages %>%
   modelr::add_predictions(mod1) %>%
@@ -225,7 +225,7 @@ wages %>%
 - 对于截距$\alpha = -126532$，即当身高为0时，期望的收入值-126532。呵呵，人的身高不可能为0，所以这是一种极端的理论情况，现实不可能发生。
 
 
-```{r}
+```{r lm-20}
 wages %>%
   ggplot(aes(x = height, y = earn)) +
   geom_point(alpha = 0.25) +
@@ -253,12 +253,12 @@ earn &= \alpha + \beta_1 \text{height} + \beta_2 \text{ed} +\epsilon \\
 $$
 
 R语言代码实现也很简单，只需要把变量`ed`增加在公式的右边
-```{r}
+```{r lm-21}
 mod2 <- lm(earn ~ height + ed, data = wages)
 ```
 同样，我们打印`mod2`看看
 
-```{r}
+```{r lm-22}
 mod2
 ```
 
@@ -267,7 +267,7 @@ mod2
 
 ## 更多模型
 
-```{r, eval=FALSE}
+```{r lm-23, eval=FALSE}
 lm(earn ~ sex, data = wages)
 lm(earn ~ ed, data = wages)
 lm(earn ~ age, data = wages)
@@ -301,13 +301,13 @@ lm(earn ~ height + sex + ed + age + race, data = wages)
 ## 变量重要性
 
 哪个变量对收入的影响最大？
-```{r, eval=FALSE}
+```{r lm-24, eval=FALSE}
 lm(earn ~ height + ed + age, data = wages)
 ```
 
 - 方法一，变量都做**标准化处理**后，再放到模型中计算，然后对比系数的绝对值
 
-```{r}
+```{r lm-25}
 fit <- wages %>%
   mutate_at(vars(earn, height, ed, age), scale) %>%
   lm(earn ~ 1 + height + ed + age, data = .)
@@ -317,7 +317,7 @@ summary(fit)
 
 
 - 方法二，通过比较模型参数的t-statistic的绝对值，可以考察[参数的重要程度](https://topepo.github.io/caret/variable-importance.html)
-```{r}
+```{r lm-26}
 caret::varImp(fit)
 ```
 
@@ -331,7 +331,7 @@ caret::varImp(fit)
 
 ### 截距项
 
-```{r, eval=FALSE}
+```{r lm-27, eval=FALSE}
 # 包含截距，以下两者是等价的
 lm(earn ~ 1 + height, data = wages)
 lm(earn ~ height, data = wages)
@@ -346,13 +346,13 @@ lm(earn ~ 0 + height, data = wages)
 
 ### 只有截距项
 
-```{r}
+```{r lm-28}
 lm(earn ~ 1, data = wages)
 ```
 
 
 只有截距项，实质上就是计算y变量的均值
-```{r}
+```{r lm-29}
 wages %>%
   summarise(
     mean_wages = mean(earn)
@@ -364,12 +364,12 @@ wages %>%
 
 race变量就是数据框wages的一个分类变量，代表四个不同的种族。用分类变量做回归，本质上是各组之间的进行比较。
 
-```{r}
+```{r lm-30}
 wages %>% distinct(race)
 ```
 
 
-```{r}
+```{r lm-31}
 wages %>%
   ggplot(aes(x = race, y = earn, fill = race)) +
   geom_boxplot(position = position_dodge()) +
@@ -378,14 +378,14 @@ wages %>%
 
 以分类变量作为解释变量，做线性回归
 
-```{r}
+```{r lm-32}
 mod3 <- lm(earn ~ race, data = wages)
 mod3
 ```
 
 tidyverse框架下，喜欢**数据框**的统计结果，因此，可用broom的`tidy()`函数将**模型输出**转换为数据框的形式
 
-```{r}
+```{r lm-33}
 broom::tidy(mod3)
 ```
 
@@ -402,7 +402,7 @@ broom::tidy(mod3)
 <!-- Linear regression with a categorical variable, is the equivalent -->
 <!-- of ANOVA (Analysis of Variance) -->
 
-```{block, type="danger"}
+```{block lm-34, type="danger"}
 分类变量的线性回归本质上就是方差分析
 ```
 第 \@ref(tidystats) 章专题讨论方差分析
@@ -411,7 +411,7 @@ broom::tidy(mod3)
 ### 因子变量
 
 hispanic组的估计最低，适合做基线，因此可以将race转换为因子变量，这样方便调整因子先后顺序
-```{r}
+```{r lm-35}
 wages_fct <- wages %>%
   mutate(race = factor(race, levels = c("hispanic", "white", "black", "other"))) %>%
   select(earn, race)
@@ -420,7 +420,7 @@ head(wages_fct)
 ```
 
 `wages_fct`替换`wages`，然后建立线性模型
-```{r}
+```{r lm-36}
 mod4 <- lm(earn ~ race, data = wages_fct)
 broom::tidy(mod4)
 ```
@@ -429,7 +429,7 @@ broom::tidy(mod4)
 
 
 大家可以用sex变量试试看
-```{r, eval=FALSE}
+```{r lm-37, eval=FALSE}
 lm(earn ~ sex, data = wages)
 ```
 
@@ -439,7 +439,7 @@ lm(earn ~ sex, data = wages)
 
 如果预测变量是一个分类变量和一个连续变量
 
-```{r}
+```{r lm-38}
 mod5 <- lm(earn ~ height + sex, data = wages)
 coef(mod5)
 ```
@@ -448,7 +448,7 @@ coef(mod5)
 - `sexmale = 16874.158`  当height保持不变时，sex变化(female变为male)引起的earn变化
 
 
-```{r}
+```{r lm-39}
 p1 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
@@ -461,7 +461,7 @@ p1
 
 . is shorthand for "everything else." 
 
-```{r, eval=FALSE}
+```{r lm-40, eval=FALSE}
 lm(earn ~ height + sex + race + ed + age, data = wages)
 lm(earn ~ ., data = wages)
 
@@ -474,19 +474,19 @@ R 语言很多时候都出现了`.`，不同的场景，含义是不一样的。
 
 ### 交互项
 
-```{r, eval=FALSE}
+```{r lm-41, eval=FALSE}
 lm(earn ~ height + sex + height:sex, data = wages)
 lm(earn ~ height * sex, data = wages)
 lm(earn ~ (height + sex)^2, data = wages)
 ```
 
-```{r, eval=FALSE}
+```{r lm-42, eval=FALSE}
 lm(earn ~ height:sex, data = wages)
 lm(earn ~ height:sex:race, data = wages)
 ```
 
 
-```{r}
+```{r lm-43}
 mod6 <- lm(earn ~ height + sex + height:sex, data = wages)
 coef(mod6)
 ```
@@ -498,7 +498,7 @@ coef(mod6)
 - 对于男性，height增长1个单位，引起earn的增长`564.5102 + 701.4065 = 1265.92` 
 
 
-```{r}
+```{r lm-44}
 p2 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
@@ -509,7 +509,7 @@ p2
 
 
 注意，没有相互项和有相互项的区别
-```{r, out.width= "100%"}
+```{r lm-45, out.width= "100%"}
 library(patchwork)
 
 combined <- p1 + p2 & theme(legend.position = "bottom")
@@ -520,7 +520,7 @@ combined + plot_layout(guides = "collect")
 ### 虚拟变量
 
 交互项，有点不好理解？我们再细致说一遍
-```{r, eval = F}
+```{r lm-46, eval = F}
 earn ~ height + sex + height:sex
 ```
 
@@ -532,7 +532,7 @@ $$
 $$
 
 我们要求出其中的$\alpha, \beta_1,  \beta_2, \beta_3$，事实上，分类变量在R语言代码里，会转换成0和1这种**虚拟变量**，然后再计算。类似
-```{r}
+```{r lm-47}
 wages %>% mutate(sexmale = if_else(sex == "female", 0, 1))
 ```
 那么上面的公式变为
@@ -554,7 +554,7 @@ $$
 \end{aligned}
 $$
 我们再对比`mod6`结果中的系数$\alpha, \beta_1,  \beta_2, \beta_3$
-```{r}
+```{r lm-48}
 mod6
 ```
 
@@ -566,7 +566,7 @@ mod6
  
 
 事实上，对于男性和女性，截距和系数都不同，因此这种情形**等价于**，按照sex分成两组，男性算男性的斜率，女性算女性的斜率
-```{r}
+```{r lm-49}
 wages %>%
   group_by(sex) %>%
   group_modify(
@@ -578,13 +578,13 @@ wages %>%
 
 
 
-```{r}
+```{r lm-50}
 wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_smooth(method = lm, se = F)
 ```
 
-```{r}
+```{r lm-51}
 wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_line(aes(y = predict(mod6)))
@@ -593,7 +593,7 @@ wages %>%
 
 如果再特殊一点的模型（有点过分了）
 
-```{r}
+```{r lm-52}
 mod7 <- lm(earn ~ height + height:sex, data = wages)
 coef(mod7)
 ```
@@ -657,7 +657,7 @@ $$
 
 
 比如：计算身高和收入两者的Pearson相关系数的平方
-```{r}
+```{r lm-53}
 r <- cor(wages$height, wages$earn)
 print(r^2)
 ```
@@ -665,7 +665,7 @@ print(r^2)
 
 然后看看，身高和收入的线性模型
 
-```{r}
+```{r lm-54}
 lm(formula = earn ~ height, data = wages) %>%
   broom::glance() %>%
   pull(r.squared)
@@ -677,14 +677,24 @@ lm(formula = earn ~ height, data = wages) %>%
 
 一篇极富思考性和启发性的文章[《常见统计检验的本质是线性模型》](https://lindeloev.github.io/tests-as-linear/)
 
+## 线性模型的物理解释
+
+图中，中间蓝色点是这些数据点的均值点，线性模型可以类比为，这里有一根通过这个均值点的刚体，而每个数据点都是一个弹簧，竖直连接到刚体，很显然越远的点，对刚体的拉力越大，越近越小，最后刚体达到平衡状态，此时刚体的状态就是线性回归的直线。
+
+```{r out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/Least_squares_as_springs.png")
+```
+
+可参考[Least squares as springs](https://joshualoftus.com/posts/2020-11-23-least-squares-as-springs/)
 
 
-```{r, echo = F}
+
+```{r lm-55, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(combined, fit, mod1, mod2, mod3, mod4, mod5, mod6, mod7, p1, p2, r, wages, wages_fct)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r lm-56, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

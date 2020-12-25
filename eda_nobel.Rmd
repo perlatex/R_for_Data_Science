@@ -24,25 +24,25 @@
 
 这是一个诺贝尔奖获得者的数据集，
 
-```{r out.width = '80%', fig.align='left', echo = FALSE}
+```{r eda-nobel-1, out.width = '80%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/nobel_prize_winners_list.jpg")
 ```
 
 
 ## 导入数据
-```{r message=FALSE, warning=FALSE}
+```{r eda-nobel-2, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(lubridate)
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r eda-nobel-3, message=FALSE, warning=FALSE}
 df <- read_csv("./demo_data/nobel_winners.csv")
 df
 ```
 
 
-```{r, eval = FALSE}
+```{r eda-nobel-4, eval = FALSE}
 # 如果是xlsx格式
 readxl::read_excel("myfile.xlsx")
 
@@ -51,7 +51,7 @@ readr::read_csv("myfile.csv")
 ```
 
 
-```{block, type="danger"}
+```{block eda-nobel-5, type="danger"}
 这里有个小小的提示：
 
 - 路径（包括文件名）， 不要用中文和空格
@@ -67,13 +67,13 @@ readr::read_csv("myfile.csv")
 
 
 缺失值及其处理
-```{r}
+```{r eda-nobel-6}
 df %>% map_df(~ sum(is.na(.)))
 ```
 
 
 性别缺失怎么造成的？
-```{r}
+```{r eda-nobel-7}
 df %>% count(laureate_type)
 ```
 
@@ -100,11 +100,11 @@ df %>% count(laureate_type)
 
 ## 每个学科颁过多少次奖
 
-```{r}
+```{r eda-nobel-8}
 df %>% count(category)
 ```
 
-```{r}
+```{r eda-nobel-9}
 df %>%
   count(category) %>%
   ggplot(aes(x = category, y = n, fill = category)) +
@@ -115,7 +115,7 @@ df %>%
 ```
 
 
-```{r, fig.width= 6, fig.height= 4}
+```{r eda-nobel-10, fig.width= 6, fig.height= 4}
 df %>%
   count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
@@ -127,7 +127,7 @@ df %>%
 
 也可以使用别人定义好的配色方案
 
-```{r, fig.width= 6, fig.height= 4, warning=FALSE, message=FALSE}
+```{r eda-nobel-11, fig.width= 6, fig.height= 4, warning=FALSE, message=FALSE}
 library(ggthemr) # install.packages("devtools")
 # devtools::install_github('cttobin/ggthemr')
 ggthemr("dust")
@@ -141,7 +141,7 @@ df %>%
 ```
 
 
-```{r echo=FALSE}
+```{r eda-nobel-12, echo=FALSE}
 ggthemr_reset()
 ```
 
@@ -150,7 +150,7 @@ ggthemr_reset()
 
 当然，也可以自己DIY，或者使用配色网站的主题方案(https://learnui.design/tools/data-color-picker.html#palette)
 
-```{r, fig.width= 6, fig.height= 4}
+```{r eda-nobel-13, fig.width= 6, fig.height= 4}
 df %>%
   count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n)) +
@@ -161,7 +161,7 @@ df %>%
 
 
 让图骚动起来吧
-```{r}
+```{r eda-nobel-14}
 library(gganimate) # install.packages("gganimate", dependencies = T)
 
 df %>%
@@ -183,7 +183,7 @@ df %>%
 
 
 ## 看看我们伟大的祖国
-```{r}
+```{r eda-nobel-15}
 df %>%
   dplyr::filter(birth_country == "China") %>%
   dplyr::select(full_name, prize_year, category)
@@ -196,7 +196,7 @@ df %>%
 
 下面我们去重吧， 去重可以用`distinct()`函数
 
-```{r}
+```{r eda-nobel-16}
 dt <- tibble::tribble(
   ~x, ~y, ~z,
   1, 1, "a",
@@ -209,18 +209,18 @@ dt
 ```
 
 
-```{r}
+```{r eda-nobel-17}
 dt %>% distinct_at(vars(x), .keep_all = T)
 ```
 
 
-```{r}
+```{r eda-nobel-18}
 dt %>% distinct_at(vars(x, y), .keep_all = T)
 ```
 
 
 
-```{r}
+```{r eda-nobel-19}
 nobel_winners <- df %>%
   mutate_if(is.character, tolower) %>%
   distinct_at(vars(full_name, prize_year, category), .keep_all = TRUE) %>%
@@ -233,24 +233,24 @@ nobel_winners
 ```
 
 
-```{block, type="danger"}
+```{block eda-nobel-20, type="danger"}
 这是时候，我们才对数据有了一个初步的了解
 ```
 
 
 再来看看我的祖国
-```{r}
+```{r eda-nobel-21}
 nobel_winners %>%
   dplyr::filter(birth_country == "china") %>%
   dplyr::select(full_name, prize_year, category)
 ```
 
 ## 哪些大神多次获得诺贝尔奖
-```{r}
+```{r eda-nobel-22}
 nobel_winners %>% count(full_name, sort = T)
 ```
 
-```{r}
+```{r eda-nobel-23}
 nobel_winners %>%
   group_by(full_name) %>%
   mutate(
@@ -266,19 +266,19 @@ nobel_winners %>%
 ## 大神在得奖的时候是多大年龄？
 
 
-```{r}
+```{r eda-nobel-24}
 nobel_winners %>%
   count(prize_age) %>%
   ggplot(aes(x = prize_age, y = n)) +
   geom_col()
 ```
 
-```{r}
+```{r eda-nobel-25}
 nobel_winners %>%
   group_by(category) %>%
   summarise(mean_prize_age = mean(prize_age, na.rm = T))
 ```
-```{r}
+```{r eda-nobel-26}
 nobel_winners %>%
   mutate(category = fct_reorder(category, prize_age, median, na.rm = TRUE)) %>%
   ggplot(aes(category, prize_age)) +
@@ -287,7 +287,7 @@ nobel_winners %>%
   coord_flip()
 ```
 
-```{r}
+```{r eda-nobel-27}
 nobel_winners %>%
   dplyr::filter(!is.na(prize_age)) %>%
   group_by(decade, category) %>%
@@ -299,7 +299,7 @@ nobel_winners %>%
   geom_line()
 ```
 
-```{r}
+```{r eda-nobel-28}
 library(ggridges)
 
 nobel_winners %>%
@@ -315,7 +315,7 @@ nobel_winners %>%
 他们60多少岁才得诺奖，大家才23或24岁，还年轻，不用焦虑喔。
 
 
-```{r}
+```{r eda-nobel-29}
 nobel_winners %>%
 
   ggplot(aes(x = prize_age, fill = category, color = category)) +
@@ -326,7 +326,7 @@ nobel_winners %>%
 
 
 有同学说要一个个的画，至于`group_split()`函数，下次课在讲
-```{r}
+```{r eda-nobel-30}
 nobel_winners %>%
   group_split(category) %>%
   map(
@@ -338,7 +338,7 @@ nobel_winners %>%
 
 
 也可以用强大的`group_by() + group_map()`组合，我们会在第 \@ref(advR) 章讲到
-```{r, eval=FALSE}
+```{r eda-nobel-31, eval=FALSE}
 nobel_winners %>%
   group_by(category) %>%
   group_map(
@@ -352,7 +352,7 @@ nobel_winners %>%
 
 
 ## 性别比例
-```{r}
+```{r eda-nobel-32}
 nobel_winners %>%
   dplyr::filter(laureate_type == "individual") %>%
   count(category, gender) %>%
@@ -361,7 +361,7 @@ nobel_winners %>%
 ```
 
 各年代性别比例
-```{r, fig.width= 9, fig.height= 6}
+```{r eda-nobel-33, fig.width= 9, fig.height= 6}
 nobel_winners %>%
   dplyr::filter(laureate_type == "individual") %>%
   # mutate(decade = glue::glue("{round(prize_year - 1, -1)}s")) %>%
@@ -376,7 +376,7 @@ nobel_winners %>%
   scale_fill_gradient(low = "#FDF4E9", high = "#834C0D")
 ```
 
-```{r}
+```{r eda-nobel-34}
 library(ggbeeswarm) # install.packages("ggbeeswarm")
 
 nobel_winners %>%
@@ -402,7 +402,7 @@ nobel_winners %>%
   )
 ```
 
-```{r}
+```{r eda-nobel-35}
 nobel_winners %>%
   count(decade,
     category,
@@ -425,7 +425,7 @@ nobel_winners %>%
 
 
 ## 这些大神都是哪个年代出生的人？
-```{r, fig.width= 9, fig.height= 6}
+```{r eda-nobel-36, fig.width= 9, fig.height= 6}
 nobel_winners %>%
   select(category, birth_date) %>%
   mutate(year = floor(year(birth_date) / 10) * 10) %>%
@@ -443,13 +443,13 @@ nobel_winners %>%
 
 ## 最年轻的诺奖获得者？
 
-```{r}
+```{r eda-nobel-37}
 nobel_winners %>%
   dplyr::filter(prize_age == min(prize_age, na.rm = T))
 ```
 
 
-```{r}
+```{r eda-nobel-38}
 nobel_winners %>%
   dplyr::filter(
     rank(prize_year - year(birth_date)) == 1
@@ -457,7 +457,7 @@ nobel_winners %>%
 ```
 
 
-```{r}
+```{r eda-nobel-39}
 nobel_winners %>%
   arrange(
     prize_year - year(birth_date)
@@ -466,14 +466,14 @@ nobel_winners %>%
 
 
 
-```{r}
+```{r eda-nobel-40}
 nobel_winners %>%
   top_n(1, year(birth_date) - prize_year)
 ```
 
 
 ## 平均年龄和获奖数量
-```{r}
+```{r eda-nobel-41}
 df1 <- nobel_winners %>%
   group_by(category) %>%
   summarise(
@@ -484,7 +484,7 @@ df1
 ```
 
 
-```{r}
+```{r eda-nobel-42}
 df1 %>%
   ggplot(aes(mean_prise_age, total_num)) +
   geom_point(aes(color = category)) +
@@ -494,7 +494,7 @@ df1 %>%
 
 
 ## 出生地与工作地分布
-```{r}
+```{r eda-nobel-43}
 nobel_winners_clean <- nobel_winners %>%
   mutate_at(
     vars(birth_country, death_country),
@@ -514,13 +514,13 @@ nobel_winners_clean <- nobel_winners %>%
 ```
 
 
-```{r}
+```{r eda-nobel-44}
 nobel_winners_clean %>% count(death_country, sort = TRUE)
 ```
 
 
 ## 迁移模式
-```{r, fig.width= 9, fig.height= 8}
+```{r eda-nobel-45, fig.width= 9, fig.height= 8}
 nobel_winners_clean %>%
   mutate(
     colour = case_when(
@@ -560,7 +560,7 @@ nobel_winners_clean %>%
 
 
 ## 地图
-```{r}
+```{r eda-nobel-46}
 library(here)
 library(sf)
 library(countrycode)
@@ -607,7 +607,7 @@ global %>%
 
 
 
-```{r}
+```{r eda-nobel-47}
 # Determine to 10 Countries
 topCountries <- nobel_winners_clean %>%
   count(birth_country, sort = TRUE) %>%
@@ -618,7 +618,7 @@ topCountries
 ```
 
 
-```{r}
+```{r eda-nobel-48}
 df4 <- nobel_winners_clean %>%
   filter(birth_country %in% topCountries$birth_country) %>%
   group_by(birth_country, category, prize_year) %>%
@@ -630,7 +630,7 @@ df4
 
 
 
-```{r, fig.width= 12, fig.height= 6}
+```{r eda-nobel-49, fig.width= 12, fig.height= 6}
 library(gganimate)
 df4 %>%
   mutate(prize_year = as.integer(prize_year)) %>%
@@ -657,7 +657,7 @@ df4 %>%
 
 ## 出生地和工作地不一样的占比
 
-```{r}
+```{r eda-nobel-50}
 nobel_winners_clean %>%
   select(category, birth_country, death_country) %>%
   mutate(immigration = if_else(birth_country == death_country, 0, 1))
@@ -667,12 +667,12 @@ nobel_winners_clean %>%
 
 <!-- # https://github.com/gkaramanis/tidytuesday/blob/master/week-20/nobelShared.R -->
 
-```{r, eval=FALSE}
+```{r eda-nobel-51, eval=FALSE}
 nobel_winners %>%
   separate(prize_share, into = c("num", "deno"), sep = "/", remove = FALSE)
 ```
 
-```{r}
+```{r eda-nobel-52}
 nobel_winners %>%
   filter(category == "medicine") %>%
   mutate(
@@ -722,11 +722,11 @@ nobel_winners %>%
        
 
 
-```{r, echo = F}
+```{r eda-nobel-53, echo = F}
 # remove the objects
 rm(df, df1, df4, dt, global, nobel_winners, nobel_winners_birth_country, nobel_winners_clean, scale_color_continuous, scale_color_discrete, scale_color_gradient, topCountries)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-nobel-54, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

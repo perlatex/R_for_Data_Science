@@ -1,7 +1,7 @@
 # 时间序列分析 {#tibbletime}
 
 
-```{r message = FALSE, warning = FALSE, eval = FALSE}
+```{r slider-1, message = FALSE, warning = FALSE, eval = FALSE}
 library(tidyverse)
 library(tibbletime)
 library(slider)
@@ -9,6 +9,6 @@ library(slider)
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r slider-2, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

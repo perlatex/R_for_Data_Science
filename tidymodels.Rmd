@@ -2,14 +2,14 @@
 
 Rstudio工厂的 Max Kuhn 大神正主持**机器学习**的开发，日臻成熟了，感觉很强大啊。
 
-```{r message = FALSE, warning = FALSE}
+```{r tidymodels-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(tidymodels)
 ```
 
 
 ## 数据
-```{r, eval=FALSE}
+```{r tidymodels-2, eval=FALSE}
 penguins <- read_csv("./demo_data/penguins.csv") %>%
   janitor::clean_names() %>% 
   drop_na()
@@ -18,7 +18,7 @@ penguins %>%
   head()
 ```
 
-```{r, eval=FALSE}
+```{r tidymodels-3, eval=FALSE}
 penguins %>%
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm, 
              color = species, shape = species)
@@ -34,7 +34,7 @@ penguins %>%
 <!-- https://tidymodels.github.io/model-implementation-principles/model-predictions.html -->
 
 
-```{r, eval=FALSE}
+```{r tidymodels-4, eval=FALSE}
 split <- penguins %>% 
   mutate(species = as_factor(species)) %>% 
   mutate(species = fct_lump(species, 1)) %>% 
@@ -50,7 +50,7 @@ testing_data
 
 
 ## model01
-```{r, eval=FALSE}
+```{r tidymodels-5, eval=FALSE}
 model_logistic <- parsnip::logistic_reg() %>% 
   set_engine("glm") %>% 
   set_mode("classification") %>% 
@@ -71,7 +71,7 @@ predict(model, new_data = testing_data) %>%
 
 
 ## model02
-```{r, eval=FALSE}
+```{r tidymodels-6, eval=FALSE}
 model_neighbor <- parsnip::nearest_neighbor(neighbors = 10) %>% 
   set_engine("kknn") %>% 
   set_mode("classification") %>% 
@@ -84,7 +84,7 @@ predict(model_neighbor, new_data = testing_data) %>%
 
 
 ## model03
-```{r, eval=FALSE}
+```{r tidymodels-7, eval=FALSE}
 model_multinom <- parsnip::multinom_reg() %>% 
   set_engine("nnet") %>% 
   set_mode("classification") %>% 
@@ -99,7 +99,7 @@ predict(model_multinom, new_data = testing_data) %>%
 
 
 ## model04
-```{r, eval=FALSE}
+```{r tidymodels-8, eval=FALSE}
 model_decision <- parsnip::decision_tree() %>% 
   set_engine("rpart") %>% 
   set_mode("classification") %>% 
@@ -116,7 +116,7 @@ predict(model_decision, new_data = testing_data) %>%
 
 ### 使用 recipes
 
-```{r, message=FALSE, warning=FALSE}
+```{r tidymodels-9, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tidymodels)
 library(workflows)
@@ -142,7 +142,7 @@ testing_data  <- rsample::testing(split)
 预测变量做标准处理。
 
 
-```{r}
+```{r tidymodels-10}
 penguins_lm <- 
   parsnip::linear_reg() %>% 
   #parsnip::set_engine("lm") 
@@ -160,12 +160,12 @@ broom::tidy(penguins_recipe)
 
 
 
-```{r out.width='80%', fig.align='center', echo = FALSE}
+```{r tidymodels-11, out.width='80%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/recipes-process.png")
 ```
 
 
-```{r, eval=FALSE}
+```{r tidymodels-12, eval=FALSE}
 penguins_recipe %>% 
   recipes::prep(data = training_data) %>%  #or prep(retain = TRUE)
   recipes::juice()
@@ -197,7 +197,7 @@ test_data <-
 workflows的思路让模型结构更清晰。 这样`prep()`, `bake()`, and `juice()` 就可以省略了，只需要recipe和model，他们往往是成对出现的
 
 
-```{r}
+```{r tidymodels-13}
 wflow <- 
   workflows::workflow() %>% 
   workflows::add_recipe(penguins_recipe) %>% 
@@ -211,7 +211,7 @@ wflow_fit <-
 
 
 
-```{r}
+```{r tidymodels-14}
 wflow_fit %>% 
   workflows::pull_workflow_fit() %>% 
   broom.mixed::tidy()
@@ -223,7 +223,7 @@ wflow_fit %>%
 
 先提取模型，用在 `predict()` 是可以的，但这样太麻烦了
 
-```{r, eval=FALSE}
+```{r tidymodels-15, eval=FALSE}
 wflow_fit %>% 
   workflows::pull_workflow_fit() %>% 
   stats::predict(new_data = test_data) # note: test_data not testing_data
@@ -234,20 +234,20 @@ wflow_fit %>%
 因为，`predict()` 会自动的将recipes(对training_data的操作)，应用到testing_data
 这个不错，参考[这里](https://www.tidymodels.org/start/recipes/)
 
-```{r}
+```{r tidymodels-16}
 penguins_pred <- 
   predict(
     wflow_fit, 
-    new_data = testing_data %>% select(-bill_length_mm),
+    new_data = testing_data %>% dplyr::select(-bill_length_mm),
     type= "numeric"
   ) %>% 
-  dplyr::bind_cols(testing_data %>% select(bill_length_mm))
+  dplyr::bind_cols(testing_data %>% dplyr::select(bill_length_mm))
 
 penguins_pred
 ```
 
 
-```{r}
+```{r tidymodels-17}
 penguins_pred %>% 
   ggplot(aes(x = bill_length_mm, y = .pred)) + 
   geom_abline(linetype = 2) + 
@@ -259,14 +259,14 @@ penguins_pred %>%
 
 参考<https://www.tmwr.org/performance.html#regression-metrics>
 
-```{r}
+```{r tidymodels-18}
 penguins_pred %>%
   yardstick::rmse(truth = bill_length_mm, estimate = .pred) 
 ```
 
 
 
-```{r}
+```{r tidymodels-19}
 # 自定义一个指标评价函数my_multi_metric，就是放一起，感觉不够tidyverse
 my_multi_metric <- yardstick::metric_set(rmse, rsq, mae, ccc)
 
@@ -275,7 +275,7 @@ penguins_pred %>%
 ```
 
 
-```{r, echo = F}
+```{r tidymodels-20, echo = F}
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 
@@ -284,7 +284,7 @@ rm(my_multi_metric, penguins, penguins_lm, penguins_pred, penguins_recipe, split
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidymodels-21, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

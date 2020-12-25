@@ -7,7 +7,7 @@
 
 
 
-```{r message = FALSE, warning = FALSE}
+```{r tidyverse-tips-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(patchwork)  # install.packages("patchwork")
 ```
@@ -18,7 +18,7 @@ library(patchwork)  # install.packages("patchwork")
 
 我之前多次用到`count()`函数，其功能就是统计某个变量中**各组**出现的次数
 
-```{r}
+```{r tidyverse-tips-2}
 df <- tibble(
   name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
   type = c("english", "math", "english", "math", "english", "math"),
@@ -28,12 +28,12 @@ df <- tibble(
 df
 ```
 
-```{r}
+```{r tidyverse-tips-3}
 df %>% count(name)
 ```
 
 如果用之前讲的`group_by() + summarise()`来写，
-```{r}
+```{r tidyverse-tips-4}
 df %>% 
   group_by(name) %>% 
   summarise( n = n())
@@ -41,7 +41,7 @@ df %>%
 
 
 `count()` 还有更多强大的参数， 比如
-```{r}
+```{r tidyverse-tips-5}
 df %>% count(name,
   sort = TRUE,
   wt = score,
@@ -51,7 +51,7 @@ df %>% count(name,
 
 
 如果不用`count()`，用`group_by() + summarise()`写，
-```{r}
+```{r tidyverse-tips-6}
 df %>%
   group_by(name) %>%
   summarise(
@@ -67,7 +67,7 @@ df %>%
 ## 在 count() 中创建新变量
 
 可以在`count()`里构建新变量，并利用这个新变量完成统计
-```{r}
+```{r tidyverse-tips-7}
 df %>% count(range = 10 * (score %/% 10))
 ```
 
@@ -78,7 +78,7 @@ df %>% count(range = 10 * (score %/% 10))
 
 想增加一列，代表每人参加的考试次数
 
-```{r}
+```{r tidyverse-tips-8}
 df %>%
   group_by(name) %>%
   mutate(n = n()) %>%
@@ -87,7 +87,7 @@ df %>%
 
 
 可以有更简单的方法
-```{r}
+```{r tidyverse-tips-9}
 df %>% add_count(name)
 ```
 
@@ -99,36 +99,36 @@ df %>% add_count(name)
 ## nth(), first(),  last()
 
 
-```{r}
+```{r tidyverse-tips-10}
 v <- c("a", "c", "d", "k")
 ```
 
 
-```{r}
+```{r tidyverse-tips-11}
 v[1]
 v[length(v)]
 ```
 
 
-```{r}
+```{r tidyverse-tips-12}
 c("a", "c", "d", "k") %>% nth(3)
 ```
 
 
-```{r}
+```{r tidyverse-tips-13}
 c("a", "c", "d", "k") %>% first()
 c("a", "c", "d", "k") %>% last()
 ```
 
 
 用在数据框中，同样可以使用
-```{r}
+```{r tidyverse-tips-14}
 df %>%
   filter(score == first(score))
 ```
 
 
-```{r}
+```{r tidyverse-tips-15}
 df %>%
   group_by(name) %>%
   filter(score == last(score))
@@ -137,7 +137,7 @@ df %>%
 ## 列变量重新排序
 
 比如想把score放在第一列
-```{r}
+```{r tidyverse-tips-16}
 df %>%
   select(score, everything())
 ```
@@ -148,7 +148,7 @@ df %>%
 ## if_else
 
 
-```{r}
+```{r tidyverse-tips-17}
 df %>% mutate(
   assess = if_else(score > 85, "very_good", "good")
 )
@@ -159,7 +159,7 @@ df %>% mutate(
 
 ## case_when
 
-```{r}
+```{r tidyverse-tips-18}
 df %>% mutate(
   assess = case_when(
     score < 70 ~ "general",
@@ -174,7 +174,7 @@ df %>% mutate(
 
 
 ## 找出前几名
-```{r}
+```{r tidyverse-tips-19}
 df %>%
   top_n(2, score)
 ```
@@ -182,31 +182,31 @@ df %>%
 
 ## 去除多余的空白
 
-```{r}
+```{r tidyverse-tips-20}
 library(stringr)
 
 str_trim(" excess    whitespace in a string be gone!")
 ```
 
 
-```{r}
+```{r tidyverse-tips-21}
 # Use str_squish() to remove any leading, trailing, or excess whitespace
 str_squish(" excess    whitespace in a string be gone!")
 ```
 
 ## 取反操作
-```{r}
+```{r tidyverse-tips-22}
 3:10 %in% c(1:5)
 ```
 
 有时候需要一个**不属于**的操作符
-```{r}
+```{r tidyverse-tips-23}
 # 自定义一个不属于操作符
 `%nin%` <- Negate(`%in%`)
 3:10 %nin% c(1:5)
 ```
 
-```{r}
+```{r tidyverse-tips-24}
 # 使用purrr::negate()自定义反向操作符
 `%nin%` <- purrr::negate(`%in%`)
 3:10 %nin% c(1:5)
@@ -216,7 +216,7 @@ str_squish(" excess    whitespace in a string be gone!")
 
 ## drop_na()
 
-```{r}
+```{r tidyverse-tips-25}
 dt <- tribble(
   ~x, ~y,
   1, NA,
@@ -230,7 +230,7 @@ dt
 ```
 
 
-```{r}
+```{r tidyverse-tips-26}
 dt %>% drop_na()
 # dt %>% drop_na(x)
 ```
@@ -238,7 +238,7 @@ dt %>% drop_na()
 
 
 ## replace_na()
-```{r}
+```{r tidyverse-tips-27}
 dt <- tribble(
   ~x, ~y,
   1, NA,
@@ -252,7 +252,7 @@ dt %>% mutate(x = replace_na(x, 0))
 ```
 
 
-```{r}
+```{r tidyverse-tips-28}
 dt %>% mutate(
   x = replace_na(x, mean(x, na.rm = TRUE))
   )
@@ -266,7 +266,7 @@ dt %>% mutate(
 
 ## coalesce
 
-```{r}
+```{r tidyverse-tips-29}
 dt <- tribble(
   ~x, ~y,
   1, NA,
@@ -283,7 +283,7 @@ dt %>% mutate(
 ```
 
 有时候，我们可能为了减少信息丢失，想填充NA
-```{r}
+```{r tidyverse-tips-30}
 dt <- tribble(
   ~name, ~age,
   "a", 1,
@@ -304,7 +304,7 @@ dt %>%
 ## summarise() 生成 list-column
 summarize()会生成一个value，
 
-```{r}
+```{r tidyverse-tips-31}
 library(gapminder)
 gapminder %>%
   group_by(continent) %>%
@@ -315,7 +315,7 @@ gapminder %>%
 
 summarize()也可以生成一个list，
 
-```{r}
+```{r tidyverse-tips-32}
 library(gapminder)
 gapminder %>%
   group_by(continent) %>%
@@ -332,7 +332,7 @@ gapminder %>%
 ```
 
 
-```{r}
+```{r tidyverse-tips-33}
 gapminder %>%
   group_by(continent) %>%
   summarise(test = list(lm(lifeExp ~ gdpPercap))) %>% # 线性回归
@@ -351,7 +351,7 @@ gapminder %>%
 
 
 以下两种方法，同样完成上面的工作，具体方法会在第 \@ref(advR) 章介绍
-```{r, eval=FALSE}
+```{r tidyverse-tips-34, eval=FALSE}
 gapminder %>%
   group_nest(continent) %>%
   mutate(test = map(data, ~ t.test(.x$gdpPercap))) %>%
@@ -360,7 +360,7 @@ gapminder %>%
 ```
 
 
-```{r, eval=FALSE}
+```{r tidyverse-tips-35, eval=FALSE}
 gapminder %>%
   group_by(continent) %>%
   group_modify(
@@ -375,7 +375,7 @@ gapminder %>%
 
 最好用的四件套
 
-```{r}
+```{r tidyverse-tips-36}
 gapminder %>%
   distinct(continent, country) %>%
   count(continent) %>%
@@ -383,7 +383,7 @@ gapminder %>%
   geom_col()
 ```
 
-```{r}
+```{r tidyverse-tips-37}
 gapminder %>%
   distinct(continent, country) %>%
   count(continent) %>%
@@ -394,11 +394,11 @@ gapminder %>%
 
 
 画图容易，但画出一张好图并不容易
-```{r eval=FALSE, include=FALSE}
+```{r tidyverse-tips-38, eval=FALSE, include=FALSE}
 c("#b3b3b3a0", "#D55E00", "#0072B2") %>% scales::show_col()
 ```
 
-```{r}
+```{r tidyverse-tips-39}
 gapminder %>%
   distinct(continent, country) %>%
   count(continent) %>% 
@@ -420,7 +420,7 @@ gapminder %>%
 
 
 或者偷懒，将`continent == "Asia"`的结果直接赋值给`aes(fill = ___ )`， 效果与上面是一样的。
-```{r}
+```{r tidyverse-tips-40}
 gapminder %>%
   distinct(continent, country) %>%
   count(continent) %>% 
@@ -456,7 +456,7 @@ gapminder %>%
 - 公司的营业额
 
 
-```{r}
+```{r tidyverse-tips-41}
 gapminder %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point()
@@ -464,7 +464,7 @@ gapminder %>%
 
 
 
-```{r}
+```{r tidyverse-tips-42}
 gapminder %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
@@ -475,7 +475,7 @@ gapminder %>%
 
 门诊病症的流水记录
 
-```{r}
+```{r tidyverse-tips-43}
 tb <- tibble::tribble(
   ~disease,  ~n,
       "鼻塞", 112,
@@ -497,7 +497,7 @@ tb <- tibble::tribble(
   )
 ```
 
-```{r}
+```{r tidyverse-tips-44}
 p1 <- tb %>% 
   uncount(n) %>% 
 
@@ -521,7 +521,7 @@ p2 <- tb %>%
   
 ```
 
-```{r}
+```{r tidyverse-tips-45}
 p1 + p2
 ```
 
@@ -530,7 +530,7 @@ p1 + p2
 ## fct_reoder2
 
 让图例的顺序与图的曲线顺序一致
-```{r}
+```{r tidyverse-tips-46}
 dat_wide <- tibble(
   x = 1:3,
   top = c(4.5, 4, 5.5),
@@ -571,7 +571,7 @@ p_ABCD + p_sane +
 
 ## unite
 
-```{r}
+```{r tidyverse-tips-47}
 dfa <- tribble(
    ~school, ~class,
   "chuansi", "01",
@@ -585,7 +585,7 @@ dfa <- tribble(
 dfa
 ```
 
-```{r}
+```{r tidyverse-tips-48}
 df_united <- dfa %>% 
    tidyr::unite(school, class, col = "school_plus_class", sep = "_", remove = FALSE)
 
@@ -594,7 +594,7 @@ df_united
 
 
 当然，简单的情况也可以用`mutate()`实现
-```{r}
+```{r tidyverse-tips-49}
 dfa %>% mutate(newcol = str_c(school, "_", class))
 ```
 
@@ -603,14 +603,14 @@ dfa %>% mutate(newcol = str_c(school, "_", class))
 
 ## separate()
 
-```{r, eval=FALSE}
+```{r tidyverse-tips-50, eval=FALSE}
 df_united %>%
   tidyr::separate(school_plus_class, into = c("sch", "cls"), sep = "_", remove = F)
 ```
 
 
 如果用mutate()来实现，语句就会比较复杂些
-```{r}
+```{r tidyverse-tips-51}
 df_united %>% 
   mutate(sch = str_split(school_plus_class, "_") %>% map_chr(1)) %>% 
   mutate(cls = str_split(school_plus_class, "_") %>% map_chr(2)) 
@@ -619,7 +619,7 @@ df_united %>%
 
 如果每行不是都恰好分隔成两部分呢？就需要`tidyr::extract()`, 使用方法和`tidyr::separate()`类似
 
-```{r}
+```{r tidyverse-tips-52}
 dfb <- tribble(
    ~school_class,
   "chuansi_01",
@@ -633,7 +633,7 @@ dfb
 ```
 
 
-```{r, eval=FALSE}
+```{r tidyverse-tips-53, eval=FALSE}
 dfb %>% tidyr::separate(school_class, 
                 into = c("sch", "cls"), 
                 sep = "_", 
@@ -645,7 +645,7 @@ dfb %>% tidyr::separate(school_class,
 ## extract()
 
 有时候分隔符搞不定的，可以用正则表达式，讲捕获的每组弄成一列
-```{r}
+```{r tidyverse-tips-54}
 dfc <- tibble(x = c("1-12week", "1-10wk", "5-12w", "01-05weeks"))
 dfc
 ```
@@ -653,7 +653,7 @@ dfc
 
 
 
-```{r}
+```{r tidyverse-tips-55}
 dfc %>% tidyr::extract(
   x,
   c("start", "end", "letter"), "(\\d+)-(\\d+)([a-z]+)",
@@ -667,13 +667,13 @@ dfc %>% tidyr::extract(
 ## crossing()  
 
 先看看效果
-```{r}
+```{r tidyverse-tips-56}
 tidyr::crossing(x = c("F", "M"), y = c("a", "b"), z = c(1:2))
 ```
 
 
 这个函数在**数据模拟**的时候很方便，
-```{r}
+```{r tidyverse-tips-57}
 tidyr::crossing(trials = 1:10, m = 1:5) %>%
   group_by(trials) %>%
   mutate(
@@ -686,7 +686,7 @@ tidyr::crossing(trials = 1:10, m = 1:5) %>%
 
 
 再来一个例子
-```{r}
+```{r tidyverse-tips-58}
 sim <- tribble(
   ~f, ~params,
   "rbinom", list(size = 1, prob = 0.5, n = 10)
@@ -697,7 +697,7 @@ sim %>%
 
 
 
-```{r}
+```{r tidyverse-tips-59}
 rep_sim <- sim %>%
   crossing(rep = 1:1e5) %>%
   mutate(sim = invoke_map(f, params)) %>%
@@ -711,7 +711,7 @@ head(rep_sim)
 
 
 
-```{r, fig.width= 6, fig.height= 4}
+```{r tidyverse-tips-60, fig.width= 6, fig.height= 4}
 rep_sim %>% 
   ggplot(aes(x = mean_sim)) +
   geom_histogram(binwidth = 0.05,  fill = "skyblue") +
@@ -720,7 +720,7 @@ rep_sim %>%
 
 
 也可用在较复杂的模拟，比如下面介绍的**大数极限定理**， 
-```{r}
+```{r tidyverse-tips-61}
 sim <- tribble(
   ~n_tosses, ~f, ~params,
      10, "rbinom", list(size = 1, prob = 0.5, n = 15),
@@ -738,7 +738,7 @@ sim_rep <- sim %>%
 ```
 
 
-```{r, fig.width = 8,  fig.height = 6}
+```{r tidyverse-tips-62, fig.width = 8,  fig.height = 6}
 sim_rep %>%
   ggplot(aes(x = factor(n_tosses), y = avg)) +
   ggbeeswarm::geom_quasirandom(color = "lightgrey") +
@@ -760,13 +760,13 @@ sim_rep %>%
 
 
  
-```{r, echo = F}
+```{r tidyverse-tips-63, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(`%nin%`, dat, dat_wide, df, df_united, dfa, dfb, dfc, dt, long, p_ABCD, p_sane, p1, p2, plant_heigt, rep_sim, sim, sim_rep, tb, v, wide)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidyverse-tips-64, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

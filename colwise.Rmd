@@ -19,19 +19,19 @@ New dplyr - 8 things to know:
 8) `nest_by()`  
 
 
-```{r, eval=FALSE, echo=FALSE}
+```{r colwise-1, eval=FALSE, echo=FALSE}
 devtools::install_github("tidyverse/dplyr")
 ```
 
 
-```{r message = FALSE, warning = FALSE}
+```{r colwise-2, message = FALSE, warning = FALSE}
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
 ```
 
 
 ## 简单回顾
-```{r, eval=FALSE}
+```{r colwise-3, eval=FALSE}
 mutate()
 select()
 filter()
@@ -54,7 +54,7 @@ left_join()
 - **数据框**
 
 
-```{r}
+```{r colwise-4}
 df <- tibble(
   grp = rep(c("a", "b"), each = 5),
   x = c(rnorm(5, -0.25, 1), rnorm(5, 0, 1.5)),
@@ -64,21 +64,21 @@ df
 ```
 
 
-```{r}
+```{r colwise-5}
 df %>%
   group_by(grp) %>%
   summarise(rng = mean(x))
 ```
 
 当统计函数返回多个值的时候，比如`range()`返回是最小值和最大值，`summarise()`很贴心地将结果整理成多行，这样符合tidy的格式。
-```{r}
+```{r colwise-6}
 df %>%
   group_by(grp) %>%
   summarise(rng = range(x))
 ```
 
 类似的还有`quantile()`函数，也是返回多个值
-```{r}
+```{r colwise-7}
 df %>%
   group_by(grp) %>%
   summarise(
@@ -86,7 +86,7 @@ df %>%
   )
 ```
 
-```{r}
+```{r colwise-8}
 df %>%
   group_by(grp) %>%
   summarise(
@@ -99,7 +99,7 @@ df %>%
 
 `summarise()`可以输出数据框，比如
 
-```{r}
+```{r colwise-9}
 my_quantile <- function(x, probs) {
   tibble(x = quantile(x, probs), probs = probs)
 }
@@ -112,7 +112,7 @@ mtcars %>%
 再比如：
 
 dplyr 1.0 之前是需要`group_modify()`来实现`数据框进，数据框出`
-```{r}
+```{r colwise-10}
 mtcars %>%
   group_by(cyl) %>%
   group_modify(
@@ -123,7 +123,7 @@ mtcars %>%
 
 dplyr 1.0 之后，有了新的方案
 
-```{r}
+```{r colwise-11}
 mtcars %>%
   group_by(cyl) %>%
   summarise(
@@ -140,14 +140,14 @@ mtcars %>%
 
 当 `group_by()`与`summarise()`配合使用的时候，`summarise()`默认会**抵消掉**最近一次的分组信息，比如下面按照`cyl`和`vs`分组，但`summarise()`后，就只剩下`cyl`的分组信息了。
 
-```{r}
+```{r colwise-12}
 mtcars %>%
   group_by(cyl, vs) %>%
   summarise(cyl_n = n())
 ```
 
 
-```{r}
+```{r colwise-13}
 mtcars %>%
   group_by(cyl, vs) %>%
   summarise(cyl_n = n()) %>%
@@ -155,7 +155,7 @@ mtcars %>%
 ```
 
 如果想保留vs的分组信息，就需要设置`.groups = keep`参数
-```{r}
+```{r colwise-14}
 mtcars %>%
   group_by(cyl, vs) %>%
   summarise(cyl_n = n(), .groups = "keep") %>%
@@ -166,7 +166,7 @@ mtcars %>%
 当然`summarise()`可以控制输出的更多形式
 
 - 丢弃所有的分组信息
-```{r}
+```{r colwise-15}
 mtcars %>%
   group_by(cyl, vs) %>%
   summarise(cyl_n = n(), .groups = "drop") %>%
@@ -174,7 +174,7 @@ mtcars %>%
 ```
 
 - 变成行方向分组，即，每行是一个分组
-```{r}
+```{r colwise-16}
 mtcars %>%
   group_by(cyl, vs) %>%
   summarise(cyl_n = n(), .groups = "rowwise") %>%
@@ -187,19 +187,19 @@ mtcars %>%
 ## 选择某列
 
 - 通过位置索引进行选取
-```{r}
+```{r colwise-17}
 df %>% select(1, 3)
 df %>% select(2:3)
 ```
 
 - 通过列名
-```{r}
+```{r colwise-18}
 df %>% select(grp, x, y)
 df %>% select(x:y)
 ```
 
 - 通过函数选取
-```{r}
+```{r colwise-19}
 df %>% select(starts_with("x"))
 df %>% select(ends_with("p"))
 df %>% select(contains("x"))
@@ -207,7 +207,7 @@ df %>% select(matches("x"))
 ```
 
 - 通过类型
-```{r}
+```{r colwise-20}
 df %>% select(where(is.character))
 df %>% select(where(is.numeric))
 ```
@@ -215,13 +215,13 @@ df %>% select(where(is.numeric))
 
 
 - 通过各种组合
-```{r}
+```{r colwise-21}
 df %>% select(!where(is.character))
 df %>% select(where(is.numeric) & starts_with("x"))
 df %>% select(starts_with("g") | ends_with("y"))
 ```
 
-```{r, eval=FALSE}
+```{r colwise-22, eval=FALSE}
 # 注意any_of和all_of的区别
 
 vars <- c("x", "y", "z")
@@ -232,12 +232,12 @@ df %>% select(any_of(vars))
 
 
 ## 重命名某列
-```{r}
+```{r colwise-23}
 df %>% rename(group = grp)
 ```
 
 
-```{r}
+```{r colwise-24}
 df %>% rename_with(toupper)
 df %>% rename_with(toupper, is.numeric)
 df %>% rename_with(toupper, starts_with("x"))
@@ -246,24 +246,24 @@ df %>% rename_with(toupper, starts_with("x"))
 ## 调整列的位置
 
 我们前面一章讲过`arrange()`排序，这是行方向的排序， 比如按照x变量绝对值的大小从高到低排序。
-```{r}
+```{r colwise-25}
 df %>% arrange(desc(abs(x)))
 ```
 
 
 我们现在想调整**列的位置**，比如，这里调整数据框三列的位置，让`grp`列放在`x`列的后面
-```{r}
+```{r colwise-26}
 df %>% select(x, grp, y)
 ```
 
 如果列变量很多的时候，上面的方法就不太好用，因此推荐大家使用`relocate()`
-```{r}
+```{r colwise-27}
 df %>% relocate(grp, .after = y)
 df %>% relocate(x, .before = grp)
 ```
 
 还有
-```{r}
+```{r colwise-28}
 df %>% relocate(grp, .after = last_col())
 ```
 
@@ -275,12 +275,12 @@ df %>% relocate(grp, .after = last_col())
 
 我们经常需要对数据框的**多列**执行相同的操作。比如
 
-```{r}
+```{r colwise-29}
 iris <- iris %>% as_tibble()
 iris
 ```
 
-```{r}
+```{r colwise-30}
 iris %>%
   group_by(Species) %>%
   summarise(
@@ -292,7 +292,7 @@ iris %>%
 ```
 
 dplyr 1.0之后，使用`across()`函数异常简练
-```{r}
+```{r colwise-31}
 iris %>%
   group_by(Species) %>%
   summarise(
@@ -301,7 +301,7 @@ iris %>%
 ```
 
 或者更科学的
-```{r}
+```{r colwise-32}
 iris %>%
   group_by(Species) %>%
   summarise(
@@ -310,7 +310,7 @@ iris %>%
 ```
 
 可以看到，以往是一列一列的处理，现在对**多列同时操作**，这主要得益于`across()`函数，它有两个主要的参数：
-```{r, eval = FALSE}
+```{r colwise-33, eval = FALSE}
 across(.cols = , .fns = )
 ```
 
@@ -324,7 +324,7 @@ across(.cols = , .fns = )
 
 再看看这个案例
 
-```{r}
+```{r colwise-34}
 std <- function(x) {
   (x - mean(x)) / sd(x)
 }
@@ -345,7 +345,7 @@ iris %>%
 
 
 
-```{r}
+```{r colwise-35}
 iris %>%
   group_by(Species) %>%
   summarise(
@@ -356,7 +356,7 @@ iris %>%
 
 
 
-```{r}
+```{r colwise-36}
 iris %>%
   group_by(Species) %>%
   summarise(
@@ -369,7 +369,7 @@ iris %>%
 
 
 除了在`summarise()`里可以使用外，在其它函数也是可以使用的
-```{r}
+```{r colwise-37}
 iris %>% mutate(across(is.numeric, mean))
 iris %>% mutate(across(starts_with("Sepal"), mean))
 
@@ -393,7 +393,7 @@ iris %>% mutate(
 这些函数**返回当前分组的信息**，因此只能在特定函数内部使用，比如`summarise()` and `mutate()`
 
 
-```{r}
+```{r colwise-38}
 df <- tibble(
   g = sample(rep(letters[1:3], 1:3)),
   x = runif(6),
@@ -403,7 +403,7 @@ df
 ```
 
 
-```{r}
+```{r colwise-39}
 df %>%
   group_by(g) %>%
   summarise(
@@ -412,7 +412,7 @@ df %>%
 ```
 
 
-```{r}
+```{r colwise-40}
 df %>%
   group_by(g) %>%
   summarise(
@@ -422,7 +422,7 @@ df %>%
 
 
 
-```{r}
+```{r colwise-41}
 df %>%
   group_by(g) %>%
   summarise(
@@ -431,7 +431,7 @@ df %>%
 ```
 
 
-```{r}
+```{r colwise-42}
 mtcars %>%
   group_by(cyl) %>%
   summarise(
@@ -441,7 +441,7 @@ mtcars %>%
 
 
 
-```{r}
+```{r colwise-43}
 df %>%
   group_by(g) %>%
   mutate(across(everything(), ~ paste(cur_column(), round(.x, 2))))
@@ -449,7 +449,7 @@ df %>%
 
 
 
-```{r}
+```{r colwise-44}
 wt <- c(x = 0.2, y = 0.8)
 
 df %>%
@@ -461,7 +461,7 @@ df %>%
 ## 行方向操作
 
 数据框中向量de方向，事实上可以看做有两个方向，横着看是row-vector，竖着看是col-vector。
-```{r out.width = '100%', fig.align='left', echo = FALSE}
+```{r colwise-45, out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/vctr.png")
 ```
 
@@ -469,13 +469,13 @@ tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观�
 这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不同友好。比如
 
 ### 行方向上的统计
-```{r}
+```{r colwise-46}
 df <- tibble(id = letters[1:6], w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 df
 ```
 
 计算每行的均值，
-```{r}
+```{r colwise-47}
 df %>% mutate(avg = mean(c(w, x, y, z)))
 ```
 好像不对？为什么呢？
@@ -484,7 +484,7 @@ df %>% mutate(avg = mean(c(w, x, y, z)))
 
 
 - 按照tidy的方法
-```{r}
+```{r colwise-48}
 df %>%
   pivot_longer(
     cols = -id,
@@ -500,7 +500,7 @@ df %>%
 
 
 - 按照Jenny Bryan的方案，使用`purrr`宏包的`pmap_dbl`函数
-```{r}
+```{r colwise-49}
 library(purrr)
 df %>%
   mutate(r_mean = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
@@ -511,7 +511,7 @@ df %>%
 
 - `rowwise()`
 
-```{r}
+```{r colwise-50}
 df %>%
   rowwise() %>%
   mutate(avg = mean(c(w, x, y, z)))
@@ -522,7 +522,7 @@ df %>%
 
 - `rowwise() + c_across()`，现在dplyr 1.0终于给出了一个很好的解决方案
 
-```{r}
+```{r colwise-51}
 df %>%
   rowwise() %>%
   mutate(
@@ -532,7 +532,7 @@ df %>%
 
 这个很好的解决方案中，`rowwise()`工作原理类似与`group_by()`，是按每一行进行分组，然后按行（行方向）统计
 
-```{r}
+```{r colwise-52}
 df %>%
   rowwise(id) %>%
   mutate(total = mean(c_across(w:z)))
@@ -553,7 +553,7 @@ df %>%
 
 因此，我们可以总结成下面这张图
 
-```{r out.width = '100%', fig.align='left', echo = FALSE}
+```{r colwise-53, out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/colwise_vs_rowwise.jpg")
 ```
 
@@ -562,19 +562,19 @@ knitr::include_graphics(path = "images/colwise_vs_rowwise.jpg")
 `rowwise()`不仅仅用于计算行方向均值这样的简单统计，而是当处理**列表列**时，方才显示出`rowwise()`与`purrr::map`一样的强大。那么，什么是**列表列**？
 **列表列**指的是数据框的一列是一个列表， 比如
 
-```{r}
+```{r colwise-54}
 tb <- tibble(
   x = list(1, 2:3, 4:6)
 )
 ```
 
 如果想显示列表中每个元素的长度，用purrr包，可以这样写
-```{r}
+```{r colwise-55}
 tb %>% mutate(l = purrr::map_int(x, length))
 ```
 
 如果从行方向的角度理解，其实很简练
-```{r}
+```{r colwise-56}
 tb %>%
   rowwise() %>%
   mutate(l = length(x))
@@ -584,14 +584,14 @@ tb %>%
 
 
 ### 行方向上的建模
-```{r}
+```{r colwise-57}
 mtcars <- mtcars %>% as_tibble()
 mtcars
 ```
 
 以cyl分组，计算每组中`mpg ~ wt`的线性模型的系数.
 
-```{r}
+```{r colwise-58}
 mtcars %>%
   group_by(cyl) %>%
   nest()
@@ -602,7 +602,7 @@ mtcars %>%
 
 分组建模后，形成**列表列**，此时列表中的每个元素对应一个模型，我们需要依次提取每次模型的系数，列方向的做法是，借用`purrr::map`完成列表中每个模型的迭代，
 
-```{r}
+```{r colwise-59}
 mtcars %>%
   group_by(cyl) %>%
   nest() %>%
@@ -621,7 +621,7 @@ mtcars %>%
 事实上，分组建模后，形成**列表列**，这种存储格式，天然地符合**行处理的范式**，因此一开始就使用行方向分组（这里`nest_by()` 类似于 `group_by()`）
 
 
-```{r}
+```{r colwise-60}
 mtcars %>%
   nest_by(cyl) %>%
   mutate(model = list(lm(mpg ~ wt, data = data))) %>%
@@ -629,7 +629,7 @@ mtcars %>%
 ```
 
 
-```{r}
+```{r colwise-61}
 # or
 mtcars %>%
   nest_by(cyl) %>%
@@ -640,7 +640,7 @@ mtcars %>%
 
 
 至此，tidyverse框架下，实现分组统计中的`数据框进，数据框输出`， 现在有四种方法了
-```{r,eval = FALSE}
+```{r colwise-62,eval = FALSE}
 mtcars %>%
   group_nest(cyl) %>%
   mutate(model = purrr::map(data, ~ lm(mpg ~ wt, data = .))) %>%
@@ -689,12 +689,12 @@ mtcars %>%
 
 
 
-```{r, echo = F}
+```{r colwise-63, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(df, my_quantile, std, tb, wt)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r colwise-64, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

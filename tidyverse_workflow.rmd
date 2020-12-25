@@ -1,6 +1,6 @@
 # 回望tidyverse之旅 {#workflow}
 
-```{r}
+```{r tidyverse-workflow-1}
 library(tidyverse)
 ```
 
@@ -9,7 +9,7 @@ library(tidyverse)
 本章做个小结，通过案例**复习和串讲**下tidyverse中常用的核心部件（事实上，tidyverse套餐比我们列出的要丰富）。
 
 
-```{r, out.width='100%', fig.cap = "图片来源Silvia Canelón在R-Ladies Chicago的报告", echo=FALSE}
+```{r tidyverse-workflow-2, out.width='100%', fig.cap = "图片来源Silvia Canelón在R-Ladies Chicago的报�<U+383C><U+3E61>", echo=FALSE}
 knitr::include_graphics("images/tidyverse-workflow.png")
 ```
 
@@ -17,13 +17,13 @@ knitr::include_graphics("images/tidyverse-workflow.png")
 
 
 ## readr 宏包
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-3, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/readr.png")
 ```
 
 读入数据是第一步，我们可以用`readr`导入数据
 
-```{block, type="danger"}
+```{block tidyverse-workflow-4, type="danger"}
 提示：
 
 - 逗号(`,`)分割的文件 `read_csv()`
@@ -38,27 +38,27 @@ knitr::include_graphics("images/hex/readr.png")
 
 
 读取外部数据
-```{r}
+```{r tidyverse-workflow-5}
 penguins <- read_csv("./demo_data/penguins.csv") 
 ```
 
 
 保存到外部文件
-```{r, eval=FALSE}
+```{r tidyverse-workflow-6, eval=FALSE}
 penguins %>% write_csv("newdata.csv")
 ```
 
 
 
 ## tibble 宏包
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-7, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/tibble.png")
 ```
 
 `tibble` 是升级版的 `dataframe`, 之所以是升级版，是因为在`tidyverse`中`tibble`做很多优化。下面你可以看到两者的区别：
 
 
-```{r}
+```{r tidyverse-workflow-8}
 as_tibble(penguins)
 as.data.frame(penguins) %>% head()
 ```
@@ -73,7 +73,7 @@ as.data.frame(penguins) %>% head()
 
 
 ## ggplot2 宏包
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-9, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/ggplot2.png")
 ```
 
@@ -82,14 +82,14 @@ knitr::include_graphics("images/hex/ggplot2.png")
 ### 查看数据
 
 我们先查看下数据
-```{r}
+```{r tidyverse-workflow-10}
 glimpse(penguins)
 ```
 
 ### 散点图
 
 体重在性别上有很大区别？
-```{r}
+```{r tidyverse-workflow-11}
 ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
   geom_point()
 ```
@@ -97,13 +97,13 @@ ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
 
 ### 箱线图
 
-```{r}
+```{r tidyverse-workflow-12}
 ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
   geom_boxplot()
 ```
 
 
-```{r}
+```{r tidyverse-workflow-13}
 ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
   geom_boxplot(aes(fill = species))
 ```
@@ -121,7 +121,7 @@ ggplot(data = penguins, aes(x = sex, y = body_mass_g)) +
 
 
 ## dplyr 宏包
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-14, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/dplyr.png")
 ```
 
@@ -142,12 +142,12 @@ dplyr 宏包可以:
 
 下面两个有什么区别？
 
-```{r}
+```{r tidyverse-workflow-15}
 select(penguins, species, sex, body_mass_g)
 ```
 
 
-```{r}
+```{r tidyverse-workflow-16}
 penguins %>%
   select(species, sex, body_mass_g)
 ```
@@ -156,12 +156,12 @@ penguins %>%
 
 ### 行方向排序
 
-```{r}
+```{r tidyverse-workflow-17}
 glimpse(penguins)
 ```
 
 
-```{r}
+```{r tidyverse-workflow-18}
 penguins %>%
   select(species, sex, body_mass_g) %>%
   arrange(desc(body_mass_g))
@@ -171,7 +171,7 @@ penguins %>%
 
 ### 分组统计
 
-```{r}
+```{r tidyverse-workflow-19}
 penguins %>% 
   group_by(species, sex) %>%
   summarize(count = n())
@@ -180,7 +180,7 @@ penguins %>%
 
 ### 增加列
 
-```{r}
+```{r tidyverse-workflow-20}
 penguins %>% 
   group_by(species) %>%
   mutate(count_species = n()) %>%
@@ -193,7 +193,7 @@ penguins %>%
 
 ### 筛选
 
-```{r}
+```{r tidyverse-workflow-21}
 penguins %>% 
   group_by(species) %>%
   mutate(count_species = n()) %>%
@@ -209,7 +209,7 @@ penguins %>%
 
 ## forcats 宏包
 
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-22, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/forcats.png")
 ```
 
@@ -218,7 +218,7 @@ knitr::include_graphics("images/hex/forcats.png")
 
 对于不是因子型的变量，比如这里 `year` 是数值型变量，我们也可以通过 `factor()` 函数 将它转换成因子型变量。
 
-```{r}
+```{r tidyverse-workflow-23}
 penguins %>%
   mutate(year_factor = factor(year, levels = unique(year)))
 ```
@@ -226,7 +226,7 @@ penguins %>%
 
 我们保存到新的数据集中，再看看有什么变化
 
-```{r}
+```{r tidyverse-workflow-24}
 penguins_new <-
   penguins %>%
   mutate(year_factor = factor(year, levels = unique(year)))
@@ -235,7 +235,7 @@ penguins_new
 
 
 
-```{r}
+```{r tidyverse-workflow-25}
 class(penguins_new$year_factor)
 
 levels(penguins_new$year_factor)
@@ -246,7 +246,7 @@ levels(penguins_new$year_factor)
 
 ## stringr 宏包
 
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-26, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/stringr.png")
 ```
 
@@ -261,7 +261,7 @@ knitr::include_graphics("images/hex/stringr.png")
 
 ### 字符串转换
 
-```{r}
+```{r tidyverse-workflow-27}
 penguins %>%
   select(species, island) %>%
   mutate(ISLAND = str_to_upper(island))
@@ -269,7 +269,7 @@ penguins %>%
 
 ### 字符串合并
 
-```{r}
+```{r tidyverse-workflow-28}
 penguins %>%
   select(species, island) %>%
   mutate(ISLAND = str_to_upper(island)) %>%
@@ -281,7 +281,7 @@ penguins %>%
 
 ## tidyr 宏包
 
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-29, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/stringr.png")
 ```
 
@@ -290,7 +290,7 @@ knitr::include_graphics("images/hex/stringr.png")
 
 ### 长表格变宽表格
 
-```{r}
+```{r tidyverse-workflow-30}
 untidy_penguins <-
   penguins %>%
     pivot_wider(names_from = sex,
@@ -302,7 +302,7 @@ untidy_penguins
 ### 宽表格变长表格
 
 
-```{r}
+```{r tidyverse-workflow-31}
 untidy_penguins %>%
   pivot_longer(cols = male:`NA`, 
                names_to = "sex",
@@ -314,7 +314,7 @@ untidy_penguins %>%
 
 ## purrr 宏包
 
-```{r out.width='20%', fig.align='left', echo = FALSE}
+```{r tidyverse-workflow-32, out.width='20%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/hex/purrr.png")
 ```
 
@@ -322,12 +322,12 @@ knitr::include_graphics("images/hex/purrr.png")
 
 
 
-```{r}
+```{r tidyverse-workflow-33}
 penguins %>% map(~sum(is.na(.)))
 ```
 
 
-```{r}
+```{r tidyverse-workflow-34}
 penguins %>%
   group_nest(species) %>%
   mutate(model = purrr::map(data, ~ lm(bill_depth_mm ~ bill_length_mm, data = .))) %>%
@@ -337,13 +337,13 @@ penguins %>%
 
 
 
-```{r, echo = F}
+```{r tidyverse-workflow-35, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(penguins, penguins_new, untidy_penguins)
 ```
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidyverse-workflow-36, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

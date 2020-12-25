@@ -5,14 +5,14 @@
 
 ## 数据故事
 
-```{r out.width = '75%', echo = FALSE, fig.cap = "这是数据故事的地图"}
+```{r eda-ames-houseprice-1, out.width = '75%', echo = FALSE, fig.cap = "这是数据故事的地囑�<U+3E65>"}
 knitr::include_graphics("images/ames.png")
 ```
 
 
 这是一份**Ames**房屋[数据](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)，您可以把它想象为房屋中介推出的成都市武侯区、锦江区以及高新区等各区县的房屋信息
 
-```{r, message=FALSE, warning=FALSE}
+```{r eda-ames-houseprice-2, message=FALSE, warning=FALSE}
 library(tidyverse)
 ames <- read_csv("./demo_data/ames_houseprice.csv") %>% 
         janitor::clean_names()
@@ -25,7 +25,7 @@ glimpse(ames)
 
 
 感谢曾倬同学提供的解释说明文档
-```{r}
+```{r eda-ames-houseprice-3}
 explanation <- readxl::read_excel("./demo_data/ames_houseprice_explanation.xlsx")
 explanation %>% 
   knitr::kable()
@@ -52,7 +52,7 @@ explanation %>%
 
 ## 变量选取
 
-```{r}
+```{r eda-ames-houseprice-4}
 d <- ames %>% 
   select(sale_price, 
          lot_frontage,   # 建筑离街道的距离
@@ -72,7 +72,7 @@ d
 
 ## 缺失值处理
 
-```{r}
+```{r eda-ames-houseprice-5}
 d %>% 
   summarise(
     across(everything(), function(x) sum(is.na(x)) )
@@ -82,7 +82,7 @@ d %>%
 
 
 找出来看看
-```{r}
+```{r eda-ames-houseprice-6}
 d %>% 
   filter_all(
     any_vars(is.na(.))
@@ -90,7 +90,7 @@ d %>%
 ```
 
 
-```{r, eval=FALSE}
+```{r eda-ames-houseprice-7, eval=FALSE}
 library(visdat)
 
 d %>% vis_dat()
@@ -100,7 +100,7 @@ d %>% vis_dat()
 
 如果不选择`lot_frontage` 就不会有缺失值，如何选择，自己抉择
 
-```{r, eval=FALSE}
+```{r eda-ames-houseprice-8, eval=FALSE}
 d %>% 
   select(-lot_frontage) %>% 
   visdat::vis_dat()
@@ -108,13 +108,13 @@ d %>%
 
 
 我个人觉得这个变量很重要，所以还是保留，牺牲一点样本量吧
-```{r}
+```{r eda-ames-houseprice-9}
 d <- d %>% 
   drop_na()
 ```
 
 
-```{r, eval=FALSE}
+```{r eda-ames-houseprice-10, eval=FALSE}
 d %>% visdat::vis_dat()
 ```
 
@@ -127,7 +127,7 @@ d %>% visdat::vis_dat()
 
 - 标准化
 
-```{r}
+```{r eda-ames-houseprice-11}
 standard <- function(x) {
   (x - mean(x)) / sd(x)
 }
@@ -142,7 +142,7 @@ d %>%
 
 - 对数化
 
-```{r}
+```{r eda-ames-houseprice-12}
 d %>% 
   mutate(
     log_sale_price = log(sale_price)
@@ -150,7 +150,7 @@ d %>%
 ```
 
 
-```{r}
+```{r eda-ames-houseprice-13}
 d %>% 
   mutate(
     across(where(is.numeric), log),
@@ -163,14 +163,14 @@ d %>%
 
 选择哪一种，我们看图说话
 
-```{r}
+```{r eda-ames-houseprice-14}
 d %>% 
   ggplot(aes(x = sale_price)) +
   geom_density()
 ```
 
 
-```{r}
+```{r eda-ames-houseprice-15}
 d %>% 
   ggplot(aes(x = log(sale_price))) +
   geom_density()
@@ -179,7 +179,7 @@ d %>%
 
 
 我们选择对数化，并保存结果
-```{r}
+```{r eda-ames-houseprice-16}
 d <- d %>% 
   mutate(
     across(where(is.numeric), 
@@ -199,13 +199,13 @@ d <- d %>%
 
 ### 各区域的房屋价格均值
 
-```{r}
+```{r eda-ames-houseprice-17}
 d %>% count(neighborhood)
 ```
 
 
 
-```{r}
+```{r eda-ames-houseprice-18}
 d %>% 
   group_by(neighborhood) %>% 
   summarise(
@@ -235,7 +235,7 @@ d %>%
 
 ### 房屋价格与占地面积
 
-```{r}
+```{r eda-ames-houseprice-19}
 d %>%
   ggplot(aes(x = log_lot_area, y = log_sale_price)) +
   geom_point(colour = "blue") +
@@ -246,7 +246,7 @@ d %>%
 
 
 
-```{r}
+```{r eda-ames-houseprice-20}
 d %>%
   ggplot(aes(x = log_lot_area, y = log_sale_price)) +
   geom_point(aes(colour = neighborhood)) +
@@ -257,7 +257,7 @@ d %>%
 
 
 
-```{r}
+```{r eda-ames-houseprice-21}
 d %>%
   ggplot(aes(x = log_lot_area, y = log_sale_price)) +
   geom_point(colour = "blue") +
@@ -270,7 +270,7 @@ d %>%
 
 ### 房屋价格与房屋居住面积
 
-```{r}
+```{r eda-ames-houseprice-22}
 d %>%
   ggplot(aes(x = log_gr_liv_area, y = log_sale_price)) +
   geom_point(aes(colour = neighborhood)) +
@@ -278,7 +278,7 @@ d %>%
 ```
 
 
-```{r}
+```{r eda-ames-houseprice-23}
 d %>%
   ggplot(aes(x = log_gr_liv_area, y = log_sale_price)) +
   geom_point() +
@@ -291,13 +291,13 @@ d %>%
 
 ## 建模
 
-```{r}
+```{r eda-ames-houseprice-24}
 lm(log_sale_price ~ 1 + log_gr_liv_area + neighborhood, data = d) %>% 
   broom::tidy()
 ```
 
 
-```{r}
+```{r eda-ames-houseprice-25}
 library(lme4)
 lmer(log_sale_price ~ 1 + log_gr_liv_area + (log_gr_liv_area | neighborhood), 
     data = d) %>% 
@@ -306,7 +306,7 @@ lmer(log_sale_price ~ 1 + log_gr_liv_area + (log_gr_liv_area | neighborhood),
 
 
 
-```{r, echo = F}
+```{r eda-ames-houseprice-26, echo = F}
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 rm(ames, d, explanation)
@@ -314,6 +314,6 @@ rm(ames, d, explanation)
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-ames-houseprice-27, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

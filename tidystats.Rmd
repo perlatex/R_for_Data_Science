@@ -29,7 +29,7 @@
 从这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集，数据在课件首页下载。
 
 首先，我们下载后导入数据
-```{r message = FALSE, warning = FALSE}
+```{r tidystats-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 wages <- read_csv("./demo_data/wages.csv")
 
@@ -44,18 +44,18 @@ wages %>%
 
 ## 单因素方差分析
 
-```{r}
+```{r tidystats-2}
 t.test(earn ~ sex, data = wages)
 ```
 
 
-```{r}
+```{r tidystats-3}
 lm(earn ~ sex, data = wages) %>% 
   summary()
 ```
 
 
-```{r}
+```{r tidystats-4}
 aov(earn ~ sex, data = wages) %>% 
   summary()
 
@@ -71,7 +71,7 @@ aov(earn ~ sex, data = wages) %>%
 - dose : 抗坏血酸剂量 (0.5, 1, and 2 mg) 
 
 
-```{r message=FALSE, warning=FALSE}
+```{r tidystats-5, message=FALSE, warning=FALSE}
 library("ggpubr")
 my_data <- ToothGrowth %>%
   mutate_at(vars(supp, dose), ~ as_factor(.))
@@ -81,7 +81,7 @@ my_data %>% head()
 
 
 
-```{r}
+```{r tidystats-6}
 my_data %>%
   ggplot(aes(x = supp, y = len, fill = supp)) +
   geom_boxplot(position = position_dodge()) +
@@ -97,7 +97,7 @@ my_data %>%
 
 这里是两个解释变量，所以问题需要双因素方差分析 (ANOVA)
 
-```{r}
+```{r tidystats-7}
 aov(len ~ supp + dose, data = my_data) %>%
   broom::tidy()
 ```
@@ -105,7 +105,7 @@ aov(len ~ supp + dose, data = my_data) %>%
 
 检验表明不同类型之间存在显著差异，但是并没有告诉我们具体谁与谁之间的不同。需要多重比较帮助我们解决这个问题。使用`TurkeyHSD`函数
 
-```{r}
+```{r tidystats-8}
 aov(len ~ supp + dose, data = my_data) %>%
   TukeyHSD(which = "dose") %>%
   broom::tidy()
@@ -114,14 +114,14 @@ aov(len ~ supp + dose, data = my_data) %>%
 
 
 
-```{r}
+```{r tidystats-9}
 aov(len ~ supp + dose, data = my_data) %>%
   TukeyHSD(which = "supp") %>%
   broom::tidy()
 ```
 
 思考：交互效应是否显著？
-```{r}
+```{r tidystats-10}
 aov(len ~ supp * dose, data = my_data) %>%
   broom::tidy()
 ```
@@ -129,7 +129,7 @@ aov(len ~ supp * dose, data = my_data) %>%
 ## 在tidyverse中的应用
 
 我们也可以配合强大的tidyverse函数，完成不同分组下的方差分析，比如
-```{r}
+```{r tidystats-11}
 mtcars %>%
   group_by(cyl) %>%
   summarise(
@@ -144,13 +144,13 @@ mtcars %>%
 更多使用可参考第 \@ref(colwise) 章。
 
 
-```{r, echo = F}
+```{r tidystats-12, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(my_data, wages)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidystats-13, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

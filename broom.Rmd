@@ -5,7 +5,7 @@
 
 还是用第 \@ref(ggplot2-geom) 章的`gapminder`案例
 
-```{r}
+```{r broom-1}
 library(tidyverse)
 library(gapminder)
 gapminder
@@ -17,7 +17,7 @@ gapminder
 ### 可视化探索
 
 画个简单的图
-```{r}
+```{r broom-2}
 gapminder %>%
   ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
   geom_point(alpha = 0.2)
@@ -25,7 +25,7 @@ gapminder %>%
 
 我们想用**不同的模型**拟合`log(gdpPercap)`与`lifeExp`的关联
 
-```{r}
+```{r broom-3}
 library(colorspace)
 
 model_colors <- colorspace::qualitative_hcl(4, palette = "dark 2")
@@ -58,7 +58,7 @@ ggplot(
 ### 简单模型
 
 还是回到我们今天的主题。我们建立一个简单的线性模型
-```{r}
+```{r broom-4}
 out <- lm(
   formula = lifeExp ~ gdpPercap + pop + continent,
   data = gapminder
@@ -67,12 +67,12 @@ out
 ```
 
 
-```{r, eval=FALSE}
+```{r broom-5, eval=FALSE}
 str(out)
 ```
 
 
-```{r}
+```{r broom-6}
 summary(out)
 ```
 
@@ -83,7 +83,7 @@ knitr::include_graphics("images/lm-object-schematic.png")
 ```
 
 我们发现`out`对象包含了很多元素，比如系数、残差、模型残差自由度等等，用读取列表的方法可以直接读取
-```{r, eval=FALSE}
+```{r broom-7, eval=FALSE}
 out$coefficients
 out$residuals
 out$fitted.values
@@ -100,7 +100,7 @@ out$fitted.values
 为规整模型结果，这里我们推荐用[David Robinson](http://varianceexplained.org/about/) 开发的`broom`宏包。
 
 
-```{r message = FALSE, warning = FALSE}
+```{r broom-8, message = FALSE, warning = FALSE}
 library(broom)
 ```
 
@@ -118,13 +118,13 @@ library(broom)
 
 ### tidy
 
-```{r}
+```{r broom-9}
 tidy(out)
 ```
 
 
 
-```{r}
+```{r broom-10}
 out %>%
   tidy() %>%
   ggplot(mapping = aes(
@@ -137,14 +137,14 @@ out %>%
 
 
 可以很方便的获取系数的置信区间
-```{r}
+```{r broom-11}
 out %>%
   tidy(conf.int = TRUE)
 ```
 
 
 
-```{r}
+```{r broom-12}
 out %>%
   tidy(conf.int = TRUE) %>%
   filter(!term %in% c("(Intercept)")) %>%
@@ -166,12 +166,12 @@ out %>%
 `augment()`会返回一个数据框，这个数据框是在原始数据框的基础上，增加了模型的拟合值（`.fitted`）, 拟合值的标准误（`.se.fit`）, 残差（`.resid`）等列。
 
 
-```{r}
+```{r broom-13}
 augment(out)
 ```
 
 
-```{r}
+```{r broom-14}
 out %>%
   augment() %>%
   ggplot(mapping = aes(x = lifeExp, y = .fitted)) +
@@ -185,7 +185,7 @@ out %>%
 `glance()` 函数也会返回数据框，但这个数据框只有一行，内容实际上是`summary()`输出结果的最底下一行。
 
 
-```{r}
+```{r broom-15}
 glance(out)
 ```
 
@@ -195,7 +195,7 @@ glance(out)
 
 broom的三个主要函数在分组统计建模时，格外方便。
 
-```{r}
+```{r broom-16}
 penguins <-
   palmerpenguins::penguins %>%
   drop_na()
@@ -203,7 +203,7 @@ penguins <-
 
 
 
-```{r}
+```{r broom-17}
 penguins %>%
   group_nest(species) %>%
   mutate(model = purrr::map(data, ~ lm(bill_depth_mm ~ bill_length_mm, data = .))) %>%
@@ -213,7 +213,7 @@ penguins %>%
 
 
 
-```{r}
+```{r broom-18}
 fit_ols <- function(df) {
   lm(body_mass_g ~ bill_depth_mm + bill_length_mm, data = df)
 }
@@ -231,7 +231,7 @@ out_tidy
 
 
 
-```{r}
+```{r broom-19}
 out_tidy %>%
   ggplot(aes(
     x = species, y = estimate,
@@ -246,13 +246,13 @@ out_tidy %>%
 
 
 
-```{r, echo = F}
+```{r broom-20, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(out, out_tidy, penguins, model_colors, fit_ols)
 ```
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r broom-21, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

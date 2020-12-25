@@ -3,7 +3,7 @@
 # 模拟与抽样 {#sampling}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r sampling-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
@@ -18,7 +18,7 @@ library(tidyverse)
 ### 生成随机数
 
 比如生成5个高斯分布的随机数，高斯分布就是正态分布，R语言里我们用`rnorm()`函数产生正态分布的随机数
-```{r}
+```{r sampling-2}
 rnorm(n = 5, mean = 0, sd = 1)
 ```
 
@@ -40,7 +40,7 @@ rnorm(n = 5, mean = 0, sd = 1)
 - `r`:random 
 
 
-```{r}
+```{r sampling-3}
 dnorm(seq(0.1, 0.5, length.out = 10), mean = 0, sd = 1)
 ```
 
@@ -48,7 +48,7 @@ dnorm(seq(0.1, 0.5, length.out = 10), mean = 0, sd = 1)
 在tidyverse的框架下，我们喜欢在数据框(data.frame)下运用这些函数，因为这样我们可以方便使用ggplot2来可视化，
 
 - 例子1，我们生成100个正态分布的点，然后看看其分布
-```{r}
+```{r sampling-4}
 tibble(
   x = rnorm(n = 100, mean = 0, sd = 1)
 ) %>%
@@ -58,7 +58,7 @@ tibble(
 
 
 我们将模拟的正态分布和理论上正态分布画在一起
-```{r}
+```{r sampling-5}
 tibble(
   x = rnorm(n = 100, mean = 0, sd = 1)
 ) %>%
@@ -80,7 +80,7 @@ $$ y_i  = 4 + 3.2\, x_i$$
 现实中，观察值往往会带入误差，假定误差服从正态分布，那么$x$和$y$的线性关系重新表述为
 $$ y_i  = \beta_0 + \beta_1\, x_i + \epsilon_i, \quad \epsilon \in \text{Normal}(\mu =0, \sigma =1) $$
 
-```{r}
+```{r sampling-6}
 beta_0 <- 4
 beta_1 <- 3.2
 epsilon <- rnorm(n = 1000, mean = 0, sd = 1)
@@ -97,7 +97,7 @@ sim_normal %>% head()
 
 
 
-```{r}
+```{r sampling-7}
 sim_normal %>%
   ggplot(aes(x = x_vals, y = y_vals)) +
   geom_point()
@@ -105,7 +105,7 @@ sim_normal %>%
 
 
 有时候为了方便，可以写简练点
-```{r}
+```{r sampling-8}
 tibble(
   a = runif(1000, 0, 5),
   b = 4 + rnorm(1000, mean = 3.2 * a, sd = 1)
@@ -126,7 +126,7 @@ tibble(
 - `mu`: 多元高斯分布的均值向量
 - `Sigma`: 协方差矩阵，主要这里是大写的S (Sigma)，提醒我们它是一个矩阵，不是一个数值
 
-```{r}
+```{r sampling-9}
 a <- 3.5
 b <- -1
 sigma_a <- 1
@@ -139,7 +139,7 @@ cov_ab <- sigma_a * sigma_b * rho # 协方差
 
 
 
-```{r}
+```{r sampling-10}
 # 构建协方差矩阵
 sigma <- matrix(c(
   sigma_a^2, cov_ab,
@@ -149,7 +149,7 @@ sigma <- matrix(c(
 
 
 
-```{r}
+```{r sampling-11}
 d <- MASS::mvrnorm(1000, mu = mu, Sigma = sigma) %>%
   data.frame() %>%
   set_names("group_a", "group_b")
@@ -160,7 +160,7 @@ head(d)
 
 
 
-```{r}
+```{r sampling-12}
 d %>%
   ggplot(aes(x = group_a)) +
   geom_density(
@@ -176,7 +176,7 @@ d %>%
 ```
 
 
-```{r}
+```{r sampling-13}
 d %>%
   ggplot(aes(x = group_b)) +
   geom_density(
@@ -192,7 +192,7 @@ d %>%
 ```
 
 
-```{r}
+```{r sampling-14}
 d %>%
   ggplot(aes(x = group_a, y = group_b)) +
   geom_point() +
@@ -203,7 +203,7 @@ d %>%
 我们回头验算一下
 
 
-```{r}
+```{r sampling-15}
 d %>% summarise(
   a_mean = mean(group_a),
   b_mean = mean(group_b),
@@ -221,13 +221,13 @@ d %>% summarise(
 这是我研究生时候老师布置的一个的题目，当时我用的是C语言代码，现在我们有强大的tidyverse
 
 
-```{r out.width = '50%', fig.align='left', echo = FALSE}
+```{r sampling-16, out.width = '50%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/pi.jpg")
 ```
 
 
 
-```{r}
+```{r sampling-17}
 set.seed(2019)
 
 n <- 50000
@@ -238,7 +238,7 @@ points <- tibble("x" = runif(n), "y" = runif(n))
 
 
 
-```{r}
+```{r sampling-18}
 points <- points %>%
   mutate(inside = map2_dbl(.x = x, .y = y, ~ if_else(.x**2 + .y**2 < 1, 1, 0))) %>%
   rowid_to_column("N")
@@ -246,17 +246,17 @@ points <- points %>%
 
 正方形的面积是1，圆的面积是$\pi r^2 = \frac{1}{4} \pi$，如果知道两者的比例，就可以估算$\pi$
 
-```{r}
+```{r sampling-19}
 points <- points %>%
   mutate(estimate = 4 * cumsum(inside) / N)
 ```
 
-```{r}
+```{r sampling-20}
 points %>% tail()
 ```
 
 
-```{r}
+```{r sampling-21}
 points %>%
   ggplot() +
   geom_line(aes(y = estimate, x = N), colour = "#82518c") +
@@ -269,14 +269,14 @@ points %>%
 
 ### 总体分布
 假定一个事实，川师男生总体的平均身高和身高的标准差分别为
-```{r}
+```{r sampling-22}
 true.mean <- 175.7
 true.sd <- 15.19
 ```
 
 那么我们可以模拟分布情况如下
 
-```{r}
+```{r sampling-23}
 pop.distn <-
   tibble(
     height = seq(100, 250, 0.5),
@@ -309,14 +309,14 @@ ggplot(pop.distn) +
 ### 样本
 假定我们从中抽取30个男生身高样本
 
-```{r}
+```{r sampling-24}
 sample.a <-
   tibble(height = rnorm(n = 30, mean = true.mean, sd = true.sd))
 ```
 
 然后看看样本的直方图
 
-```{r}
+```{r sampling-25}
 sample.a %>%
   ggplot(aes(x = height)) +
   geom_histogram(aes(y = stat(density)),
@@ -335,7 +335,7 @@ sample.a %>%
 
 红色的虚线代表分布的总体的均值，黑色实线代表30个样本的均值，
 
-```{r}
+```{r sampling-26}
 sample.a %>%
   summarize(
     sample.mean = mean(height),
@@ -347,13 +347,13 @@ sample.a %>%
 
 可能有同学说，这个样本太少了，计算的均值还不够科学，会以偏概全。于是又重新找了30个男生，和上次类似，用`rnorm`函数模拟，我们记为样本b
 
-```{r}
+```{r sampling-27}
 sample.b <-
   tibble(height = rnorm(30, mean = true.mean, sd = true.sd))
 ```
 
 再来看看这次样本的分布
-```{r}
+```{r sampling-28}
 sample.b %>%
   ggplot(aes(x = height)) +
   geom_histogram(aes(y = stat(density)),
@@ -369,7 +369,7 @@ sample.b %>%
 
 同样，我们计算样本b的均值和方差
 
-```{r}
+```{r sampling-29}
 sample.b %>%
   summarize(
     sample.mean = mean(height),
@@ -383,7 +383,7 @@ sample.b %>%
 和样本a比，有一点点变化。不经想问，我能否继续抽样呢？结果会有变化吗？为了避免重复写代码
 ，我把上面的过程整合到一起，写一个**子函数**，专门模拟抽样过程
 
-```{r}
+```{r sampling-30}
 rnorm.stats <- function(n, mu, sigma) {
   the.sample <- rnorm(n, mu, sigma)
   tibble(
@@ -395,12 +395,12 @@ rnorm.stats <- function(n, mu, sigma) {
 ```
 
 于是，我们又可以继续模拟了。注意我们之前设定的总体分布的均值和方差
-```{r, eval= FALSE}
+```{r sampling-31, eval= FALSE}
 true.mean <- 175.7
 true.sd <- 15.19
 ```
 
-```{r}
+```{r sampling-32}
 rnorm.stats(30, true.mean, true.sd)
 ```
 yes，代码工作的很好，但不过只是代码减少了一点点，仍然只是一次抽样（这里30个样本为一次抽样），**我们的目的是反复抽样**， 抽很多次的那种喔。
@@ -408,13 +408,13 @@ yes，代码工作的很好，但不过只是代码减少了一点点，仍然�
 
 那我们用`purrr`包的`rerun`函数偷个懒，
 
-```{r}
+```{r sampling-33}
 df.samples.of.30 <-
   purrr::rerun(2500, rnorm.stats(30, true.mean, true.sd)) %>%
   dplyr::bind_rows()
 ```
 哇，一下子抽了2500个样本,全部装进了`df.sample.of.30`这个数据框， 偷偷看一眼呢
-```{r}
+```{r sampling-34}
 df.samples.of.30 %>% head()
 ```
 
@@ -427,7 +427,7 @@ df.samples.of.30 %>% head()
  
  
 我们发现每次抽样的均值都不一样，感觉又像一个分布(抽样的均值分布)，我们画出来看看吧
-```{r}
+```{r sampling-35}
 df.samples.of.30 %>%
   ggplot(aes(x = sample.mean, y = stat(density))) +
   geom_histogram(bins = 25, fill = "firebrick", alpha = 0.5) +
@@ -442,7 +442,7 @@ df.samples.of.30 %>%
 为了更清楚的说明，我们把**整体的分布(灰色曲线)、样本a（蓝色直方图）、抽样的均值分布（红色直方图）**三者画在一起。
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r sampling-36, message=FALSE, warning=FALSE}
 df.samples.of.30 %>%
   ggplot(aes(x = sample.mean, y = stat(density))) +
   geom_histogram(bins = 50, fill = "firebrick", alpha = 0.5) +
@@ -461,7 +461,7 @@ df.samples.of.30 %>%
 然而，注意到，必须限定再次抽样的大小仍然是30个男生，以上这句话才成立。
 
 
-```{r}
+```{r sampling-37}
 df.samples.of.30 %>%
   summarize(
     mean.of.means = mean(sample.mean),
@@ -470,7 +470,7 @@ df.samples.of.30 %>%
 ```
 
 这里计算的是抽样(样本大小为30)均值分布，而不是整体的均值分布。言外之意，样本大小可以是其它的呗， 那就把样本调整为50、100、250、500分别试试看
-```{r}
+```{r sampling-38}
 df.samples.of.50 <-
   rerun(2500, rnorm.stats(50, true.mean, true.sd)) %>%
   bind_rows()
@@ -488,7 +488,7 @@ df.samples.of.500 <-
   bind_rows()
 ```
 忍不住想画图看看，每次抽取的男生数量不同，均值的分布会有不同？
-```{r}
+```{r sampling-39}
 df.combined <-
   bind_rows(
     df.samples.of.30,
@@ -501,7 +501,7 @@ df.combined <-
 ```
 
 
-```{r, fig.width = 10, fig.asp= 0.3}
+```{r sampling-40, fig.width = 10, fig.asp= 0.3}
 df.combined %>%
   ggplot(aes(x = sample.mean, y = stat(density), fill = sample.sz)) +
   geom_histogram(bins = 25, alpha = 0.5) +
@@ -516,7 +516,7 @@ df.combined %>%
 
 随着样本大小由30增加到500，抽样的均值分布围绕着越来越聚合到实际的均值，或者说随着样本大小的增多，对均值估计的不确定性越小。 
 
-```{r}
+```{r sampling-41}
 sampling.distn.mean.table <-
   df.combined %>%
   group_by(sample.size) %>%
@@ -545,7 +545,7 @@ $$
 
 注意到这里的$\sigma$是总体的标准差，即最开始我们设定的川师男生身高的标准差`true.sd`. 也就说，理论上
 
-```{r}
+```{r sampling-42}
 df.se.mean.theory <- tibble(
   sample.size = seq(10, 500, 10)
 ) %>%
@@ -556,7 +556,7 @@ df.se.mean.theory
 
 
 
-```{r}
+```{r sampling-43}
 sampling.distn.mean.table %>%
   ggplot(aes(x = sample.size, y = sd.of.means)) +
   geom_point() +
@@ -578,7 +578,7 @@ sampling.distn.mean.table %>%
 
 
 
-```{r}
+```{r sampling-44}
 sampling.distn.sd.table <-
   df.combined %>%
   group_by(sample.size) %>%
@@ -608,7 +608,7 @@ sampling.distn.sd.table
 
 
 
-```{r, echo = F}
+```{r sampling-45, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(
@@ -630,6 +630,6 @@ rm(
 )
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r sampling-46, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

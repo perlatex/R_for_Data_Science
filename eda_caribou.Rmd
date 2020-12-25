@@ -4,7 +4,7 @@
 
 ## 驯鹿位置跟踪
 
-```{r, out.width='85%', fig.align='left', echo=FALSE}
+```{r eda-caribou-1, out.width='85%', fig.align='left', echo=FALSE}
 knitr::include_graphics("images/caribou_location.png")
 ```
 
@@ -12,7 +12,7 @@ knitr::include_graphics("images/caribou_location.png")
 大家可以在[这里](https://github.com/tacookson/data/tree/master/caribou-location-tracking)了解数据集的信息，它包含了两个数据集
 
 
-```{r, eval=FALSE}
+```{r eda-caribou-2, eval=FALSE}
 # devtools::install_github("thebioengineer/tidytuesdayR")
 library(tidytuesdayR)
 
@@ -23,7 +23,7 @@ tuesdata <- tidytuesdayR::tt_load("2020-06-23")
 
 
 
-```{r message=FALSE, warning=FALSE}
+```{r eda-caribou-3, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(lubridate)
 library(gganimate)
@@ -35,24 +35,24 @@ locations <- readr::read_csv("./demo_data/caribou/locations.csv")
 
 ## 驯鹿的身份信息
 
-```{r}
+```{r eda-caribou-4}
 individuals %>% glimpse()
 ```
 
 
-```{r}
+```{r eda-caribou-5}
 individuals %>% count(animal_id)
 ```
 
 
 我们发现有重复id的，怎么办？
-```{r}
+```{r eda-caribou-6}
 individuals %>% janitor::get_dupes(animal_id)
 ```
 
 
 
-```{r}
+```{r eda-caribou-7}
 individuals %>%
   filter(deploy_on_latitude > 50) %>%
   ggplot(aes(x = deploy_on_longitude, y = deploy_on_latitude)) +
@@ -73,7 +73,7 @@ individuals %>%
 
 
 
-```{r}
+```{r eda-caribou-8}
 locations %>%
   ggplot(aes(x = longitude, y = latitude)) +
   geom_point(aes(color = study_site))
@@ -83,7 +83,7 @@ locations %>%
 
 ## 被追踪最多次的驯鹿的轨迹
 
-```{r}
+```{r eda-caribou-9}
 top_animal_ids <-
   count(locations, animal_id, sort = TRUE) %>%
   slice(1:10) %>%
@@ -124,7 +124,7 @@ locations %>%
 
 
 ## 某一只驯鹿的轨迹
-```{r}
+```{r eda-caribou-10}
 locations %>%
   dplyr::filter(animal_id %in% c("QU_car143")) %>%
   dplyr::arrange(animal_id, timestamp) %>%
@@ -160,7 +160,7 @@ locations %>%
 
 ## 选择某个驯鹿，查看他的活动轨迹
 
-```{r}
+```{r eda-caribou-11}
 example_animal <- locations %>%
   dplyr::filter(animal_id == sample(animal_id, 1)) %>%
   dplyr::arrange(timestamp)
@@ -168,20 +168,20 @@ example_animal
 ```
 
 
-```{r, eval=FALSE}
+```{r eda-caribou-12, eval=FALSE}
 "2010-03-28 21:00:44" %>% lubridate::as_date()
 "2010-03-28 21:00:44" %>% lubridate::as_datetime()
 "2010-03-28 21:00:44" %>% lubridate::quarter()
 ```
 
-```{r}
+```{r eda-caribou-13}
 example_animal %>%
   dplyr::mutate(date = lubridate::as_date(timestamp)) %>%
   ggplot(aes(x = longitude, y = latitude, color = date)) +
   geom_path()
 ```
 
-```{r}
+```{r eda-caribou-14}
 example_animal %>%
   dplyr::mutate(quarter = lubridate::quarter(timestamp) %>% as.factor()) %>%
   ggplot(aes(x = longitude, y = latitude, color = quarter)) +
@@ -194,7 +194,7 @@ example_animal %>%
 
 看看驯鹿夏季和冬季运动模式，这段代码来自gkaramanis
 
-```{r}
+```{r eda-caribou-15}
 movement <- locations %>%
   filter(study_site != "Hart Ranges") %>%
   mutate(
@@ -244,7 +244,7 @@ ggplot(movement) +
 
 ## 迁移速度
 
-```{r}
+```{r eda-caribou-16}
 location_with_speed <- locations %>%
   dplyr::group_by(animal_id) %>%
   dplyr::mutate(
@@ -262,7 +262,7 @@ location_with_speed
 ```
 
 
-```{r}
+```{r eda-caribou-17}
 location_with_speed %>%
   ggplot(aes(x = speed)) +
   geom_histogram() +
@@ -272,7 +272,7 @@ location_with_speed %>%
 
 ## 动态展示
 
-```{r, eval=FALSE}
+```{r eda-caribou-18, eval=FALSE}
 library(gganimate)
 
 example_animal %>%
@@ -285,7 +285,7 @@ example_animal %>%
 
 ## 更多
 
-```{r, eval=FALSE}
+```{r eda-caribou-19, eval=FALSE}
 df <- locations %>%
   dplyr::filter(
     study_site == "Graham",
@@ -310,7 +310,7 @@ df <- locations %>%
 ```
 
 
-```{r, eval=FALSE}
+```{r eda-caribou-20, eval=FALSE}
 p <- df %>%
   ggplot(aes(longitude_centroid, latitude_centroid, colour = animal_id)) +
   geom_point(size = 2) +
@@ -332,12 +332,12 @@ p
 
 
 
-```{r, echo = F}
+```{r eda-caribou-21, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(example_animal, individuals, location_with_speed, locations, movement, top_animal_ids)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-caribou-22, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

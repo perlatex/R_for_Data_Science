@@ -2,7 +2,7 @@
 
 本节课，是广义线性模型的延续
 
-```{r message = FALSE, warning = FALSE}
+```{r ordinal-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
@@ -27,17 +27,17 @@ library(tidyverse)
 
 教育代际传递。通俗点说子女的教育程度是否受到父母教育程度的影响。我这个案例思路参考了南京大学池彪的《教育人力资本的代际传递研究》硕士论文，这篇文章思路很清晰，建议大家可以看看。根据文中提供的数据来源，我们下载2016年的中国家庭追踪调查数据[CFPS](http://www.isss.pku.edu.cn/cfps/)，并整理了部分数据。
 
-```{r echo=FALSE, out.width = "90%"}
+```{r ordinal-2, echo=FALSE, out.width = "90%"}
 knitr::include_graphics(path = "images/variables.png")
 ```
 
 
-```{r}
+```{r ordinal-3}
 tb <- readr::read_rds("./demo_data/cfps.rds")
 head(tb)
 ```
 
-```{r}
+```{r ordinal-4}
 tb %>% count(edu)
 tb %>% count(edu_f)
 tb %>% count(edu_m)
@@ -45,7 +45,7 @@ tb %>% count(edu_m)
 
 
 为了方便处理，减少分类，我们将大专以及大专以上的都归为一类
-```{r}
+```{r ordinal-5}
 df <- tb %>%
   dplyr::mutate(
     across(
@@ -61,7 +61,7 @@ df
 看起很复杂？那我写简单点
 
 
-```{r}
+```{r ordinal-6}
 tb %>%
   dplyr::mutate(
     across(
@@ -73,7 +73,7 @@ tb %>%
 
 
 
-```{r}
+```{r ordinal-7}
 df %>% count(edu)
 df %>% count(edu_f)
 df %>% count(edu_m)
@@ -96,11 +96,11 @@ df %>% count(edu_m)
 
 
 多大比例选择门当户对?
-```{r}
+```{r ordinal-8}
 df
 ```
 
-```{r}
+```{r ordinal-9}
 df %>%
   dplyr::summarise(
     eq_n = sum(edu_m == edu_f),
@@ -109,7 +109,7 @@ df %>%
   dplyr::mutate(prop = eq_n / n)
 ```
 
-```{r}
+```{r ordinal-10}
 df %>%
   dplyr::count(edu_m, edu_f) %>%
   dplyr::group_by(edu_m) %>%
@@ -118,7 +118,7 @@ df %>%
 ```
 
 
-```{r}
+```{r ordinal-11}
 df %>%
   dplyr::count(edu_m, edu_f) %>%
   dplyr::group_by(edu_m) %>%
@@ -137,7 +137,7 @@ df %>%
 
 
 ### 母亲的教育程度对子女的影响
-```{r, fig.showtext= TRUE}
+```{r ordinal-12, fig.showtext= TRUE}
 library(ggridges)
 df %>%
   dplyr::mutate(
@@ -178,7 +178,7 @@ $$logit (P(Y \le j)) = \alpha_{j} + \beta_{1}x_1 + \beta_{2}x_2 $$
 $\alpha$ 是截距 $\beta$ 是回归系数，注意到有序分类 logistic 回归模型中就有 $J-1$ 个 logit 模型。对于每个模型，系数是相同的，截距不同。下面我们通过代码来演示
 
 
-```{r}
+```{r ordinal-13}
 library(MASS)
 df1 <- df %>%
   dplyr::mutate(
@@ -213,7 +213,7 @@ $$
 
 写起很麻烦，偷个懒吧
 
-```{r}
+```{r ordinal-14}
 library(equatiomatic)
 extract_eq(mod_mass, use_coefs = TRUE)
 ```
@@ -228,7 +228,7 @@ extract_eq(mod_mass, use_coefs = TRUE)
 
 先将系数转换成odds ratios(OR)
 
-```{r}
+```{r ordinal-15}
 coef(mod_mass) %>% exp()
 ```
 
@@ -241,7 +241,7 @@ coef(mod_mass) %>% exp()
 
 ### 边际效应
 
-```{r message=FALSE, warning=FALSE}
+```{r ordinal-16, message=FALSE, warning=FALSE}
 library(margins)
 # me_mass <- marginal_effects(mod_mass, variables = "sex")
 me_mass <- marginal_effects(mod_mass, variables = "edu_m")
@@ -258,7 +258,7 @@ me_mass %>%
 
 ### ordinal 包
 
-```{r}
+```{r ordinal-17}
 library(ordinal)
 mod_ordinal <- clm(edu ~ edu_f + edu_m + sex + num_siblings + urban,
   data = df1,
@@ -462,12 +462,12 @@ broom::tidy(mod_ordinal)
 
 
 
-```{r, echo = F}
+```{r ordinal-18, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(df, df1, me_mass, mod_mass, mod_ordinal, tb)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ordinal-19, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

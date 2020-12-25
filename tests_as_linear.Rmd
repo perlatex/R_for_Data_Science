@@ -12,7 +12,7 @@
 
 
 
-```{r out.width = '100%', echo = FALSE}
+```{r tests-as-linear-1, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/linear_tests_cheat_sheet.png")
 ```
 
@@ -29,7 +29,7 @@ knitr::include_graphics("images/linear_tests_cheat_sheet.png")
 也就说，相同的指标在不同的时期测了三次，目的是考察期间的干预措施对若干指标的影响。
 
 
-```{r}
+```{r tests-as-linear-2}
 library(tidyverse)
 library(knitr)
 library(kableExtra)
@@ -44,7 +44,7 @@ edata
 
 
 
-```{r}
+```{r tests-as-linear-3}
 glimpse(edata)
 ```
 
@@ -56,7 +56,7 @@ glimpse(edata)
 首先，我们想`检验`第一次测量的抑郁得分（depress1）的分布，是否明显偏离正态分布（均值为0），这里的零假设就是正态分布且均值为0； 备选假设就是均值不为0
 
 
-```{r}
+```{r tests-as-linear-4}
 # Run t-test
 model_1_t <- t.test(edata$depress1, mu = 0)
 model_1_t
@@ -67,7 +67,7 @@ model_1_t
 
 
 
-```{r}
+```{r tests-as-linear-5}
 edata %>%
   ggplot(aes(x = depress1)) +
   geom_density()
@@ -75,11 +75,11 @@ edata %>%
 
 先不管做这个假设有没有意义，我们用线性回归的方法做一遍，
 
-```{r}
+```{r tests-as-linear-6}
 t.test(depress1 ~ 1, data = edata)
 ```
 
-```{r}
+```{r tests-as-linear-7}
 # Run equivalent linear model
 model_1_lm <- lm(depress1 ~ 1, data = edata)
 summary(model_1_lm)
@@ -90,7 +90,7 @@ summary(model_1_lm)
 为了方便比较两个模型，我们通过`broom`宏包将两个结果规整在一起，发现两个模型的t-value, estimate 和p.value都是一样的，这与和[Jonas Kristoffer Lindeløv](https://lindeloev.github.io/tests-as-linear/)表中期望的一样。
 
 
-```{r}
+```{r tests-as-linear-8}
 library(broom)
 
 # tidy() gets model outputs we usually use to report our results
@@ -103,7 +103,7 @@ results <- bind_rows(model_1_t_tidy, model_1_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-9, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -117,7 +117,7 @@ kable(results) %>%
 
 
 
-```{r}
+```{r tests-as-linear-10}
 # run paired t-test testing depression from g1 against g2
 model_2_t <- t.test(edata$depress1, edata$depress3, paired = TRUE)
 model_2_t_tidy <- tidy(model_2_t) %>% mutate(model = "t.test(x, y, paired = TRUE")
@@ -126,14 +126,14 @@ model_2_t
 
 写成线性模型为`lm(depress1 - depress3 ~ 1)`，即先让两个变量相减，然后去做回归
 
-```{r}
+```{r tests-as-linear-11}
 # run linear model
 model_2_lm <- lm(depress1 - depress3 ~ 1, data = edata)
 model_2_lm_tidy <- tidy(model_2_lm) %>% mutate(model = "lm(y-x ~ 1)")
 summary(model_2_lm)
 ```
 
-```{r}
+```{r tests-as-linear-12}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_2_t_tidy, model_2_lm_tidy) %>%
   select(model, estimate, statistic, p.value)
@@ -142,7 +142,7 @@ results <- bind_rows(model_2_t_tidy, model_2_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-13, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -152,7 +152,7 @@ haha，通过这个等价的线性模型，我们似乎可以窥探到`配对样
 它`depress1` 和 `depress3`一一对应相减后得到新的一列，用新的一列做**单样本t检验**
 
 
-```{r}
+```{r tests-as-linear-14}
 # run paired t-test testing depression from g1 against g2
 model_2_t2 <- t.test(edata$depress1- edata$depress3)
 model_2_t2_tidy <- tidy(model_2_t2) %>% mutate(model = "t.test(x - y")
@@ -162,7 +162,7 @@ model_2_t2
 
 既然是原理这样，那么在回归模型之前，可以在数据框中用`depress1 - depress3`构建新的一列
 
-```{r}
+```{r tests-as-linear-15}
 # calculate the difference between baseline and tp3 depression
 edata <- edata %>%
   mutate(
@@ -175,7 +175,7 @@ model_2_lm2_tidy <- tidy(model_2_lm2) %>% mutate(model = "lm(delta ~ 1)")
 
 
 最后，把四个模型放在一起
-```{r}
+```{r tests-as-linear-16}
 # we combine the three model outputs, rowwise
 results <- bind_rows(model_2_t_tidy, model_2_t2_tidy) %>% 
   bind_rows(model_2_lm_tidy) %>%
@@ -186,7 +186,7 @@ results <- bind_rows(model_2_t_tidy, model_2_t2_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-17, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -202,7 +202,7 @@ kable(results) %>%
 
 
 
-```{r}
+```{r tests-as-linear-18}
 # Run correlation test
 model_3_cor <- cor.test(edata$depress3, edata$depress1, method = "pearson")
 model_3_cor_tidy <- tidy(model_3_cor) %>% mutate(model = "cor.test(x, y)")
@@ -210,7 +210,7 @@ model_3_cor
 ```
 
 
-```{r}
+```{r tests-as-linear-19}
 # Run equivalent linear model
 model_3_lm <- lm(depress3 ~ depress1, data = edata)
 model_3_lm_tidy <- tidy(model_3_lm) %>% mutate(model = "lm(y ~ x)")
@@ -218,7 +218,7 @@ summary(model_3_lm)
 ```
 
 
-```{r}
+```{r tests-as-linear-20}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_3_cor_tidy, model_3_lm_tidy) %>%
   select(model, term, estimate, statistic, p.value)
@@ -227,7 +227,7 @@ results <- bind_rows(model_3_cor_tidy, model_3_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-21, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -240,7 +240,7 @@ kable(results) %>%
 
 我们现在想看看两组（组1=技能提升组；组2=信心提升组）在第一次量表中`depress1`得分是否有显著区别？
 
-```{r eval=FALSE, include=FALSE}
+```{r tests-as-linear-22, eval=FALSE, include=FALSE}
 t.test(depress1 ~ group, data = edata) 
 
 a <- edata %>% filter(group == 1) %>% pull(depress1)
@@ -253,7 +253,7 @@ lm(depress1 ~ group, data = edata)
 
 
 
-```{r}
+```{r tests-as-linear-23}
 # Run one-way anova
 model_4_anova <- aov(depress1 ~ group, data = edata)
 model_4_anova_tidy <- tidy(model_4_anova) %>% mutate(model = "aov(y ~ factor(x))")
@@ -261,7 +261,7 @@ summary(model_4_anova)
 ```
 
 
-```{r}
+```{r tests-as-linear-24}
 # Run equivalent linear model
 model_4_lm <- lm(depress1 ~ group, data = edata)
 model_4_lm_tidy <- tidy(model_4_lm) %>% mutate(model = "lm(y ~ factor(x))")
@@ -269,7 +269,7 @@ summary(model_4_lm)
 ```
 
 
-```{r}
+```{r tests-as-linear-25}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_4_anova_tidy, model_4_lm_tidy) %>%
   select(model, term, estimate, statistic, p.value)
@@ -278,7 +278,7 @@ results <- bind_rows(model_4_anova_tidy, model_4_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-26, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -299,7 +299,7 @@ kable(results) %>%
 
 
 
-```{r}
+```{r tests-as-linear-27}
 # take the square root of the anova stat
 sqrt(model_4_anova_tidy$statistic[1])
 # same as stat from lm
@@ -319,7 +319,7 @@ model_4_anova_tidy$statistic[1]
 在上面的模型中增加`confid1`这个指标，考察信心得分是否会影响干预的成功？此时，模型有一个离散变量`group`，和一个连续变量`confid1`，这就需要用到协变量分析。
 
 
-```{r}
+```{r tests-as-linear-28}
 # Run one-way anova
 model_5_ancova <- aov(dep_slope ~ group + confid1, data = edata)
 model_5_ancova_tidy <- tidy(model_5_ancova) %>% mutate(model = "aov(y ~ x + z)")
@@ -327,7 +327,7 @@ summary(model_5_ancova)
 ```
 
 
-```{r}
+```{r tests-as-linear-29}
 # Run equivalent linear model
 model_5_lm <- lm(dep_slope ~ group + confid1, data = edata)
 model_5_lm_tidy <- tidy(model_5_lm) %>% mutate(model = "lm(y ~ x + z)")
@@ -336,7 +336,7 @@ summary(model_5_lm)
 
 
 
-```{r}
+```{r tests-as-linear-30}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_5_ancova_tidy, model_5_lm_tidy) %>%
   select(model, term, estimate, statistic, p.value)
@@ -344,7 +344,7 @@ results <- bind_rows(model_5_ancova_tidy, model_5_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-31, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -360,7 +360,7 @@ confidence 这个变量p.value都是0.56993。
 但`lm`是负的0.5758. 究其原因，可能是它们都很接近0，那么即使数学上很小的差别都会导致结果从0的一边跳到0的另一边。事实上，和单因素方差分析一样，我们将`lm`模型的confidence的统计值做平方计算，发现与`aov`的结果是一样样的
 
 
-```{r}
+```{r tests-as-linear-32}
 # or, square the lm stat
 model_5_lm_tidy$statistic[-1]^2
 # same as anova stat
@@ -374,7 +374,7 @@ model_5_ancova_tidy$statistic
 如果我们考察组内性别差异是否会导致depression的变化，那么就需要**双因素方差分析**，而且两个预测子之间还有相互作用项。
 
 
-```{r}
+```{r tests-as-linear-33}
 # Run anova
 model_6_anova <- aov(dep_slope ~ group * sex, data = edata)
 model_6_anova_tidy <- tidy(model_6_anova) %>% mutate(model = "aov(y ~ x * z)")
@@ -382,7 +382,7 @@ summary(model_6_anova)
 ```
 
 
-```{r}
+```{r tests-as-linear-34}
 # Run equivalent linear model
 model_6_lm <- lm(dep_slope ~ group * sex, data = edata)
 model_6_lm_tidy <- tidy(model_6_lm) %>% mutate(model = "lm(y ~ x * z)")
@@ -391,14 +391,14 @@ summary(model_6_lm)
 
 
 
-```{r}
+```{r tests-as-linear-35}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_6_anova_tidy, model_6_lm_tidy) %>%
   select(model, term, estimate, statistic, p.value)
 ```
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-36, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -414,7 +414,7 @@ kable(results) %>%
 最后，为了更好地演示`aov`与`lm`之间的等价性，给group弄成一个有多个水平（>2）的因子, 具体过程如下
 
 
-```{r}
+```{r tests-as-linear-37}
 edata_mock <- edata %>%
   # Add 2 to numeric version of groups
   mutate(group = as.numeric(group) + 2) %>%
@@ -427,7 +427,7 @@ edata_mock <- edata %>%
 
 数据没有改，只是复制了一遍，复制出来的数据，因子水平改为3和4， 那么新的数据edata_mock中，group就有四个因子水平（1，2，3，4）
 
-```{r}
+```{r tests-as-linear-38}
 # Run  anova
 model_7_anova <- aov(dep_slope ~ group * sex, data = edata_mock)
 model_7_anova_tidy <- tidy(model_7_anova) %>% mutate(model = "aov(y ~ x * z)")
@@ -435,14 +435,14 @@ summary(model_7_anova)
 ```
 
 
-```{r}
+```{r tests-as-linear-39}
 # Run equivalent linear model
 model_7_lm <- lm(dep_slope ~ group * sex, data = edata_mock)
 model_7_lm_tidy <- tidy(model_7_lm) %>% mutate(model = "lm(y ~ x * z)")
 summary(model_7_lm)
 ```
 
-```{r}
+```{r tests-as-linear-40}
 # we combine the two model outputs, rowwise
 results <- bind_rows(model_7_anova_tidy, model_7_lm_tidy) %>%
   select(model, term, estimate, statistic, p.value)
@@ -452,7 +452,7 @@ results <- bind_rows(model_7_anova_tidy, model_7_lm_tidy) %>%
 
 
 
-```{r, echo = FALSE}
+```{r tests-as-linear-41, echo = FALSE}
 kable(results) %>%
   collapse_rows(1)
 ```
@@ -466,7 +466,7 @@ kable(results) %>%
 所以，相比于做统计检验，我倾向于线性模型，因为`lm()`除了给出变量作为整体是否对响应变量产生影响外，还提供了更多的因子之间的信息。
 
 
-```{r}
+```{r tests-as-linear-42}
 edata %>%
   mutate(`sex:group` = interaction(sex, group, sep = ":")) %>%
   ggplot(aes(
@@ -487,7 +487,7 @@ edata %>%
 
 
 
-```{r, echo = F}
+```{r tests-as-linear-43, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(edata, edata_mock, model_1_lm, model_1_lm_tidy, model_1_t, model_1_t_tidy, model_2_lm, model_2_lm_tidy, model_2_lm2, model_2_lm2_tidy, model_2_t, model_2_t_tidy, model_2_t2, model_2_t2_tidy, model_3_cor, model_3_cor_tidy, model_3_lm, model_3_lm_tidy, model_4_anova, model_4_anova_tidy, model_4_lm, model_4_lm_tidy, model_5_ancova, model_5_ancova_tidy, model_5_lm, model_5_lm_tidy, model_6_anova, model_6_anova_tidy, model_6_lm, model_6_lm_tidy, model_7_anova, model_7_anova_tidy, model_7_lm, model_7_lm_tidy, results)
@@ -495,6 +495,6 @@ rm(edata, edata_mock, model_1_lm, model_1_lm_tidy, model_1_t, model_1_t_tidy, mo
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tests-as-linear-44, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

@@ -1,7 +1,7 @@
 # 科研数据可视化 {#ggplot2-academic}
 
 
-```{r echo = FALSE, message = FALSE}
+```{r ggplot2-academic-1, echo = FALSE, message = FALSE}
 library(tidyverse)
 library(ggridges)
 library(cowplot)
@@ -11,7 +11,7 @@ library(cowplot)
 ## 统计分布图
 
 在学术中，很多情形我们都需要画出统计分布图。比如，围绕天气温度数据(美国内布拉斯加州东部，林肯市， 2016年)，我们想看每个月份里气温的分布情况
-```{r}
+```{r ggplot2-academic-2}
 lincoln_df <- ggridges::lincoln_weather %>%
   mutate(
     month_short = fct_recode(
@@ -129,7 +129,7 @@ lincoln_box
 
 箱线图是1970年代统计学家发明的一种可视化方法，这种图可以很方便地用手工画出，所以当时很流行，现在计算机性能大大提升了，所以大家喜欢用视觉上更直观的**小提琴图**取代箱线图
 
-```{r out.width = '80%', echo = FALSE, fig.cap = '小提琴图示意图'}
+```{r ggplot2-academic-3, out.width = '80%', echo = FALSE, fig.cap = '小提琴图示意囑�<U+3E65>'}
 knitr::include_graphics("images/violin-schematic-1.png")
 ```
 
@@ -139,7 +139,7 @@ knitr::include_graphics("images/violin-schematic-1.png")
 
 
 
-```{r out.width = '100%', echo = FALSE, fig.cap= "图片来源：nature methods, VOL.11, NO.2, FEBRUARY 2014"}
+```{r ggplot2-academic-4, out.width = '100%', echo = FALSE, fig.cap= "图片来源：nature methods, VOL.11, NO.2, FEBRUARY 2014"}
 knitr::include_graphics("images/boxplot.png")
 ```
 
@@ -345,7 +345,7 @@ ggdraw(lincoln_final)
 
 
 
-```{r, echo = F}
+```{r ggplot2-academic-5, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(bandwidth, lincoln_base, lincoln_box, lincoln_df, lincoln_errbar, lincoln_final, lincoln_jitter, lincoln_points, lincoln_sina, lincoln_violin, temps, tmax, tmin, xax)
@@ -353,6 +353,6 @@ rm(bandwidth, lincoln_base, lincoln_box, lincoln_df, lincoln_errbar, lincoln_fin
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-academic-6, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

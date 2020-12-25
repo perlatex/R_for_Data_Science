@@ -1,7 +1,7 @@
 # 网络爬虫 {#rvest}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r rvest-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(rvest)
 library(sf)
@@ -9,7 +9,7 @@ library(sf)
 
 ## 链家网
 
-```{r}
+```{r rvest-2}
 urls <-	paste0("https://sh.lianjia.com/ershoufang/pg", seq_along(1:2))
 
 
@@ -41,7 +41,7 @@ scrape_house_info  <- function(url) {
 ```
 
 
-```{r}
+```{r rvest-3}
 tb <- urls %>% map_df(scrape_house_info)
 
 tb %>% 
@@ -53,7 +53,7 @@ tb %>%
 
 ## 猪肉价格
 
-```{r}
+```{r rvest-4}
 df_price <-
   read_html("https://hangqing.zhuwang.cc/shengzhu/20190905/407978.html") %>%
   html_node(".tabzj") %>%
@@ -71,7 +71,7 @@ df_price %>%
 
 
 
-```{r}
+```{r rvest-5}
 china <- st_read("./demo_data/chinamap_data/bou2_4p.shp") %>% 
   st_set_crs(4326) %>% 
   group_by(NAME) %>%
@@ -79,7 +79,7 @@ china <- st_read("./demo_data/chinamap_data/bou2_4p.shp") %>%
 ```
 
 
-```{r}
+```{r rvest-6}
 china_uni <- china %>% 
   mutate( NAME = iconv(NAME, "GBK", "UTF-8") ) %>% 
   mutate_at(vars(NAME), ~str_remove_all(., "自治区|回族|维吾尔|壮族") ) %>%
@@ -87,14 +87,14 @@ china_uni <- china %>%
 ```
 
 
-```{r}
+```{r rvest-7}
 df <- left_join(china_uni, df_price, by = c("NAME" = "name"))
 ```
 
 
 
 
-```{r,fig.width= 8, fig.height= 8, eval=FALSE}
+```{r rvest-8,fig.width= 8, fig.height= 8, eval=FALSE}
 ggplot(data = df) + 
   geom_sf( aes(fill = price_today < 28), show.legend = FALSE) + 
   geom_sf_text(aes(label = NAME),
@@ -113,14 +113,14 @@ ggplot(data = df) +
 
 
 
-```{r, echo = F}
+```{r rvest-9, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(df, china_uni, china, df_price, tb, scrape_house_info, urls)
 ```
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r rvest-10, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

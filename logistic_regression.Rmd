@@ -6,7 +6,7 @@
 
 假定这里有一组数据，包含学生GRE成绩和被录取的状态(admit = 1，就是被录取；admit = 0，没有被录取)
 
-```{r, message=FALSE, warning=FALSE}
+```{r logistic-regression-1, message=FALSE, warning=FALSE}
 library(tidyverse)
 gredata <- read_csv("demo_data/gredata.csv")
 gredata
@@ -29,7 +29,7 @@ $$
 
 按照上面表达式，用**glm**函数写代码，
 
-```{r}
+```{r logistic-regression-2}
 model_logit <- glm(admit ~ gre,
   data = gredata,
   family = binomial(link = "logit")
@@ -40,7 +40,7 @@ summary(model_logit)
 
 得到gre的系数是
 
-```{r}
+```{r logistic-regression-3}
 coef(model_logit)[2]
 ```
 
@@ -64,7 +64,7 @@ coef(model_logit)[2]
 
 模型给出**系数**（0.003582）事实上就是log-odds度量方式的结果，具体来说， 这里系数（0.003582）代表着： GRE考试成绩每增加1个单位，那么`log-odds(录取概率)`就会增加0.003582. （注意，不是录取概率增加0.003582，而是`log-odds(录取概率)`增加0.003582）
 
-```{r eval=FALSE, include=FALSE}
+```{r logistic-regression-4, eval=FALSE, include=FALSE}
 library(effects)
 
 effect_link <- Effect("gre", mod = model_logit)
@@ -77,7 +77,7 @@ plot(effect_link,
 
 为了更清楚的理解，我们把log-odds的结果与gre成绩画出来看看
 
-```{r}
+```{r logistic-regression-5}
 logit_log_odds <- broom::augment_columns(
   model_logit,
   data = gredata,
@@ -88,7 +88,7 @@ logit_log_odds <- broom::augment_columns(
 
 
 
-```{r}
+```{r logistic-regression-6}
 library(latex2exp)
 logit_log_odds %>% 
     ggplot(aes(x = gre, y = log_odds)) +
@@ -112,7 +112,7 @@ logit_log_odds %>%
 
 第二种odds scale度量方式可能要比第一种要好理解点，我们先求系数的指数，`exp(0.003582) = 1.003588`
 
-```{r}
+```{r logistic-regression-7}
 exp(0.003582)
 ```
 
@@ -127,7 +127,7 @@ exp(0.003582)
 
 同样，我们把`odds(录取概率)`的结果与GRE成绩画出来看看
 
-```{r}
+```{r logistic-regression-8}
 logit_odds <- broom::augment_columns(
   model_logit,
   data = gredata,
@@ -138,7 +138,7 @@ logit_odds <- broom::augment_columns(
 ```
 
 
-```{r}
+```{r logistic-regression-9}
 logit_odds %>% 
     ggplot(aes(x = gre, y = odds_ratio)) +
     geom_line(color = "#FB9E07", size = 2) +
@@ -162,7 +162,7 @@ logit_odds %>%
 
 第三种度量方式是概率度量(probability scale)，因为模型假定的是，GRE的分数与`log-odds(录取概率)`呈线性关系，那么很显然GRE的分数与`录取概率`就不可能是线性关系了，而是呈非线性关系。我们先看下非线性关系长什么样。
 
-```{r eval=FALSE, include=FALSE}
+```{r logistic-regression-10, eval=FALSE, include=FALSE}
 library(effects)
 
 effect_response <- Effect("gre", mod = model)
@@ -175,7 +175,7 @@ plot(effect_response,
 
 
 
-```{r}
+```{r logistic-regression-11}
 logit_probs <- broom::augment_columns(
   model_logit,
   data = gredata,
@@ -186,7 +186,7 @@ logit_probs <- broom::augment_columns(
 
 
 
-```{r}
+```{r logistic-regression-12}
 logit_probs %>% 
     ggplot(aes(x = gre, y = pred_prob)) +
     #geom_point(aes(x = gre, y = admit)) +
@@ -206,7 +206,7 @@ logit_probs %>%
 -   GRE分数800分左右，录取概率接近0.5；
 
 
-```{block, type="danger"}
+```{block logistic-regression-13, type="danger"}
 提请注意的是，以上三种度量的方式中：
 
 - `log_odds scale`，预测因子与`log_odds()`的关系是一个固定值，具有可加性
@@ -226,7 +226,7 @@ logit_probs %>%
 先认识下两个常用的函数`predict()`和`fitted()`.
 
 
-```{r}
+```{r logistic-regression-14}
 gredata %>%
   mutate(
     pred = predict(model_logit),
@@ -244,7 +244,7 @@ $$p = \exp(\alpha) / (1 + \exp(\alpha) )$$
 具体如下
 
 
-```{r}
+```{r logistic-regression-15}
 gredata %>%
   mutate(
     pred = predict(model_logit),
@@ -257,7 +257,7 @@ gredata %>%
 
 如果想让`predict()`也返回`录取概率`，也可以不用那么麻烦，事实上`predict`的`type = "response")` 选项已经为我们准备好了。
 
-```{r}
+```{r logistic-regression-16}
 gredata %>%
   mutate(
     pred = predict(model_logit, type = "response"),
@@ -269,7 +269,7 @@ gredata %>%
 
 有时候，我们需要对给定的GRE分数，用建立的模型**预测**被录取的概率
 
-```{r}
+```{r logistic-regression-17}
 newdata <- tibble(
   gre = c(550, 660, 700, 780)
 )
@@ -285,7 +285,7 @@ newdata
 - `type = "link"`，预测的是log_odds，实际上就是`coef(model_logit)[1] + gre * coef(model_logit)[2]`
 
 
-```{r}
+```{r logistic-regression-18}
 newdata %>% 
   mutate(
     pred_log_odds = predict(model_logit, newdata = newdata, type = "link"),
@@ -300,7 +300,7 @@ newdata %>%
 - `type = "response""`，预测的是probabilities， 实际上就是`exp(pred_log_odds) / (1 + exp(pred_log_odds) )`
 
 
-```{r}
+```{r logistic-regression-19}
 newdata %>% 
   mutate(
     pred_log_odds = predict(model_logit, newdata = newdata, type = "link")
@@ -316,7 +316,7 @@ newdata %>%
 - `type = "terms"`，返回一个矩阵，具体计算为：模型的**设计矩阵**中心化以后，与模型返回的系数相乘而得到的新矩阵^[https://stackoverflow.com/questions/37963904/what-does-predict-glm-type-terms-actually-do]。
 
 
-```{r}
+```{r logistic-regression-20}
 predict(model_logit, gredata, type = 'terms') %>% 
   as_tibble() %>% 
   head()
@@ -325,7 +325,7 @@ predict(model_logit, gredata, type = 'terms') %>%
 
 我们复盘一次
 
-```{r}
+```{r logistic-regression-21}
 X <- model.matrix(admit ~ gre, data = gredata)
 
 X %>% 
@@ -344,13 +344,13 @@ X %>%
 
 
 
-```{r, echo = F}
+```{r logistic-regression-22, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(gredata, logit_log_odds, logit_odds, logit_probs, model_logit, newdata, X)
 ```
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r logistic-regression-23, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

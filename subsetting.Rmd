@@ -18,65 +18,65 @@
 
 
 对于原子型向量，我们有至少四种选取子集的方法
-```{r}
+```{r subsetting-1}
 x <- c(1.1, 2.2, 3.3, 4.4, 5.5)
 ```
 
 
 - 正整数： 指定向量元素中的位置
-```{r}
+```{r subsetting-2}
 x[1]
 ```
 
-```{r}
+```{r subsetting-3}
 x[c(1,3)]
 ```
 
 
-```{r}
+```{r subsetting-4}
 x[c(3,1)]
 ```
 
 - 负整数：删除指定位置的元素
-```{r}
+```{r subsetting-5}
 x[-2]
 ```
 
-```{r}
+```{r subsetting-6}
 x[c(-3, -4)]
 ```
 
 
 - 逻辑向量：将`TRUE`对应位置的元素提取出来
-```{r}
+```{r subsetting-7}
 x[c(TRUE, FALSE, TRUE, FALSE, TRUE)]
 ```
 
 常用的一种情形；筛选出大于某个值的所有元素
-```{r}
+```{r subsetting-8}
 x > 3
 ```
 
-```{r}
+```{r subsetting-9}
 x[x > 3]
 ```
 
 
 - 如果是命名向量
-```{r}
+```{r subsetting-10}
 y <- c("a" =  11, "b" =  12, "c" =  13, "d" =  14)
 y
 ```
 
 我们可以用命名向量，返回其对应位置的向量
-```{r}
+```{r subsetting-11}
 y[c("d", "c", "a")]
 ```
 
 ## 列表
 
 对列表取子集，和向量的方法一样。使用 `[` 总是返回列表，
-```{r}
+```{r subsetting-12}
 l <- list("one" = c("a", "b", "c"), 
 		  "two" = c(1:5), 
 		  "three" = c(TRUE, FALSE)
@@ -84,22 +84,22 @@ l <- list("one" = c("a", "b", "c"),
 l
 ```
 
-```{r}
+```{r subsetting-13}
 l[1]
 ```
 
 
 如果想列表中的元素，需要使用 `[[`
-```{r}
+```{r subsetting-14}
 l[[1]]
 ```
 也可以使用其中的元素名，比如`[["one"]]`，
-```{r}
+```{r subsetting-15}
 l[["one"]]
 ```
 
 程序员觉得以上太麻烦了，要写太多的字符了，所以用`$`来简写
-```{r}
+```{r subsetting-16}
 l$one
 ```
 
@@ -111,17 +111,17 @@ l$one
  
 ## 矩阵
 
-```{r}
+```{r subsetting-17}
 a <- matrix(1:9, nrow = 3)
 a
 ```
 我们取第1行到第2行的2-3列，`[1:2, 2:3]`，中间以逗号分隔，于是得到一个新的矩阵
-```{r}
+```{r subsetting-18}
 a[1:2, 2:3]
 ```
 
 默认情况下, `[` 会将获取的数据，以尽可能低的维度形式呈现。比如
-```{r}
+```{r subsetting-19}
 a[1, 1:2]
 ```
 表示第1行的第1、2列，此时不是$1 \times 2$矩阵，而是包含了两个元素的向量。
@@ -136,21 +136,21 @@ a[1, 1:2]
 可以这样简写
 
 
-```{r}
+```{r subsetting-20}
 a[1:2, ]
 ```
 
 对于下面这种情况，想想，会输出什么
-```{r}
+```{r subsetting-21}
 a[ , ]
 ```
 可以再简化点？
-```{r}
+```{r subsetting-22}
 a[]
 ```
 
 是不是可以再简化点？
-```{r}
+```{r subsetting-23}
 a
 ```
 
@@ -161,45 +161,45 @@ a
 - 当选取数据框的某几列的时候，可以和list一样，指定元素位置，比如`df[1:2]`选取前两列 
 - 也可以像矩阵一样，使用行和列的标识选取，比如`df[1:3, ]`选取前三行的所有列
 
-```{r}
+```{r subsetting-24}
 df <- data.frame(x = 1:4,
 				 y = 4:1,
 				 z = c("a", "b", "c", "d")
 				 )
 df
 ```
-```{r}
+```{r subsetting-25}
 # Like a list
 df[c("x", "z")]
 ```
 
 
 
-```{r}
+```{r subsetting-26}
 # Like a matrix
 df[, c("x", "z")]
 ```
 
 
 也可以通过行和列的位置
-```{r}
+```{r subsetting-27}
 df[1:2]
 ```
 
 
-```{r}
+```{r subsetting-28}
 df[1:3, ]
 ```
 
 
 当遇到单行或单列的时候，也和矩阵一样，数据会降维
-```{r}
+```{r subsetting-29}
 df[, "x"]
 ```
 
 
 如果想避免降维，需要多写一句话
-```{r}
+```{r subsetting-30}
 df[, "x", drop = FALSE]
 ```
 这样输出的还是矩阵形式, 但程序员总是偷懒的，有时候我们也容易忘记写`drop = FALSE`，
@@ -211,7 +211,7 @@ df[, "x", drop = FALSE]
 
 tibble是增强型的data.frame，选取tibble的行或者列，即使遇到单行或者单列的时候，数据也不会降维，总是返回tibble，即仍然是数据框的形式。
 
-```{r}
+```{r subsetting-31}
 tb <- tibble::tibble(
   x = 1:4,
   y = 4:1,
@@ -221,12 +221,12 @@ tb
 ```
 
 
-```{r}
+```{r subsetting-32}
 tb["x"]
 ```
 
 
-```{r}
+```{r subsetting-33}
 tb[, "x"]
 ```
 除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)，我们会在第 \@ref(tibble) 章专门讲
@@ -240,29 +240,29 @@ tb[, "x"]
 - 对数据框，思考`df["x"]`， `df[["x"]]`， `df$x`三者的区别?
 - 如果`x`是一个矩阵，请问 `x[] <- 0` 和`x <- 0` 有什么区别？
 
-```{r, eval=FALSE}
+```{r subsetting-34, eval=FALSE}
 m <- matrix(1:9, nrow = 3)
 m
 ```
 
 
-```{r, eval=FALSE}
+```{r subsetting-35, eval=FALSE}
 diag(m)
 upper.tri(m, diag = FALSE)
 ```
 
 
-```{r, eval=FALSE}
+```{r subsetting-36, eval=FALSE}
 m[upper.tri(m, diag = FALSE)]
 ```
 
 
 
-```{r, echo = F}
+```{r subsetting-37, echo = F}
 # remove the objects
 rm(a, df, l, tb, x, y)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r subsetting-38, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

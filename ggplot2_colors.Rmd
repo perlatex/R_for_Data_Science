@@ -1,7 +1,7 @@
 # 数据可视化中的配色 {#ggplot2-colors}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r ggplot2-colors-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(palmerpenguins)
 ```
@@ -12,7 +12,7 @@ library(palmerpenguins)
 
 我个人比较喜欢[colorspace](http://colorspace.r-forge.r-project.org/articles/color_spaces.html)中的配色，今天我们就讲讲如何使用这个宏包！
 
-```{r}
+```{r ggplot2-colors-2}
 library(colorspace)    
 ```
 
@@ -20,7 +20,7 @@ library(colorspace)
 
 `colorspace` 宏包提供了三种类型的配色模板:
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-colors-3, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/hcl-palettes-principles.png")
 ```
 
@@ -33,21 +33,21 @@ knitr::include_graphics("images/hcl-palettes-principles.png")
 
 ## 配色模板
 
-```{r, out.width = '100%'}
+```{r ggplot2-colors-4, out.width = '100%'}
 hcl_palettes(plot = TRUE)
 ```
 
 ## 使用案例
 
 ggplot2默认
-```{r}
+```{r ggplot2-colors-5}
 penguins %>% 
    ggplot(aes(bill_length_mm, fill = species)) +
    geom_density(alpha = 0.6)
 ```
 
 手动修改
-```{r}
+```{r ggplot2-colors-6}
 penguins %>% 
    ggplot(aes(bill_length_mm, fill = species)) +
    geom_density(alpha = 0.6) +
@@ -59,7 +59,7 @@ penguins %>%
 
 
 模板配色
-```{r}
+```{r ggplot2-colors-7}
 penguins %>% 
    ggplot(aes(bill_length_mm, fill = species)) +
    geom_density(alpha = 0.6) +

@@ -11,7 +11,7 @@
 
 数据科学是综合了统计学、计算机科学和领域知识的交叉学科，其基本内容就是用数据的方法研究科学，用科学的方法研究数据（鄂维南院士）。2010年，Drew Conway画了一张数据科学的[韦恩图](https://www.kainos.com/my-experience-as-a-data-scientist)
 
-```{r out.width = '40%', fig.align='center', echo = FALSE}
+```{r intro-ds-1, out.width = '40%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/data_science.png", dpi = 300)
 ```
 
@@ -25,7 +25,7 @@ knitr::include_graphics("images/data_science.png", dpi = 300)
 
 -   1992年，新西兰奥克兰大学统计学教授 Ross Ihaka 和 Robert Gentleman，为了方便地给学生教授统计学课程，他们设计开发了R语言（他们名字的首字母都是R）。
 
-```{r echo=FALSE, fig.align='center', out.width = '100%'}
+```{r intro-ds-2, echo=FALSE, fig.align='center', out.width = '100%'}
 knitr::include_graphics("images/Rinventor.png")
 ```
 
@@ -45,7 +45,7 @@ knitr::include_graphics("images/Rinventor.png")
 
 官网定义：<https://www.r-project.org/>
 
-```{r echo=FALSE, out.width = '100%'}
+```{r intro-ds-3, echo=FALSE, out.width = '100%'}
 knitr::include_graphics("images/what_is_R.png")
 ```
 
@@ -60,7 +60,7 @@ R语言是用于统计分析、图形表示和报告的编程语言:
 
 ### R语言发展趋势
 
-```{r echo=FALSE, out.width = '100%'}
+```{r intro-ds-4, echo=FALSE, out.width = '100%'}
 knitr::include_graphics("images/tiobe-index.png")
 ```
 
@@ -74,7 +74,7 @@ knitr::include_graphics("images/tiobe-index.png")
 Awards，简称 COPSS 奖，被誉为统计学的诺贝尔奖）奖颁给 tidyverse的作者Hadley Wickham后，充分说明R语言得到了学术界的肯定和认可，我相信未来它在自然科学、社会科学和工业领域中的应用前景会非常光明。
 
 
-```{r echo=FALSE,  fig.align='center', out.width = '80%'}
+```{r intro-ds-5, echo=FALSE,  fig.align='center', out.width = '80%'}
 knitr::include_graphics("images/hadley-wickham.jpg")
 ```
 
@@ -89,7 +89,7 @@ knitr::include_graphics("images/hadley-wickham.jpg")
 ### 数据科学流程
 Hadley Wickham将[数据科学流程](https://r4ds.had.co.nz/)分解成6个环节
 
-```{r out.width = '80%', fig.align='center', echo = FALSE}
+```{r intro-ds-6, out.width = '80%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/data-science-explore.png")
 ```
 
@@ -98,7 +98,7 @@ knitr::include_graphics("images/data-science-explore.png")
 
 ### tidyverse家族
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r intro-ds-7, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/tidyverse.png")
 ```
 
@@ -129,14 +129,14 @@ knitr::include_graphics("images/tidyverse.png")
 
 
 看了这些代码，可能第一眼感觉是这样的
-```{r echo=FALSE, out.width = '70%', fig.cap='图片来自电影《降临》'}
+```{r intro-ds-8, echo=FALSE, out.width = '70%', fig.cap='图片来自电影《降临�<U+383C><U+3E62>'}
 knitr::include_graphics("images/arrival-movie.png")
 ```
 
 
 
 但我更希望这门课结束后，大家的感觉是这样的
-```{r echo=FALSE, out.width = '70%',fig.cap='图片来自美剧《权利的游戏》'}
+```{r intro-ds-9, echo=FALSE, out.width = '70%',fig.cap='图片来自美剧《权利的游戏�<U+383C><U+3E62>'}
 knitr::include_graphics("images/night_king.jpg")
 ```
 
@@ -147,7 +147,7 @@ knitr::include_graphics("images/night_king.jpg")
 
 ### 社会科学需要统计
 
-```{r echo=FALSE, fig.align='center', out.width = '70%'}
+```{r intro-ds-10, echo=FALSE, fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/social_science.jpg")
 ```
 
@@ -157,7 +157,7 @@ knitr::include_graphics("images/social_science.jpg")
 ### 社会科学需要可视化
 
 
-```{r echo=FALSE, out.width = '100%'}
+```{r intro-ds-11, echo=FALSE, out.width = '100%'}
 knitr::include_graphics("images/BBC-style-Plot.png")
 ```
 
@@ -167,13 +167,13 @@ knitr::include_graphics("images/BBC-style-Plot.png")
 
 ### 社会科学需要编程
 
-```{r eval=FALSE, include=FALSE}
+```{r intro-ds-12, eval=FALSE, include=FALSE}
 knitr::include_graphics("images/Coding-Lab.jpg")
 ```
 
 为什么不能用excel做数据分析？画个图说明下
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r intro-ds-13, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/R_Excel.png", dpi = 150)
 ```
 
@@ -186,7 +186,7 @@ knitr::include_graphics("images/R_Excel.png", dpi = 150)
 
 ### 社会科学需要可重复性
 
-```{r echo=FALSE, out.width = '60%'}
+```{r intro-ds-14, echo=FALSE, out.width = '60%'}
 #knitr::include_graphics("images/latex-tweak.gif")
 knitr::include_graphics("images/nature_editorial.png")
 ```
@@ -200,7 +200,7 @@ knitr::include_graphics("images/nature_editorial.png")
 
 2016年权威机构KDnuggets做过调研，显示数据科学领域最受欢迎的工具，是python和R两种语言
 
-```{r out.width = '60%', fig.align='center', echo = FALSE}
+```{r intro-ds-15, out.width = '60%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 ```
 
@@ -229,7 +229,7 @@ knitr::include_graphics("images/Languages02.jpg", dpi = 90)
 
 ### 一见钟情，还是相见恨晚？
 
-```{r echo=FALSE,  fig.align='center', out.width = '70%'}
+```{r intro-ds-16, echo=FALSE,  fig.align='center', out.width = '70%'}
 knitr::include_graphics("images/meme.png")
 ```
 

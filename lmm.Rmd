@@ -16,7 +16,7 @@
 
 一般情况下，不同的院系，制定教师收入的依据和标准可能是不同的。我们假定有一份大学教职员的收入清单，这个学校包括信息学院、外国语学院、社会政治学、生物学院、统计学院共五个机构，我们通过数据建模，探索这个学校的**薪酬制定规则**。
 
-```{r}
+```{r lmm-1}
 create_data <- function() {
   df <- tibble(
     ids = 1:100,
@@ -36,7 +36,7 @@ create_data <- function() {
 
 
 
-```{r}
+```{r lmm-2}
 library(tidyverse)
 library(lme4)
 library(modelr)
@@ -62,22 +62,22 @@ $$
 
 通过这个等式，可以计算出各个系数，即截距$\alpha$就是起薪，斜率$\beta$就是年度增长率。确定了斜率和截距，也就确定了每个教职员工的收入曲线。
 
-```{r}
+```{r lmm-3}
 # Model without respect to grouping
 m1 <- lm(salary ~ experience, data = df)
 m1
 ```
 
-```{r}
+```{r lmm-4}
 broom::tidy(m1)
 ```
 
 
-```{r}
+```{r lmm-5}
 df %>% modelr::add_predictions(m1)
 ```
 
-```{r}
+```{r lmm-6}
 # Model without respect to grouping
 df %>%
   add_predictions(m1) %>%
@@ -113,14 +113,14 @@ $$\hat{y_i} = \alpha_{j[i]} + \beta x_i$$
 
 
  
-```{r}
+```{r lmm-7}
 # Model with varying intercept
 m2 <- lmer(salary ~ experience + (1 | department), data = df)
 m2
 ```
 
 
-```{r}
+```{r lmm-8}
 broom.mixed::tidy(m2, effects = "fixed")
 broom.mixed::tidy(m2, effects = "ran_vals")
 ```
@@ -128,7 +128,7 @@ broom.mixed::tidy(m2, effects = "ran_vals")
 
 
 
-```{r}
+```{r lmm-9}
 df %>%
   add_predictions(m2) %>%
   ggplot(aes(
@@ -160,13 +160,13 @@ $$\hat{y_i} = \alpha + \beta_{j[i]}x_i$$
 这里，截距($\alpha$)对所有教师而言是固定不变的，而斜率($\beta$)会随学院不同而变化，5个学院对应着5个斜率。
 
 
-```{r}
+```{r lmm-10}
 # Model with varying slope
 m3 <- lmer(salary ~ experience + (0 + experience | department), data = df)
 m3
 ```
 
-```{r}
+```{r lmm-11}
 broom.mixed::tidy(m3, effects = "fixed")
 broom.mixed::tidy(m3, effects = "ran_vals")
 ```
@@ -175,7 +175,7 @@ broom.mixed::tidy(m3, effects = "ran_vals")
 
 
 
-```{r}
+```{r lmm-12}
 df %>%
   add_predictions(m3) %>%
   ggplot(aes(
@@ -211,13 +211,13 @@ $$\hat{y_i} = \alpha_{j[i]} + \beta_{j[i]}x_i$$
 
 
             
-```{r}
+```{r lmm-13}
 # Model with varying slope and intercept
 m4 <- lmer(salary ~ experience + (1 + experience | department), data = df)
 m4
 ```
 
-```{r}
+```{r lmm-14}
 broom.mixed::tidy(m4, effects = "fixed")
 broom.mixed::tidy(m4, effects = "ran_vals")
 ```
@@ -227,7 +227,7 @@ broom.mixed::tidy(m4, effects = "ran_vals")
 
 
 
-```{r}
+```{r lmm-15}
 df %>%
   add_predictions(m4) %>%
   ggplot(aes(
@@ -249,7 +249,7 @@ df %>%
 ### 提问
 问题：**薪酬制定规则四**中，不同的院系起薪不同，年度增长率也不同，我们得出了5组不同的截距和斜率，那么是不是可以等价为，**先按照院系分5组，然后各算各的截距和斜率**? 比如
 
-```{r}
+```{r lmm-16}
 df %>%
   group_by(department) %>%
   group_modify(
@@ -265,12 +265,12 @@ df %>%
 
 - 完全共享
  
-```{r}
+```{r lmm-17}
 broom::tidy(m1)
 ```
 
 
-```{r}
+```{r lmm-18}
 complete_pooling <-
   broom::tidy(m1) %>%
   dplyr::select(term, estimate) %>%
@@ -288,7 +288,7 @@ complete_pooling
 
 - 部分共享
 
-```{r, eval=FALSE}
+```{r lmm-19, eval=FALSE}
 fix_effect <- broom.mixed::tidy(m4, effects = "fixed")
 fix_effect
 fix_effect$estimate[1]
@@ -296,14 +296,14 @@ fix_effect$estimate[2]
 ```
 
 
-```{r, eval=FALSE}
+```{r lmm-20, eval=FALSE}
 var_effect <- broom.mixed::tidy(m4, effects = "ran_vals")
 var_effect
 ```
 
 
 
-```{r, eval=FALSE}
+```{r lmm-21, eval=FALSE}
 # random effects plus fixed effect parameters
 partial_pooling <- var_effect %>%
   dplyr::select(level, term, estimate) %>%
@@ -322,7 +322,7 @@ partial_pooling <- var_effect %>%
 partial_pooling
 ```
 
-```{r}
+```{r lmm-22}
 partial_pooling <-
   coef(m4)$department %>%
   tibble::rownames_to_column() %>%
@@ -338,7 +338,7 @@ partial_pooling
 
 - 不共享
 
-```{r}
+```{r lmm-23}
 no_pool <- df %>%
   dplyr::group_by(department) %>%
   dplyr::group_modify(
@@ -348,7 +348,7 @@ no_pool
 ```
 
 
-```{r}
+```{r lmm-24}
 un_pooling <- no_pool %>%
   dplyr::select(department, term, estimate) %>%
   tidyr::pivot_wider(
@@ -368,7 +368,7 @@ un_pooling
 
 ### 可视化 
 
-```{r}
+```{r lmm-25}
 library(ggrepel)
 
 un_pooling %>%
@@ -411,14 +411,14 @@ un_pooling %>%
 ## 更多
 
 - 解释模型的含义
-```{r, eval=FALSE}
+```{r lmm-26, eval=FALSE}
 lmer(salary ~ 1 + (0 + experience | department), data = df)
 # vs
 lmer(salary ~ 1 + experience + (0 + experience | department), data = df)
 ```
 
 
-```{r}
+```{r lmm-27}
 lmer(salary ~ 1 + (1 + experience | department), data = df)
 # vs
 lmer(salary ~ 1 + (1 | department) + (0 + experience | department), data = df)
@@ -428,12 +428,12 @@ lmer(salary ~ 1 + (1 | department) + (0 + experience | department), data = df)
 
 
 
-```{r, echo = F}
+```{r lmm-28, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(complete_pooling, create_data, df, m1, m2, m3, m4, no_pool, partial_pooling, un_pooling)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r lmm-29, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

@@ -3,7 +3,7 @@
 
 这是Nature期刊上的一篇文章[Nature. 2004 September 30; 431(7008)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173856/#SD2)，
 
-```{r out.width = '80%', fig.align='left', echo = FALSE}
+```{r eda-olympics-1, out.width = '80%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/ukmss-36386-f0001.jpg")
 ```
 
@@ -13,13 +13,13 @@ knitr::include_graphics(path = "images/ukmss-36386-f0001.jpg")
 
 
 ## 导入数据
-```{r message=FALSE, warning=FALSE}
+```{r eda-olympics-2, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(readxl)
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r eda-olympics-3, message=FALSE, warning=FALSE}
 d <- read_excel("./demo_data/olympics.xlsx")
 d
 ```
@@ -29,7 +29,7 @@ d
 
 我们先画图看看
 
-```{r, out.width = '100%'}
+```{r eda-olympics-4, out.width = '100%'}
 d %>%
   ggplot() +
   geom_point(aes(x = Olympic_year, y = Men_score), color = "blue") +
@@ -37,11 +37,11 @@ d %>%
 ```
 这样写也是可以的，只不过最好先tidy数据
 
-```{r out.width = '80%', fig.align='left', echo = FALSE}
+```{r eda-olympics-5, out.width = '80%', fig.align='left', echo = FALSE}
 knitr::include_graphics(path = "images/pivot.png")
 ```
 
-```{r}
+```{r eda-olympics-6}
 d1 <- d %>%
   pivot_longer(
     cols = -Olympic_year,
@@ -54,7 +54,7 @@ d1
 
 然后在画图
 
-```{r, out.width = '100%'}
+```{r eda-olympics-7, out.width = '100%'}
 d1 %>%
   ggplot(aes(x = Olympic_year, y = winning_time, color = sex)) +
   geom_point() +
@@ -84,7 +84,7 @@ $$
 (`lm(y ~ 1 + x,data = d)`, 要求得 $\alpha$和$\beta$，就是对应 1 和 x 前的系数)
 
 
-```{r}
+```{r eda-olympics-8}
 fit_1 <- lm(Men_score ~ 1 + Olympic_year, data = d)
 
 summary(fit_1)
@@ -92,7 +92,7 @@ summary(fit_1)
 
 
 
-```{r}
+```{r eda-olympics-9}
 fit_2 <- lm(Women_score ~ 1 + Olympic_year, data = d)
 
 summary(fit_2)
@@ -107,7 +107,7 @@ summary(fit_2)
 
 使用`predict()`完成预测
 
-```{r}
+```{r eda-olympics-10}
 df <- data.frame(Olympic_year = 2020)
 
 predict(fit_1, newdata = df)
@@ -117,7 +117,7 @@ predict(fit_1, newdata = df)
 
 为了图片中的一致，我们使用1900年到2252年(`seq(1900, 2252, by = 4)`)建立预测项，并整理到数据框里
 
-```{r}
+```{r eda-olympics-11}
 grid <- tibble(
   Olympic_year = as.numeric(seq(1900, 2252, by = 4))
 )
@@ -125,7 +125,7 @@ grid
 ```
 
 
-```{r}
+```{r eda-olympics-12}
 tb <- grid %>%
   mutate(
     Predict_Men = predict(fit_1, newdata = grid),
@@ -136,7 +136,7 @@ tb
 
 
 有时候我喜欢用`modelr::add_predictions()`函数实现相同的功能
-```{r}
+```{r eda-olympics-13}
 library(modelr)
 grid %>%
   add_predictions(fit_1, var = "Predict_Men") %>%
@@ -146,7 +146,7 @@ grid %>%
 
 ## 再次可视化
 
-```{r}
+```{r eda-olympics-14}
 tb1 <- tb %>%
   pivot_longer(
     cols = -Olympic_year,
@@ -157,7 +157,7 @@ tb1
 ```
 
 
-```{r, out.width = '100%'}
+```{r eda-olympics-15, out.width = '100%'}
 tb1 %>%
   ggplot(aes(
     x = Olympic_year,
@@ -197,11 +197,11 @@ tb1 %>%
 ## list_column
 
 这里是另外的一种方法
-```{r}
+```{r eda-olympics-16}
 library(modelr)
 ```
 
-```{r, out.width = '100%'}
+```{r eda-olympics-17, out.width = '100%'}
 d1 <- d %>%
   pivot_longer(
     cols = -Olympic_year,
@@ -271,12 +271,12 @@ tb4 %>%
 
 
 
-```{r, echo = F}
+```{r eda-olympics-18, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(d, d1, d2, df, fit_1, fit_2, fit_model, grid, tb, tb1, tb4)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-olympics-19, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

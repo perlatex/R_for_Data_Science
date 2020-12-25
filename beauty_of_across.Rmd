@@ -5,7 +5,7 @@ dplyr 1.0版本增加了`across()`函数，这个函数集中体现了dplyr宏�
 
 
 
-```{r message=FALSE, warning=FALSE}
+```{r beauty-of-across-1, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(palmerpenguins)
 penguins
@@ -14,7 +14,7 @@ penguins
 看到数据框里有很多缺失值，需要统计每一列缺失值的数量，按照常规的写法
 
 
-```{r}
+```{r beauty-of-across-2}
 penguins %>%
   summarise(
     na_in_species = sum(is.na(species)),
@@ -29,7 +29,7 @@ penguins %>%
 ```
 幸亏数据框的列数不够多，只有8列，如果数据框有几百列，那就成体力活了，同时代码复制粘贴也容易出错。想偷懒，我们自然想到用`summarise_all()`，
 
-```{r}
+```{r beauty-of-across-3}
 penguins %>%
   summarise_all(
     ~ sum(is.na(.))
@@ -38,7 +38,7 @@ penguins %>%
 
 挺好。接着探索，我们想先按企鹅类型分组，然后统计出各体征数据的均值，这个好说，直接写代码
 
-```{r}
+```{r beauty-of-across-4}
 penguins %>%
   group_by(species) %>%
   summarise(
@@ -52,7 +52,7 @@ penguins %>%
 或者用`summarise_if()`偷懒
 
 
-```{r}
+```{r beauty-of-across-5}
 d1 <- penguins %>%
   group_by(species) %>%
   summarise_if(is.numeric, mean, na.rm = TRUE)
@@ -63,7 +63,7 @@ d1
 方法不错，从语义上还算很好理解。 但多了一列`year`, 我想在`summarise_if()`中用 `is.numeric & !year`去掉`year`，却没成功。人类的欲望是无穷的，我们还需要统计每组下企鹅的个数，然后合并到一起。因此，我们再接再厉
 
 
-```{r}
+```{r beauty-of-across-6}
 d2 <- penguins %>%
   group_by(species) %>%
   summarise(
@@ -73,7 +73,7 @@ d2
 ```
 
 最后合并
-```{r}
+```{r beauty-of-across-7}
 d1 %>% left_join(d2, by = "species")
 ```
 
@@ -85,12 +85,12 @@ d1 %>% left_join(d2, by = "species")
 
 `across()`的出现，让这一切变得简单和清晰，上面三步完成的动作，一步搞定
 
-```{r out.width = '75%', echo = FALSE}
+```{r beauty-of-across-8, out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/across_cover.jpg")
 ```
 
 
-```{r}
+```{r beauty-of-across-9}
 penguins %>%
   group_by(species) %>%
   summarise(
@@ -103,7 +103,7 @@ penguins %>%
 ## across()函数形式
 
 `across()`函数，它有三个主要的参数：
-```{r, eval = FALSE}
+```{r beauty-of-across-10, eval = FALSE}
 across(.cols = , .fns = , .names = )
 ```
 
@@ -153,7 +153,7 @@ across(.cols = , .fns = , .names = )
 ### 求每一列的缺失值数量
 
 就是本章开始的需求
-```{r, eval=FALSE}
+```{r beauty-of-across-11, eval=FALSE}
 penguins %>%
   summarise(
     na_in_species = sum(is.na(species)),
@@ -168,7 +168,7 @@ penguins %>%
 ```
 
 
-```{r}
+```{r beauty-of-across-12}
 # using across()
 penguins %>%
   summarise(
@@ -189,7 +189,7 @@ penguins %>%
 
 ### 每个类型变量下有多少组？
 
-```{r}
+```{r beauty-of-across-13}
 penguins %>%
   summarise(
     distinct_species = n_distinct(species),
@@ -214,7 +214,7 @@ penguins %>%
 ### 多列多个统计函数
 
 
-```{r}
+```{r beauty-of-across-14}
 penguins %>%
   group_by(species) %>%
   summarise(
@@ -246,7 +246,7 @@ penguins %>%
 事实上，这里是`across()`与`summarise()`的强大结合起来
 
 
-```{r}
+```{r beauty-of-across-15}
 penguins %>%
   group_by(species, island) %>%
   summarise(
@@ -283,7 +283,7 @@ penguins %>%
 
 ### 不同分组下更复杂的统计
 
-```{r}
+```{r beauty-of-across-16}
 # using across()
 penguins %>%
   group_by(species) %>%
@@ -299,7 +299,7 @@ penguins %>%
 
 ### 数据标准化处理
 
-```{r}
+```{r beauty-of-across-17}
 std <- function(x) {
   (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
 }
@@ -326,7 +326,7 @@ penguins %>%
 
 ### 数据对数化处理
 
-```{r}
+```{r beauty-of-across-18}
 # using across()
 penguins %>%
   drop_na() %>%
@@ -351,7 +351,7 @@ penguins %>%
 ### 在分组建模中与`cur_data()`配合使用
 
 
-```{r}
+```{r beauty-of-across-19}
 penguins %>%
   group_by(species) %>%
   summarise(
@@ -388,7 +388,7 @@ penguins %>%
 ### 与`cur_column()`配合使用
 
 
-```{r}
+```{r beauty-of-across-20}
 # 每一列乘以各自的系数
 df   <- tibble(x = 1:3, y = 3:5, z = 5:7)
 mult <- list(x = 1, y = 10, z = 100)
@@ -427,7 +427,7 @@ df %>% mutate(
 
 ### 与`c_across()`配合也挺默契
 
-```{r}
+```{r beauty-of-across-21}
 df <- tibble(x = 1:3, y = 3:5, z = 5:7)
 
 df %>%
@@ -450,13 +450,13 @@ df %>%
 - 数据框中的多列执行相同操作
 - 不同性质的操作，有时可以一起写出，不用再`left_join()`
 
-```{r out.width = '90%', echo = FALSE, fig.cap = "across()函数总结图"}
+```{r beauty-of-across-22, out.width = '90%', echo = FALSE, fig.cap = "across()函数总结囑�<U+3E65>"}
 knitr::include_graphics("images/across.png")
 ```
 
 
 
-```{r, echo = F}
+```{r beauty-of-across-23, echo = F}
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 
@@ -465,7 +465,7 @@ rm(cutoffs, d1, d2, df, mult, std, weights)
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r beauty-of-across-24, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

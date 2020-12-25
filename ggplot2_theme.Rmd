@@ -4,13 +4,13 @@
 语法，感谢[Henry Wang](https://henrywang.nl/ggplot2-theme-elements-demonstration/)提供了很好的思路。如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)，最推荐的是[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
 
 
-```{r, eval=FALSE}
+```{r ggplot2-theme-1, eval=FALSE}
 theme(element_name = element_function())
 ```
 
 这里`element_function()`有四个
 
-```{r, eval=FALSE}
+```{r ggplot2-theme-2, eval=FALSE}
 element_text()
 element_line()
 element_rect()
@@ -27,26 +27,26 @@ element_blank()
 
 每个元素函数都有一系列控制外观的参数，下面我们通过具体的案例来一一介绍吧。
 
-```{r}
+```{r ggplot2-theme-3}
 library(tidyverse)
 ```
 
 还是用让人生厌的`ggplot2::mpg`数据包吧，具体介绍请见\@ref(visual) 章。
 
-```{r}
+```{r ggplot2-theme-4}
 glimpse(mpg)
 ```
 
 
 稍微做点数据整理
-```{r}
+```{r ggplot2-theme-5}
 df <- mpg %>% 
   as_tibble() %>% 
   filter(class != "2seater", manufacturer %in% c("toyota", "volkswagen"))
 df
 ```
 我相信这种图你们已经会画了吧
-```{r}
+```{r ggplot2-theme-6}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -68,7 +68,7 @@ df %>%
 |图形边距      | plot.margin      |        margin()|
 
 
-```{r}
+```{r ggplot2-theme-7}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -93,7 +93,7 @@ df %>%
 |坐标轴标签    | axis.text        |  element_text()|
 |直线和坐标轴  | axis.line        |  element_line()|
 
-```{r}
+```{r ggplot2-theme-8}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -123,7 +123,7 @@ df %>%
 
 
 
-```{r}
+```{r ggplot2-theme-9}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -137,7 +137,7 @@ df %>%
 ```
 
 或者
-```{r}
+```{r ggplot2-theme-10}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -169,7 +169,7 @@ df %>%
 |图例位置      | legend.postion   |"top", "bottom", "left", "right"|
 
 
-```{r}
+```{r ggplot2-theme-11}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -199,7 +199,7 @@ df %>%
 
 
 
-```{r}
+```{r ggplot2-theme-12}
 df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
@@ -215,7 +215,7 @@ df %>%
 ```
 
 ## 案例
-```{r}
+```{r ggplot2-theme-13}
 diamonds %>%
   ggplot(aes(carat, price)) +
   geom_hex() +
@@ -242,7 +242,7 @@ diamonds %>%
 你肯定不会觉得这图好看。
 
 
-```{r}
+```{r ggplot2-theme-14}
 library(palmerpenguins)
 penguins %>%
   ggplot(aes(bill_length_mm, bill_depth_mm)) +
@@ -273,7 +273,7 @@ penguins %>%
 ```
 
 
-```{r}
+```{r ggplot2-theme-15}
 penguins %>%
   ggplot(aes(bill_length_mm, bill_depth_mm)) +
   geom_point(aes(color = species)) +
@@ -304,7 +304,7 @@ penguins %>%
 
 ## 小结
 
-```{r out.width = '99%', echo = FALSE}
+```{r ggplot2-theme-16, out.width = '99%', echo = FALSE}
 knitr::include_graphics("images/ggplot2-themes.jpg")
 ```
 
@@ -314,7 +314,7 @@ knitr::include_graphics("images/ggplot2-themes.jpg")
 
 - 假定数据是这样
 
-```{r}
+```{r ggplot2-theme-17}
 library(tidyverse)
 set.seed(12)
 
@@ -328,7 +328,7 @@ head(dd)
 ```
 
 你画图后，交给老板看
-```{r}
+```{r ggplot2-theme-18}
 dd %>%
   ggplot(aes(x = Height, fill = Location)) +
   geom_histogram(binwidth = 1, color = "white") +
@@ -336,13 +336,13 @@ dd %>%
 ```
 
 然而，老板有点不满意，希望你要这样改
-```{r echo=FALSE, out.width='85%'}
+```{r ggplot2-theme-19, echo=FALSE, out.width='85%'}
 knitr::include_graphics("images/advisor_email.png")
 ```
 
 请用前后两章学到的内容让老板满意吧
 
-```{r eval=FALSE, include=FALSE}
+```{r ggplot2-theme-20, eval=FALSE, include=FALSE}
 ggplot(data = dd, aes(x = Height, fill = Location)) +
   geom_histogram(binwidth = 1, color = "white") +
   scale_fill_manual(values = c("green3", "turquoise3")) +
@@ -360,7 +360,7 @@ ggplot(data = dd, aes(x = Height, fill = Location)) +
 
 
 
-```{r, echo = F}
+```{r ggplot2-theme-21, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(d1, d2, dd, df)
@@ -368,6 +368,6 @@ rm(d1, d2, dd, df)
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-theme-22, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

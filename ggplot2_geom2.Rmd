@@ -3,7 +3,7 @@
 
 ## 图形语法
 
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-geom2-1, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/ggplot_template.png")
 ```
 
@@ -40,7 +40,7 @@ knitr::include_graphics("images/ggplot_template.png")
     
     
     
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-geom2-2, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 ```
 
@@ -58,7 +58,7 @@ knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 ## 应用
 
 还是用企鹅数据
-```{r, message=FALSE, warning=FALSE}
+```{r ggplot2-geom2-3, message=FALSE, warning=FALSE}
 library(tidyverse)
 penguins <- read_csv("./demo_data/penguins.csv") %>% 
             drop_na()
@@ -67,7 +67,7 @@ penguins
 
 
 
-```{md}
+```{md ggplot2-geom2-4}
 前面讲到R语言数据类型有字符串型、数值型、因子型、逻辑型、日期型等，ggplot2会将字符串型、因子型、逻辑型、日期型默认为**离散变量**，而数值型默认为**连续变量**。我们在而呈现数据的时候，可能会同时用到多种类型的数据，比如
 
 * 一个离散
@@ -86,7 +86,7 @@ penguins
 常用于一个离散变量
 
 
-```{r}
+```{r ggplot2-geom2-5}
 penguins %>% 
     ggplot(aes(x = species)) +
     geom_bar(fill = "gray50")
@@ -94,7 +94,7 @@ penguins %>%
 
 
 
-```{r}
+```{r ggplot2-geom2-6}
 penguins %>% 
   count(species) %>% 
   ggplot(aes(x = species, y = n)) +
@@ -104,21 +104,21 @@ penguins %>%
 
 ### 直方图
 常用于一个连续变量
-```{r}
+```{r ggplot2-geom2-7}
 penguins %>% 
     ggplot(aes(x = bill_length_mm, color = species)) +
     geom_histogram() 
 ```
 
 
-```{r}
+```{r ggplot2-geom2-8}
 penguins %>% 
     ggplot(aes(x = bill_length_mm, color = species)) +
     geom_density()
 ```
 
 
-```{r}
+```{r ggplot2-geom2-9}
 penguins %>% 
   ggplot(aes(x = bill_depth_mm, 
              y = after_stat(count / max(count)))
@@ -132,7 +132,7 @@ penguins %>%
 ### 抖散图
 点重叠的处理方案
 
-```{r}
+```{r ggplot2-geom2-10}
 penguins %>% 
     ggplot(aes(x = species, y = bill_length_mm)) +
     geom_jitter()
@@ -144,7 +144,7 @@ penguins %>%
 ### 箱线图
 一个离散变量 + 一个连续变量
 
-```{r}
+```{r ggplot2-geom2-11}
 penguins %>% 
     ggplot(aes(x = species, y = bill_length_mm)) +
     geom_boxplot() +
@@ -153,7 +153,7 @@ penguins %>%
 
 
 ### 小提琴图
-```{r}
+```{r ggplot2-geom2-12}
 penguins %>% 
     ggplot(aes(x = species, y = bill_length_mm)) +
     geom_violin(fill = "grey90") +
@@ -162,7 +162,7 @@ penguins %>%
 
 
 ### sina图
-```{r}
+```{r ggplot2-geom2-13}
 library(ggforce)
 penguins %>%
   ggplot(aes(x = species, y = bill_length_mm, fill = species)) +
@@ -174,7 +174,7 @@ penguins %>%
 ### 山峦图
 常用于一个离散变量 + 一个连续变量
 
-```{r}
+```{r ggplot2-geom2-14}
 library(ggridges)
 penguins %>%
   ggplot(aes(y = species, x = bill_length_mm, fill = species)) +
@@ -186,7 +186,7 @@ penguins %>%
 
 ### 云雨图
 
-```{r}
+```{r ggplot2-geom2-15}
 source("scripts/half_flat_violinplot.R")
 
 penguins %>%
@@ -205,7 +205,7 @@ penguins %>%
 
 常用于两个连续变量
 
-```{r}
+```{r ggplot2-geom2-16}
 penguins %>% 
     ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
     geom_point(aes(color = species)) +
@@ -217,7 +217,7 @@ penguins %>%
 
 分组呈现
 
-```{r}
+```{r ggplot2-geom2-17}
 penguins %>% 
     ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
     geom_point(aes(color = species)) +
@@ -225,7 +225,7 @@ penguins %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom2-18}
 penguins %>% 
     ggplot(
       aes(x = bill_length_mm, y = bill_depth_mm)
@@ -238,7 +238,7 @@ penguins %>%
 
 不要试图去理解它，感受它
 
-```{r out.width = '85%', echo = FALSE}
+```{r ggplot2-geom2-19, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/tenet.jpg")
 ```
 
@@ -246,7 +246,7 @@ knitr::include_graphics("images/tenet.jpg")
 
 ### 瓦片图
 
-```{r}
+```{r ggplot2-geom2-20}
 penguins %>%
   group_by(species, sex) %>% 
   summarise(
@@ -264,7 +264,7 @@ penguins %>%
 
 
 ### 关联图
-```{r}
+```{r ggplot2-geom2-21}
 corm <- 
   penguins %>%
   select(ends_with("_mm")) %>% 
@@ -275,7 +275,7 @@ corm
 
 
 
-```{r}
+```{r ggplot2-geom2-22}
 corm <- corm %>%
   pivot_longer(
     cols = -rowname, 
@@ -288,7 +288,7 @@ corm
 ```
 
 
-```{r}
+```{r ggplot2-geom2-23}
 corm %>% 
   ggplot(aes(rowname, fct_rev(colname), fill = corr)) + 
   geom_tile() + 
@@ -312,7 +312,7 @@ corm %>%
 ### 主题风格
 
 
-```{r}
+```{r ggplot2-geom2-24}
 penguins %>% 
     ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
     geom_point() +
@@ -320,7 +320,7 @@ penguins %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom2-25}
 library(ggthemes)
 penguins %>% 
     ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
@@ -336,7 +336,7 @@ penguins %>%
 使用自己喜欢的颜色
 
 
-```{r}
+```{r ggplot2-geom2-26}
 penguins %>% 
     ggplot(aes(x = bill_depth_mm, 
                y = bill_length_mm,
@@ -352,7 +352,7 @@ penguins %>%
 
 哪画图的代码中，哪两张图的结果是一样？为什么？
 
-```{r, eval=FALSE}
+```{r ggplot2-geom2-27, eval=FALSE}
 library(tidyverse)
 
 tbl <-
@@ -380,12 +380,12 @@ ggplot(tbl, aes(x, y, color = group)) + geom_line()
 * [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
 
 
-```{r, echo = F}
+```{r ggplot2-geom2-28, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(penguins, geom_flat_violin, `%||%`, GeomFlatViolin, corm)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-geom2-29, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

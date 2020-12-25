@@ -3,13 +3,13 @@
 Tidy Evaluation (Tidy Eval)，不是一个宏包，而是一个非标准评估的框架，也叫延迟评估。主要目的是更方便地与tidyverse里的函数配合使用，事实上，很多时候我们不一定需要用到它。我这里尽可能规避较专业的词汇，用通俗的语言介绍一些简单用法，表述可能不准确。如果想了解背后复杂的机制请阅读[advance R](https://adv-r.hadley.nz/quasiquotation.html)。
 
 ## 编写函数
-```{r message = FALSE, warning = FALSE}
+```{r tidyeval-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(rlang)
 ```
 
 写代码的过程中，我们会遇到对不同的数据框，执行相同的操作。比如
-```{r, eval=FALSE}
+```{r tidyeval-2, eval=FALSE}
 df1 %>% group_by(x1) %>% summarise(mean = mean(y1))
 df2 %>% group_by(x2) %>% summarise(mean = mean(y2))
 df3 %>% group_by(x3) %>% summarise(mean = mean(y3))
@@ -19,13 +19,13 @@ df4 %>% group_by(x4) %>% summarise(mean = mean(y4))
 
 为了减少代码的重复，我们考虑将共同的部分保留，变化的部分用参数名提取出来
 
-```{r, eval=FALSE}
+```{r tidyeval-3, eval=FALSE}
 data %>% group_by(group_var) %>% summarise(mean = mean(summary_var))
 ```
 
 很自然地，我们想到写一个子函数的形式，比如
 
-```{r}
+```{r tidyeval-4}
 grouped_mean <- function(data, group_var, summary_var) {
   data %>%
     group_by(group_var) %>%
@@ -35,14 +35,14 @@ grouped_mean <- function(data, group_var, summary_var) {
 
 当我们试图运行这段代码的时候，却发现报错了
 
-```{r, error = TRUE}
+```{r tidyeval-5, error = TRUE}
 grouped_mean(mtcars, cyl, mpg)
 ```
 
 
 
 Hadley Wickham告诉我们，正确的写法应该是，
-```{r}
+```{r tidyeval-6}
 grouped_mean <- function(data, group_var, summary_var) {
   group_var <- enquo(group_var)
   summary_var <- enquo(summary_var)
@@ -54,14 +54,14 @@ grouped_mean <- function(data, group_var, summary_var) {
 ```
 
 然后再运行
-```{r}
+```{r tidyeval-7}
 grouped_mean(mtcars, cyl, mpg)
 ```
 
 
 或者更简便的
 
-```{r}
+```{r tidyeval-8}
 grouped_mean <- function(data, group_var, summary_var) {
   data %>%
     group_by({{group_var}}) %>%
@@ -74,7 +74,7 @@ grouped_mean(mtcars, cyl, mpg)
 
 dplyr1.0之后，可以这样写
 
-```{r, eval=FALSE}
+```{r tidyeval-9, eval=FALSE}
 sum_group_vars <- function(df, 
                            group_vars, 
                            sum_vars){
@@ -105,7 +105,7 @@ sum_group_vars(mpg, c(model, year), c(hwy, cty))
 
 
 那么，对于我们这里编写的函数中
-```{r, eval=FALSE}
+```{r tidyeval-10, eval=FALSE}
 grouped_mean(mtcars, cyl, mpg)
 ```
 
@@ -122,7 +122,7 @@ grouped_mean(mtcars, cyl, mpg)
 
 
 先看看`qq_show()`
-```{r}
+```{r tidyeval-11}
 var <- quote(height)
 qq_show(!!var)
 ```
@@ -130,7 +130,7 @@ qq_show(!!var)
 
 再看看`grouped_mean()`的代码
 
-```{r}
+```{r tidyeval-12}
   group_var <-  quote(cyl)
 summary_var <-  quote(mpg)
 	
@@ -149,7 +149,7 @@ rlang::qq_show(
 
 前面讲了如何传递分组参数和统计参数到子函数。如果传递更多的参数，可以用`...`代替`group_var` ，然后传递到`group_by()`，比如
 
-```{r}
+```{r tidyeval-13}
 grouped_mean <- function(data, summary_var, ...) {
   summary_var <- enquo(summary_var)
     group_var <- enquos(...)
@@ -162,13 +162,13 @@ grouped_mean <- function(data, summary_var, ...) {
 
 
 指定统计参数`disp`，分组参数`(cyl am)`，然后运行代码,
-```{r}
+```{r tidyeval-14}
 grouped_mean(mtcars, disp, cyl, am)
 ```
 
 或者指定统计参数`disp`，更多的分组参数`(cyl, am, vs)`
 
-```{r}
+```{r tidyeval-15}
 grouped_mean(mtcars, disp, cyl, am, vs)
 ```
 
@@ -177,7 +177,7 @@ grouped_mean(mtcars, disp, cyl, am, vs)
 
 
 
-```{r}
+```{r tidyeval-16}
 grouped_mean <- function(data, summary_var, ...) {
   summary_var <- enquo(summary_var)
 
@@ -204,7 +204,7 @@ grouped_mean(mtcars, disp, cyl, am, vs)
 
 
 
-```{r}
+```{r tidyeval-17}
 grouped_mean2 <- function(.data, .summary_var, ...) {
   summary_var <- enquo(.summary_var)
   group_vars <- enquos(...)
@@ -221,7 +221,7 @@ grouped_mean2 <- function(.data, .summary_var, ...) {
 grouped_mean2(mtcars, disp, cyl, am)
 ```
 或者更简洁的办法
-```{r, eval=FALSE}
+```{r tidyeval-18, eval=FALSE}
 my_summarise <- function(data, group_var, summarise_var) {
   data %>%
     group_by(across({{ group_var }})) %>%
@@ -241,7 +241,7 @@ my_summarise(starwars, species, height)
 - `!!` 解引用并放在 `:=` 左边
 
 
-```{r}
+```{r tidyeval-19}
 grouped_mean3 <- function(.data, .summary_var, ...) {
   summary_var <- enquo(.summary_var)
 
@@ -274,7 +274,7 @@ grouped_mean3(mtcars, disp, cyl, am)
 - `...` 放需要统计的多个变量`height, mass`，期望完成 `mean(height)`, `mean(mass)`
 -  需要用`purrr:map()`配合调整表达式， 如
 
-```{r}
+```{r tidyeval-20}
 vars <- list(quote(mass), quote(height))
 
 purrr::map(vars, function(var) expr(mean(!!var, na.rm = TRUE)))
@@ -282,7 +282,7 @@ purrr::map(vars, function(var) expr(mean(!!var, na.rm = TRUE)))
 
 
 完整代码可以这样写
-```{r}
+```{r tidyeval-21}
 grouped_mean4 <- function(.data, .group_var, ...) {
   group_var <- enquo(.group_var)
   summary_vars <- enquos(..., .named = TRUE)
@@ -302,7 +302,7 @@ grouped_mean4 <- function(.data, .group_var, ...) {
 ```
 
 
-```{r}
+```{r tidyeval-22}
 grouped_mean4(starwars, species, height, mass)
 ```
 
@@ -316,13 +316,13 @@ grouped_mean4(starwars, species, height, mass)
 
 
 ### 统计并过滤
-```{r}
+```{r tidyeval-23}
 df <- tibble(index = sample(letters[1:4], size = 100, replace = TRUE) ) 
 df
 ```
 
 
-```{r}
+```{r tidyeval-24}
 
 filter_which <- function(df, var, val) {
 	
@@ -348,7 +348,7 @@ df %>%
 
 
 ### 自定义统计输出
-```{r}
+```{r tidyeval-25}
 my_summarise <- function(data, expr) {
   data %>% summarise(
     "mean_{{expr}}" := mean({{ expr }}),
@@ -368,7 +368,7 @@ mtcars %>% my_summarise(mpg)
 
 ### 形成依次下滑的列
 
-```{r}
+```{r tidyeval-26}
 d <- tibble(x = seq_len(10))
 
 
@@ -393,7 +393,7 @@ d %>% jetlag(x, 3)
 `enquo()` vs `quo()` vs `expr()` vs `as_name()` vs `as_label()` vs `sym()`
 
 
-```{r}
+```{r tidyeval-27}
 a <- 1
 b <- 1
 var <- quote(a + b)
@@ -402,18 +402,18 @@ var
 ```
 
 
-```{r}
+```{r tidyeval-28}
 qq_show(!!var)
 ```
 
 
-```{r}
+```{r tidyeval-29}
 # quotes a new expression locally
 expr(mean(!!var, na.rm = TRUE))
 ```
 
 
-```{r}
+```{r tidyeval-30}
 var <- quo(height)
 
 # transforms a quoted variable name into a string. 
@@ -421,7 +421,7 @@ as_name(var)
 ```
 
 
-```{r}
+```{r tidyeval-31}
 # also returns a single string but supports any kind of R object as input, including quoted function calls and vectors. Its purpose is to summarise that object into a single label. That label is often suitable as a default name.
 as_label(var)
 ```
@@ -429,7 +429,7 @@ as_label(var)
 
 
 
-```{r}
+```{r tidyeval-32}
 # creates a symbol from a string
 sym("height")
 ```
@@ -449,12 +449,12 @@ sym("height")
 
 
 
-```{r, echo = F}
+```{r tidyeval-33, echo = F}
 # remove the objects
 rm(a, b, d, df, filter_which, group_var, grouped_mean, grouped_mean2, grouped_mean3, grouped_mean4, jetlag, my_summarise, summary_var, var, vars)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidyeval-34, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

@@ -1,7 +1,7 @@
 # 探索性数据分析-新冠疫情 {#eda-covid2019}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r eda-covid2019-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(lubridate)
 library(maps)
@@ -19,7 +19,7 @@ showtext_auto()
 
 
 
-```{r, out.width='45%', fig.align='left', fig.cap='电影《传染病》,《流感》海报', echo=FALSE}
+```{r eda-covid2019-2, out.width='45%', fig.align='left', fig.cap='电影《传染病�<U+383C><U+3E62>,《流感》海抐�<U+3E35>', echo=FALSE}
 knitr::include_graphics(c("images/movie_contagion.jpg", "images/movie_flu.png"))
 ```
 
@@ -27,14 +27,14 @@ knitr::include_graphics(c("images/movie_contagion.jpg", "images/movie_flu.png"))
 
 我们打开链接[https://github.com/CSSEGISandData/COVID-19](https://github.com/CSSEGISandData/COVID-19)，
 
-```{r, out.width='85%', fig.align='left', echo = F}
+```{r eda-covid2019-3, out.width='85%', fig.align='left', echo = F}
 knitr::include_graphics("images/github_COVID-19_download.png")
 ```
 
 
 找到疫情时间序列数据，你可以通过点击该网页`Clone or download`直接下载的方式获取数据。
 
-```{r, out.width='85%', fig.align='left', echo = F}
+```{r eda-covid2019-4, out.width='85%', fig.align='left', echo = F}
 knitr::include_graphics("images/github_COVID-19_files.png")
 ```
 
@@ -46,7 +46,7 @@ knitr::include_graphics("images/github_COVID-19_files.png")
 
 
 
-```{r}
+```{r eda-covid2019-5}
 d <- read_csv("./demo_data/time_series_covid19_confirmed_global.csv")
 d
 ```
@@ -56,7 +56,7 @@ d
 探索数据之前，我们一定要对数据**存储结构、数据变量名及其含义**要非常清楚，重要的事情说三遍。
 
 
-```{r}
+```{r eda-covid2019-6}
 glimpse(d)
 ```
 
@@ -68,7 +68,7 @@ glimpse(d)
 
 ### 必要的预备知识之`select()`
 
-```{r, eval = FALSE}
+```{r eda-covid2019-7, eval = FALSE}
 d %>% select(-c(1:4))
 d %>% select(5:ncol(.))
 d %>% select(matches("/20"))
@@ -83,17 +83,17 @@ d %>% select(ends_with("/20"))
 
 **宽表格**变**长表格**，需要用到`pivot_longer()` 和 `pivot_wider()`， 比如
 
-```{r, out.width='99%', fig.align='left', echo = F}
+```{r eda-covid2019-8, out.width='99%', fig.align='left', echo = F}
 knitr::include_graphics("images/pivot.png")
 ```
 
 
-```{r}
+```{r eda-covid2019-9}
 table4a
 ```
 
 
-```{r}
+```{r eda-covid2019-10}
 longer <- table4a %>%
   pivot_longer(
     cols = `1999`:`2000`,
@@ -109,7 +109,7 @@ longer
 
 有时候我们想折腾下，比如把**长表格**再变回**宽表格**
 
-```{r}
+```{r eda-covid2019-11}
 longer %>%
   pivot_wider(
     names_from = year,
@@ -121,18 +121,18 @@ longer %>%
 
 有时候，我会遇到日期`date`这种数据类型，我推荐使用`lubridate`包来处理，比如
 
-```{r}
+```{r eda-covid2019-12}
 c("2020-3-25", "20200325", "20-03-25", "2020 03 25") %>% lubridate::ymd()
 ```
 
 
-```{r}
+```{r eda-covid2019-13}
 c("3/25/20", "03-25-20", "3-25/2020") %>% lubridate::mdy()
 ```
 
 遇到这种`010210`日期的，请把输入数据的人扁一顿，他会告诉你的
 
-```{r, eval=FALSE}
+```{r eda-covid2019-14, eval=FALSE}
 lubridate::dmy(010210)
 lubridate::dym(010210)
 lubridate::mdy(010210)
@@ -144,7 +144,7 @@ lubridate::ydm(010210)
 
 ### 必要的预备知识之时间差
 
-```{r}
+```{r eda-covid2019-15}
 difftime(ymd("2020-03-24"),
   ymd("2020-03-23"),
   units = "days"
@@ -152,19 +152,19 @@ difftime(ymd("2020-03-24"),
 ```
 
 或者更直观的表述
-```{r}
+```{r eda-covid2019-16}
 ymd("2020-03-24") - ymd("2020-03-23")
 ```
 
 
 转换为天数
-```{r}
+```{r eda-covid2019-17}
 (ymd("2020-03-24") - ymd("2020-03-23")) %>% as.numeric()
 ```
 
 ### 有时候需要log10_scale
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-18, out.width = '100%'}
 tb <- tibble(
   days_since_100 = 0:18,
   cases = 100 * 1.33^days_since_100
@@ -194,7 +194,7 @@ p1 + p2 + p3
 
 ### 数据清洗规整
 
-```{r}
+```{r eda-covid2019-19}
 d1 <- d %>%
   pivot_longer(
     cols = 5:ncol(.),
@@ -211,7 +211,7 @@ d1
 ```
 
 
-```{r}
+```{r eda-covid2019-20}
 d1 %>%
   group_by(date) %>%
   summarise(confirmed = sum(cases))
@@ -219,7 +219,7 @@ d1 %>%
 
 【WHO：2019冠状病毒全球大流行正在“加速”】世界卫生组织（WHO）昨日发出警告，指2019冠状病毒全球感染者已超过30万人，全球大流行正在“加速”。世卫组织指，从首例病例报告到感染者达到10万人用了67天；感染人数增至20万用了11天；从20万到突破30万则只用了4天。
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-21, out.width = '100%'}
 d1 %>%
   group_by(date) %>%
   summarise(confirmed = sum(cases)) %>%
@@ -236,7 +236,7 @@ d1 %>%
 ```
 
 
-```{r}
+```{r eda-covid2019-22}
 # d1 %>% distinct(country_region) %>% pull(country_region)
 d1 %>% distinct(country_region)
 ```
@@ -244,13 +244,13 @@ d1 %>% distinct(country_region)
 
 
 
-```{r}
+```{r eda-covid2019-23}
 d1 %>%
   filter(country_region == "China")
 ```
 
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-24, out.width = '100%'}
 d1 %>%
   filter(country_region == "China") %>%
   ggplot(aes(x = date, y = cases)) +
@@ -263,7 +263,7 @@ d1 %>%
 
 
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-25, out.width = '100%'}
 d1 %>%
   group_by(country_region) %>%
   filter(max(cases) >= 20000) %>%
@@ -285,7 +285,7 @@ d1 %>%
 网站[https://www.ft.com/coronavirus-latest](https://www.ft.com/coronavirus-latest) 这张图很受关注，于是打算重复
 
 
-```{r, out.width='85%', fig.align='left', fig.cap='图片来源www.ft.com', echo=FALSE}
+```{r eda-covid2019-26, out.width='85%', fig.align='left', fig.cap='图片来源www.ft.com', echo=FALSE}
 knitr::include_graphics("images/ft_coronavirus.jpg")
 ```
 
@@ -304,7 +304,7 @@ knitr::include_graphics("images/ft_coronavirus.jpg")
 - 构建新的一列`mutate( days_since_100 = date - min(date[cases >= 100])`
 - 将`days_since_100`转换成数值型`as.numeric()`
 
-```{r}
+```{r eda-covid2019-27}
 d2 <- d1 %>%
   group_by(country_region) %>%
   filter(max(cases) >= 100) %>%
@@ -317,13 +317,13 @@ d2 <- d1 %>%
 d2
 ```
 
-```{block, type="danger"}
+```{block eda-covid2019-28, type="danger"}
 大家都谈过恋爱，也有可能失恋。大家失恋时间是不同的，若把失恋的当天作为第 0 day, 就可以比较失恋若干天后每个人精神波动情况。参照《失恋33天》
 ```
 
 
 
-```{r}
+```{r eda-covid2019-29}
 d2_most <- d2 %>%
   group_by(country_region) %>%
   top_n(1, days_since_100) %>%
@@ -336,7 +336,7 @@ d2_most
 
 
 
-```{r, out.width = "100%"}
+```{r eda-covid2019-30, out.width = "100%"}
 d2 %>%
   bind_rows(
     tibble(country = "33% daily rise", days_since_100 = 0:30) %>%
@@ -418,7 +418,7 @@ d2 %>%
 
 ### 简便的方法
 
-```{r}
+```{r eda-covid2019-31}
 d2a <- d1 %>%
   group_by(country_region) %>%
   filter(cases >= 100) %>%
@@ -436,7 +436,7 @@ d2a
 ### 疫情持续时间最久的国家
 
 
-```{r}
+```{r eda-covid2019-32}
 d3 <- d2a %>%
   group_by(country_region) %>%
   filter(days_since_100 == max(days_since_100)) %>%
@@ -447,7 +447,7 @@ d3 <- d2a %>%
 d3
 ```
 
-```{r}
+```{r eda-covid2019-33}
 highlight <- d3 %>%
   top_n(10, days_since_100) %>%
   pull(country_region)
@@ -455,7 +455,7 @@ highlight
 ```
 
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-34, out.width = '100%'}
 d2a %>%
   bind_rows(
     tibble(country = "33% daily rise", days_since_100 = 0:30) %>%
@@ -504,7 +504,7 @@ d2a %>%
 
 笨办法，实际上是4张表共同完成
 
-```{r}
+```{r eda-covid2019-35}
 highlight <- c(
   "China", "Spain", "US", "United Kingdom", "Korea, South",
   "Italy", "Japan", "Singapore", "Germany", "France", "Iran"
@@ -522,7 +522,7 @@ d3_gray <- d2a %>% filter(country_region %in% gray)
 ```
 
   
-```{r, out.width = '100%'}
+```{r eda-covid2019-36, out.width = '100%'}
 d2a %>%
   ggplot(aes(days_since_100, cases, group = country_region)) +
   geom_hline(yintercept = 100) +
@@ -599,7 +599,7 @@ d2a %>%
 对数据框d2a增加两列属性(有无标签，有无颜色)，然后手动改颜色
 
 
-```{r}
+```{r eda-covid2019-37}
 highlight_country <- d2a %>%
   group_by(country_region) %>%
   filter(days_since_100 == max(days_since_100)) %>%
@@ -613,7 +613,7 @@ highlight_country
 
 
 吸取了[Kieran Healy大神的配色方案](https://github.com/kjhealy/covid) 
-```{r}
+```{r eda-covid2019-38}
 ## Colors
 cgroup_cols <- c(prismatic::clr_darken(paletteer_d("ggsci::category20_d3"), 0.2)[1:length(highlight_country)], "gray70")
 scales::show_col(cgroup_cols)
@@ -621,7 +621,7 @@ scales::show_col(cgroup_cols)
 
 
 
-```{r}
+```{r eda-covid2019-39}
 d2a %>% 
   group_by(country_region) %>% 
   filter(max(days_since_100) > 9) %>%
@@ -661,7 +661,7 @@ d2a %>%
 
 
 ## 每个国家的情况
-```{r}
+```{r eda-covid2019-40}
 d2 %>%
   group_by(country_region) %>%
   filter(max(cases) >= 1000) %>%
@@ -670,7 +670,7 @@ d2 %>%
 
 
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-41, out.width = '100%'}
 d2 %>%
   group_by(country_region) %>%
   filter(max(cases) >= 1000) %>%
@@ -709,7 +709,7 @@ d2 %>%
 
 ## 地图 
 
-```{r, eval=FALSE}
+```{r eda-covid2019-42, eval=FALSE}
 library(countrycode)
 # countrycode('Albania', 'country.name', 'iso3c')
 
@@ -722,7 +722,7 @@ d2_newest %>%
 
 
 我们选取最新的日期
-```{r}
+```{r eda-covid2019-43}
 d_newest <- d %>%
   select(Long, Lat, last_col()) %>%
   set_names("Long", "Lat", "newest_date")
@@ -730,7 +730,7 @@ d_newest
 ```
 
 
-```{r, out.width = '100%'}
+```{r eda-covid2019-44, out.width = '100%'}
 world <- map_data("world")
 
 

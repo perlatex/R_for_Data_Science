@@ -1,7 +1,7 @@
 # 探索性数据分析-身高体重 {#eda-height}
 
 
-```{r message = FALSE, warning = FALSE}
+```{r eda-height-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
@@ -9,12 +9,12 @@ library(tidyverse)
 ## 案例分析
 
 这是一份身高和体重的数据集
-```{r}
+```{r eda-height-2}
 d <- read_csv("./demo_data/weight-height.csv")
 d
 ```
 
-```{r}
+```{r eda-height-3}
 d %>% summarise(
   across(everything(), ~ sum(is.na(.)))
 )
@@ -25,14 +25,14 @@ d %>% summarise(
 ### 画出不同性别的身高分布
 
 常规答案
-```{r}
+```{r eda-height-4}
 d %>%
   ggplot(aes(x = Height, fill = Gender)) +
   geom_density(alpha = 0.5)
 ```
 
 
-```{r}
+```{r eda-height-5}
 d %>%
   ggplot(aes(x = Height, fill = Gender)) +
   geom_density(alpha = 0.5) +
@@ -55,7 +55,7 @@ d %>%
 
 - 第一步，先把子集用分面的方法，分别画出来
 
-```{r, eval = FALSE}
+```{r eda-height-6, eval = FALSE}
 d %>%
   ggplot(aes(x = Height)) +
   geom_density() +
@@ -65,7 +65,7 @@ d %>%
 
 - 第二步，添加整体的情况作为背景图层。因为第一步用到了分面，也就说会分组，但我们希望整体的背景图层不受分面信息影响，或者叫背景图层不需要分组，而是显示全部。也就说，要保证每个分面面板中的背景图都是一样的，因此，在这个geom_denstiy()图层中，构建不受facet_wrap()影响的数据，即删掉data的分组列。
 
-```{r, eval = FALSE}
+```{r eda-height-7, eval = FALSE}
 d %>%
   ggplot(aes(x = Height)) +
   geom_density(
@@ -77,7 +77,7 @@ d %>%
 
 - 第三步，y轴的调整，我们希望保持密度的形状，同时希望y轴不用比例值而是用具体的count个数，这样整体和局部能放在一个标度下，
 
-```{r, eval = FALSE}
+```{r eda-height-8, eval = FALSE}
 d %>%
   ggplot(aes(x = Height, y = after_stat(count))) +
   geom_density(
@@ -93,7 +93,7 @@ d %>%
 
 "Male", "Female" 是Gender已经存在的分组。另外，我们在背景图层，新增了一个组"all people"，这样，整个图就有三个分组（三个color组），那么，我们可以在scale_fill_manual中统一设置和指定。
 
-```{r, eval = FALSE}
+```{r eda-height-9, eval = FALSE}
 density_colors <- c(
   "Male" = "#247BA0",
   "Female" = "#F25F5C",
@@ -102,7 +102,7 @@ density_colors <- c(
 ```
 
 
-```{r, eval = FALSE}
+```{r eda-height-10, eval = FALSE}
 d %>%
   ggplot(aes(x = Height, y = after_stat(count))) +
   geom_density(
@@ -122,7 +122,7 @@ d %>%
 
 ### 完整代码
 
-```{r}
+```{r eda-height-11}
 density_colors <- c(
   "Male" = "#247BA0",
   "Female" = "#F25F5C",
@@ -133,7 +133,7 @@ scales::show_col(density_colors)
 ```
 
 
-```{r}
+```{r eda-height-12}
 d %>%
   ggplot(aes(x = Height, y = after_stat(count))) +
   geom_density(
@@ -153,7 +153,7 @@ d %>%
 
 
 或者，用不同的主题风格
-```{r}
+```{r eda-height-13}
 density_colors <- c(
   "Male" = "#56B4E9",
   "Female" = "#EF8A17",
@@ -180,7 +180,7 @@ d %>%
 
 ### 画出不同性别的体重分布
 
-```{r}
+```{r eda-height-14}
 d %>%
   ggplot(aes(x = Weight, fill = Gender)) +
   geom_density(alpha = 0.5)
@@ -190,7 +190,7 @@ d %>%
 
 ## 建模
 ### 身高与体重的散点图
-```{r}
+```{r eda-height-15}
 d %>%
   ggplot(aes(x = Height, y = Weight, color = Gender)) +
   geom_point()
@@ -198,20 +198,20 @@ d %>%
 
 
 ### 建立身高与体重的线性模型
-```{r}
+```{r eda-height-16}
 fit <- lm(Weight ~ 1 + Height, data = d)
 summary(fit)
 ```
 
 
-```{r}
+```{r eda-height-17}
 broom::tidy(fit)
 ```
 
 
 ### 建立不同性别下的身高与体重的线性模型
 
-```{r}
+```{r eda-height-18}
 d %>%
   group_by(Gender) %>%
   group_modify(
@@ -220,7 +220,7 @@ d %>%
 ```
 
 
-```{r}
+```{r eda-height-19}
 d %>%
   ggplot(aes(x = Height, y = Weight, group = Gender)) +
   geom_point(aes(color = Gender)) +
@@ -229,12 +229,12 @@ d %>%
 
 
 
-```{r, echo = F}
+```{r eda-height-20, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(d, fit, density_colors)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-height-21, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

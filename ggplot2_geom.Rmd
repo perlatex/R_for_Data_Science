@@ -9,7 +9,7 @@
 
 
 
-```{r,warning = FALSE, message = FALSE}
+```{r ggplot2-geom-1,warning = FALSE, message = FALSE}
 library(tidyverse)
 ```
 
@@ -18,13 +18,13 @@ library(tidyverse)
 
 先看一组数据
 
-```{r}
+```{r ggplot2-geom-2}
 df <- read_csv("./demo_data/datasaurus.csv")
 df
 ```
 
 先用`dataset`分组后，然后计算每组下`x`的均值和方差，`y`的均值和方差，以及`x，y`两者的相关系数，我们发现每组数据下它们几乎都是相等的
-```{r}
+```{r ggplot2-geom-3}
 df %>%
   group_by(dataset) %>%
   summarise(
@@ -36,7 +36,7 @@ df %>%
 ```
 
 如果上面代码不熟悉，可以用第 \@ref(dplyr) 章的代码重新表达，也是一样的
-```{r}
+```{r ggplot2-geom-4}
 df %>%
   group_by(dataset) %>%
   summarize(
@@ -50,7 +50,7 @@ df %>%
 
 那么，我们是否能得出结论，每组的数据长的差不多呢？然而，我们画图发现
 
-```{r, fig.asp=1.2}
+```{r ggplot2-geom-5, fig.asp=1.2}
 ggplot(df, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
   # geom_smooth(method = lm) +
@@ -66,12 +66,12 @@ ggplot(df, aes(x = x, y = y, colour = dataset)) +
 
 ### 图形语法
 
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-geom-6, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/ggplot_template.png")
 ```
 
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-geom-7, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/how_to_plot.png")
 ```
 
@@ -107,7 +107,7 @@ knitr::include_graphics("images/how_to_plot.png")
     + `geom_sf()`
     
     
-```{r out.width = '70%', echo = FALSE}
+```{r ggplot2-geom-8, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 ```
 
@@ -123,14 +123,14 @@ knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 
 ggplot2图层语法框架
 
-```{r out.width = '100%', echo = FALSE}
+```{r ggplot2-geom-9, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/ggplot2_system.png")
 ```
 
 
 ## 开始
 
-```{block, type="try"}
+```{block ggplot2-geom-10, type="try"}
 前面讲到R语言数据类型有字符串型、数值型、因子型、逻辑型、日期型等，ggplot2会将字符串型、因子型、逻辑型、日期型默认为**离散变量**，而数值型默认为**连续变量**。我们在而呈现数据的时候，可能会同时用到多种类型的数据，比如
 
 * 一个离散
@@ -147,13 +147,13 @@ knitr::include_graphics("images/ggplot2_system.png")
 
 ### 导入数据
 
-```{r}
+```{r ggplot2-geom-11}
 gapdata <- read_csv("./demo_data/gapminder.csv")
 gapdata
 ```
 
 ### 检查数据
-```{r}
+```{r ggplot2-geom-12}
 # 是否有缺失值
 
 gapdata %>%
@@ -172,7 +172,7 @@ gapdata %>%
 
 
 
-```{block, type = "try"}
+```{block ggplot2-geom-13, type = "try"}
 接下来，我们需要思考我们应该选择什么样的图，呈现这些不同类型的数据，探索数据背后的故事
 ```
 
@@ -182,7 +182,7 @@ gapdata %>%
 ### 柱状图
 常用于一个离散变量
 
-```{r}
+```{r ggplot2-geom-14}
 gapdata %>%
   ggplot(aes(x = continent)) +
   geom_bar()
@@ -191,7 +191,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-15}
 gapdata %>%
   ggplot(aes(x = reorder(continent, continent, length))) +
   geom_bar()
@@ -199,7 +199,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-16}
 gapdata %>%
   ggplot(aes(x = reorder(continent, continent, length))) +
   geom_bar() +
@@ -208,7 +208,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-17}
 # geom_bar vs stat_count
 gapdata %>%
   ggplot(aes(x = continent)) +
@@ -217,14 +217,14 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-18}
 gapdata %>% count(continent)
 ```
 可见，geom_bar() 自动完成了这个统计，更多geom与stat对应关系见[这里](https://ggplot2.tidyverse.org/reference/index.html#section-layer-stats)
 
 
 
-```{r}
+```{r ggplot2-geom-19}
 gapdata %>%
   distinct(continent, country) %>%
   ggplot(aes(x = continent)) +
@@ -232,7 +232,7 @@ gapdata %>%
 ```
 
 我个人比较喜欢先统计，然后画图
-```{r}
+```{r ggplot2-geom-20}
 gapdata %>%
   distinct(continent, country) %>%
   group_by(continent) %>%
@@ -245,21 +245,21 @@ gapdata %>%
 
 ### 直方图
 常用于一个连续变量
-```{r}
+```{r ggplot2-geom-21}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_histogram() # 对应的stat_bin()
 ```
 
 
-```{r}
+```{r ggplot2-geom-22}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_histogram(binwidth = 1)
 ```
 
 
-```{r}
+```{r ggplot2-geom-23}
 #' histograms, 默认使用 `position = "stack"`
 gapdata %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
@@ -267,7 +267,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-24}
 #' 使用`position = "identity"`
 gapdata %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
@@ -275,14 +275,14 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-25}
 gapdata %>%
   ggplot(aes(x = lifeExp, color = continent)) +
   geom_freqpoly()
 ```
 
 
-```{r}
+```{r ggplot2-geom-26}
 #' smooth histogram = densityplot
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
@@ -290,7 +290,7 @@ gapdata %>%
 ```
 
 如果不喜欢下面那条线，可以这样
-```{r}
+```{r ggplot2-geom-27}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_line(stat = "density")
@@ -298,7 +298,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-28}
 # adjust 调节bandwidth,
 # adjust = 1/2 means use half of the default bandwidth.
 gapdata %>%
@@ -311,21 +311,21 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-29}
 gapdata %>%
   ggplot(aes(x = lifeExp, color = continent)) +
   geom_density()
 ```
 
 
-```{r}
+```{r ggplot2-geom-30}
 gapdata %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
   geom_density(alpha = 0.2)
 ```
 
 
-```{r}
+```{r ggplot2-geom-31}
 gapdata %>%
   filter(continent != "Oceania") %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
@@ -333,7 +333,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-32}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_density() +
@@ -344,7 +344,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-33}
 gapdata %>%
   filter(continent != "Oceania") %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
@@ -355,7 +355,7 @@ gapdata %>%
 
 直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`, `stat(level)`
 
-```{r}
+```{r ggplot2-geom-34}
 gapdata %>%
   filter(continent != "Oceania") %>%
   ggplot(aes(x = lifeExp, y = stat(density))) +
@@ -367,7 +367,7 @@ gapdata %>%
 
 ### 箱线图
 一个离散变量 + 一个连续变量
-```{r}
+```{r ggplot2-geom-35}
 #' 思考下结果为什么是这样？
 gapdata %>%
   ggplot(aes(x = year, y = lifeExp)) +
@@ -375,7 +375,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-36}
 # 数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
 gapdata %>%
   ggplot(aes(x = as.factor(year), y = lifeExp)) +
@@ -385,7 +385,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-37}
 # 明确指定分组变量
 gapdata %>%
   ggplot(aes(x = year, y = lifeExp)) +
@@ -395,7 +395,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-38}
 gapdata %>%
   ggplot(aes(x = year, y = lifeExp)) +
   geom_violin(aes(group = year)) +
@@ -409,31 +409,31 @@ gapdata %>%
 
 点重叠的处理方案
 
-```{r}
+```{r ggplot2-geom-39}
 gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
   geom_point()
 ```
 
 
-```{r}
+```{r ggplot2-geom-40}
 gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
   geom_jitter()
 ```
 
 
-```{r}
+```{r ggplot2-geom-41}
 gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
   geom_boxplot()
 ```
 
-```{r}
+```{r ggplot2-geom-42}
 gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
   geom_boxplot() +
   geom_jitter()
 ```
 
 
-```{r}
+```{r ggplot2-geom-43}
 gapdata %>%
   ggplot(aes(x = continent, y = lifeExp)) +
   geom_jitter() +
@@ -443,7 +443,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-44}
 gapdata %>%
   ggplot(aes(reorder(x = continent, lifeExp), y = lifeExp)) +
   geom_jitter() +
@@ -454,7 +454,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-45}
 gapdata %>%
   ggplot(aes(x = continent, y = lifeExp)) +
   geom_violin(
@@ -477,7 +477,7 @@ gapdata %>%
 ### 山峦图
 
 常用于一个离散变量 + 一个连续变量
-```{r}
+```{r ggplot2-geom-46}
 gapdata %>%
   ggplot(aes(
     x = lifeExp,
@@ -486,7 +486,7 @@ gapdata %>%
   )) +
   ggridges::geom_density_ridges()
 ```
-```{r}
+```{r ggplot2-geom-47}
 # https://learnui.design/tools/data-color-picker.html#palette
 gapdata %>%
   ggplot(aes(
@@ -501,7 +501,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-48}
 gapdata %>%
   ggplot(aes(
     x = lifeExp,
@@ -518,27 +518,27 @@ gapdata %>%
 ### 散点图
 常用于两个连续变量
 
-```{r}
+```{r ggplot2-geom-49}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point()
 ```
 
-```{r}
+```{r ggplot2-geom-50}
 gapdata %>%
   ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
   geom_point()
 ```
 
 
-```{r}
+```{r ggplot2-geom-51}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
   scale_x_log10() # A better way to log transform
 ```
 
-```{r}
+```{r ggplot2-geom-52}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point(aes(color = continent))
@@ -546,7 +546,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-53}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point(alpha = (1 / 3), size = 2)
@@ -554,7 +554,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-54}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
@@ -563,7 +563,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-55}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
@@ -572,14 +572,14 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-56}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
   geom_smooth(lwd = 3, se = FALSE, method = "lm")
 ```
 
-```{r}
+```{r ggplot2-geom-57}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -588,7 +588,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-58}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point(show.legend = FALSE) +
@@ -596,7 +596,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-59}
 jCountries <- c("Canada", "Rwanda", "Cambodia", "Mexico")
 
 gapdata %>%
@@ -607,7 +607,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-60}
 gapdata %>%
   filter(country %in% jCountries) %>%
   ggplot(aes(
@@ -621,7 +621,7 @@ gapdata %>%
 
 这是一种技巧，但我更推荐以下方法
 
-```{r}
+```{r ggplot2-geom-61}
 d1 <- gapdata %>%
   filter(country %in% jCountries) %>%
   group_by(country) %>%
@@ -631,7 +631,7 @@ d1
 ```
 
 
-```{r}
+```{r ggplot2-geom-62}
 d1 %>% ggplot(aes(
   x = year, y = lifeExp, color = country
 )) +
@@ -644,7 +644,7 @@ d1 %>% ggplot(aes(
 
 如果觉得麻烦，就用`gghighlight`宏包吧
 
-```{r}
+```{r ggplot2-geom-63}
 gapdata %>%
   filter(country %in% jCountries) %>%
   ggplot(aes(
@@ -656,7 +656,7 @@ gapdata %>%
 ```
 
 ### 点线图
-```{r}
+```{r ggplot2-geom-64}
 gapdata %>%
   filter(continent == "Asia" & year == 2007) %>%
   ggplot(aes(x = lifeExp, y = country)) +
@@ -665,7 +665,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-65}
 gapdata %>%
   filter(continent == "Asia" & year == 2007) %>%
   ggplot(aes(
@@ -696,7 +696,7 @@ gapdata %>%
 
 ### 文本标注
 
-```{r}
+```{r ggplot2-geom-66}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
@@ -709,7 +709,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-67}
 ten_countries <- gapdata %>%
   distinct(country) %>%
   pull() %>%
@@ -717,7 +717,7 @@ ten_countries <- gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-68}
 library(ggrepel)
 gapdata %>%
   filter(year == 2007) %>%
@@ -755,7 +755,7 @@ gapdata %>%
 
 ### errorbar图
 
-```{r}
+```{r ggplot2-geom-69}
 avg_gapdata <- gapdata %>%
   group_by(continent) %>%
   summarise(
@@ -766,7 +766,7 @@ avg_gapdata
 ```
 
 
-```{r }
+```{r ggplot2-geom-70 }
 avg_gapdata %>%
   ggplot(aes(continent, mean, fill = continent)) +
   # geom_col(alpha = 0.5) +
@@ -776,7 +776,7 @@ avg_gapdata %>%
 
 ### 椭圆图
 
-```{r}
+```{r ggplot2-geom-71}
 gapdata %>%
   ggplot(aes(x = log(gdpPercap), y = lifeExp)) +
   geom_point() +
@@ -791,14 +791,14 @@ gapdata %>%
 `geom_density_2d()`, `geom_bin2d()`, `geom_hex()`常用于刻画两个变量构成的二维区间的密度
 
 
-```{r}
+```{r ggplot2-geom-72}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_bin2d()
 ```
 
 
-```{r}
+```{r ggplot2-geom-73}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_hex()
@@ -810,7 +810,7 @@ gapdata %>%
 
 `geom_tile()`， `geom_contour()`， `geom_raster()`常用于3个变量
 
-```{r}
+```{r ggplot2-geom-74}
 gapdata %>%
   group_by(continent, year) %>%
   summarise(mean_lifeExp = mean(lifeExp)) %>%
@@ -821,7 +821,7 @@ gapdata %>%
 
 事实上可以有更好的呈现方式
 
-```{r}
+```{r ggplot2-geom-75}
 gapdata %>%
   group_by(continent, year) %>%
   summarise(mean_lifeExp = mean(lifeExp)) %>%
@@ -830,7 +830,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-76}
 gapdata %>%
   group_by(continent, year) %>%
   summarise(mean_lifeExp = mean(lifeExp)) %>%
@@ -844,7 +844,7 @@ gapdata %>%
 ## 主题风格
 
 
-```{r}
+```{r ggplot2-geom-77}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -852,7 +852,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-78}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -861,7 +861,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-79}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -871,7 +871,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-80}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -881,7 +881,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-81}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -893,7 +893,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-82}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -902,7 +902,7 @@ gapdata %>%
   ggtitle("ggthemes::theme_economist()")
 ```
 
-```{r}
+```{r ggplot2-geom-83}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -912,7 +912,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-84}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -923,7 +923,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-85}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -934,7 +934,7 @@ gapdata %>%
 
 
 
-```{r}
+```{r ggplot2-geom-86}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -944,7 +944,7 @@ gapdata %>%
 ```
 
 
-```{r}
+```{r ggplot2-geom-87}
 gapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
   geom_point() +
@@ -982,12 +982,12 @@ gapdata %>%
 
 
 
-```{r, echo = F}
+```{r ggplot2-geom-88, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(avg_gapdata, d1, df, gapdata, jCountries, ten_countries)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r ggplot2-geom-89, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

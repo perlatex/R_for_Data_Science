@@ -4,7 +4,7 @@
 ## 引言
 
 
-```{r out.width = '70%', fig.align='center', echo = FALSE}
+```{r eda-vaccine-effectiveness-1, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/vaccine.png")
 ```
 
@@ -15,7 +15,7 @@ knitr::include_graphics("images/vaccine.png")
 ，根据在数国临床试验初步结果，其研发的新冠疫苗有效率达到90%以上，星期三，完整结果显示，参加疫苗实验的44000个志愿者中，共有170人确诊感染，其中安慰剂组162人，接种疫苗组仅8人，这证明了辉瑞开发的新冠疫苗有效率高达95%。
 
 
-```{r echo=FALSE}
+```{r eda-vaccine-effectiveness-2, echo=FALSE}
 d <- tibble::tribble(
   ~group, ~volunteers, ~got_covid,
   "placebo", 22000L, 162L,
@@ -39,7 +39,7 @@ $$
 
 ## 模型
 
-```{r, message=FALSE, warning=FALSE}
+```{r eda-vaccine-effectiveness-3, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tidybayes)
 library(rstan)
@@ -72,7 +72,7 @@ $$
 
 具体Stan代码如下
 
-```{r, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-4, warning=FALSE, message=FALSE, results=FALSE}
 stan_program <- "
 data {
   int<lower=1> event_c;        // num events, control
@@ -114,12 +114,12 @@ mod <- stan(model_code = stan_program, data = stan_data)
 ## 结果
 
 最后，我们后验概率抽样
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-5, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 mod
 ```
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-6, warning=FALSE, message=FALSE}
 draws <- mod %>%
   tidybayes::spread_draws(effect, VE, log_odds)
 
@@ -134,14 +134,14 @@ draws %>%
 
 从结果中看到effect中很多负数。事实上，effect中越多的负值，即被感染的可能性越低，说明疫苗干预效果越好
 
-```{r}
+```{r eda-vaccine-effectiveness-7}
 mean(draws$effect < 0) %>% round(2)
 ```
 
 结果告诉我们，疫苗有明显的干预效果。比如，我们假定10000个人接受了疫苗，那么被感染的人数以及相应的可能性，如下图
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-8, warning=FALSE, message=FALSE}
 draws %>%
   ggplot(aes(x = effect * 1e4)) +
   geom_density(fill = "blue", alpha = .2) +
@@ -153,7 +153,7 @@ draws %>%
 
 
 
-```{r, eval=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-9, eval=FALSE, include=FALSE}
 draws %>%
   ggplot(aes(x = log_odds)) +
   geom_density(fill = "blue", alpha = .2) +
@@ -168,7 +168,7 @@ draws %>%
 ### 疫苗有效率
 
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-10, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 draws %>%
   ggdist::mean_qi(.width = c(0.95))
 
@@ -181,7 +181,7 @@ median(draws$VE)
 
 我们再看看疫苗有效率 VE 的结果
 
-```{r, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-11, warning=FALSE, message=FALSE}
 draws %>%
   select(VE) %>%
   ggdist::median_qi(.width = c(0.90))
@@ -193,14 +193,14 @@ draws %>%
 
 
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-12, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 draws %>%
   ggplot(aes(x = VE)) +
   geom_density()
 ```
 
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-13, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 draws %>%
   ggplot(aes(x = VE)) +
   geom_density(fill = "blue", alpha = .2) +
@@ -213,7 +213,7 @@ draws %>%
 
 当然，通过图可能理解的更清晰。
 
-```{r, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-14, warning=FALSE, message=FALSE}
 label_txt <- paste("median =", round(median(draws$VE), 2))
 
 draws %>%
@@ -228,7 +228,7 @@ draws %>%
 ```
 
 
-```{r, echo = F}
+```{r eda-vaccine-effectiveness-15, echo = F}
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 rm(d, draws, label_txt, mod, stan_data, stan_program)
@@ -236,7 +236,7 @@ rm(d, draws, label_txt, mod, stan_data, stan_program)
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r eda-vaccine-effectiveness-16, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

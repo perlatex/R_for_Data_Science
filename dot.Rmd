@@ -2,14 +2,14 @@
 
 本章介绍tidyverse的语法中经常遇到`.`， 不同的场景，含义不同。因此很有必要弄清楚各自的含义。
 
-```{r message = FALSE, warning = FALSE}
+```{r dot-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
 
 ## 每一行的 `.` 各自代表什么意思呢?
 
-```{r, eval = F}
+```{r dot-2, eval = F}
 read_csv("./data/wages.csv") %>%
   mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
   select(., -letter) %>%
@@ -34,14 +34,14 @@ read_csv("./data/wages.csv") %>%
 - `z %>% f(x, y, arg = .)` is equivalent to `f(x, y, arg  = z)`
 
 我们经常这样写
-```{r}
+```{r dot-3}
 mtcars %>%
   select(cyl, disp, hp) %>%
   head(2)
 ```
 
 实际上，这里是有占位符的
-```{r}
+```{r dot-4}
 mtcars %>%
   select(., cyl, disp, hp) %>%
   head(., 2)
@@ -50,14 +50,14 @@ mtcars %>%
 ## Lambda函数
 
 `.`出现在函数`.f`的位置上， 就是 purrr 风格的Lambda函数`~ fun(.)`， 
-```{r}
+```{r dot-5}
 mtcars %>%
   select_at(vars(contains("ar")), ~ toupper(.)) %>%
   head(3)
 ```
 
 有时候程序员会将`~toupper(.) `简写成 `toupper`
-```{r}
+```{r dot-6}
 mtcars %>%
   select_at(vars(contains("ar")), toupper) %>%
   head(3)
@@ -66,17 +66,17 @@ mtcars %>%
 
 ## 正则表达式
 
-```{r}
+```{r dot-7}
 words <- "the fattest cat."
 ```
 
 
-```{r}
+```{r dot-8}
 words %>% str_replace_all("t.", "-")
 ```
 
 
-```{r}
+```{r dot-9}
 words %>% str_replace_all("t\\.", "-")
 ```
 
@@ -84,14 +84,14 @@ words %>% str_replace_all("t\\.", "-")
 ## Unary funciton (只带一个参数的函数)
 <!-- A pipeline with a dot (.) as LHS will create a unary function. -->
 
-```{r}
+```{r dot-10}
 mean_rm <- . %>% mean(na.rm = T)
 
 c(1, 2, 3, NA) %>% mean_rm()
 ```
 
 等价于
-```{r}
+```{r dot-11}
 # is equivalent to
 c(1, 2, 3, NA) %>% mean(., na.rm = T)
 ```
@@ -101,12 +101,12 @@ c(1, 2, 3, NA) %>% mean(., na.rm = T)
 
 
 
-```{r}
+```{r dot-12}
 iris %>% subset(1:nrow(.) %% 30 == 0)
 ```
 
 
-```{r}
+```{r dot-13}
 1:10 %>% {
   c(min(.), max(.))
 }
@@ -117,7 +117,7 @@ iris %>% subset(1:nrow(.) %% 30 == 0)
 
 当`dplyr::mutate`遇到`purrr::map`，情况就复杂很多了。然而，这种情况，tidyverse比比皆是。我就多说几句吧
 
-```{r}
+```{r dot-14}
 iris %>%
   head(3) %>%
   mutate(., r_sum = pmap_dbl(select_if(., is.numeric), sum))
@@ -127,7 +127,7 @@ iris %>%
 
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r dot-15, warning=FALSE, message=FALSE}
 df <- tibble(
   mean = c(1, 2),
   sd = c(2, 4)
@@ -146,7 +146,7 @@ df %>%
 
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r dot-16, warning=FALSE, message=FALSE}
 df %>%
   dplyr::mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>%
   tidyr::unnest_wider(rand)
@@ -159,7 +159,7 @@ df %>%
 
 再来一个变态的。（我们不一定要这样写，但我们尽可能的要明白它的意思。）
 
-```{r}
+```{r dot-17}
 df <- tribble(
   ~a, ~b,
   1, 10,
@@ -176,7 +176,7 @@ df %>%
 
 
 ## Dot dot dot
-```{r}
+```{r dot-18}
 commas <- function(...) {
   stringr::str_c(..., collapse = ", ")
 }
@@ -192,7 +192,7 @@ commas(letters[1:10])
 <!-- Don't confuse with many function arguments that are prefixed with a . -->
 注意：有些函数的参数前缀是 .
 
-```{r, eval= F}
+```{r dot-19, eval= F}
 mutate_all(.tbl, .funs, ...)
 
 mutate_if(.tbl, .predicate, .funs, ...)
@@ -227,7 +227,7 @@ rename_all(.tbl, .funs = list(), ...)
 
 现在回答本章开始的问题
 
-```{r, warning=FALSE, message=FALSE}
+```{r dot-20, warning=FALSE, message=FALSE}
 read_csv("./demo_data/wages.csv") %>%
   dplyr::mutate(letter = str_extract(race, "(?<=h)(.)")) %>%
   dplyr::select(., -letter) %>%
@@ -251,12 +251,12 @@ read_csv("./demo_data/wages.csv") %>%
 
 
 
-```{r, echo = F}
+```{r dot-21, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(df, mean_rm, words, commas)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r dot-22, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

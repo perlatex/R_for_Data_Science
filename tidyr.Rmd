@@ -2,7 +2,7 @@
 
 
 
-```{r message = FALSE, warning = FALSE}
+```{r tidyr-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
@@ -11,7 +11,7 @@ library(tidyverse)
 
 假定这里有 `A`, `B`, `C` 和 `D` 四种植物每天生长的记录，
 
-```{r}
+```{r tidyr-2}
 plant_height <- data.frame(
   Day = 1:5,
   A = c(0.7, 1.0, 1.5, 1.8, 2.2),
@@ -25,7 +25,7 @@ plant_height
 ```
 
 
-```{block, type="danger"}
+```{block tidyr-3, type="danger"}
 大家想想，
 
 - 把植物高度大于或等于0.8cm的时刻**筛选**出来，怎么写语句?
@@ -33,13 +33,13 @@ plant_height
 ```
 
 很显然，我们用第 \@ref(dplyr) 章数据处理和第 \@ref(ggplot2-aes) 章数据可视化的技术，可以写成这样
-```{r, eval = FALSE}
+```{r tidyr-4, eval = FALSE}
 plant_height %>% 
   filter( ___ >= 0.8)
 ```
 
 
-```{r, eval = FALSE}
+```{r tidyr-5, eval = FALSE}
 plant_height %>% 
   ggplot(aes(x = Day, y = ___, color = ___)) +
   geom_line()
@@ -50,12 +50,12 @@ plant_height %>%
 
 怎么解决呢？想用上面的语句，数据就得变形。那么怎么变形呢？ 
 
-```{r out.width = '100%', fig.align='left', echo = FALSE}
+```{r tidyr-6, out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/make_data_tidy.png")
 ```
 
 下面任意一种都行：
-```{r eval=FALSE}
+```{r tidyr-7, eval=FALSE}
 melted <- gather(plant_height, variable, value, 2:3)
 
 ## Column names instead of indices
@@ -79,7 +79,7 @@ melted <- gather(plant_height, variable, value, -Day)
 
 
 
-```{r out.width = '100%', fig.align='left', echo = FALSE}
+```{r tidyr-8, out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/tidyr-fig.png")
 ```
 
@@ -88,7 +88,7 @@ knitr::include_graphics("images/tidyr-fig.png")
 
 所以现在使用`pivot_longer()`函数
 
-```{r, how-to-pivot, include=FALSE, eval=FALSE}
+```{r how-to-pivot, include=FALSE, eval=FALSE}
 long <- plant_height %>%
   pivot_longer(
     cols = A:D,
@@ -117,7 +117,7 @@ flair::decorate("how-to-pivot") %>%
 
 
 当然，参数`cols` 的写法可以多种形式的，具体见第 \@ref(colwise) 章`select()`函数.
-```{r, eval=FALSE}
+```{r tidyr-11, eval=FALSE}
 plant_height %>% 
   pivot_longer(
   cols = -Day,         # A:D 或者 c(A, B, C, D) 或者 c("A", "B", "C", "D")
@@ -131,7 +131,7 @@ plant_height %>%
 
 画图的问题也就解决了
 
-```{r}
+```{r tidyr-12}
 long %>% 
   ggplot(aes(x = Day, y = height, color = plant)) +
   geom_line()
@@ -143,7 +143,7 @@ long %>%
 
 如果，长表格变回宽表格呢？需要用到`pivot_wider()`
 
-```{r}
+```{r tidyr-13}
 wide <- long %>% 
   pivot_wider(
   names_from = "plant",
@@ -160,7 +160,7 @@ wide
 
 Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
 
-```{r out.width = '85%', echo = FALSE}
+```{r tidyr-14, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/import_datatype01.png")
 ```
 
@@ -171,13 +171,13 @@ knitr::include_graphics("images/import_datatype01.png")
 
 根据Hadley Wickham的思想，这里的宽表格(`plant_heigt`和 `wide`)不是tidy的，只有长表格(`long`)才是tidy的，
 
-```{r}
+```{r tidyr-15}
 long
 ```
 
 
 
-```{block, type="danger"}
+```{block tidyr-16, type="danger"}
 以后，我们会意识到tidyverse中的很多函数都喜欢tidy的（尤其是ggplot2时）！
 ```
 
@@ -192,11 +192,11 @@ long
 
 
 
-```{r, echo = F}
+```{r tidyr-17, echo = F}
 # remove the objects
 rm(long, wide, plant_height)
 ```
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r tidyr-18, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

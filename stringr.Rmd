@@ -1,6 +1,6 @@
 # 正则表达式 {#stringr}
 
-```{r message = FALSE, warning = FALSE}
+```{r stringr-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(stringr)
 ```
@@ -11,7 +11,7 @@ library(stringr)
 
 这是一份关于地址信息的数据
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r stringr-2, echo=FALSE, message=FALSE, warning=FALSE}
 d <- tibble::tribble(
   ~No, ~address,
   1L, "Sichuan Univ, Coll Chem",
@@ -63,17 +63,17 @@ R 语言中很多函数都需要使用正则表达式，然而正则表达式不
 ### 字符串长度
 
 想获取字符串的长度，可以使用`str_length()`函数
-```{r}
+```{r stringr-3}
 str_length("R for data science")
 ```
 
 字符串向量，也适用
-```{r}
+```{r stringr-4}
 str_length(c("a", "R for data science", NA))
 ```
 
 数据框里配合dplyr函数，同样很方便
-```{r}
+```{r stringr-5}
 data.frame(
   x = c("a", "R for data science", NA)
 ) %>%
@@ -90,28 +90,28 @@ data.frame(
 
 
 把字符串拼接在一起，使用 `str_c()` 函数
-```{r}
+```{r stringr-6}
 str_c("x", "y")
 ```
 
 
 把字符串拼接在一起，可以设置中间的间隔
-```{r}
+```{r stringr-7}
 str_c("x", "y", sep = ", ")
 ```
 
 
-```{r}
+```{r stringr-8}
 str_c(c("x", "y", "z"), sep = ", ")
 ```
 是不是和你想象的不一样，那就`?str_c`，或者试试这个
 
-```{r}
+```{r stringr-9}
 str_c(c("x", "y", "z"), c("x", "y", "z"), sep = ", ")
 ```
 
 用在数据框里
-```{r}
+```{r stringr-10}
 data.frame(
   x = c("I", "love", "you"),
   y = c("you", "like", "me")
@@ -121,11 +121,11 @@ data.frame(
 
 使用collapse选项，是先组合，然后再转换成单个字符串，大家对比下
 
-```{r}
+```{r stringr-11}
 str_c(c("x", "y", "z"), c("a", "b", "c"), sep = "|")
 ```
 
-```{r}
+```{r stringr-12}
 str_c(c("x", "y", "z"), c("a", "b", "c"), collapse = "|")
 ```
 
@@ -138,13 +138,13 @@ str_c(c("x", "y", "z"), c("a", "b", "c"), collapse = "|")
 ### 字符串取子集
 
 截取字符串的一部分，需要指定截取的开始位置和结束位置
-```{r}
+```{r stringr-13}
 x <- c("Apple", "Banana", "Pear")
 str_sub(x, 1, 3)
 ```
 
 开始位置和结束位置如果是负整数，就表示位置是从后往前数，比如下面这段代码，截取倒数第3个至倒数第1个位置上的字符串
-```{r}
+```{r stringr-14}
 x <- c("Apple", "Banana", "Pear")
 str_sub(x, -3, -1)
 ```
@@ -152,18 +152,18 @@ str_sub(x, -3, -1)
 
 也可以进行赋值，如果该位置上有字符，就用新的字符替换旧的字符
 
-```{r}
+```{r stringr-15}
 x <- c("Apple", "Banana", "Pear")
 x
 ```
 
 
-```{r}
+```{r stringr-16}
 str_sub(x, 1, 1)
 ```
 
 
-```{r}
+```{r stringr-17}
 str_sub(x, 1, 1) <- "Q"
 x
 ```
@@ -178,25 +178,25 @@ x
 ### 基础匹配
 
 `str_view()` 是查看string是否匹配pattern，如果匹配，就高亮显示
-```{r}
+```{r stringr-18}
 x <- c("apple", "banana", "pear")
 str_view(string = x, pattern = "an")
 ```
 
 有时候，我们希望在字符`a`前后都有字符（即，a处在两字符中间，如rap, bad, sad, wave，spear等等）
-```{r}
+```{r stringr-19}
 x <- c("apple", "banana", "pear")
 str_view(x, ".a.")
 ```
 
 这里的`.` 代表任意字符。如果向表达.本身呢？
 
-```{r}
+```{r stringr-20}
 c("s.d") %>%
   str_view(".")
 ```
 
-```{r}
+```{r stringr-21}
 c("s.d") %>%
   str_view("\\.")
 ```
@@ -205,20 +205,20 @@ c("s.d") %>%
 ### 锚点
 
 希望`a`是字符串的开始
-```{r}
+```{r stringr-22}
 x <- c("apple", "banana", "pear")
 str_view(x, "^a")
 ```
 
 
 希望`a`是一字符串的末尾
-```{r}
+```{r stringr-23}
 x <- c("apple", "banana", "pear")
 str_view(x, "a$")
 ```
 
 
-```{r}
+```{r stringr-24}
 x <- c("apple pie", "apple", "apple cake")
 str_view(x, "^apple$")
 ```
@@ -237,7 +237,7 @@ str_view(x, "^apple$")
 * `[^abc]`: matches anything except a, b, or c.
 
 
-```{r}
+```{r stringr-25}
 str_view(c("grey", "gray"), "gr[ea]y")
 ```
 
@@ -258,7 +258,7 @@ str_view(c("grey", "gray"), "gr[ea]y")
 
 
 
-```{r}
+```{r stringr-26}
 x <- "Roman numerals: MDCCCLXXXVIII"
 str_view(x, "CC?")
 str_view(x, "X+")
@@ -278,7 +278,7 @@ str_view(x, "X+")
 
 
 
-```{r}
+```{r stringr-27}
 x <- "Roman numerals: MDCCCLXXXVIII"
 str_view(x, "C{2}")
 str_view(x, "C{2,}")
@@ -291,7 +291,7 @@ str_view(x, "C{2,3}")
 
 
 
-```{r}
+```{r stringr-28}
 x <- "Roman numerals: MDCCCLXXXVIII"
 
 str_view(x, "CLX+")
@@ -301,7 +301,7 @@ str_view(x, "CLX+?")
 
 小结一下呢
 
-```{r out.width = '75%', echo = FALSE}
+```{r stringr-29, out.width = '75%', echo = FALSE}
 knitr::include_graphics("images/regex_repeat.jpg")
 ```
 
@@ -311,20 +311,20 @@ knitr::include_graphics("images/regex_repeat.jpg")
 ### 分组与回溯引用
 
 
-```{r}
+```{r stringr-30}
 ft <- fruit %>% head(10)
 ft
 ```
 
 我们想看看这些单词里，有哪些字母是重复两次的，比如`aa`, `pp`. 如果用上面学的方法
-```{r}
+```{r stringr-31}
 str_view(ft, ".{2}", match = TRUE)
 ```
 
 发现不是和我们的预想不一样呢。
 
 所以需要用到新技术 **分组与回溯引用**，
-```{r}
+```{r stringr-32}
 str_view(ft, "(.)\\1", match = TRUE)
 ```
 
@@ -336,13 +336,13 @@ str_view(ft, "(.)\\1", match = TRUE)
 
 
 如果是匹配`abab`, `wcwc`
-```{r}
+```{r stringr-33}
 str_view(ft, "(..)\\1", match = TRUE)
 ```
 
 如果是匹配`abba`, `wccw`呢？
 
-```{r}
+```{r stringr-34}
 str_view(ft, "(.)(.)\\2\\1", match = TRUE)
 ```
 
@@ -357,24 +357,24 @@ str_view(ft, "(.)(.)\\2\\1", match = TRUE)
 ### 确定一个字符向量是否匹配一种模式
 
 实际问题中，想判断是否匹配？可以用到`str_detect()`函数
-```{r}
+```{r stringr-35}
 x <- c("apple", "banana", "pear")
 str_detect(x, "e")
 ```
 
 数据框中也是一样
-```{r echo=FALSE}
+```{r stringr-36, echo=FALSE}
 d <- tibble(x = c("apple", "banana", "pear"))
 d
 ```
 
-```{r}
+```{r stringr-37}
 d %>% mutate(has_e = str_detect(x, "e"))
 ```
 
 用于筛选也很方便
 
-```{r}
+```{r stringr-38}
 d %>% dplyr::filter(str_detect(x, "e"))
 ```
 
@@ -382,12 +382,12 @@ d %>% dplyr::filter(str_detect(x, "e"))
 
 
 `stringr::words`包含了牛津字典里常用单词
-```{r}
+```{r stringr-39}
 stringr::words %>% head()
 ```
 
 我们统计下以`t`开头的单词，有多少个？
-```{r}
+```{r stringr-40}
 # How many common words start with t?
 sum(str_detect(words, "^t"))
 ```
@@ -395,14 +395,14 @@ sum(str_detect(words, "^t"))
 
 
 以元音结尾的单词，占比多少？
-```{r}
+```{r stringr-41}
 # proportion of common words end with a vowel?
 mean(str_detect(words, "[aeiou]$"))
 ```
 
 
 放在数据框里看看, 看看以`x`结尾的单词是哪些？
-```{r}
+```{r stringr-42}
 tibble(
   word = words
 ) %>%
@@ -414,13 +414,13 @@ tibble(
 
 `str_detect()` 有一个功能类似的函数`str_count()`，区别在于，后者不是简单地返回是或否，而是返回字符串中匹配的数量
 
-```{r}
+```{r stringr-43}
 x <- c("apple", "banana", "pear")
 str_count(x, "a")
 ```
 
 
-```{r}
+```{r stringr-44}
 tibble(
   word = words
 ) %>%
@@ -442,12 +442,12 @@ tibble(
 
 大家放心，正则表达式不会重叠匹配。比如用`"aba"`去匹配`"abababa"`，肉眼感觉是三次，但正则表达式告诉我们是两次，因为不会重叠匹配
 
-```{r}
+```{r stringr-45}
 str_count("abababa", "aba")
 ```
 
 
-```{r}
+```{r stringr-46}
 str_view_all("abababa", "aba")
 ```
 
@@ -457,7 +457,7 @@ str_view_all("abababa", "aba")
 
 ### 提取匹配的内容
 
-```{r}
+```{r stringr-47}
 colours <- c(
   "red", "orange", "yellow",
   "green", "blue", "purple"
@@ -470,39 +470,39 @@ colour_match 这里是一个字符串，放在pattern参数位置上也是正则
 
 这里注意以下两者的区别
 
-```{r, eval=FALSE}
+```{r stringr-48, eval=FALSE}
 str_view("abcd", "ab|cd")
 str_view("abc", "a[bc]d")
 ```
 
 
 
-```{r}
+```{r stringr-49}
 more <- "It is hard to erase blue or red ink."
 str_extract(more, pattern = colour_match)
 ```
 
 
-```{r}
+```{r stringr-50}
 str_extract_all(more, pattern = colour_match)
 ```
 
 
 
 
-```{r}
+```{r stringr-51}
 more <- sentences[str_count(sentences, colour_match) > 1]
 more
 ```
 取出sentences中，含有有两种和两种颜色以上的句子。不过，不喜欢这种写法，看着费劲，还是用tidyverse的方法
-```{r}
+```{r stringr-52}
 tibble(sentence = sentences) %>%
   filter(str_count(sentences, colour_match) > 1)
 ```
 
 `str_extract()`提取匹配, 谁先匹配就提取谁
 
-```{r}
+```{r stringr-53}
 tibble(x = more) %>%
   mutate(color = str_extract(x, colour_match))
 ```
@@ -510,12 +510,12 @@ tibble(x = more) %>%
 
 `str_extract_all()`提取全部匹配项
 
-```{r}
+```{r stringr-54}
 tibble(x = more) %>%
   mutate(color = str_extract_all(x, colour_match))
 ```
 
-```{r}
+```{r stringr-55}
 tibble(x = more) %>%
   mutate(color = str_extract_all(x, colour_match)) %>%
   unnest(color)
@@ -528,14 +528,14 @@ tibble(x = more) %>%
 
 
 只替换匹配的第一项
-```{r}
+```{r stringr-56}
 x <- c("apple", "pear", "banana")
 str_replace(x, "[aeiou]", "-")
 ```
 
 
 替换全部匹配项
-```{r}
+```{r stringr-57}
 str_replace_all(x, "[aeiou]", "-")
 ```
 
@@ -549,18 +549,18 @@ str_replace_all(x, "[aeiou]", "-")
 
 这个和`str_c()`是相反的操作
 
-```{r}
+```{r stringr-58}
 lines <- "I love my country"
 lines
 ```
 
 
-```{r}
+```{r stringr-59}
 str_split(lines, " ")
 ```
 
 
-```{r}
+```{r stringr-60}
 fields <- c("Name: Hadley", "Country: NZ", "Age: 35")
 fields %>% str_split(": ", n = 2, simplify = TRUE)
 ```
@@ -579,14 +579,14 @@ fields %>% str_split(": ", n = 2, simplify = TRUE)
 ### look ahead
 
 想匹配Windows，同时希望Windows右侧是`"95", "98", "NT", "2000"`中的一个
-```{r}
+```{r stringr-61}
 win <- c("Windows2000", "Windows", "Windows3.1")
 str_view(win, "Windows(?=95|98|NT|2000)")
 ```
 
 
 
-```{r}
+```{r stringr-62}
 win <- c("Windows2000", "Windows", "Windows3.1")
 str_view(win, "Windows(?!95|98|NT|2000)")
 ```
@@ -601,7 +601,7 @@ Windows后面的 `()` 是匹配条件，事实上，有四种情形：
 - `(?<!pattern)` 要求此位置的前面不能匹配表达式pattern
 
 
-```{block, type="danger"}
+```{block stringr-63, type="danger"}
 注意：对于正则表达式引擎来说，它是从文本头部向尾部（从左到右）开始解析的，因此对于文本尾部方向，称为“前”，因为这个时候，正则引擎还没走到那块；而对文本头部方向，则称为“后”，因为正则引擎已经走过了那一块地方。
 ```
 
@@ -610,13 +610,13 @@ Windows后面的 `()` 是匹配条件，事实上，有四种情形：
 ### look behind
 
 
-```{r}
+```{r stringr-64}
 win <- c("2000Windows", "Windows", "3.1Windows")
 str_view(win, "(?<=95|98|NT|2000)Windows")
 ```
 
 
-```{r}
+```{r stringr-65}
 win <- c("2000Windows", "Windows", "3.1Windows")
 str_view(win, "(?<!95|98|NT|2000)Windows")
 ```
@@ -632,7 +632,7 @@ str_view(win, "(?<!95|98|NT|2000)Windows")
 
 我们希望能提取第二列中的数值，构成新的一列
 
-```{r}
+```{r stringr-66}
 dt <- tibble(
   x = 1:4,
   y = c("wk 3", "week-1", "7", "w#9")
@@ -641,12 +641,12 @@ dt
 ```
 
 
-```{r, eval=FALSE,include=FALSE}
+```{r stringr-67, eval=FALSE,include=FALSE}
 dt %>%
   mutate(z = parse_number(y))
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r stringr-68, eval = FALSE, include=FALSE}
 # parse_number() parse_integer() parse_double()
 
 # parse_factor() parse_logical() parse_character()
@@ -654,7 +654,7 @@ dt %>%
 # parse_datetime() parse_time() parse_date()
 ```
 
-```{r}
+```{r stringr-69}
 dt %>%
   mutate(
     z = str_extract(y, "[0-9]")
@@ -671,7 +671,7 @@ dt %>%
 
 提取第二列中的大写字母
 
-```{r}
+```{r stringr-70}
 df <- data.frame(
   x = seq_along(1:7),
   y = c("2016123456", "20150513", "AB2016123456", "J2017000987", "B2017000987C", "aksdf", "2014")
@@ -682,7 +682,7 @@ df
 
 
 
-```{r}
+```{r stringr-71}
 df %>%
   mutate(
     item = str_extract_all(y, "[A-Z]")
@@ -700,14 +700,14 @@ df %>%
 
 要求：中英文分开
 
-```{r}
+```{r stringr-72}
 tb <- tibble(x = c("I我", "love爱", "you你"))
 tb
 ```
 
 
 
-```{r}
+```{r stringr-73}
 tb %>%
   tidyr::extract(
     # x, c("en", "cn"), "([:alpha:]+)([^:alpha:]+)",
@@ -722,14 +722,14 @@ tb %>%
 
 要求：提取起始数字
 
-```{r}
+```{r stringr-74}
 df <- tibble(x = c("1-12周", "1-10周", "5-12周"))
 df
 ```
 
 
 
-```{r}
+```{r stringr-75}
 df %>% extract(
   x,
   # c("start", "end", "cn"), "([:digit:]+)-([:digit:]+)([^:alpha:]+)",
@@ -746,14 +746,14 @@ df %>% extract(
 
 要求：提取大写字母后的数字
 
-```{r}
+```{r stringr-76}
 df <- tibble(
   x = c("12W34", "AB2C46", "B217C", "akTs6df", "21WD4")
 )
 ```
 
 
-```{r}
+```{r stringr-77}
 df %>%
   mutate(item = str_extract_all(x, "(?<=[A-Z])[0-9]")) %>%
   tidyr::unnest(item)
@@ -765,7 +765,7 @@ df %>%
 - 如何提取提取数字前的大写字母？
 - 为什么第一个正则表达式返回结果为"" 
 
-```{r}
+```{r stringr-78}
 x <- "Roman numerals: MDCCCLXXXVIII"
 str_match_all(x, "C?") # "?"的意思是匹配0次或者1次
 str_match_all(x, "CC?")
@@ -777,7 +777,7 @@ str_match_all(x, "CC?")
 
 提取数字并求和
 
-```{r}
+```{r stringr-79}
 df <- tibble(
   x = c("1234", "B246", "217C", "2357f", "21WD4")
 )
@@ -785,7 +785,7 @@ df
 ```
 
 
-```{r}
+```{r stringr-80}
 df %>%
   mutate(num = str_match_all(x, "\\d")) %>%
   unnest(num) %>%
@@ -795,7 +795,7 @@ df %>%
 ```
 
 ### 案例7
-```{r}
+```{r stringr-81}
 text <- "Quantum entanglement is a physical phenomenon that occurs when pairs or groups of particles are generated, interact, or share spatial proximity in ways such that the quantum state of each particle cannot be described independently of the state of the others, even when the particles are separated by a large distance."
 
 
@@ -820,7 +820,7 @@ text %>% str_replace_all(pairs)
 ## 回答提问
 
 回到上课前的提问：如何提取`Sichuan Univ`后面的学院？
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r stringr-82, echo=FALSE, message=FALSE, warning=FALSE}
 d <- tibble::tribble(
   ~No, ~address,
   1L, "Sichuan Univ, Coll Chem",
@@ -837,7 +837,7 @@ d
 ```
 
 
-```{r}
+```{r stringr-83}
 d %>%
   dplyr::mutate(
     coll = str_extract(address, "(?<=Sichuan Univ,).*")
@@ -847,13 +847,13 @@ d %>%
 
 
 当然还有其他的解决办法
-```{r eval=FALSE}
+```{r stringr-84, eval=FALSE}
 d %>% mutate(
   coll = str_remove_all(address, ".*,")
 )
 ```
 
-```{r eval=FALSE}
+```{r stringr-85, eval=FALSE}
 d %>% tidyr::separate(
   address,
   into = c("univ", "coll"), sep = ",", remove = FALSE
@@ -861,7 +861,7 @@ d %>% tidyr::separate(
 ```
 
 
-```{r eval=FALSE}
+```{r stringr-86, eval=FALSE}
 d %>%
   tidyr::extract(
     address, c("univ", "coll"), "(Sichuan Univ), (.+)",
@@ -878,7 +878,7 @@ d %>%
 - https://github.com/VerbalExpressions/RVerbalExpressions
 
 
-```{r}
+```{r stringr-87}
 library(inferregex) # remotes::install_github("daranzolin/inferregex")
 s <- "abcd-9999-ab9"
 infer_regex(s)$regex
@@ -887,13 +887,13 @@ infer_regex(s)$regex
 
 
 
-```{r, echo = F}
+```{r stringr-88, echo = F}
 # remove the objects
 rm(colour_match, colours, d, df, dt, fields, ft, lines, more, pairs, s, tb, text, win, x)
 ```
 
 
 
-```{r, echo = F, message = F, warning = F, results = "hide"}
+```{r stringr-89, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
