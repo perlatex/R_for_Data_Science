@@ -25,7 +25,7 @@ options(
   htmltools.dir.version = FALSE, formatR.indent = 2, width = 55, digits = 4
 )
 
-knitr::opts_chunk$set(cache = TRUE,
+knitr::opts_chunk$set(
                       echo = TRUE, 
                       warning = FALSE, 
                       message = FALSE,

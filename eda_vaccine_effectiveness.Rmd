@@ -43,6 +43,8 @@ $$
 library(tidyverse)
 library(tidybayes)
 library(rstan)
+  rstan_options(auto_write = FALSE)
+  options(mc.cores = 4)
 ```
 
 然后，我们建立如下数学模型：

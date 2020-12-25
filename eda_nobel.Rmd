@@ -161,7 +161,7 @@ df %>%
 
 
 让图骚动起来吧
-```{r eda-nobel-14}
+```{r eda-nobel-14, eval=FALSE}
 library(gganimate) # install.packages("gganimate", dependencies = T)
 
 df %>%
