@@ -450,7 +450,7 @@ df %>%
 - 数据框中的多列执行相同操作
 - 不同性质的操作，有时可以一起写出，不用再`left_join()`
 
-```{r beauty-of-across-22, out.width = '90%', echo = FALSE, fig.cap = "across()函数总结囑�<U+3E65>"}
+```{r beauty-of-across-22, out.width = '90%', echo = FALSE, fig.cap = "across()函数总结图"}
 knitr::include_graphics("images/across.png")
 ```
 

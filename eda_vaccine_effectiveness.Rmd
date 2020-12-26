@@ -43,8 +43,8 @@ $$
 library(tidyverse)
 library(tidybayes)
 library(rstan)
-  rstan_options(auto_write = FALSE)
-  options(mc.cores = 4)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 ```
 
 然后，我们建立如下数学模型：
@@ -74,7 +74,7 @@ $$
 
 具体Stan代码如下
 
-```{r eda-vaccine-effectiveness-4, warning=FALSE, message=FALSE, results=FALSE}
+```{r eda-vaccine-effectiveness-4, cache=TRUE, results=FALSE, eval=FALSE}
 stan_program <- "
 data {
   int<lower=1> event_c;        // num events, control
@@ -107,22 +107,29 @@ stan_data <- list(
   n_t     = 4.4e4 / 2
 )
 
-mod <- stan(model_code = stan_program, data = stan_data)
+mod_vaccine <- stan(model_code = stan_program, data = stan_data)
 ```
 
+
+```{r include=FALSE}
+# 运行stan代码，导致渲染bookdown报错，不知道为什么，先用这边笨办法凑合吧
+# mod_vaccine %>% saveRDS(here::here("stan","mod_vaccine.rds"))
+mod_vaccine <- readRDS(here::here("stan","mod_vaccine.rds"))
+
+```
 
 
 
 ## 结果
 
 最后，我们后验概率抽样
-```{r eda-vaccine-effectiveness-5, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-mod
+```{r eda-vaccine-effectiveness-5, eval=FALSE, include=FALSE}
+mod_vaccine
 ```
 
 
-```{r eda-vaccine-effectiveness-6, warning=FALSE, message=FALSE}
-draws <- mod %>%
+```{r eda-vaccine-effectiveness-6}
+draws <- mod_vaccine %>%
   tidybayes::spread_draws(effect, VE, log_odds)
 
 draws %>% 
@@ -143,7 +150,7 @@ mean(draws$effect < 0) %>% round(2)
 结果告诉我们，疫苗有明显的干预效果。比如，我们假定10000个人接受了疫苗，那么被感染的人数以及相应的可能性，如下图
 
 
-```{r eda-vaccine-effectiveness-8, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-8}
 draws %>%
   ggplot(aes(x = effect * 1e4)) +
   geom_density(fill = "blue", alpha = .2) +
@@ -183,26 +190,23 @@ median(draws$VE)
 
 我们再看看疫苗有效率 VE 的结果
 
-```{r eda-vaccine-effectiveness-11, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-11}
 draws %>%
   select(VE) %>%
   ggdist::median_qi(.width = c(0.90))
 ```
 
 
-通过数据看出，疫苗的有效性为0.95，在90%的可信赖水平, 中位数区间[0.91, 0.97]
+通过数据看出，疫苗的有效性为0.95，在90%的可信赖水平, 中位数区间[0.91, 0.97].
 
 
 
 
-```{r eda-vaccine-effectiveness-12, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r eda-vaccine-effectiveness-12, eval=FALSE, include=FALSE}
 draws %>%
   ggplot(aes(x = VE)) +
   geom_density()
-```
 
-
-```{r eda-vaccine-effectiveness-13, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 draws %>%
   ggplot(aes(x = VE)) +
   geom_density(fill = "blue", alpha = .2) +
@@ -215,7 +219,7 @@ draws %>%
 
 当然，通过图可能理解的更清晰。
 
-```{r eda-vaccine-effectiveness-14, warning=FALSE, message=FALSE}
+```{r eda-vaccine-effectiveness-14}
 label_txt <- paste("median =", round(median(draws$VE), 2))
 
 draws %>%
@@ -233,7 +237,8 @@ draws %>%
 ```{r eda-vaccine-effectiveness-15, echo = F}
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
-rm(d, draws, label_txt, mod, stan_data, stan_program)
+#rm(d, draws, label_txt, mod_vaccine, stan_data, stan_program)
+rm(d, draws, label_txt, mod_vaccine)
 ```
 
 
