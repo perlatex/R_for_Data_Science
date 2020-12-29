@@ -19,7 +19,7 @@ showtext_auto()
 
 
 
-```{r eda-covid2019-2, out.width='45%', fig.align='left', fig.cap='电影《传染病�<U+383C><U+3E62>,《流感》海抐�<U+3E35>', echo=FALSE}
+```{r eda-covid2019-2, out.width='45%', fig.align='left', fig.cap='电影《传染病》,《流感》海报', echo=FALSE}
 knitr::include_graphics(c("images/movie_contagion.jpg", "images/movie_flu.png"))
 ```
 

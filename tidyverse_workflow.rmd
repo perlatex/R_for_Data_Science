@@ -9,7 +9,7 @@ library(tidyverse)
 本章做个小结，通过案例**复习和串讲**下tidyverse中常用的核心部件（事实上，tidyverse套餐比我们列出的要丰富）。
 
 
-```{r tidyverse-workflow-2, out.width='100%', fig.cap = "图片来源Silvia Canelón在R-Ladies Chicago的报�<U+383C><U+3E61>", echo=FALSE}
+```{r tidyverse-workflow-2, out.width='100%', fig.cap = "图片来源Silvia Canelón在R-Ladies Chicago的报告", echo=FALSE}
 knitr::include_graphics("images/tidyverse-workflow.png")
 ```
 

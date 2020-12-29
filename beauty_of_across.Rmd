@@ -427,6 +427,7 @@ df %>% mutate(
 
 ### 与`c_across()`配合也挺默契
 
+在一行中的占比
 ```{r beauty-of-across-21}
 df <- tibble(x = 1:3, y = 3:5, z = 5:7)
 
@@ -439,6 +440,25 @@ df %>%
 
 
 
+看一行中哪个最大，最大的变为1，其余的变为0
+
+```{r beauty-of-across-25}
+replace_col_max <- function(vec) {
+  if (!is.vector(vec)) {
+    stop("input of replace_col_max must be vector.")
+  }
+
+  if_else(vec == max(vec), 1L, 0L)
+}
+
+
+df %>%
+  rowwise() %>%
+  mutate(
+    new = list(replace_col_max(c_across(everything())))
+  ) %>%
+  unnest_wider(new, names_sep = "_")
+```
 
 
 
@@ -460,7 +480,7 @@ knitr::include_graphics("images/across.png")
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 
-rm(cutoffs, d1, d2, df, mult, std, weights)
+rm(cutoffs, d1, d2, df, mult, std, weights, replace_col_max)
 ```
 
 

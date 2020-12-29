@@ -129,7 +129,7 @@ lincoln_box
 
 箱线图是1970年代统计学家发明的一种可视化方法，这种图可以很方便地用手工画出，所以当时很流行，现在计算机性能大大提升了，所以大家喜欢用视觉上更直观的**小提琴图**取代箱线图
 
-```{r ggplot2-academic-3, out.width = '80%', echo = FALSE, fig.cap = '小提琴图示意囑�<U+3E65>'}
+```{r ggplot2-academic-3, out.width = '80%', echo = FALSE, fig.cap = '小提琴图示意图'}
 knitr::include_graphics("images/violin-schematic-1.png")
 ```
 

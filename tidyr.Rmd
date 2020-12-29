@@ -174,9 +174,11 @@ plant_record
 ```
 
 我们想转换成这样的
-```{r tidyr-6, out.width = '100%', fig.align='left', echo = FALSE}
+```{r tidyr-60, out.width = '100%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/make_data_tidy2.jpg")
 ```
+
+
 原来的列名需要转换成多个变量，还是用`pivot_longer()`函数，
 ```{r}
 plant_record %>% 
@@ -200,7 +202,7 @@ plant_record %>%
 ```
 
 
-##  tidy data
+##  tidy data原则
 
 Hadley Wickhamt提出了数据科学tidy原则，我结合自己的理解，tidy思想体现在:
 

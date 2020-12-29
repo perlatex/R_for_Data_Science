@@ -5,7 +5,7 @@
 
 ## 数据故事
 
-```{r eda-ames-houseprice-1, out.width = '75%', echo = FALSE, fig.cap = "这是数据故事的地囑�<U+3E65>"}
+```{r eda-ames-houseprice-1, out.width = '75%', echo = FALSE, fig.cap = "这是数据故事的地图"}
 knitr::include_graphics("images/ames.png")
 ```
 

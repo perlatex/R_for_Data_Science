@@ -389,6 +389,15 @@ Carol同学的信息没有了？ 大家想想又为什么呢？
 xfun::embed_file('./data/nycflights.Rmd')
 ```
 
+- 统计每位同学成绩高于75分的科目数
+
+
+```{r eval=FALSE, include=FALSE}
+df %>% 
+  group_by(name) %>% 
+  mutate(num_of_bigger_than_75 = sum(score >75))
+```
+
 
 
 ```{r dplyr-44, echo = F}
