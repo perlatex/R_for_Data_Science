@@ -194,7 +194,7 @@ d <- d %>%
 
 
 
-## 开始探索
+## 有趣的探索
 
 
 ### 各区域的房屋价格均值
@@ -287,6 +287,23 @@ d %>%
   theme(strip.background = element_blank())
 ```
 
+### 车库与房屋价格
+
+车库大小是否对销售价格有帮助?
+```{r}
+ames %>% 
+  #select(garage_cars, garage_area, sale_price) %>% 
+  ggplot(aes(x = garage_area, y = sale_price)) +
+  geom_point(
+    data = select(ames, -garage_cars),
+    color = "gray50"
+  ) +
+  geom_point(aes(color = as_factor(garage_cars))) +
+  facet_wrap(vars(garage_cars)) +
+  theme(legend.position = "none") +
+  ggtitle("This is the influence of garage for sale price")
+               
+```
 
 
 ## 建模

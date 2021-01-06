@@ -376,6 +376,11 @@ Carol同学的信息没有了？ 大家想想又为什么呢？
 
 
 
+```{r dplyr-42-1, out.width = '99%', echo = FALSE}
+knitr::include_graphics("images/join_examples.jpg")
+```
+
+
 
 
 ## 延伸阅读

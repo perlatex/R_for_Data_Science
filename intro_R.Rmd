@@ -199,6 +199,14 @@ class(fac)
 ```
 
 
+再比如，General上将；Colonel上校；Captain上尉, 如果没有指定层级levels，`c("Colonel", "General", "Captain")`就是一个常规的字符串向量，若指定了层级levels，这个字符串就有了军衔信息.
+```{r intro-R-23-1}
+factor(c("Colonel", "General", "Captain"), 
+              levels = c("General", "Colonel", "Captain")
+       )
+
+```
+
 
 
 ## 数据结构

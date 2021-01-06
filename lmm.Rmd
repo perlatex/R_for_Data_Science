@@ -425,6 +425,7 @@ lmer(salary ~ 1 + (1 | department) + (0 + experience | department), data = df)
 ```
 
 - 课后阅读[文献](https://peerj.com/articles/4794/)，读完后大家一起分享
+- 课后阅读 [Understanding mixed effects models through data simulation](https://osf.io/3cz2e/)，
 
 
 
