@@ -204,10 +204,20 @@ y_n \sim \operatorname{normal}(\alpha + \beta X_n, \, \sigma).
 $$
 
 
+```{r bayes-simuate, eval=FALSE}
+alpha_real <- 10
+beta_real  <- 3
+sigma_real <- 2
+
+df <- tibble(
+  x = runif(30, 1, 8),
+  y = rnorm(30, alpha_real + beta_real * x, sd = sigma_real)
+)
+```
 
 
 
-```{r bayes-03}
+```{r bayes-03, eval=FALSE}
 stan_program <- "
 data {
   int<lower=0> N;
@@ -222,8 +232,101 @@ parameters {
 model {
   y ~ normal(alpha + beta * x, sigma);
 }
+generated quantities {
+  vector[N] y_rep; 
+  for (n in 1:N) 
+    y_rep[n] = normal_rng(alpha + beta * x[n], sigma);
+}
+
 "
+
+stan_data <- df %>%
+  tidybayes::compose_data(
+    N = nrow(.),
+    x = x,
+    y = y
+  )
+
+fit_normal <- stan(model_code = stan_program, data = stan_data)
 ```
+
+```{r include=FALSE}
+# 运行stan代码，导致渲染bookdown报错，不知道为什么，先用这边笨办法凑合吧
+#
+#save(fit_normal, 
+#     stan_data, 
+#     alpha_real, 
+#     beta_real, 
+#     sigma_real, 
+#     file = here::here("stan", "stan_data_normal.Rdata")
+#     ) 
+
+load(here::here("stan", "stan_data_normal.Rdata"))
+```
+
+### 模型输出
+
+```{r bayes-04}
+fit_normal
+```
+
+
+
+### 模型评估
+```{r bayes-05}
+rstan::traceplot(fit_normal, pars = c("alpha", "beta", "sigma"))
+```
+
+
+```{r, eval=FALSE}
+rstan::extract(fit_normal, par = c("alpha", "beta"))
+rstan::extract(fit_normal, par = "alpha")$alpha
+rstan::extract(fit_normal, par = "beta")$beta
+```
+
+
+
+
+
+```{r bayes-06}
+fit_normal %>% 
+  tidybayes::gather_draws(alpha, beta) %>% 
+  ggplot(aes(x = .value, y = as_factor(.variable)) ) +
+  ggdist::stat_halfeye() +
+  geom_vline(xintercept = c(alpha_real, beta_real)) 
+```
+
+
+
+事实上，`bayesplot`宏包提供了大量模型评估函数，大爱
+
+```{r bayes-07, message=FALSE, results=FALSE}
+true_alpha_beta <- c(alpha_real, beta_real, sigma_real)
+
+posterior_alpha_beta <- 
+  as.matrix(fit_normal, pars = c('alpha','beta', 'sigma'))
+bayesplot::mcmc_recover_hist(posterior_alpha_beta, true = true_alpha_beta)
+```
+
+
+```{r bayes-08}
+y_rep <- as.matrix(fit_normal, pars = "y_rep")
+bayesplot::ppc_dens_overlay(y = stan_data$y, yrep = y_rep[1:200, ])
+```
+
+
+
+```{r bayes-09}
+y_rep <- as.matrix(fit_normal, pars = "y_rep")
+bayesplot::ppc_intervals(y = stan_data$y, yrep = y_rep, x = stan_data$x) 
+```
+
+
+
+## bayesian workflow
+
+
+
 
 ## 参考资料
 
@@ -243,7 +346,7 @@ model {
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 
-rm(stan_program)
+rm(fit_normal, y_rep, stan_data, alpha_real, beta_real, sigma_real,posterior_alpha_beta, true_alpha_beta)
 ```
 
 
