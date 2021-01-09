@@ -1,0 +1,254 @@
+# 贝叶斯建模 {#bayesian-models}
+
+```{r bayes-01, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+library(brms)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+
+之前我们讲了线性模型和混合线性模型，今天我们往前一步，应该说是一大步。因为这一步迈向了贝叶斯分析，与频率学派的分析有本质的区别，这种区别类似经典物理和量子物理的区别。
+
+- 频率学派，是从数据出发
+- 贝叶斯。先假定参数有一个分布，看到数据后，再重新分配可能性。
+
+
+## 生活中的贝叶斯
+
+事实上，贝叶斯在生活中应用很广泛，我们自觉和不自觉中都在使用贝叶斯分析。
+
+
+## 贝叶斯公式
+
+参数是假设，数据是证据。对于参数 $\theta$ 和数据 $D$，贝叶斯公式可以写为
+
+$$
+\underbrace{p(\theta|D)}_\text{posterior} \; = \; \underbrace{p(D|\theta)}_\text{likelihood} \;\; \underbrace{p(\theta)}_\text{prior} \;.
+$$
+
+## 三张图讲贝叶斯分析
+
+```{r bayes-three-panels, eval=FALSE, include=FALSE}
+# https://www.tjmahr.com/bayes-theorem-in-three-panels/
+
+d <- tibble(
+  ids = 1:8,
+  bases = 100 * runif(8, .9, 1.1),
+  experience = c(1, 3, 6, 10, 14, 15, 21, 26),
+  raises = 2 * runif(8, .9, 1.1)
+) %>% mutate(
+  salary = bases + experience * raises
+)
+d
+
+
+
+d %>% 
+  ggplot(aes(x = experience, y = salary)) +
+  geom_point()
+
+
+
+## 看到数据之前，可能的曲线
+## 在看到数据之前，我们认为这个系数，应该是某个值，且服从正态分布
+fit_prior <- brm(
+  formula = salary ~ experience, 
+  data = d,
+  prior = c( 
+    prior(normal(100, 20), class = "Intercept"), 
+    prior(normal(4, 2), class = "b")
+  ),
+  iter = 2000,
+  chains = 4,
+  sample_prior = "only", 
+  cores = 4,
+  control = list(adapt_delta = 0.9, max_treedepth = 13)
+)
+
+draws_prior <- d %>%
+  tidyr::expand(experience = 0:30) %>%
+  tidybayes::add_fitted_draws(fit_prior, n = 100)
+
+p1 <- 
+  ggplot(draws_prior) +
+  aes(x = experience, y = .value) +
+  geom_line(aes(group = .draw), alpha = .2) +
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) + 
+  ggtitle("看到数据之前，可能的曲线")
+p1
+
+
+
+
+## 曲线与数据匹配得怎么样?
+## 哪条曲线与数据匹配的最好？
+## Maximum likelihood estimate
+fm1 <- lm(salary ~ experience, data = d)
+new_data <- tibble(experience = 0:30) %>% 
+  mutate(
+    fit = predict(fm1, newdata = .)
+  )
+
+
+p2 <- ggplot(data = d) + 
+  aes(x = experience, y = salary) + 
+  geom_line(aes(y = fit), data = new_data, size = 1) +
+  geom_point(color = "#FB6542", size = 2) + 
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) + 
+  ggtitle("曲线与数据匹配得怎么样")
+p2
+
+
+
+
+
+## 看到数据之后，可能的曲线
+fit <- brm(
+  formula = salary ~ experience, 
+  data = d,
+  prior = c( 
+    prior(normal(100, 20), class = "Intercept"), 
+    prior(normal(4, 2), class = "b")
+  ),
+  iter = 2000,
+  chains = 4,
+  cores = 4,
+  control = list(adapt_delta = 0.9, max_treedepth = 13)
+)
+
+
+
+draws_posterior <- d %>%
+  tidyr::expand(experience = 0:30) %>%
+  tidybayes::add_fitted_draws(fit, n = 100) 
+draws_posterior
+
+
+
+p3 <- 
+  ggplot(draws_posterior) +
+  aes(x = experience, y = .value) +
+  geom_line(aes(group = .draw), alpha = .2) +
+  geom_point(
+    aes(y = salary), 
+    color = "#FB6542", size = 2, 
+    data = d
+  ) +
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) +
+  ggtitle("看到数据之后，可能的曲线")
+p3
+
+
+
+library(patchwork)
+p1 + p2 + p3
+
+ggsave("bayes-three-panels.png", width = 9, height = 3)
+```
+
+
+
+
+```{r bayes-02, out.width = '85%', echo = FALSE}
+knitr::include_graphics("./images/bayes-three-panels.png")
+```
+
+
+
+- **第一张图**: 在看到数据之前，我们预先认为参数，应该在某个范围且服从某种分布
+
+- **第二张图**: 曲线与数据匹配得怎么样? 相似性概率
+
+- **第三张图**: 看到数据之后，可能的曲线
+
+观察到数据点后，我们认为服从线性模型，这个线性模型不是一条直线，而是很多条，有些线的可能性大，有些线的可能性低，但都是有可能的。那么，综合这些有可能的线，(截距和斜率)构成了一种分布，即**后验概率分布**。
+
+
+因为我们是R语言课，我们跳过很多理论推导。事实上，我在学习贝叶斯数据分析的时候，也是先从代码操作人手，然后理解贝叶斯推断相关理论，有时候更直观更容易理解。当然，我不是说我的方法一定正确，只是供大家的一个选项。我会用到brms和Stan，但我个人更喜欢Stan.
+
+
+
+## 线性模型
+
+从最简单的线性模式开始
+$$
+y_n = \alpha + \beta x_n + \epsilon_n \quad \text{where}\quad
+\epsilon_n \sim \operatorname{normal}(0,\sigma).
+$$
+
+等价于
+
+$$
+y_n - (\alpha + \beta X_n) \sim \operatorname{normal}(0,\sigma),
+$$
+
+进一步等价
+
+$$
+y_n \sim \operatorname{normal}(\alpha + \beta X_n, \, \sigma).
+$$
+
+
+
+
+
+```{r bayes-03}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  y ~ normal(alpha + beta * x, sigma);
+}
+"
+```
+
+## 参考资料
+
+- https://mc-stan.org/
+- https://github.com/jgabry/bayes-workflow-book
+- https://github.com/XiangyunHuang/masr/
+- https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse_2_ed/
+- 《Regression and Other Stories》, Andrew Gelman, Cambridge University Press. 2020
+- 《A Student's Guide to Bayesian Statistics》,  Ben Lambert, 2018
+- 《Statistical Rethinking: A Bayesian Course with Examples in R and STAN》 ( 2nd Edition), by Richard McElreath, 2020
+- 《Bayesian Data Analysis》, Third Edition, 2013
+- 《Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan》  (2nd Edition) John Kruschke, 2014
+- 《Bayesian Models for Astrophysical Data: Using R, JAGS, Python, and Stan》， Joseph M. Hilbe, Cambridge University Press, 2017
+
+
+```{r bayes-20, echo = F}
+# remove the objects
+# ls() %>% stringr::str_flatten(collapse = ", ")
+
+rm(stan_program)
+```
+
+
+
+```{r bayes-21, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+

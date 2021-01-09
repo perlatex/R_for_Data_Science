@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>第 40 章 探索性数据分析-奥林匹克 | 数据科学中的 R 语言</title>
+  <meta name="description" content="一个简单的中文书示例。" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="第 40 章 探索性数据分析-奥林匹克 | 数据科学中的 R 语言" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="一个简单的中文书示例。" />
+  <meta name="github-repo" content="perlatex/R_for_data_science" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 40 章 探索性数据分析-奥林匹克 | 数据科学中的 R 语言" />
+  
+  <meta name="twitter:description" content="一个简单的中文书示例。" />
+  
+
+<meta name="author" content="王敏杰" />
+
+
+<meta name="date" content="2021-01-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="eda-nobel.html"/>
+<link rel="next" href="eda-covid2019.html"/>
+<script src="libs/header-attrs/header-attrs.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable/js/pagedtable.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/str_view/str_view.css" rel="stylesheet" />
+<script src="libs/str_view-binding/str_view.js"></script>
+<script src="libs/kePrint/kePrint.js"></script>
+<link href="libs/lightable/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/psyteachr.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">数据科学中的R语言</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>前言</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#关于课程"><i class="fa fa-check"></i>关于课程</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#课件中用到的宏包"><i class="fa fa-check"></i>课件中用到的宏包</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#ryouwithme"><i class="fa fa-check"></i>RYouWithMe</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#致谢"><i class="fa fa-check"></i>致谢</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="part"><span><b>I 基础篇</b></span></li>
+<li class="chapter" data-level="1" data-path="intro-ds.html"><a href="intro-ds.html"><i class="fa fa-check"></i><b>1</b> 数据科学与R语言</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro-ds.html"><a href="intro-ds.html#什么是数据科学"><i class="fa fa-check"></i><b>1.1</b> 什么是数据科学</a></li>
+<li class="chapter" data-level="1.2" data-path="intro-ds.html"><a href="intro-ds.html#什么是r"><i class="fa fa-check"></i><b>1.2</b> 什么是R</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="intro-ds.html"><a href="intro-ds.html#r那些事"><i class="fa fa-check"></i><b>1.2.1</b> R那些事</a></li>
+<li class="chapter" data-level="1.2.2" data-path="intro-ds.html"><a href="intro-ds.html#r是什么"><i class="fa fa-check"></i><b>1.2.2</b> R是什么</a></li>
+<li class="chapter" data-level="1.2.3" data-path="intro-ds.html"><a href="intro-ds.html#r语言发展趋势"><i class="fa fa-check"></i><b>1.2.3</b> R语言发展趋势</a></li>
+<li class="chapter" data-level="1.2.4" data-path="intro-ds.html"><a href="intro-ds.html#r路上的大神"><i class="fa fa-check"></i><b>1.2.4</b> R路上的大神</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="intro-ds.html"><a href="intro-ds.html#r能干什么"><i class="fa fa-check"></i><b>1.3</b> R能干什么</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="intro-ds.html"><a href="intro-ds.html#数据科学流程"><i class="fa fa-check"></i><b>1.3.1</b> 数据科学流程</a></li>
+<li class="chapter" data-level="1.3.2" data-path="intro-ds.html"><a href="intro-ds.html#tidyverse家族"><i class="fa fa-check"></i><b>1.3.2</b> tidyverse家族</a></li>
+<li class="chapter" data-level="1.3.3" data-path="intro-ds.html"><a href="intro-ds.html#r-tidyverse-四大优势"><i class="fa fa-check"></i><b>1.3.3</b> R &amp; tidyverse 四大优势</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="intro-ds.html"><a href="intro-ds.html#为什么选择-r"><i class="fa fa-check"></i><b>1.4</b> 为什么选择 R</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="intro-ds.html"><a href="intro-ds.html#社会科学需要统计"><i class="fa fa-check"></i><b>1.4.1</b> 社会科学需要统计</a></li>
+<li class="chapter" data-level="1.4.2" data-path="intro-ds.html"><a href="intro-ds.html#社会科学需要可视化"><i class="fa fa-check"></i><b>1.4.2</b> 社会科学需要可视化</a></li>
+<li class="chapter" data-level="1.4.3" data-path="intro-ds.html"><a href="intro-ds.html#社会科学需要编程"><i class="fa fa-check"></i><b>1.4.3</b> 社会科学需要编程</a></li>
+<li class="chapter" data-level="1.4.4" data-path="intro-ds.html"><a href="intro-ds.html#社会科学需要可重复性"><i class="fa fa-check"></i><b>1.4.4</b> 社会科学需要可重复性</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="intro-ds.html"><a href="intro-ds.html#r-语言之美你值得拥有"><i class="fa fa-check"></i><b>1.5</b> R 语言之美，你值得拥有</a></li>
+<li class="chapter" data-level="1.6" data-path="intro-ds.html"><a href="intro-ds.html#当今最值得学习的数据科学语言"><i class="fa fa-check"></i><b>1.6</b> 当今最值得学习的数据科学语言</a></li>
+<li class="chapter" data-level="1.7" data-path="intro-ds.html"><a href="intro-ds.html#一见钟情还是相见恨晚"><i class="fa fa-check"></i><b>1.7</b> 一见钟情，还是相见恨晚？</a></li>
+<li class="chapter" data-level="1.8" data-path="intro-ds.html"><a href="intro-ds.html#推荐阅读"><i class="fa fa-check"></i><b>1.8</b> 推荐阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro-R.html"><a href="intro-R.html"><i class="fa fa-check"></i><b>2</b> R语言基础</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro-R.html"><a href="intro-R.html#安装-r"><i class="fa fa-check"></i><b>2.1</b> 安装 R</a></li>
+<li class="chapter" data-level="2.2" data-path="intro-R.html"><a href="intro-R.html#安装-rstudio"><i class="fa fa-check"></i><b>2.2</b> 安装 RStudio</a></li>
+<li class="chapter" data-level="2.3" data-path="intro-R.html"><a href="intro-R.html#开始"><i class="fa fa-check"></i><b>2.3</b> 开始</a></li>
+<li class="chapter" data-level="2.4" data-path="intro-R.html"><a href="intro-R.html#一切都是对象"><i class="fa fa-check"></i><b>2.4</b> 一切都是对象</a></li>
+<li class="chapter" data-level="2.5" data-path="intro-R.html"><a href="intro-R.html#数据类型"><i class="fa fa-check"></i><b>2.5</b> 数据类型</a></li>
+<li class="chapter" data-level="2.6" data-path="intro-R.html"><a href="intro-R.html#数据结构"><i class="fa fa-check"></i><b>2.6</b> 数据结构</a></li>
+<li class="chapter" data-level="2.7" data-path="intro-R.html"><a href="intro-R.html#函数"><i class="fa fa-check"></i><b>2.7</b> 函数</a></li>
+<li class="chapter" data-level="2.8" data-path="intro-R.html"><a href="intro-R.html#脚本"><i class="fa fa-check"></i><b>2.8</b> 脚本</a></li>
+<li class="chapter" data-level="2.9" data-path="intro-R.html"><a href="intro-R.html#宏包"><i class="fa fa-check"></i><b>2.9</b> 宏包</a></li>
+<li class="chapter" data-level="2.10" data-path="intro-R.html"><a href="intro-R.html#可能的问题"><i class="fa fa-check"></i><b>2.10</b> 可能的问题</a></li>
+<li class="chapter" data-level="2.11" data-path="intro-R.html"><a href="intro-R.html#如何获取帮助"><i class="fa fa-check"></i><b>2.11</b> 如何获取帮助</a></li>
+<li class="chapter" data-level="2.12" data-path="intro-R.html"><a href="intro-R.html#r-语言社区"><i class="fa fa-check"></i><b>2.12</b> R 语言社区</a></li>
+<li class="chapter" data-level="2.13" data-path="intro-R.html"><a href="intro-R.html#延伸阅读"><i class="fa fa-check"></i><b>2.13</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="subsetting.html"><a href="subsetting.html"><i class="fa fa-check"></i><b>3</b> 子集选取</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="subsetting.html"><a href="subsetting.html#向量"><i class="fa fa-check"></i><b>3.1</b> 向量</a></li>
+<li class="chapter" data-level="3.2" data-path="subsetting.html"><a href="subsetting.html#列表"><i class="fa fa-check"></i><b>3.2</b> 列表</a></li>
+<li class="chapter" data-level="3.3" data-path="subsetting.html"><a href="subsetting.html#矩阵"><i class="fa fa-check"></i><b>3.3</b> 矩阵</a></li>
+<li class="chapter" data-level="3.4" data-path="subsetting.html"><a href="subsetting.html#数据框"><i class="fa fa-check"></i><b>3.4</b> 数据框</a></li>
+<li class="chapter" data-level="3.5" data-path="subsetting.html"><a href="subsetting.html#增强型数据框"><i class="fa fa-check"></i><b>3.5</b> 增强型数据框</a></li>
+<li class="chapter" data-level="3.6" data-path="subsetting.html"><a href="subsetting.html#延伸阅读-1"><i class="fa fa-check"></i><b>3.6</b> 延伸阅读</a></li>
+</ul></li>
+<li class="part"><span><b>II tidyverse篇</b></span></li>
+<li class="chapter" data-level="4" data-path="rmarkdown.html"><a href="rmarkdown.html"><i class="fa fa-check"></i><b>4</b> 可重复性报告</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="rmarkdown.html"><a href="rmarkdown.html#什么是rmarkdown"><i class="fa fa-check"></i><b>4.1</b> 什么是Rmarkdown</a></li>
+<li class="chapter" data-level="4.2" data-path="rmarkdown.html"><a href="rmarkdown.html#markdown-基本语法"><i class="fa fa-check"></i><b>4.2</b> markdown 基本语法</a></li>
+<li class="chapter" data-level="4.3" data-path="rmarkdown.html"><a href="rmarkdown.html#hello-r-markdown"><i class="fa fa-check"></i><b>4.3</b> Hello R Markdown</a></li>
+<li class="chapter" data-level="4.4" data-path="rmarkdown.html"><a href="rmarkdown.html#生成html文档"><i class="fa fa-check"></i><b>4.4</b> 生成html文档</a></li>
+<li class="chapter" data-level="4.5" data-path="rmarkdown.html"><a href="rmarkdown.html#生成word文档"><i class="fa fa-check"></i><b>4.5</b> 生成word文档</a></li>
+<li class="chapter" data-level="4.6" data-path="rmarkdown.html"><a href="rmarkdown.html#生成pdf文档"><i class="fa fa-check"></i><b>4.6</b> 生成pdf文档</a></li>
+<li class="chapter" data-level="4.7" data-path="rmarkdown.html"><a href="rmarkdown.html#使用方法"><i class="fa fa-check"></i><b>4.7</b> 使用方法</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="rmarkdown.html"><a href="rmarkdown.html#插入公式"><i class="fa fa-check"></i><b>4.7.1</b> 插入公式</a></li>
+<li class="chapter" data-level="4.7.2" data-path="rmarkdown.html"><a href="rmarkdown.html#插入图片"><i class="fa fa-check"></i><b>4.7.2</b> 插入图片</a></li>
+<li class="chapter" data-level="4.7.3" data-path="rmarkdown.html"><a href="rmarkdown.html#运行代码"><i class="fa fa-check"></i><b>4.7.3</b> 运行代码</a></li>
+<li class="chapter" data-level="4.7.4" data-path="rmarkdown.html"><a href="rmarkdown.html#表格"><i class="fa fa-check"></i><b>4.7.4</b> 表格</a></li>
+<li class="chapter" data-level="4.7.5" data-path="rmarkdown.html"><a href="rmarkdown.html#生成图片"><i class="fa fa-check"></i><b>4.7.5</b> 生成图片</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="rmarkdown.html"><a href="rmarkdown.html#延伸阅读-2"><i class="fa fa-check"></i><b>4.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="readr.html"><a href="readr.html"><i class="fa fa-check"></i><b>5</b> 读取数据</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="readr.html"><a href="readr.html#数据科学中的文件管理"><i class="fa fa-check"></i><b>5.1</b> 数据科学中的文件管理</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="readr.html"><a href="readr.html#文件夹命名"><i class="fa fa-check"></i><b>5.1.1</b> 文件夹命名</a></li>
+<li class="chapter" data-level="5.1.2" data-path="readr.html"><a href="readr.html#项目文件结构"><i class="fa fa-check"></i><b>5.1.2</b> 项目文件结构</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="readr.html"><a href="readr.html#读取文件"><i class="fa fa-check"></i><b>5.2</b> 读取文件</a></li>
+<li class="chapter" data-level="5.3" data-path="readr.html"><a href="readr.html#范例"><i class="fa fa-check"></i><b>5.3</b> 范例</a></li>
+<li class="chapter" data-level="5.4" data-path="readr.html"><a href="readr.html#乱码情形"><i class="fa fa-check"></i><b>5.4</b> 乱码情形</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dplyr.html"><a href="dplyr.html"><i class="fa fa-check"></i><b>6</b> 数据处理</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="dplyr.html"><a href="dplyr.html#mutate"><i class="fa fa-check"></i><b>6.1</b> <code>mutate()</code></a></li>
+<li class="chapter" data-level="6.2" data-path="dplyr.html"><a href="dplyr.html#管道"><i class="fa fa-check"></i><b>6.2</b> <code>管道</code> %&gt;%</a></li>
+<li class="chapter" data-level="6.3" data-path="dplyr.html"><a href="dplyr.html#select"><i class="fa fa-check"></i><b>6.3</b> <code>select()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="dplyr.html"><a href="dplyr.html#filter"><i class="fa fa-check"></i><b>6.4</b> <code>filter()</code></a></li>
+<li class="chapter" data-level="6.5" data-path="dplyr.html"><a href="dplyr.html#summarise统计"><i class="fa fa-check"></i><b>6.5</b> <code>summarise()</code>统计</a></li>
+<li class="chapter" data-level="6.6" data-path="dplyr.html"><a href="dplyr.html#group_by分组"><i class="fa fa-check"></i><b>6.6</b> <code>group_by()</code>分组</a></li>
+<li class="chapter" data-level="6.7" data-path="dplyr.html"><a href="dplyr.html#arrange排序"><i class="fa fa-check"></i><b>6.7</b> <code>arrange()</code>排序</a></li>
+<li class="chapter" data-level="6.8" data-path="dplyr.html"><a href="dplyr.html#left_join"><i class="fa fa-check"></i><b>6.8</b> <code>left_join()</code></a></li>
+<li class="chapter" data-level="6.9" data-path="dplyr.html"><a href="dplyr.html#right_join"><i class="fa fa-check"></i><b>6.9</b> <code>right_join()</code></a></li>
+<li class="chapter" data-level="6.10" data-path="dplyr.html"><a href="dplyr.html#延伸阅读-3"><i class="fa fa-check"></i><b>6.10</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html"><i class="fa fa-check"></i><b>7</b> 数据可视化</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#为什么要可视化"><i class="fa fa-check"></i><b>7.1</b> 为什么要可视化</a></li>
+<li class="chapter" data-level="7.2" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#什么是数据可视化"><i class="fa fa-check"></i><b>7.2</b> 什么是数据可视化</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#图形属性"><i class="fa fa-check"></i><b>7.2.1</b> 图形属性</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#宏包ggplot2"><i class="fa fa-check"></i><b>7.3</b> 宏包ggplot2</a></li>
+<li class="chapter" data-level="7.4" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#ggplot2-的图形语法"><i class="fa fa-check"></i><b>7.4</b> ggplot2 的图形语法</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#语法模板"><i class="fa fa-check"></i><b>7.4.1</b> 语法模板</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#映射"><i class="fa fa-check"></i><b>7.5</b> 映射</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#变量含义"><i class="fa fa-check"></i><b>7.5.1</b> 变量含义</a></li>
+<li class="chapter" data-level="7.5.2" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#嘴巴越长嘴巴也会越厚"><i class="fa fa-check"></i><b>7.5.2</b> 嘴巴越长，嘴巴也会越厚？</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#映射-vs.设置"><i class="fa fa-check"></i><b>7.6</b> 映射 vs.设置</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#提问"><i class="fa fa-check"></i><b>7.6.1</b> 提问</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#几何对象"><i class="fa fa-check"></i><b>7.7</b> 几何对象</a></li>
+<li class="chapter" data-level="7.8" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#图层叠加"><i class="fa fa-check"></i><b>7.8</b> 图层叠加</a></li>
+<li class="chapter" data-level="7.9" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#global-vs.-local"><i class="fa fa-check"></i><b>7.9</b> Global vs. Local</a></li>
+<li class="chapter" data-level="7.10" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#保存图片"><i class="fa fa-check"></i><b>7.10</b> 保存图片</a></li>
+<li class="chapter" data-level="7.11" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#课堂作业"><i class="fa fa-check"></i><b>7.11</b> 课堂作业</a></li>
+<li class="chapter" data-level="7.12" data-path="ggplot2-aes.html"><a href="ggplot2-aes.html#延伸阅读-4"><i class="fa fa-check"></i><b>7.12</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="tidyr.html"><a href="tidyr.html"><i class="fa fa-check"></i><b>8</b> 数据规整</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="tidyr.html"><a href="tidyr.html#提问-1"><i class="fa fa-check"></i><b>8.1</b> 提问</a></li>
+<li class="chapter" data-level="8.2" data-path="tidyr.html"><a href="tidyr.html#宽表格变成长表格"><i class="fa fa-check"></i><b>8.2</b> 宽表格变成长表格</a></li>
+<li class="chapter" data-level="8.3" data-path="tidyr.html"><a href="tidyr.html#长表格变成宽表格"><i class="fa fa-check"></i><b>8.3</b> 长表格变成宽表格</a></li>
+<li class="chapter" data-level="8.4" data-path="tidyr.html"><a href="tidyr.html#复杂的情形"><i class="fa fa-check"></i><b>8.4</b> 复杂的情形</a></li>
+<li class="chapter" data-level="8.5" data-path="tidyr.html"><a href="tidyr.html#tidy-data原则"><i class="fa fa-check"></i><b>8.5</b> tidy data原则</a></li>
+<li class="chapter" data-level="8.6" data-path="tidyr.html"><a href="tidyr.html#案例"><i class="fa fa-check"></i><b>8.6</b> 案例</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="stringr.html"><a href="stringr.html"><i class="fa fa-check"></i><b>9</b> 正则表达式</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="stringr.html"><a href="stringr.html#问题"><i class="fa fa-check"></i><b>9.1</b> 问题</a></li>
+<li class="chapter" data-level="9.2" data-path="stringr.html"><a href="stringr.html#什么是正则表达式"><i class="fa fa-check"></i><b>9.2</b> 什么是正则表达式</a></li>
+<li class="chapter" data-level="9.3" data-path="stringr.html"><a href="stringr.html#字符串基础"><i class="fa fa-check"></i><b>9.3</b> 字符串基础</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="stringr.html"><a href="stringr.html#字符串长度"><i class="fa fa-check"></i><b>9.3.1</b> 字符串长度</a></li>
+<li class="chapter" data-level="9.3.2" data-path="stringr.html"><a href="stringr.html#字符串组合"><i class="fa fa-check"></i><b>9.3.2</b> 字符串组合</a></li>
+<li class="chapter" data-level="9.3.3" data-path="stringr.html"><a href="stringr.html#字符串取子集"><i class="fa fa-check"></i><b>9.3.3</b> 字符串取子集</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="stringr.html"><a href="stringr.html#使用正则表达式进行模式匹配"><i class="fa fa-check"></i><b>9.4</b> 使用正则表达式进行模式匹配</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="stringr.html"><a href="stringr.html#基础匹配"><i class="fa fa-check"></i><b>9.4.1</b> 基础匹配</a></li>
+<li class="chapter" data-level="9.4.2" data-path="stringr.html"><a href="stringr.html#锚点"><i class="fa fa-check"></i><b>9.4.2</b> 锚点</a></li>
+<li class="chapter" data-level="9.4.3" data-path="stringr.html"><a href="stringr.html#字符类与字符选项"><i class="fa fa-check"></i><b>9.4.3</b> 字符类与字符选项</a></li>
+<li class="chapter" data-level="9.4.4" data-path="stringr.html"><a href="stringr.html#重复"><i class="fa fa-check"></i><b>9.4.4</b> 重复</a></li>
+<li class="chapter" data-level="9.4.5" data-path="stringr.html"><a href="stringr.html#分组与回溯引用"><i class="fa fa-check"></i><b>9.4.5</b> 分组与回溯引用</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="stringr.html"><a href="stringr.html#解决实际问题"><i class="fa fa-check"></i><b>9.5</b> 解决实际问题</a>
+<ul>
+<li class="chapter" data-level="9.5.1" data-path="stringr.html"><a href="stringr.html#确定一个字符向量是否匹配一种模式"><i class="fa fa-check"></i><b>9.5.1</b> 确定一个字符向量是否匹配一种模式</a></li>
+<li class="chapter" data-level="9.5.2" data-path="stringr.html"><a href="stringr.html#确定匹配的位置"><i class="fa fa-check"></i><b>9.5.2</b> 确定匹配的位置</a></li>
+<li class="chapter" data-level="9.5.3" data-path="stringr.html"><a href="stringr.html#提取匹配的内容"><i class="fa fa-check"></i><b>9.5.3</b> 提取匹配的内容</a></li>
+<li class="chapter" data-level="9.5.4" data-path="stringr.html"><a href="stringr.html#替换匹配内容"><i class="fa fa-check"></i><b>9.5.4</b> 替换匹配内容</a></li>
+<li class="chapter" data-level="9.5.5" data-path="stringr.html"><a href="stringr.html#拆分字符串"><i class="fa fa-check"></i><b>9.5.5</b> 拆分字符串</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="stringr.html"><a href="stringr.html#进阶部分"><i class="fa fa-check"></i><b>9.6</b> 进阶部分</a>
+<ul>
+<li class="chapter" data-level="9.6.1" data-path="stringr.html"><a href="stringr.html#look-ahead"><i class="fa fa-check"></i><b>9.6.1</b> look ahead</a></li>
+<li class="chapter" data-level="9.6.2" data-path="stringr.html"><a href="stringr.html#look-behind"><i class="fa fa-check"></i><b>9.6.2</b> look behind</a></li>
+</ul></li>
+<li class="chapter" data-level="9.7" data-path="stringr.html"><a href="stringr.html#案例分析"><i class="fa fa-check"></i><b>9.7</b> 案例分析</a>
+<ul>
+<li class="chapter" data-level="9.7.1" data-path="stringr.html"><a href="stringr.html#案例1"><i class="fa fa-check"></i><b>9.7.1</b> 案例1</a></li>
+<li class="chapter" data-level="9.7.2" data-path="stringr.html"><a href="stringr.html#案例2"><i class="fa fa-check"></i><b>9.7.2</b> 案例2</a></li>
+<li class="chapter" data-level="9.7.3" data-path="stringr.html"><a href="stringr.html#案例3"><i class="fa fa-check"></i><b>9.7.3</b> 案例3</a></li>
+<li class="chapter" data-level="9.7.4" data-path="stringr.html"><a href="stringr.html#案例4"><i class="fa fa-check"></i><b>9.7.4</b> 案例4</a></li>
+<li class="chapter" data-level="9.7.5" data-path="stringr.html"><a href="stringr.html#案例5"><i class="fa fa-check"></i><b>9.7.5</b> 案例5</a></li>
+<li class="chapter" data-level="9.7.6" data-path="stringr.html"><a href="stringr.html#案例6"><i class="fa fa-check"></i><b>9.7.6</b> 案例6</a></li>
+<li class="chapter" data-level="9.7.7" data-path="stringr.html"><a href="stringr.html#案例7"><i class="fa fa-check"></i><b>9.7.7</b> 案例7</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="stringr.html"><a href="stringr.html#回答提问"><i class="fa fa-check"></i><b>9.8</b> 回答提问</a></li>
+<li class="chapter" data-level="9.9" data-path="stringr.html"><a href="stringr.html#一些有趣的正则表达式的宏包"><i class="fa fa-check"></i><b>9.9</b> 一些有趣的正则表达式的宏包</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="forcats.html"><a href="forcats.html"><i class="fa fa-check"></i><b>10</b> 因子型变量</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="forcats.html"><a href="forcats.html#什么是因子"><i class="fa fa-check"></i><b>10.1</b> 什么是因子</a></li>
+<li class="chapter" data-level="10.2" data-path="forcats.html"><a href="forcats.html#创建因子"><i class="fa fa-check"></i><b>10.2</b> 创建因子</a></li>
+<li class="chapter" data-level="10.3" data-path="forcats.html"><a href="forcats.html#调整因子顺序"><i class="fa fa-check"></i><b>10.3</b> 调整因子顺序</a></li>
+<li class="chapter" data-level="10.4" data-path="forcats.html"><a href="forcats.html#应用"><i class="fa fa-check"></i><b>10.4</b> 应用</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="forcats.html"><a href="forcats.html#fct_reorder"><i class="fa fa-check"></i><b>10.4.1</b> fct_reorder()</a></li>
+<li class="chapter" data-level="10.4.2" data-path="forcats.html"><a href="forcats.html#fct_rev"><i class="fa fa-check"></i><b>10.4.2</b> fct_rev()</a></li>
+<li class="chapter" data-level="10.4.3" data-path="forcats.html"><a href="forcats.html#fct_relevel"><i class="fa fa-check"></i><b>10.4.3</b> fct_relevel()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="purrr.html"><a href="purrr.html"><i class="fa fa-check"></i><b>11</b> 函数式编程</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="purrr.html"><a href="purrr.html#简单回顾"><i class="fa fa-check"></i><b>11.1</b> 简单回顾</a></li>
+<li class="chapter" data-level="11.2" data-path="purrr.html"><a href="purrr.html#向量化运算"><i class="fa fa-check"></i><b>11.2</b> 向量化运算</a></li>
+<li class="chapter" data-level="11.3" data-path="purrr.html"><a href="purrr.html#多说说列表"><i class="fa fa-check"></i><b>11.3</b> 多说说列表</a></li>
+<li class="chapter" data-level="11.4" data-path="purrr.html"><a href="purrr.html#列表-vs-向量"><i class="fa fa-check"></i><b>11.4</b> 列表 vs 向量</a></li>
+<li class="chapter" data-level="11.5" data-path="purrr.html"><a href="purrr.html#purrr-1"><i class="fa fa-check"></i><b>11.5</b> purrr</a></li>
+<li class="chapter" data-level="11.6" data-path="purrr.html"><a href="purrr.html#自定义函数"><i class="fa fa-check"></i><b>11.6</b> 自定义函数</a></li>
+<li class="chapter" data-level="11.7" data-path="purrr.html"><a href="purrr.html#在dplyr函数中的运用map"><i class="fa fa-check"></i><b>11.7</b> 在dplyr函数中的运用map</a></li>
+<li class="chapter" data-level="11.8" data-path="purrr.html"><a href="purrr.html#延伸阅读-5"><i class="fa fa-check"></i><b>11.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="tibble.html"><a href="tibble.html"><i class="fa fa-check"></i><b>12</b> 简单数据框</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="tibble.html"><a href="tibble.html#tidyverse-家族"><i class="fa fa-check"></i><b>12.1</b> tidyverse 家族</a></li>
+<li class="chapter" data-level="12.2" data-path="tibble.html"><a href="tibble.html#人性化的tibble"><i class="fa fa-check"></i><b>12.2</b> 人性化的tibble</a></li>
+<li class="chapter" data-level="12.3" data-path="tibble.html"><a href="tibble.html#tibble-与-data.frame"><i class="fa fa-check"></i><b>12.3</b> tibble 与 data.frame</a></li>
+<li class="chapter" data-level="12.4" data-path="tibble.html"><a href="tibble.html#tibble数据操作"><i class="fa fa-check"></i><b>12.4</b> tibble数据操作</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="tibble.html"><a href="tibble.html#创建tibble"><i class="fa fa-check"></i><b>12.4.1</b> 创建tibble</a></li>
+<li class="chapter" data-level="12.4.2" data-path="tibble.html"><a href="tibble.html#转换成tibble类型"><i class="fa fa-check"></i><b>12.4.2</b> 转换成tibble类型</a></li>
+<li class="chapter" data-level="12.4.3" data-path="tibble.html"><a href="tibble.html#tibble简单操作"><i class="fa fa-check"></i><b>12.4.3</b> tibble简单操作</a></li>
+<li class="chapter" data-level="12.4.4" data-path="tibble.html"><a href="tibble.html#有用的函数lst"><i class="fa fa-check"></i><b>12.4.4</b> 有用的函数<code>lst</code></a></li>
+<li class="chapter" data-level="12.4.5" data-path="tibble.html"><a href="tibble.html#有用的函数enframe"><i class="fa fa-check"></i><b>12.4.5</b> 有用的函数<code>enframe</code></a></li>
+<li class="chapter" data-level="12.4.6" data-path="tibble.html"><a href="tibble.html#有用的函数deframe"><i class="fa fa-check"></i><b>12.4.6</b> 有用的函数<code>deframe</code></a></li>
+<li class="chapter" data-level="12.4.7" data-path="tibble.html"><a href="tibble.html#读取文件-1"><i class="fa fa-check"></i><b>12.4.7</b> 读取文件</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="tibble.html"><a href="tibble.html#关于行名"><i class="fa fa-check"></i><b>12.5</b> 关于行名</a></li>
+<li class="chapter" data-level="12.6" data-path="tibble.html"><a href="tibble.html#修复列名"><i class="fa fa-check"></i><b>12.6</b> 修复列名</a></li>
+<li class="chapter" data-level="12.7" data-path="tibble.html"><a href="tibble.html#nested-tibble"><i class="fa fa-check"></i><b>12.7</b> nested tibble</a></li>
+<li class="chapter" data-level="12.8" data-path="tibble.html"><a href="tibble.html#延伸阅读-6"><i class="fa fa-check"></i><b>12.8</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html"><i class="fa fa-check"></i><b>13</b> ggplot2之几何对象</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#一个有趣的案例"><i class="fa fa-check"></i><b>13.1</b> 一个有趣的案例</a></li>
+<li class="chapter" data-level="13.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#学习目标"><i class="fa fa-check"></i><b>13.2</b> 学习目标</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#图形语法"><i class="fa fa-check"></i><b>13.2.1</b> 图形语法</a></li>
+<li class="chapter" data-level="13.2.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#图形部件"><i class="fa fa-check"></i><b>13.2.2</b> 图形部件</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#开始-1"><i class="fa fa-check"></i><b>13.3</b> 开始</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#导入数据"><i class="fa fa-check"></i><b>13.3.1</b> 导入数据</a></li>
+<li class="chapter" data-level="13.3.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#检查数据"><i class="fa fa-check"></i><b>13.3.2</b> 检查数据</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#基本绘图"><i class="fa fa-check"></i><b>13.4</b> 基本绘图</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#柱状图"><i class="fa fa-check"></i><b>13.4.1</b> 柱状图</a></li>
+<li class="chapter" data-level="13.4.2" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#直方图"><i class="fa fa-check"></i><b>13.4.2</b> 直方图</a></li>
+<li class="chapter" data-level="13.4.3" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#箱线图"><i class="fa fa-check"></i><b>13.4.3</b> 箱线图</a></li>
+<li class="chapter" data-level="13.4.4" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#抖散图"><i class="fa fa-check"></i><b>13.4.4</b> 抖散图</a></li>
+<li class="chapter" data-level="13.4.5" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#山峦图"><i class="fa fa-check"></i><b>13.4.5</b> 山峦图</a></li>
+<li class="chapter" data-level="13.4.6" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#散点图"><i class="fa fa-check"></i><b>13.4.6</b> 散点图</a></li>
+<li class="chapter" data-level="13.4.7" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#点线图"><i class="fa fa-check"></i><b>13.4.7</b> 点线图</a></li>
+<li class="chapter" data-level="13.4.8" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#文本标注"><i class="fa fa-check"></i><b>13.4.8</b> 文本标注</a></li>
+<li class="chapter" data-level="13.4.9" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#errorbar图"><i class="fa fa-check"></i><b>13.4.9</b> errorbar图</a></li>
+<li class="chapter" data-level="13.4.10" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#椭圆图"><i class="fa fa-check"></i><b>13.4.10</b> 椭圆图</a></li>
+<li class="chapter" data-level="13.4.11" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#d-密度图"><i class="fa fa-check"></i><b>13.4.11</b> 2D 密度图</a></li>
+<li class="chapter" data-level="13.4.12" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#马赛克图"><i class="fa fa-check"></i><b>13.4.12</b> 马赛克图</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#主题风格"><i class="fa fa-check"></i><b>13.5</b> 主题风格</a></li>
+<li class="chapter" data-level="13.6" data-path="ggplot2-geom.html"><a href="ggplot2-geom.html#参考资料"><i class="fa fa-check"></i><b>13.6</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html"><i class="fa fa-check"></i><b>14</b> ggplot2之主题设置</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#图表整体元素"><i class="fa fa-check"></i><b>14.1</b> 图表整体元素</a></li>
+<li class="chapter" data-level="14.2" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#坐标轴元素"><i class="fa fa-check"></i><b>14.2</b> 坐标轴元素</a></li>
+<li class="chapter" data-level="14.3" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#面板元素"><i class="fa fa-check"></i><b>14.3</b> 面板元素</a></li>
+<li class="chapter" data-level="14.4" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#图例元素"><i class="fa fa-check"></i><b>14.4</b> 图例元素</a></li>
+<li class="chapter" data-level="14.5" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#分面元素"><i class="fa fa-check"></i><b>14.5</b> 分面元素</a></li>
+<li class="chapter" data-level="14.6" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#案例-1"><i class="fa fa-check"></i><b>14.6</b> 案例</a></li>
+<li class="chapter" data-level="14.7" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#小结"><i class="fa fa-check"></i><b>14.7</b> 小结</a></li>
+<li class="chapter" data-level="14.8" data-path="ggplot2-theme.html"><a href="ggplot2-theme.html#提问-2"><i class="fa fa-check"></i><b>14.8</b> 提问</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html"><i class="fa fa-check"></i><b>15</b> ggplot2之标度</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#标度"><i class="fa fa-check"></i><b>15.1</b> 标度</a></li>
+<li class="chapter" data-level="15.2" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#图形属性和变量类型"><i class="fa fa-check"></i><b>15.2</b> 图形属性和变量类型</a></li>
+<li class="chapter" data-level="15.3" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#坐标轴和图例是同样的东西"><i class="fa fa-check"></i><b>15.3</b> 坐标轴和图例是同样的东西</a></li>
+<li class="chapter" data-level="15.4" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#丰富的标度体系"><i class="fa fa-check"></i><b>15.4</b> 丰富的标度体系</a></li>
+<li class="chapter" data-level="15.5" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#案例详解"><i class="fa fa-check"></i><b>15.5</b> 案例详解</a></li>
+<li class="chapter" data-level="15.6" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#用标度还是主题"><i class="fa fa-check"></i><b>15.6</b> 用标度还是主题？</a></li>
+<li class="chapter" data-level="15.7" data-path="ggplot2-scales.html"><a href="ggplot2-scales.html#小测试"><i class="fa fa-check"></i><b>15.7</b> 小测试</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html"><i class="fa fa-check"></i><b>16</b> ggplot2之图例系统</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html#图例系统"><i class="fa fa-check"></i><b>16.1</b> 图例系统</a></li>
+<li class="chapter" data-level="16.2" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html#案例详解-1"><i class="fa fa-check"></i><b>16.2</b> 案例详解</a></li>
+<li class="chapter" data-level="16.3" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html#删除其中一个图例"><i class="fa fa-check"></i><b>16.3</b> 删除其中一个图例</a></li>
+<li class="chapter" data-level="16.4" data-path="ggplot2-guides.html"><a href="ggplot2-guides.html#小结-1"><i class="fa fa-check"></i><b>16.4</b> 小结</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html"><i class="fa fa-check"></i><b>17</b> ggplot2之扩展内容</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#你喜欢哪个图"><i class="fa fa-check"></i><b>17.1</b> 你喜欢哪个图</a></li>
+<li class="chapter" data-level="17.2" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#定制"><i class="fa fa-check"></i><b>17.2</b> 定制</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#标签"><i class="fa fa-check"></i><b>17.2.1</b> 标签</a></li>
+<li class="chapter" data-level="17.2.2" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#定制颜色"><i class="fa fa-check"></i><b>17.2.2</b> 定制颜色</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#组合图片"><i class="fa fa-check"></i><b>17.3</b> 组合图片</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#cowplot"><i class="fa fa-check"></i><b>17.3.1</b> cowplot</a></li>
+<li class="chapter" data-level="17.3.2" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#保存图片-1"><i class="fa fa-check"></i><b>17.3.2</b> 保存图片</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#中文字体"><i class="fa fa-check"></i><b>17.4</b> 中文字体</a></li>
+<li class="chapter" data-level="17.5" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#高亮某一组"><i class="fa fa-check"></i><b>17.5</b> 高亮某一组</a>
+<ul>
+<li class="chapter" data-level="17.5.1" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#ggplot2方法"><i class="fa fa-check"></i><b>17.5.1</b> ggplot2方法</a></li>
+<li class="chapter" data-level="17.5.2" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#gghighlight方法"><i class="fa fa-check"></i><b>17.5.2</b> gghighlight方法</a></li>
+</ul></li>
+<li class="chapter" data-level="17.6" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#函数图"><i class="fa fa-check"></i><b>17.6</b> 函数图</a></li>
+<li class="chapter" data-level="17.7" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#地图"><i class="fa fa-check"></i><b>17.7</b> 地图</a>
+<ul>
+<li class="chapter" data-level="17.7.1" data-path="ggplot2-customize.html"><a href="ggplot2-customize.html#latex公式"><i class="fa fa-check"></i><b>17.7.1</b> latex公式</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html"><i class="fa fa-check"></i><b>18</b> ggplot2之统计图层</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#导言"><i class="fa fa-check"></i><b>18.1</b> 导言</a></li>
+<li class="chapter" data-level="18.2" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#为何及何时使用统计图层"><i class="fa fa-check"></i><b>18.2</b> 为何及何时使用统计图层</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#小结-2"><i class="fa fa-check"></i><b>18.2.1</b> 小结</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#用-stat_summary-理解统计图层"><i class="fa fa-check"></i><b>18.3</b> 用 stat_summary() 理解统计图层</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#小结-3"><i class="fa fa-check"></i><b>18.3.1</b> 小结</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#使用统计图层"><i class="fa fa-check"></i><b>18.4</b> 使用统计图层</a>
+<ul>
+<li class="chapter" data-level="18.4.1" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#包含95置信区间的误差棒"><i class="fa fa-check"></i><b>18.4.1</b> 包含95%置信区间的误差棒</a></li>
+<li class="chapter" data-level="18.4.2" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#带有彩色填充色的柱状图"><i class="fa fa-check"></i><b>18.4.2</b> 带有彩色填充色的柱状图</a></li>
+<li class="chapter" data-level="18.4.3" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#大小变化的点线图"><i class="fa fa-check"></i><b>18.4.3</b> 大小变化的点线图</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#总结"><i class="fa fa-check"></i><b>18.5</b> 总结</a>
+<ul>
+<li class="chapter" data-level="18.5.1" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#主要结论"><i class="fa fa-check"></i><b>18.5.1</b> 主要结论</a></li>
+<li class="chapter" data-level="18.5.2" data-path="ggplot2-stat-layer.html"><a href="ggplot2-stat-layer.html#stat-vs.-geom-or-stat-and-geom"><i class="fa fa-check"></i><b>18.5.2</b> STAT vs. GEOM or STAT and GEOM?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>19</b> 回望tidyverse之旅</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="workflow.html"><a href="workflow.html#readr-宏包"><i class="fa fa-check"></i><b>19.1</b> readr 宏包</a></li>
+<li class="chapter" data-level="19.2" data-path="workflow.html"><a href="workflow.html#tibble-宏包"><i class="fa fa-check"></i><b>19.2</b> tibble 宏包</a></li>
+<li class="chapter" data-level="19.3" data-path="workflow.html"><a href="workflow.html#ggplot2-宏包"><i class="fa fa-check"></i><b>19.3</b> ggplot2 宏包</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="workflow.html"><a href="workflow.html#查看数据"><i class="fa fa-check"></i><b>19.3.1</b> 查看数据</a></li>
+<li class="chapter" data-level="19.3.2" data-path="workflow.html"><a href="workflow.html#散点图-1"><i class="fa fa-check"></i><b>19.3.2</b> 散点图</a></li>
+<li class="chapter" data-level="19.3.3" data-path="workflow.html"><a href="workflow.html#箱线图-1"><i class="fa fa-check"></i><b>19.3.3</b> 箱线图</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="workflow.html"><a href="workflow.html#dplyr-宏包"><i class="fa fa-check"></i><b>19.4</b> dplyr 宏包</a>
+<ul>
+<li class="chapter" data-level="19.4.1" data-path="workflow.html"><a href="workflow.html#选取列"><i class="fa fa-check"></i><b>19.4.1</b> 选取列</a></li>
+<li class="chapter" data-level="19.4.2" data-path="workflow.html"><a href="workflow.html#行方向排序"><i class="fa fa-check"></i><b>19.4.2</b> 行方向排序</a></li>
+<li class="chapter" data-level="19.4.3" data-path="workflow.html"><a href="workflow.html#分组统计"><i class="fa fa-check"></i><b>19.4.3</b> 分组统计</a></li>
+<li class="chapter" data-level="19.4.4" data-path="workflow.html"><a href="workflow.html#增加列"><i class="fa fa-check"></i><b>19.4.4</b> 增加列</a></li>
+<li class="chapter" data-level="19.4.5" data-path="workflow.html"><a href="workflow.html#筛选"><i class="fa fa-check"></i><b>19.4.5</b> 筛选</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="workflow.html"><a href="workflow.html#forcats-宏包"><i class="fa fa-check"></i><b>19.5</b> forcats 宏包</a></li>
+<li class="chapter" data-level="19.6" data-path="workflow.html"><a href="workflow.html#stringr-宏包"><i class="fa fa-check"></i><b>19.6</b> stringr 宏包</a>
+<ul>
+<li class="chapter" data-level="19.6.1" data-path="workflow.html"><a href="workflow.html#字符串转换"><i class="fa fa-check"></i><b>19.6.1</b> 字符串转换</a></li>
+<li class="chapter" data-level="19.6.2" data-path="workflow.html"><a href="workflow.html#字符串合并"><i class="fa fa-check"></i><b>19.6.2</b> 字符串合并</a></li>
+</ul></li>
+<li class="chapter" data-level="19.7" data-path="workflow.html"><a href="workflow.html#tidyr-宏包"><i class="fa fa-check"></i><b>19.7</b> tidyr 宏包</a>
+<ul>
+<li class="chapter" data-level="19.7.1" data-path="workflow.html"><a href="workflow.html#长表格变宽表格"><i class="fa fa-check"></i><b>19.7.1</b> 长表格变宽表格</a></li>
+<li class="chapter" data-level="19.7.2" data-path="workflow.html"><a href="workflow.html#宽表格变长表格"><i class="fa fa-check"></i><b>19.7.2</b> 宽表格变长表格</a></li>
+</ul></li>
+<li class="chapter" data-level="19.8" data-path="workflow.html"><a href="workflow.html#purrr-宏包"><i class="fa fa-check"></i><b>19.8</b> purrr 宏包</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="tips.html"><a href="tips.html"><i class="fa fa-check"></i><b>20</b> tidyverse中的若干技巧</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="tips.html"><a href="tips.html#count"><i class="fa fa-check"></i><b>20.1</b> count()</a></li>
+<li class="chapter" data-level="20.2" data-path="tips.html"><a href="tips.html#在-count-中创建新变量"><i class="fa fa-check"></i><b>20.2</b> 在 count() 中创建新变量</a></li>
+<li class="chapter" data-level="20.3" data-path="tips.html"><a href="tips.html#add_count"><i class="fa fa-check"></i><b>20.3</b> add_count()</a></li>
+<li class="chapter" data-level="20.4" data-path="tips.html"><a href="tips.html#nth-first-last"><i class="fa fa-check"></i><b>20.4</b> nth(), first(), last()</a></li>
+<li class="chapter" data-level="20.5" data-path="tips.html"><a href="tips.html#列变量重新排序"><i class="fa fa-check"></i><b>20.5</b> 列变量重新排序</a></li>
+<li class="chapter" data-level="20.6" data-path="tips.html"><a href="tips.html#if_else"><i class="fa fa-check"></i><b>20.6</b> if_else</a></li>
+<li class="chapter" data-level="20.7" data-path="tips.html"><a href="tips.html#case_when"><i class="fa fa-check"></i><b>20.7</b> case_when</a></li>
+<li class="chapter" data-level="20.8" data-path="tips.html"><a href="tips.html#找出前几名"><i class="fa fa-check"></i><b>20.8</b> 找出前几名</a></li>
+<li class="chapter" data-level="20.9" data-path="tips.html"><a href="tips.html#去除多余的空白"><i class="fa fa-check"></i><b>20.9</b> 去除多余的空白</a></li>
+<li class="chapter" data-level="20.10" data-path="tips.html"><a href="tips.html#取反操作"><i class="fa fa-check"></i><b>20.10</b> 取反操作</a></li>
+<li class="chapter" data-level="20.11" data-path="tips.html"><a href="tips.html#drop_na"><i class="fa fa-check"></i><b>20.11</b> drop_na()</a></li>
+<li class="chapter" data-level="20.12" data-path="tips.html"><a href="tips.html#replace_na"><i class="fa fa-check"></i><b>20.12</b> replace_na()</a></li>
+<li class="chapter" data-level="20.13" data-path="tips.html"><a href="tips.html#coalesce"><i class="fa fa-check"></i><b>20.13</b> coalesce</a></li>
+<li class="chapter" data-level="20.14" data-path="tips.html"><a href="tips.html#summarise-生成-list-column"><i class="fa fa-check"></i><b>20.14</b> summarise() 生成 list-column</a></li>
+<li class="chapter" data-level="20.15" data-path="tips.html"><a href="tips.html#count-fct_reorder-geom_col-coord_flip"><i class="fa fa-check"></i><b>20.15</b> count() + fct_reorder() + geom_col() + coord_flip()</a></li>
+<li class="chapter" data-level="20.16" data-path="tips.html"><a href="tips.html#scale_xy_log10"><i class="fa fa-check"></i><b>20.16</b> scale_x/y_log10</a></li>
+<li class="chapter" data-level="20.17" data-path="tips.html"><a href="tips.html#fct_lump"><i class="fa fa-check"></i><b>20.17</b> fct_lump</a></li>
+<li class="chapter" data-level="20.18" data-path="tips.html"><a href="tips.html#fct_reoder2"><i class="fa fa-check"></i><b>20.18</b> fct_reoder2</a></li>
+<li class="chapter" data-level="20.19" data-path="tips.html"><a href="tips.html#unite"><i class="fa fa-check"></i><b>20.19</b> unite</a></li>
+<li class="chapter" data-level="20.20" data-path="tips.html"><a href="tips.html#separate"><i class="fa fa-check"></i><b>20.20</b> separate()</a></li>
+<li class="chapter" data-level="20.21" data-path="tips.html"><a href="tips.html#extract"><i class="fa fa-check"></i><b>20.21</b> extract()</a></li>
+<li class="chapter" data-level="20.22" data-path="tips.html"><a href="tips.html#crossing"><i class="fa fa-check"></i><b>20.22</b> crossing()</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="advR.html"><a href="advR.html"><i class="fa fa-check"></i><b>21</b> tidyverse进阶</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="advR.html"><a href="advR.html#scoped-函数"><i class="fa fa-check"></i><b>21.1</b> scoped 函数</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="advR.html"><a href="advR.html#mutate_if"><i class="fa fa-check"></i><b>21.1.1</b> mutate_if</a></li>
+<li class="chapter" data-level="21.1.2" data-path="advR.html"><a href="advR.html#select_if"><i class="fa fa-check"></i><b>21.1.2</b> select_if()</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="advR.html"><a href="advR.html#summarise_if"><i class="fa fa-check"></i><b>21.2</b> summarise_if</a></li>
+<li class="chapter" data-level="21.3" data-path="advR.html"><a href="advR.html#filter_if"><i class="fa fa-check"></i><b>21.3</b> filter_if()</a></li>
+<li class="chapter" data-level="21.4" data-path="advR.html"><a href="advR.html#group_by"><i class="fa fa-check"></i><b>21.4</b> group_by</a>
+<ul>
+<li class="chapter" data-level="21.4.1" data-path="advR.html"><a href="advR.html#group_split-group_map-group_modify"><i class="fa fa-check"></i><b>21.4.1</b> group_split(), group_map(), group_modify()</a></li>
+<li class="chapter" data-level="21.4.2" data-path="advR.html"><a href="advR.html#其他group函数"><i class="fa fa-check"></i><b>21.4.2</b> 其他group函数</a></li>
+</ul></li>
+<li class="chapter" data-level="21.5" data-path="advR.html"><a href="advR.html#列名清理"><i class="fa fa-check"></i><b>21.5</b> 列名清理</a></li>
+<li class="chapter" data-level="21.6" data-path="advR.html"><a href="advR.html#缺失值检查与处理"><i class="fa fa-check"></i><b>21.6</b> 缺失值检查与处理</a>
+<ul>
+<li class="chapter" data-level="21.6.1" data-path="advR.html"><a href="advR.html#purrr-dplyr-技巧"><i class="fa fa-check"></i><b>21.6.1</b> purrr &amp; dplyr 技巧</a></li>
+<li class="chapter" data-level="21.6.2" data-path="advR.html"><a href="advR.html#缺失值替换"><i class="fa fa-check"></i><b>21.6.2</b> 缺失值替换</a></li>
+</ul></li>
+<li class="chapter" data-level="21.7" data-path="advR.html"><a href="advR.html#标准化"><i class="fa fa-check"></i><b>21.7</b> 标准化</a></li>
+<li class="chapter" data-level="21.8" data-path="advR.html"><a href="advR.html#across函数"><i class="fa fa-check"></i><b>21.8</b> across函数</a>
+<ul>
+<li class="chapter" data-level="21.8.1" data-path="advR.html"><a href="advR.html#across函数替代scope函数"><i class="fa fa-check"></i><b>21.8.1</b> across函数替代scope函数</a></li>
+<li class="chapter" data-level="21.8.2" data-path="advR.html"><a href="advR.html#更方便的colwise操作"><i class="fa fa-check"></i><b>21.8.2</b> 更方便的colwise操作</a></li>
+</ul></li>
+<li class="chapter" data-level="21.9" data-path="advR.html"><a href="advR.html#参考资料-1"><i class="fa fa-check"></i><b>21.9</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="colwise.html"><a href="colwise.html"><i class="fa fa-check"></i><b>22</b> 列方向和行方向</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="colwise.html"><a href="colwise.html#体验新版本"><i class="fa fa-check"></i><b>22.1</b> 体验新版本</a></li>
+<li class="chapter" data-level="22.2" data-path="colwise.html"><a href="colwise.html#简单回顾-1"><i class="fa fa-check"></i><b>22.2</b> 简单回顾</a></li>
+<li class="chapter" data-level="22.3" data-path="colwise.html"><a href="colwise.html#summarise更强大了"><i class="fa fa-check"></i><b>22.3</b> summarise()更强大了</a></li>
+<li class="chapter" data-level="22.4" data-path="colwise.html"><a href="colwise.html#summarise后的分组信息是去是留"><i class="fa fa-check"></i><b>22.4</b> summarise()后的分组信息是去是留？</a></li>
+<li class="chapter" data-level="22.5" data-path="colwise.html"><a href="colwise.html#选择某列"><i class="fa fa-check"></i><b>22.5</b> 选择某列</a></li>
+<li class="chapter" data-level="22.6" data-path="colwise.html"><a href="colwise.html#重命名某列"><i class="fa fa-check"></i><b>22.6</b> 重命名某列</a></li>
+<li class="chapter" data-level="22.7" data-path="colwise.html"><a href="colwise.html#调整列的位置"><i class="fa fa-check"></i><b>22.7</b> 调整列的位置</a></li>
+<li class="chapter" data-level="22.8" data-path="colwise.html"><a href="colwise.html#强大的across函数"><i class="fa fa-check"></i><b>22.8</b> 强大的across函数</a></li>
+<li class="chapter" data-level="22.9" data-path="colwise.html"><a href="colwise.html#current-group-or-current-variable"><i class="fa fa-check"></i><b>22.9</b> “current” group or “current” variable</a></li>
+<li class="chapter" data-level="22.10" data-path="colwise.html"><a href="colwise.html#行方向操作"><i class="fa fa-check"></i><b>22.10</b> 行方向操作</a>
+<ul>
+<li class="chapter" data-level="22.10.1" data-path="colwise.html"><a href="colwise.html#行方向上的统计"><i class="fa fa-check"></i><b>22.10.1</b> 行方向上的统计</a></li>
+<li class="chapter" data-level="22.10.2" data-path="colwise.html"><a href="colwise.html#行方向处理与列表列是天然一对"><i class="fa fa-check"></i><b>22.10.2</b> 行方向处理与列表列是天然一对</a></li>
+<li class="chapter" data-level="22.10.3" data-path="colwise.html"><a href="colwise.html#行方向上的建模"><i class="fa fa-check"></i><b>22.10.3</b> 行方向上的建模</a></li>
+</ul></li>
+<li class="chapter" data-level="22.11" data-path="colwise.html"><a href="colwise.html#参考资料-2"><i class="fa fa-check"></i><b>22.11</b> 参考资料</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="beauty-of-across.html"><a href="beauty-of-across.html"><i class="fa fa-check"></i><b>23</b> tidyverse中的across()之美</a>
+<ul>
+<li class="chapter" data-level="23.1" data-path="beauty-of-across.html"><a href="beauty-of-across.html#across横空出世"><i class="fa fa-check"></i><b>23.1</b> across()横空出世</a></li>
+<li class="chapter" data-level="23.2" data-path="beauty-of-across.html"><a href="beauty-of-across.html#across函数形式"><i class="fa fa-check"></i><b>23.2</b> across()函数形式</a></li>
+<li class="chapter" data-level="23.3" data-path="beauty-of-across.html"><a href="beauty-of-across.html#across应用举例"><i class="fa fa-check"></i><b>23.3</b> across()应用举例</a>
+<ul>
+<li class="chapter" data-level="23.3.1" data-path="beauty-of-across.html"><a href="beauty-of-across.html#求每一列的缺失值数量"><i class="fa fa-check"></i><b>23.3.1</b> 求每一列的缺失值数量</a></li>
+<li class="chapter" data-level="23.3.2" data-path="beauty-of-across.html"><a href="beauty-of-across.html#每个类型变量下有多少组"><i class="fa fa-check"></i><b>23.3.2</b> 每个类型变量下有多少组？</a></li>
+<li class="chapter" data-level="23.3.3" data-path="beauty-of-across.html"><a href="beauty-of-across.html#多列多个统计函数"><i class="fa fa-check"></i><b>23.3.3</b> 多列多个统计函数</a></li>
+<li class="chapter" data-level="23.3.4" data-path="beauty-of-across.html"><a href="beauty-of-across.html#不同分组下数据变量的多个分位数"><i class="fa fa-check"></i><b>23.3.4</b> 不同分组下数据变量的多个分位数</a></li>
+<li class="chapter" data-level="23.3.5" data-path="beauty-of-across.html"><a href="beauty-of-across.html#不同分组下更复杂的统计"><i class="fa fa-check"></i><b>23.3.5</b> 不同分组下更复杂的统计</a></li>
+<li class="chapter" data-level="23.3.6" data-path="beauty-of-across.html"><a href="beauty-of-across.html#数据标准化处理"><i class="fa fa-check"></i><b>23.3.6</b> 数据标准化处理</a></li>
+<li class="chapter" data-level="23.3.7" data-path="beauty-of-across.html"><a href="beauty-of-across.html#数据对数化处理"><i class="fa fa-check"></i><b>23.3.7</b> 数据对数化处理</a></li>
+<li class="chapter" data-level="23.3.8" data-path="beauty-of-across.html"><a href="beauty-of-across.html#在分组建模中与cur_data配合使用"><i class="fa fa-check"></i><b>23.3.8</b> 在分组建模中与<code>cur_data()</code>配合使用</a></li>
+<li class="chapter" data-level="23.3.9" data-path="beauty-of-across.html"><a href="beauty-of-across.html#与cur_column配合使用"><i class="fa fa-check"></i><b>23.3.9</b> 与<code>cur_column()</code>配合使用</a></li>
+<li class="chapter" data-level="23.3.10" data-path="beauty-of-across.html"><a href="beauty-of-across.html#与c_across配合也挺默契"><i class="fa fa-check"></i><b>23.3.10</b> 与<code>c_across()</code>配合也挺默契</a></li>
+</ul></li>
+<li class="chapter" data-level="23.4" data-path="beauty-of-across.html"><a href="beauty-of-across.html#across总结"><i class="fa fa-check"></i><b>23.4</b> across()总结</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html"><i class="fa fa-check"></i><b>24</b> tidyverse中的缺失值</a>
+<ul>
+<li class="chapter" data-level="24.1" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#什么是缺失值"><i class="fa fa-check"></i><b>24.1</b> 什么是缺失值?</a></li>
+<li class="chapter" data-level="24.2" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#有关na的计算"><i class="fa fa-check"></i><b>24.2</b> 有关NA的计算</a></li>
+<li class="chapter" data-level="24.3" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#如何判断na"><i class="fa fa-check"></i><b>24.3</b> 如何判断NA?</a></li>
+<li class="chapter" data-level="24.4" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#强制转换"><i class="fa fa-check"></i><b>24.4</b> 强制转换</a></li>
+<li class="chapter" data-level="24.5" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#如果统计有多少na"><i class="fa fa-check"></i><b>24.5</b> 如果统计有多少NA?</a></li>
+<li class="chapter" data-level="24.6" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#应用到tidyverse中"><i class="fa fa-check"></i><b>24.6</b> 应用到tidyverse中</a></li>
+<li class="chapter" data-level="24.7" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#思考"><i class="fa fa-check"></i><b>24.7</b> 思考</a></li>
+<li class="chapter" data-level="24.8" data-path="tidyverse-NA.html"><a href="tidyverse-NA.html#更多"><i class="fa fa-check"></i><b>24.8</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="dot.html"><a href="dot.html"><i class="fa fa-check"></i><b>25</b> tidyverse中的dot</a>
+<ul>
+<li class="chapter" data-level="25.1" data-path="dot.html"><a href="dot.html#每一行的-.-各自代表什么意思呢"><i class="fa fa-check"></i><b>25.1</b> 每一行的 <code>.</code> 各自代表什么意思呢?</a></li>
+<li class="chapter" data-level="25.2" data-path="dot.html"><a href="dot.html#占位符"><i class="fa fa-check"></i><b>25.2</b> 占位符</a></li>
+<li class="chapter" data-level="25.3" data-path="dot.html"><a href="dot.html#lambda函数"><i class="fa fa-check"></i><b>25.3</b> Lambda函数</a></li>
+<li class="chapter" data-level="25.4" data-path="dot.html"><a href="dot.html#正则表达式"><i class="fa fa-check"></i><b>25.4</b> 正则表达式</a></li>
+<li class="chapter" data-level="25.5" data-path="dot.html"><a href="dot.html#unary-funciton-只带一个参数的函数"><i class="fa fa-check"></i><b>25.5</b> Unary funciton (只带一个参数的函数)</a></li>
+<li class="chapter" data-level="25.6" data-path="dot.html"><a href="dot.html#more-placeholder"><i class="fa fa-check"></i><b>25.6</b> more placeholder</a></li>
+<li class="chapter" data-level="25.7" data-path="dot.html"><a href="dot.html#当mutate遇到map"><i class="fa fa-check"></i><b>25.7</b> 当mutate遇到map</a></li>
+<li class="chapter" data-level="25.8" data-path="dot.html"><a href="dot.html#dot-dot-dot"><i class="fa fa-check"></i><b>25.8</b> Dot dot dot</a></li>
+<li class="chapter" data-level="25.9" data-path="dot.html"><a href="dot.html#dont-confuse"><i class="fa fa-check"></i><b>25.9</b> Don’t confuse</a></li>
+<li class="chapter" data-level="25.10" data-path="dot.html"><a href="dot.html#小结-4"><i class="fa fa-check"></i><b>25.10</b> 小结</a></li>
+<li class="chapter" data-level="25.11" data-path="dot.html"><a href="dot.html#回答问题"><i class="fa fa-check"></i><b>25.11</b> 回答问题</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="tidyeval.html"><a href="tidyeval.html"><i class="fa fa-check"></i><b>26</b> 非标准性评估</a>
+<ul>
+<li class="chapter" data-level="26.1" data-path="tidyeval.html"><a href="tidyeval.html#编写函数"><i class="fa fa-check"></i><b>26.1</b> 编写函数</a></li>
+<li class="chapter" data-level="26.2" data-path="tidyeval.html"><a href="tidyeval.html#看看发生了什么"><i class="fa fa-check"></i><b>26.2</b> 看看发生了什么</a></li>
+<li class="chapter" data-level="26.3" data-path="tidyeval.html"><a href="tidyeval.html#处理多个参数"><i class="fa fa-check"></i><b>26.3</b> 处理多个参数</a></li>
+<li class="chapter" data-level="26.4" data-path="tidyeval.html"><a href="tidyeval.html#调整输入的表达式"><i class="fa fa-check"></i><b>26.4</b> 调整输入的表达式</a>
+<ul>
+<li class="chapter" data-level="26.4.1" data-path="tidyeval.html"><a href="tidyeval.html#修改引用参数的默认名"><i class="fa fa-check"></i><b>26.4.1</b> 修改引用参数的默认名</a></li>
+<li class="chapter" data-level="26.4.2" data-path="tidyeval.html"><a href="tidyeval.html#修改引用的表达式"><i class="fa fa-check"></i><b>26.4.2</b> 修改引用的表达式</a></li>
+</ul></li>
+<li class="chapter" data-level="26.5" data-path="tidyeval.html"><a href="tidyeval.html#案例-2"><i class="fa fa-check"></i><b>26.5</b> 案例</a>
+<ul>
+<li class="chapter" data-level="26.5.1" data-path="tidyeval.html"><a href="tidyeval.html#统计并过滤"><i class="fa fa-check"></i><b>26.5.1</b> 统计并过滤</a></li>
+<li class="chapter" data-level="26.5.2" data-path="tidyeval.html"><a href="tidyeval.html#自定义统计输出"><i class="fa fa-check"></i><b>26.5.2</b> 自定义统计输出</a></li>
+<li class="chapter" data-level="26.5.3" data-path="tidyeval.html"><a href="tidyeval.html#形成依次下滑的列"><i class="fa fa-check"></i><b>26.5.3</b> 形成依次下滑的列</a></li>
+</ul></li>
+<li class="chapter" data-level="26.6" data-path="tidyeval.html"><a href="tidyeval.html#可能会用到的函数"><i class="fa fa-check"></i><b>26.6</b> 可能会用到的函数</a></li>
+<li class="chapter" data-level="26.7" data-path="tidyeval.html"><a href="tidyeval.html#resources"><i class="fa fa-check"></i><b>26.7</b> Resources</a></li>
+</ul></li>
+<li class="part"><span><b>III 建模篇</b></span></li>
+<li class="chapter" data-level="27" data-path="sampling.html"><a href="sampling.html"><i class="fa fa-check"></i><b>27</b> 模拟与抽样</a>
+<ul>
+<li class="chapter" data-level="27.1" data-path="sampling.html"><a href="sampling.html#模拟"><i class="fa fa-check"></i><b>27.1</b> 模拟</a>
+<ul>
+<li class="chapter" data-level="27.1.1" data-path="sampling.html"><a href="sampling.html#生成随机数"><i class="fa fa-check"></i><b>27.1.1</b> 生成随机数</a></li>
+</ul></li>
+<li class="chapter" data-level="27.2" data-path="sampling.html"><a href="sampling.html#massmvrnorm"><i class="fa fa-check"></i><b>27.2</b> MASS::mvrnorm</a></li>
+<li class="chapter" data-level="27.3" data-path="sampling.html"><a href="sampling.html#蒙特卡洛"><i class="fa fa-check"></i><b>27.3</b> 蒙特卡洛</a></li>
+<li class="chapter" data-level="27.4" data-path="sampling.html"><a href="sampling.html#抽样与样本"><i class="fa fa-check"></i><b>27.4</b> 抽样与样本</a>
+<ul>
+<li class="chapter" data-level="27.4.1" data-path="sampling.html"><a href="sampling.html#总体分布"><i class="fa fa-check"></i><b>27.4.1</b> 总体分布</a></li>
+<li class="chapter" data-level="27.4.2" data-path="sampling.html"><a href="sampling.html#样本"><i class="fa fa-check"></i><b>27.4.2</b> 样本</a></li>
+</ul></li>
+<li class="chapter" data-level="27.5" data-path="sampling.html"><a href="sampling.html#扩展阅读"><i class="fa fa-check"></i><b>27.5</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="lm.html"><a href="lm.html"><i class="fa fa-check"></i><b>28</b> 线性回归</a>
+<ul>
+<li class="chapter" data-level="28.1" data-path="lm.html"><a href="lm.html#从一个案例开始"><i class="fa fa-check"></i><b>28.1</b> 从一个案例开始</a>
+<ul>
+<li class="chapter" data-level="28.1.1" data-path="lm.html"><a href="lm.html#缺失值检查"><i class="fa fa-check"></i><b>28.1.1</b> 缺失值检查</a></li>
+<li class="chapter" data-level="28.1.2" data-path="lm.html"><a href="lm.html#变量简单统计"><i class="fa fa-check"></i><b>28.1.2</b> 变量简单统计</a></li>
+</ul></li>
+<li class="chapter" data-level="28.2" data-path="lm.html"><a href="lm.html#线性回归模型"><i class="fa fa-check"></i><b>28.2</b> 线性回归模型</a></li>
+<li class="chapter" data-level="28.3" data-path="lm.html"><a href="lm.html#使用lm-函数"><i class="fa fa-check"></i><b>28.3</b> 使用<code>lm()</code> 函数</a></li>
+<li class="chapter" data-level="28.4" data-path="lm.html"><a href="lm.html#模型的解释"><i class="fa fa-check"></i><b>28.4</b> 模型的解释</a></li>
+<li class="chapter" data-level="28.5" data-path="lm.html"><a href="lm.html#多元线性回归"><i class="fa fa-check"></i><b>28.5</b> 多元线性回归</a></li>
+<li class="chapter" data-level="28.6" data-path="lm.html"><a href="lm.html#更多模型"><i class="fa fa-check"></i><b>28.6</b> 更多模型</a></li>
+<li class="chapter" data-level="28.7" data-path="lm.html"><a href="lm.html#变量重要性"><i class="fa fa-check"></i><b>28.7</b> 变量重要性</a></li>
+<li class="chapter" data-level="28.8" data-path="lm.html"><a href="lm.html#可能遇到的情形"><i class="fa fa-check"></i><b>28.8</b> 可能遇到的情形</a>
+<ul>
+<li class="chapter" data-level="28.8.1" data-path="lm.html"><a href="lm.html#截距项"><i class="fa fa-check"></i><b>28.8.1</b> 截距项</a></li>
+<li class="chapter" data-level="28.8.2" data-path="lm.html"><a href="lm.html#只有截距项"><i class="fa fa-check"></i><b>28.8.2</b> 只有截距项</a></li>
+<li class="chapter" data-level="28.8.3" data-path="lm.html"><a href="lm.html#分类变量"><i class="fa fa-check"></i><b>28.8.3</b> 分类变量</a></li>
+<li class="chapter" data-level="28.8.4" data-path="lm.html"><a href="lm.html#因子变量"><i class="fa fa-check"></i><b>28.8.4</b> 因子变量</a></li>
+<li class="chapter" data-level="28.8.5" data-path="lm.html"><a href="lm.html#一个分类变量和一个连续变量"><i class="fa fa-check"></i><b>28.8.5</b> 一个分类变量和一个连续变量</a></li>
+<li class="chapter" data-level="28.8.6" data-path="lm.html"><a href="lm.html#偷懒的写法"><i class="fa fa-check"></i><b>28.8.6</b> 偷懒的写法</a></li>
+<li class="chapter" data-level="28.8.7" data-path="lm.html"><a href="lm.html#交互项"><i class="fa fa-check"></i><b>28.8.7</b> 交互项</a></li>
+<li class="chapter" data-level="28.8.8" data-path="lm.html"><a href="lm.html#虚拟变量"><i class="fa fa-check"></i><b>28.8.8</b> 虚拟变量</a></li>
+<li class="chapter" data-level="28.8.9" data-path="lm.html"><a href="lm.html#predict-vs-fit"><i class="fa fa-check"></i><b>28.8.9</b> predict vs fit</a></li>
+<li class="chapter" data-level="28.8.10" data-path="lm.html"><a href="lm.html#回归和相关的关系"><i class="fa fa-check"></i><b>28.8.10</b> 回归和相关的关系</a></li>
+</ul></li>
+<li class="chapter" data-level="28.9" data-path="lm.html"><a href="lm.html#延伸阅读-7"><i class="fa fa-check"></i><b>28.9</b> 延伸阅读</a></li>
+<li class="chapter" data-level="28.10" data-path="lm.html"><a href="lm.html#线性模型的物理解释"><i class="fa fa-check"></i><b>28.10</b> 线性模型的物理解释</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="broom.html"><a href="broom.html"><i class="fa fa-check"></i><b>29</b> 模型输出结果的规整</a>
+<ul>
+<li class="chapter" data-level="29.1" data-path="broom.html"><a href="broom.html#案例-3"><i class="fa fa-check"></i><b>29.1</b> 案例</a>
+<ul>
+<li class="chapter" data-level="29.1.1" data-path="broom.html"><a href="broom.html#可视化探索"><i class="fa fa-check"></i><b>29.1.1</b> 可视化探索</a></li>
+<li class="chapter" data-level="29.1.2" data-path="broom.html"><a href="broom.html#简单模型"><i class="fa fa-check"></i><b>29.1.2</b> 简单模型</a></li>
+</ul></li>
+<li class="chapter" data-level="29.2" data-path="broom.html"><a href="broom.html#broom-1"><i class="fa fa-check"></i><b>29.2</b> broom</a>
+<ul>
+<li class="chapter" data-level="29.2.1" data-path="broom.html"><a href="broom.html#tidy"><i class="fa fa-check"></i><b>29.2.1</b> tidy</a></li>
+<li class="chapter" data-level="29.2.2" data-path="broom.html"><a href="broom.html#augment"><i class="fa fa-check"></i><b>29.2.2</b> augment</a></li>
+<li class="chapter" data-level="29.2.3" data-path="broom.html"><a href="broom.html#glance"><i class="fa fa-check"></i><b>29.2.3</b> glance</a></li>
+</ul></li>
+<li class="chapter" data-level="29.3" data-path="broom.html"><a href="broom.html#应用-1"><i class="fa fa-check"></i><b>29.3</b> 应用</a></li>
+<li class="chapter" data-level="29.4" data-path="broom.html"><a href="broom.html#练习"><i class="fa fa-check"></i><b>29.4</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="tidystats.html"><a href="tidystats.html"><i class="fa fa-check"></i><b>30</b> Tidy Statistics</a>
+<ul>
+<li class="chapter" data-level="30.1" data-path="tidystats.html"><a href="tidystats.html#方法的区分"><i class="fa fa-check"></i><b>30.1</b> 方法的区分</a></li>
+<li class="chapter" data-level="30.2" data-path="tidystats.html"><a href="tidystats.html#从一个案例开始-1"><i class="fa fa-check"></i><b>30.2</b> 从一个案例开始</a></li>
+<li class="chapter" data-level="30.3" data-path="tidystats.html"><a href="tidystats.html#单因素方差分析"><i class="fa fa-check"></i><b>30.3</b> 单因素方差分析</a></li>
+<li class="chapter" data-level="30.4" data-path="tidystats.html"><a href="tidystats.html#双因素方差分析"><i class="fa fa-check"></i><b>30.4</b> 双因素方差分析</a></li>
+<li class="chapter" data-level="30.5" data-path="tidystats.html"><a href="tidystats.html#在tidyverse中的应用"><i class="fa fa-check"></i><b>30.5</b> 在tidyverse中的应用</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="tests-as-linear.html"><a href="tests-as-linear.html"><i class="fa fa-check"></i><b>31</b> 统计检验与线性模型的等价性</a>
+<ul>
+<li class="chapter" data-level="31.1" data-path="tests-as-linear.html"><a href="tests-as-linear.html#t检验"><i class="fa fa-check"></i><b>31.1</b> t检验</a></li>
+<li class="chapter" data-level="31.2" data-path="tests-as-linear.html"><a href="tests-as-linear.html#关联"><i class="fa fa-check"></i><b>31.2</b> 关联</a></li>
+<li class="chapter" data-level="31.3" data-path="tests-as-linear.html"><a href="tests-as-linear.html#单因素方差分析-1"><i class="fa fa-check"></i><b>31.3</b> 单因素方差分析</a></li>
+<li class="chapter" data-level="31.4" data-path="tests-as-linear.html"><a href="tests-as-linear.html#单因素协变量分析"><i class="fa fa-check"></i><b>31.4</b> 单因素协变量分析</a></li>
+<li class="chapter" data-level="31.5" data-path="tests-as-linear.html"><a href="tests-as-linear.html#双因素方差分析-1"><i class="fa fa-check"></i><b>31.5</b> 双因素方差分析</a></li>
+</ul></li>
+<li class="chapter" data-level="32" data-path="infer.html"><a href="infer.html"><i class="fa fa-check"></i><b>32</b> 统计推断</a>
+<ul>
+<li class="chapter" data-level="32.1" data-path="infer.html"><a href="infer.html#案例1你会给爱情片还是动作片高分"><i class="fa fa-check"></i><b>32.1</b> 案例1:你会给爱情片还是动作片高分？</a>
+<ul>
+<li class="chapter" data-level="32.1.1" data-path="infer.html"><a href="infer.html#传统的基于频率方法的t检验"><i class="fa fa-check"></i><b>32.1.1</b> 传统的基于频率方法的t检验</a></li>
+<li class="chapter" data-level="32.1.2" data-path="infer.html"><a href="infer.html#infer基于模拟的检验"><i class="fa fa-check"></i><b>32.1.2</b> infer:基于模拟的检验</a></li>
+</ul></li>
+<li class="chapter" data-level="32.2" data-path="infer.html"><a href="infer.html#案例2-航天事业的预算有党派门户之见"><i class="fa fa-check"></i><b>32.2</b> 案例2: 航天事业的预算有党派门户之见？</a>
+<ul>
+<li class="chapter" data-level="32.2.1" data-path="infer.html"><a href="infer.html#传统的方法"><i class="fa fa-check"></i><b>32.2.1</b> 传统的方法</a></li>
+<li class="chapter" data-level="32.2.2" data-path="infer.html"><a href="infer.html#infersimulation-based-tests"><i class="fa fa-check"></i><b>32.2.2</b> infer:Simulation-based tests</a></li>
+</ul></li>
+<li class="chapter" data-level="32.3" data-path="infer.html"><a href="infer.html#案例3原住民中的女学生多"><i class="fa fa-check"></i><b>32.3</b> 案例3:原住民中的女学生多？</a>
+<ul>
+<li class="chapter" data-level="32.3.1" data-path="infer.html"><a href="infer.html#传统方法"><i class="fa fa-check"></i><b>32.3.1</b> 传统方法</a></li>
+<li class="chapter" data-level="32.3.2" data-path="infer.html"><a href="infer.html#基于模拟的方法"><i class="fa fa-check"></i><b>32.3.2</b> 基于模拟的方法</a></li>
+</ul></li>
+<li class="chapter" data-level="32.4" data-path="infer.html"><a href="infer.html#宏包infer"><i class="fa fa-check"></i><b>32.4</b> 宏包<code>infer</code></a></li>
+<li class="chapter" data-level="32.5" data-path="infer.html"><a href="infer.html#更多-1"><i class="fa fa-check"></i><b>32.5</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="33" data-path="lmm.html"><a href="lmm.html"><i class="fa fa-check"></i><b>33</b> 多层线性模型</a>
+<ul>
+<li class="chapter" data-level="33.1" data-path="lmm.html"><a href="lmm.html#分组数据"><i class="fa fa-check"></i><b>33.1</b> 分组数据</a></li>
+<li class="chapter" data-level="33.2" data-path="lmm.html"><a href="lmm.html#案例-4"><i class="fa fa-check"></i><b>33.2</b> 案例</a></li>
+<li class="chapter" data-level="33.3" data-path="lmm.html"><a href="lmm.html#线性模型"><i class="fa fa-check"></i><b>33.3</b> 线性模型</a></li>
+<li class="chapter" data-level="33.4" data-path="lmm.html"><a href="lmm.html#变化的截距"><i class="fa fa-check"></i><b>33.4</b> 变化的截距</a></li>
+<li class="chapter" data-level="33.5" data-path="lmm.html"><a href="lmm.html#变化的斜率"><i class="fa fa-check"></i><b>33.5</b> 变化的斜率</a></li>
+<li class="chapter" data-level="33.6" data-path="lmm.html"><a href="lmm.html#变化的斜率-变化的截距"><i class="fa fa-check"></i><b>33.6</b> 变化的斜率 + 变化的截距</a></li>
+<li class="chapter" data-level="33.7" data-path="lmm.html"><a href="lmm.html#信息池"><i class="fa fa-check"></i><b>33.7</b> 信息池</a>
+<ul>
+<li class="chapter" data-level="33.7.1" data-path="lmm.html"><a href="lmm.html#提问-3"><i class="fa fa-check"></i><b>33.7.1</b> 提问</a></li>
+<li class="chapter" data-level="33.7.2" data-path="lmm.html"><a href="lmm.html#信息共享"><i class="fa fa-check"></i><b>33.7.2</b> 信息共享</a></li>
+<li class="chapter" data-level="33.7.3" data-path="lmm.html"><a href="lmm.html#可视化"><i class="fa fa-check"></i><b>33.7.3</b> 可视化</a></li>
+</ul></li>
+<li class="chapter" data-level="33.8" data-path="lmm.html"><a href="lmm.html#更多-2"><i class="fa fa-check"></i><b>33.8</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="34" data-path="poisson-regression.html"><a href="poisson-regression.html"><i class="fa fa-check"></i><b>34</b> 广义线性模型</a>
+<ul>
+<li class="chapter" data-level="34.1" data-path="poisson-regression.html"><a href="poisson-regression.html#线性回归回顾"><i class="fa fa-check"></i><b>34.1</b> 线性回归回顾</a></li>
+<li class="chapter" data-level="34.2" data-path="poisson-regression.html"><a href="poisson-regression.html#案例-5"><i class="fa fa-check"></i><b>34.2</b> 案例</a>
+<ul>
+<li class="chapter" data-level="34.2.1" data-path="poisson-regression.html"><a href="poisson-regression.html#线性模型的局限性"><i class="fa fa-check"></i><b>34.2.1</b> 线性模型的局限性</a></li>
+<li class="chapter" data-level="34.2.2" data-path="poisson-regression.html"><a href="poisson-regression.html#泊松分布"><i class="fa fa-check"></i><b>34.2.2</b> 泊松分布</a></li>
+<li class="chapter" data-level="34.2.3" data-path="poisson-regression.html"><a href="poisson-regression.html#正态分布换成泊松分布就行了"><i class="fa fa-check"></i><b>34.2.3</b> 正态分布换成泊松分布就行了？</a></li>
+</ul></li>
+<li class="chapter" data-level="34.3" data-path="poisson-regression.html"><a href="poisson-regression.html#泊松回归模型"><i class="fa fa-check"></i><b>34.3</b> 泊松回归模型</a>
+<ul>
+<li class="chapter" data-level="34.3.1" data-path="poisson-regression.html"><a href="poisson-regression.html#解决办法-连接函数之美"><i class="fa fa-check"></i><b>34.3.1</b> 解决办法-连接函数之美</a></li>
+<li class="chapter" data-level="34.3.2" data-path="poisson-regression.html"><a href="poisson-regression.html#代码实现"><i class="fa fa-check"></i><b>34.3.2</b> 代码实现</a></li>
+</ul></li>
+<li class="chapter" data-level="34.4" data-path="poisson-regression.html"><a href="poisson-regression.html#模型解释"><i class="fa fa-check"></i><b>34.4</b> 模型解释</a>
+<ul>
+<li class="chapter" data-level="34.4.1" data-path="poisson-regression.html"><a href="poisson-regression.html#系数"><i class="fa fa-check"></i><b>34.4.1</b> 系数</a></li>
+<li class="chapter" data-level="34.4.2" data-path="poisson-regression.html"><a href="poisson-regression.html#边际效应marginal-effects"><i class="fa fa-check"></i><b>34.4.2</b> 边际效应(Marginal effects)</a></li>
+<li class="chapter" data-level="34.4.3" data-path="poisson-regression.html"><a href="poisson-regression.html#拟合"><i class="fa fa-check"></i><b>34.4.3</b> 拟合</a></li>
+<li class="chapter" data-level="34.4.4" data-path="poisson-regression.html"><a href="poisson-regression.html#模型评估"><i class="fa fa-check"></i><b>34.4.4</b> 模型评估</a></li>
+</ul></li>
+<li class="chapter" data-level="34.5" data-path="poisson-regression.html"><a href="poisson-regression.html#思考-1"><i class="fa fa-check"></i><b>34.5</b> 思考</a>
+<ul>
+<li class="chapter" data-level="34.5.1" data-path="poisson-regression.html"><a href="poisson-regression.html#这两者为什么是相等的"><i class="fa fa-check"></i><b>34.5.1</b> 这两者为什么是相等的？</a></li>
+<li class="chapter" data-level="34.5.2" data-path="poisson-regression.html"><a href="poisson-regression.html#log-link-与-log-transforming"><i class="fa fa-check"></i><b>34.5.2</b> <code>log link</code> 与 <code>log transforming</code></a></li>
+<li class="chapter" data-level="34.5.3" data-path="poisson-regression.html"><a href="poisson-regression.html#更多分布"><i class="fa fa-check"></i><b>34.5.3</b> 更多分布</a></li>
+<li class="chapter" data-level="34.5.4" data-path="poisson-regression.html"><a href="poisson-regression.html#更复杂的模型"><i class="fa fa-check"></i><b>34.5.4</b> 更复杂的模型</a></li>
+</ul></li>
+<li class="chapter" data-level="34.6" data-path="poisson-regression.html"><a href="poisson-regression.html#小结-5"><i class="fa fa-check"></i><b>34.6</b> 小结</a></li>
+</ul></li>
+<li class="chapter" data-level="35" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>35</b> logistic回归模型</a>
+<ul>
+<li class="chapter" data-level="35.1" data-path="logistic-regression.html"><a href="logistic-regression.html#问题-1"><i class="fa fa-check"></i><b>35.1</b> 问题</a></li>
+<li class="chapter" data-level="35.2" data-path="logistic-regression.html"><a href="logistic-regression.html#模型的输出"><i class="fa fa-check"></i><b>35.2</b> 模型的输出</a>
+<ul>
+<li class="chapter" data-level="35.2.1" data-path="logistic-regression.html"><a href="logistic-regression.html#the-log-odds-scale"><i class="fa fa-check"></i><b>35.2.1</b> The log-odds scale</a></li>
+<li class="chapter" data-level="35.2.2" data-path="logistic-regression.html"><a href="logistic-regression.html#the-odds-scale"><i class="fa fa-check"></i><b>35.2.2</b> The odds scale</a></li>
+<li class="chapter" data-level="35.2.3" data-path="logistic-regression.html"><a href="logistic-regression.html#the-probability-scale."><i class="fa fa-check"></i><b>35.2.3</b> The probability scale.</a></li>
+</ul></li>
+<li class="chapter" data-level="35.3" data-path="logistic-regression.html"><a href="logistic-regression.html#预测"><i class="fa fa-check"></i><b>35.3</b> 预测</a>
+<ul>
+<li class="chapter" data-level="35.3.1" data-path="logistic-regression.html"><a href="logistic-regression.html#预测与拟合"><i class="fa fa-check"></i><b>35.3.1</b> 预测与拟合</a></li>
+<li class="chapter" data-level="35.3.2" data-path="logistic-regression.html"><a href="logistic-regression.html#预测-1"><i class="fa fa-check"></i><b>35.3.2</b> 预测</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="36" data-path="ordinal.html"><a href="ordinal.html"><i class="fa fa-check"></i><b>36</b> 有序logistic回归</a>
+<ul>
+<li class="chapter" data-level="36.1" data-path="ordinal.html"><a href="ordinal.html#logistic回归"><i class="fa fa-check"></i><b>36.1</b> logistic回归</a></li>
+<li class="chapter" data-level="36.2" data-path="ordinal.html"><a href="ordinal.html#生活中的有序logistic回归"><i class="fa fa-check"></i><b>36.2</b> 生活中的有序logistic回归</a></li>
+<li class="chapter" data-level="36.3" data-path="ordinal.html"><a href="ordinal.html#案例-6"><i class="fa fa-check"></i><b>36.3</b> 案例</a></li>
+<li class="chapter" data-level="36.4" data-path="ordinal.html"><a href="ordinal.html#问题的提出"><i class="fa fa-check"></i><b>36.4</b> 问题的提出</a>
+<ul>
+<li class="chapter" data-level="36.4.1" data-path="ordinal.html"><a href="ordinal.html#父母门当户对"><i class="fa fa-check"></i><b>36.4.1</b> 父母门当户对？</a></li>
+<li class="chapter" data-level="36.4.2" data-path="ordinal.html"><a href="ordinal.html#母亲的教育程度对子女的影响"><i class="fa fa-check"></i><b>36.4.2</b> 母亲的教育程度对子女的影响</a></li>
+<li class="chapter" data-level="36.4.3" data-path="ordinal.html"><a href="ordinal.html#父亲和母亲谁的影响大"><i class="fa fa-check"></i><b>36.4.3</b> 父亲和母亲谁的影响大</a></li>
+<li class="chapter" data-level="36.4.4" data-path="ordinal.html"><a href="ordinal.html#系数的解释"><i class="fa fa-check"></i><b>36.4.4</b> 系数的解释</a></li>
+<li class="chapter" data-level="36.4.5" data-path="ordinal.html"><a href="ordinal.html#边际效应"><i class="fa fa-check"></i><b>36.4.5</b> 边际效应</a></li>
+</ul></li>
+<li class="chapter" data-level="36.5" data-path="ordinal.html"><a href="ordinal.html#其他宏包"><i class="fa fa-check"></i><b>36.5</b> 其他宏包</a>
+<ul>
+<li class="chapter" data-level="36.5.1" data-path="ordinal.html"><a href="ordinal.html#ordinal-包"><i class="fa fa-check"></i><b>36.5.1</b> ordinal 包</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="37" data-path="tidymodels.html"><a href="tidymodels.html"><i class="fa fa-check"></i><b>37</b> 机器学习</a>
+<ul>
+<li class="chapter" data-level="37.1" data-path="tidymodels.html"><a href="tidymodels.html#数据"><i class="fa fa-check"></i><b>37.1</b> 数据</a></li>
+<li class="chapter" data-level="37.2" data-path="tidymodels.html"><a href="tidymodels.html#机器学习"><i class="fa fa-check"></i><b>37.2</b> 机器学习</a></li>
+<li class="chapter" data-level="37.3" data-path="tidymodels.html"><a href="tidymodels.html#model01"><i class="fa fa-check"></i><b>37.3</b> model01</a></li>
+<li class="chapter" data-level="37.4" data-path="tidymodels.html"><a href="tidymodels.html#model02"><i class="fa fa-check"></i><b>37.4</b> model02</a></li>
+<li class="chapter" data-level="37.5" data-path="tidymodels.html"><a href="tidymodels.html#model03"><i class="fa fa-check"></i><b>37.5</b> model03</a></li>
+<li class="chapter" data-level="37.6" data-path="tidymodels.html"><a href="tidymodels.html#model04"><i class="fa fa-check"></i><b>37.6</b> model04</a></li>
+<li class="chapter" data-level="37.7" data-path="tidymodels.html"><a href="tidymodels.html#workflow-1"><i class="fa fa-check"></i><b>37.7</b> workflow</a>
+<ul>
+<li class="chapter" data-level="37.7.1" data-path="tidymodels.html"><a href="tidymodels.html#使用-recipes"><i class="fa fa-check"></i><b>37.7.1</b> 使用 recipes</a></li>
+<li class="chapter" data-level="37.7.2" data-path="tidymodels.html"><a href="tidymodels.html#workflows的思路更清晰"><i class="fa fa-check"></i><b>37.7.2</b> workflows的思路更清晰</a></li>
+<li class="chapter" data-level="37.7.3" data-path="tidymodels.html"><a href="tidymodels.html#模型评估-1"><i class="fa fa-check"></i><b>37.7.3</b> 模型评估</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="38" data-path="bayesian-models.html"><a href="bayesian-models.html"><i class="fa fa-check"></i><b>38</b> 贝叶斯建模</a>
+<ul>
+<li class="chapter" data-level="38.1" data-path="bayesian-models.html"><a href="bayesian-models.html#生活中的贝叶斯"><i class="fa fa-check"></i><b>38.1</b> 生活中的贝叶斯</a></li>
+<li class="chapter" data-level="38.2" data-path="bayesian-models.html"><a href="bayesian-models.html#贝叶斯公式"><i class="fa fa-check"></i><b>38.2</b> 贝叶斯公式</a></li>
+<li class="chapter" data-level="38.3" data-path="bayesian-models.html"><a href="bayesian-models.html#三张图讲贝叶斯分析"><i class="fa fa-check"></i><b>38.3</b> 三张图讲贝叶斯分析</a></li>
+<li class="chapter" data-level="38.4" data-path="bayesian-models.html"><a href="bayesian-models.html#线性模型-1"><i class="fa fa-check"></i><b>38.4</b> 线性模型</a></li>
+</ul></li>
+<li class="part"><span><b>IV 应用篇</b></span></li>
+<li class="chapter" data-level="39" data-path="eda-nobel.html"><a href="eda-nobel.html"><i class="fa fa-check"></i><b>39</b> 探索性数据分析-诺奖获得者</a>
+<ul>
+<li class="chapter" data-level="39.1" data-path="eda-nobel.html"><a href="eda-nobel.html#探索性"><i class="fa fa-check"></i><b>39.1</b> 探索性</a></li>
+<li class="chapter" data-level="39.2" data-path="eda-nobel.html"><a href="eda-nobel.html#数据集"><i class="fa fa-check"></i><b>39.2</b> 数据集</a></li>
+<li class="chapter" data-level="39.3" data-path="eda-nobel.html"><a href="eda-nobel.html#导入数据-1"><i class="fa fa-check"></i><b>39.3</b> 导入数据</a></li>
+<li class="chapter" data-level="39.4" data-path="eda-nobel.html"><a href="eda-nobel.html#数据结构-1"><i class="fa fa-check"></i><b>39.4</b> 数据结构</a></li>
+<li class="chapter" data-level="39.5" data-path="eda-nobel.html"><a href="eda-nobel.html#我们想探索哪些问题"><i class="fa fa-check"></i><b>39.5</b> 我们想探索哪些问题？</a></li>
+<li class="chapter" data-level="39.6" data-path="eda-nobel.html"><a href="eda-nobel.html#每个学科颁过多少次奖"><i class="fa fa-check"></i><b>39.6</b> 每个学科颁过多少次奖</a></li>
+<li class="chapter" data-level="39.7" data-path="eda-nobel.html"><a href="eda-nobel.html#看看我们伟大的祖国"><i class="fa fa-check"></i><b>39.7</b> 看看我们伟大的祖国</a></li>
+<li class="chapter" data-level="39.8" data-path="eda-nobel.html"><a href="eda-nobel.html#哪些大神多次获得诺贝尔奖"><i class="fa fa-check"></i><b>39.8</b> 哪些大神多次获得诺贝尔奖</a></li>
+<li class="chapter" data-level="39.9" data-path="eda-nobel.html"><a href="eda-nobel.html#大神在得奖的时候是多大年龄"><i class="fa fa-check"></i><b>39.9</b> 大神在得奖的时候是多大年龄？</a></li>
+<li class="chapter" data-level="39.10" data-path="eda-nobel.html"><a href="eda-nobel.html#性别比例"><i class="fa fa-check"></i><b>39.10</b> 性别比例</a></li>
+<li class="chapter" data-level="39.11" data-path="eda-nobel.html"><a href="eda-nobel.html#这些大神都是哪个年代出生的人"><i class="fa fa-check"></i><b>39.11</b> 这些大神都是哪个年代出生的人？</a></li>
+<li class="chapter" data-level="39.12" data-path="eda-nobel.html"><a href="eda-nobel.html#最年轻的诺奖获得者"><i class="fa fa-check"></i><b>39.12</b> 最年轻的诺奖获得者？</a></li>
+<li class="chapter" data-level="39.13" data-path="eda-nobel.html"><a href="eda-nobel.html#平均年龄和获奖数量"><i class="fa fa-check"></i><b>39.13</b> 平均年龄和获奖数量</a></li>
+<li class="chapter" data-level="39.14" data-path="eda-nobel.html"><a href="eda-nobel.html#出生地与工作地分布"><i class="fa fa-check"></i><b>39.14</b> 出生地与工作地分布</a></li>
+<li class="chapter" data-level="39.15" data-path="eda-nobel.html"><a href="eda-nobel.html#迁移模式"><i class="fa fa-check"></i><b>39.15</b> 迁移模式</a></li>
+<li class="chapter" data-level="39.16" data-path="eda-nobel.html"><a href="eda-nobel.html#地图-1"><i class="fa fa-check"></i><b>39.16</b> 地图</a></li>
+<li class="chapter" data-level="39.17" data-path="eda-nobel.html"><a href="eda-nobel.html#出生地和工作地不一样的占比"><i class="fa fa-check"></i><b>39.17</b> 出生地和工作地不一样的占比</a></li>
+<li class="chapter" data-level="39.18" data-path="eda-nobel.html"><a href="eda-nobel.html#诺奖分享者"><i class="fa fa-check"></i><b>39.18</b> 诺奖分享者</a></li>
+<li class="chapter" data-level="39.19" data-path="eda-nobel.html"><a href="eda-nobel.html#其它"><i class="fa fa-check"></i><b>39.19</b> 其它</a></li>
+<li class="chapter" data-level="39.20" data-path="eda-nobel.html"><a href="eda-nobel.html#延伸阅读-8"><i class="fa fa-check"></i><b>39.20</b> 延伸阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="40" data-path="eda-olympics.html"><a href="eda-olympics.html"><i class="fa fa-check"></i><b>40</b> 探索性数据分析-奥林匹克</a>
+<ul>
+<li class="chapter" data-level="40.1" data-path="eda-olympics.html"><a href="eda-olympics.html#导入数据-2"><i class="fa fa-check"></i><b>40.1</b> 导入数据</a></li>
+<li class="chapter" data-level="40.2" data-path="eda-olympics.html"><a href="eda-olympics.html#可视化-1"><i class="fa fa-check"></i><b>40.2</b> 可视化</a></li>
+<li class="chapter" data-level="40.3" data-path="eda-olympics.html"><a href="eda-olympics.html#回归分析"><i class="fa fa-check"></i><b>40.3</b> 回归分析</a></li>
+<li class="chapter" data-level="40.4" data-path="eda-olympics.html"><a href="eda-olympics.html#预测-2"><i class="fa fa-check"></i><b>40.4</b> 预测</a></li>
+<li class="chapter" data-level="40.5" data-path="eda-olympics.html"><a href="eda-olympics.html#再次可视化"><i class="fa fa-check"></i><b>40.5</b> 再次可视化</a></li>
+<li class="chapter" data-level="40.6" data-path="eda-olympics.html"><a href="eda-olympics.html#list_column"><i class="fa fa-check"></i><b>40.6</b> list_column</a></li>
+<li class="chapter" data-level="40.7" data-path="eda-olympics.html"><a href="eda-olympics.html#课后作业"><i class="fa fa-check"></i><b>40.7</b> 课后作业</a></li>
+</ul></li>
+<li class="chapter" data-level="41" data-path="eda-covid2019.html"><a href="eda-covid2019.html"><i class="fa fa-check"></i><b>41</b> 探索性数据分析-新冠疫情</a>
+<ul>
+<li class="chapter" data-level="41.1" data-path="eda-covid2019.html"><a href="eda-covid2019.html#数据来源"><i class="fa fa-check"></i><b>41.1</b> 数据来源</a></li>
+<li class="chapter" data-level="41.2" data-path="eda-covid2019.html"><a href="eda-covid2019.html#读取数据"><i class="fa fa-check"></i><b>41.2</b> 读取数据</a></li>
+<li class="chapter" data-level="41.3" data-path="eda-covid2019.html"><a href="eda-covid2019.html#数据集结构"><i class="fa fa-check"></i><b>41.3</b> 数据集结构</a></li>
+<li class="chapter" data-level="41.4" data-path="eda-covid2019.html"><a href="eda-covid2019.html#数据清洗规整"><i class="fa fa-check"></i><b>41.4</b> 数据清洗规整</a>
+<ul>
+<li class="chapter" data-level="41.4.1" data-path="eda-covid2019.html"><a href="eda-covid2019.html#必要的预备知识之select"><i class="fa fa-check"></i><b>41.4.1</b> 必要的预备知识之<code>select()</code></a></li>
+<li class="chapter" data-level="41.4.2" data-path="eda-covid2019.html"><a href="eda-covid2019.html#必要的预备知识之pivot_longer"><i class="fa fa-check"></i><b>41.4.2</b> 必要的预备知识之<code>pivot_longer()</code></a></li>
+<li class="chapter" data-level="41.4.3" data-path="eda-covid2019.html"><a href="eda-covid2019.html#必要的预备知识之pivot_wider"><i class="fa fa-check"></i><b>41.4.3</b> 必要的预备知识之<code>pivot_wider()</code></a></li>
+<li class="chapter" data-level="41.4.4" data-path="eda-covid2019.html"><a href="eda-covid2019.html#必要的预备知识之日期格式"><i class="fa fa-check"></i><b>41.4.4</b> 必要的预备知识之日期格式</a></li>
+<li class="chapter" data-level="41.4.5" data-path="eda-covid2019.html"><a href="eda-covid2019.html#必要的预备知识之时间差"><i class="fa fa-check"></i><b>41.4.5</b> 必要的预备知识之时间差</a></li>
+<li class="chapter" data-level="41.4.6" data-path="eda-covid2019.html"><a href="eda-covid2019.html#有时候需要log10_scale"><i class="fa fa-check"></i><b>41.4.6</b> 有时候需要log10_scale</a></li>
+<li class="chapter" data-level="41.4.7" data-path="eda-covid2019.html"><a href="eda-covid2019.html#数据清洗规整-1"><i class="fa fa-check"></i><b>41.4.7</b> 数据清洗规整</a></li>
+</ul></li>
+<li class="chapter" data-level="41.5" data-path="eda-covid2019.html"><a href="eda-covid2019.html#可视化探索-1"><i class="fa fa-check"></i><b>41.5</b> 可视化探索</a>
+<ul>
+<li class="chapter" data-level="41.5.1" data-path="eda-covid2019.html"><a href="eda-covid2019.html#简便的方法"><i class="fa fa-check"></i><b>41.5.1</b> 简便的方法</a></li>
+<li class="chapter" data-level="41.5.2" data-path="eda-covid2019.html"><a href="eda-covid2019.html#疫情持续时间最久的国家"><i class="fa fa-check"></i><b>41.5.2</b> 疫情持续时间最久的国家</a></li>
+<li class="chapter" data-level="41.5.3" data-path="eda-covid2019.html"><a href="eda-covid2019.html#笨办法吧"><i class="fa fa-check"></i><b>41.5.3</b> 笨办法吧</a></li>
+<li class="chapter" data-level="41.5.4" data-path="eda-covid2019.html"><a href="eda-covid2019.html#比较tidy的方法"><i class="fa fa-check"></i><b>41.5.4</b> 比较tidy的方法</a></li>
+</ul></li>
+<li class="chapter" data-level="41.6" data-path="eda-covid2019.html"><a href="eda-covid2019.html#每个国家的情况"><i class="fa fa-check"></i><b>41.6</b> 每个国家的情况</a></li>
+<li class="chapter" data-level="41.7" data-path="eda-covid2019.html"><a href="eda-covid2019.html#地图-2"><i class="fa fa-check"></i><b>41.7</b> 地图</a></li>
+<li class="chapter" data-level="41.8" data-path="eda-covid2019.html"><a href="eda-covid2019.html#更多-3"><i class="fa fa-check"></i><b>41.8</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="42" data-path="eda-anscombe.html"><a href="eda-anscombe.html"><i class="fa fa-check"></i><b>42</b> 探索性数据分析-anscombe数据集</a>
+<ul>
+<li class="chapter" data-level="42.1" data-path="eda-anscombe.html"><a href="eda-anscombe.html#探索anscombe"><i class="fa fa-check"></i><b>42.1</b> 探索anscombe</a></li>
+<li class="chapter" data-level="42.2" data-path="eda-anscombe.html"><a href="eda-anscombe.html#规整数据"><i class="fa fa-check"></i><b>42.2</b> 规整数据</a>
+<ul>
+<li class="chapter" data-level="42.2.1" data-path="eda-anscombe.html"><a href="eda-anscombe.html#小小的回顾"><i class="fa fa-check"></i><b>42.2.1</b> 小小的回顾</a></li>
+<li class="chapter" data-level="42.2.2" data-path="eda-anscombe.html"><a href="eda-anscombe.html#回到案例"><i class="fa fa-check"></i><b>42.2.2</b> 回到案例</a></li>
+</ul></li>
+<li class="chapter" data-level="42.3" data-path="eda-anscombe.html"><a href="eda-anscombe.html#统计"><i class="fa fa-check"></i><b>42.3</b> 统计</a></li>
+<li class="chapter" data-level="42.4" data-path="eda-anscombe.html"><a href="eda-anscombe.html#建模"><i class="fa fa-check"></i><b>42.4</b> 建模</a></li>
+<li class="chapter" data-level="42.5" data-path="eda-anscombe.html"><a href="eda-anscombe.html#可视化看看"><i class="fa fa-check"></i><b>42.5</b> 可视化看看</a></li>
+</ul></li>
+<li class="chapter" data-level="43" data-path="eda-height.html"><a href="eda-height.html"><i class="fa fa-check"></i><b>43</b> 探索性数据分析-身高体重</a>
+<ul>
+<li class="chapter" data-level="43.1" data-path="eda-height.html"><a href="eda-height.html#案例分析-1"><i class="fa fa-check"></i><b>43.1</b> 案例分析</a></li>
+<li class="chapter" data-level="43.2" data-path="eda-height.html"><a href="eda-height.html#可视化-2"><i class="fa fa-check"></i><b>43.2</b> 可视化</a>
+<ul>
+<li class="chapter" data-level="43.2.1" data-path="eda-height.html"><a href="eda-height.html#画出不同性别的身高分布"><i class="fa fa-check"></i><b>43.2.1</b> 画出不同性别的身高分布</a></li>
+</ul></li>
+<li class="chapter" data-level="43.3" data-path="eda-height.html"><a href="eda-height.html#来点高级的"><i class="fa fa-check"></i><b>43.3</b> 来点高级的</a>
+<ul>
+<li class="chapter" data-level="43.3.1" data-path="eda-height.html"><a href="eda-height.html#完整代码"><i class="fa fa-check"></i><b>43.3.1</b> 完整代码</a></li>
+<li class="chapter" data-level="43.3.2" data-path="eda-height.html"><a href="eda-height.html#画出不同性别的体重分布"><i class="fa fa-check"></i><b>43.3.2</b> 画出不同性别的体重分布</a></li>
+</ul></li>
+<li class="chapter" data-level="43.4" data-path="eda-height.html"><a href="eda-height.html#建模-1"><i class="fa fa-check"></i><b>43.4</b> 建模</a>
+<ul>
+<li class="chapter" data-level="43.4.1" data-path="eda-height.html"><a href="eda-height.html#身高与体重的散点图"><i class="fa fa-check"></i><b>43.4.1</b> 身高与体重的散点图</a></li>
+<li class="chapter" data-level="43.4.2" data-path="eda-height.html"><a href="eda-height.html#建立身高与体重的线性模型"><i class="fa fa-check"></i><b>43.4.2</b> 建立身高与体重的线性模型</a></li>
+<li class="chapter" data-level="43.4.3" data-path="eda-height.html"><a href="eda-height.html#建立不同性别下的身高与体重的线性模型"><i class="fa fa-check"></i><b>43.4.3</b> 建立不同性别下的身高与体重的线性模型</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="44" data-path="eda-caribou.html"><a href="eda-caribou.html"><i class="fa fa-check"></i><b>44</b> 探索性数据分析-驯鹿迁移</a>
+<ul>
+<li class="chapter" data-level="44.1" data-path="eda-caribou.html"><a href="eda-caribou.html#驯鹿位置跟踪"><i class="fa fa-check"></i><b>44.1</b> 驯鹿位置跟踪</a></li>
+<li class="chapter" data-level="44.2" data-path="eda-caribou.html"><a href="eda-caribou.html#驯鹿的身份信息"><i class="fa fa-check"></i><b>44.2</b> 驯鹿的身份信息</a></li>
+<li class="chapter" data-level="44.3" data-path="eda-caribou.html"><a href="eda-caribou.html#性别比例-1"><i class="fa fa-check"></i><b>44.3</b> 性别比例</a></li>
+<li class="chapter" data-level="44.4" data-path="eda-caribou.html"><a href="eda-caribou.html#每个站点运动最频繁的前10的驯鹿"><i class="fa fa-check"></i><b>44.4</b> 每个站点运动最频繁的前10的驯鹿</a></li>
+<li class="chapter" data-level="44.5" data-path="eda-caribou.html"><a href="eda-caribou.html#驯鹿的活动信息"><i class="fa fa-check"></i><b>44.5</b> 驯鹿的活动信息</a></li>
+<li class="chapter" data-level="44.6" data-path="eda-caribou.html"><a href="eda-caribou.html#被追踪最多次的驯鹿的轨迹"><i class="fa fa-check"></i><b>44.6</b> 被追踪最多次的驯鹿的轨迹</a></li>
+<li class="chapter" data-level="44.7" data-path="eda-caribou.html"><a href="eda-caribou.html#某一只驯鹿的轨迹"><i class="fa fa-check"></i><b>44.7</b> 某一只驯鹿的轨迹</a></li>
+<li class="chapter" data-level="44.8" data-path="eda-caribou.html"><a href="eda-caribou.html#选择某个驯鹿查看他的活动轨迹"><i class="fa fa-check"></i><b>44.8</b> 选择某个驯鹿，查看他的活动轨迹</a></li>
+<li class="chapter" data-level="44.9" data-path="eda-caribou.html"><a href="eda-caribou.html#季节模式"><i class="fa fa-check"></i><b>44.9</b> 季节模式</a></li>
+<li class="chapter" data-level="44.10" data-path="eda-caribou.html"><a href="eda-caribou.html#迁移速度"><i class="fa fa-check"></i><b>44.10</b> 迁移速度</a></li>
+<li class="chapter" data-level="44.11" data-path="eda-caribou.html"><a href="eda-caribou.html#动态展示"><i class="fa fa-check"></i><b>44.11</b> 动态展示</a></li>
+<li class="chapter" data-level="44.12" data-path="eda-caribou.html"><a href="eda-caribou.html#更多-4"><i class="fa fa-check"></i><b>44.12</b> 更多</a></li>
+</ul></li>
+<li class="chapter" data-level="45" data-path="eda-penguins.html"><a href="eda-penguins.html"><i class="fa fa-check"></i><b>45</b> 探索性数据分析-企鹅的故事</a>
+<ul>
+<li class="chapter" data-level="45.1" data-path="eda-penguins.html"><a href="eda-penguins.html#数据-1"><i class="fa fa-check"></i><b>45.1</b> 数据</a>
+<ul>
+<li class="chapter" data-level="45.1.1" data-path="eda-penguins.html"><a href="eda-penguins.html#导入数据-3"><i class="fa fa-check"></i><b>45.1.1</b> 导入数据</a></li>
+<li class="chapter" data-level="45.1.2" data-path="eda-penguins.html"><a href="eda-penguins.html#变量含义-1"><i class="fa fa-check"></i><b>45.1.2</b> 变量含义</a></li>
+<li class="chapter" data-level="45.1.3" data-path="eda-penguins.html"><a href="eda-penguins.html#数据清洗"><i class="fa fa-check"></i><b>45.1.3</b> 数据清洗</a></li>
+</ul></li>
+<li class="chapter" data-level="45.2" data-path="eda-penguins.html"><a href="eda-penguins.html#探索性分析"><i class="fa fa-check"></i><b>45.2</b> 探索性分析</a>
+<ul>
+<li class="chapter" data-level="45.2.1" data-path="eda-penguins.html"><a href="eda-penguins.html#每种类型企鹅有多少只"><i class="fa fa-check"></i><b>45.2.1</b> 每种类型企鹅有多少只</a></li>
+<li class="chapter" data-level="45.2.2" data-path="eda-penguins.html"><a href="eda-penguins.html#每个岛屿有多少企鹅"><i class="fa fa-check"></i><b>45.2.2</b> 每个岛屿有多少企鹅？</a></li>
+<li class="chapter" data-level="45.2.3" data-path="eda-penguins.html"><a href="eda-penguins.html#每种类型企鹅各种体征属性的均值和分布"><i class="fa fa-check"></i><b>45.2.3</b> 每种类型企鹅各种体征属性的均值和分布</a></li>
+<li class="chapter" data-level="45.2.4" data-path="eda-penguins.html"><a href="eda-penguins.html#每种类型企鹅的嘴峰长度的分布"><i class="fa fa-check"></i><b>45.2.4</b> 每种类型企鹅的嘴峰长度的分布</a></li>
+<li class="chapter" data-level="45.2.5" data-path="eda-penguins.html"><a href="eda-penguins.html#每种类型企鹅的嘴峰长度的分布分性别"><i class="fa fa-check"></i><b>45.2.5</b> 每种类型企鹅的嘴峰长度的分布（分性别）</a></li>
+<li class="chapter" data-level="45.2.6" data-path="eda-penguins.html"><a href="eda-penguins.html#嘴峰长度和深度的关联"><i class="fa fa-check"></i><b>45.2.6</b> 嘴峰长度和深度的关联</a></li>
+<li class="chapter" data-level="45.2.7" data-path="eda-penguins.html"><a href="eda-penguins.html#体重与翅膀长度的关联"><i class="fa fa-check"></i><b>45.2.7</b> 体重与翅膀长度的关联</a></li>
+<li class="chapter" data-level="45.2.8" data-path="eda-penguins.html"><a href="eda-penguins.html#不同种类的宝宝体重具有显著性差异"><i class="fa fa-check"></i><b>45.2.8</b> 不同种类的宝宝，体重具有显著性差异？</a></li>
+<li class="chapter" data-level="45.2.9" data-path="eda-penguins.html"><a href="eda-penguins.html#嘴峰长度与嘴峰深度的比例"><i class="fa fa-check"></i><b>45.2.9</b> 嘴峰长度与嘴峰深度的比例</a></li>
+<li class="chapter" data-level="45.2.10" data-path="eda-penguins.html"><a href="eda-penguins.html#建立模型"><i class="fa fa-check"></i><b>45.2.10</b> 建立模型</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="46" data-path="eda-career-decision.html"><a href="eda-career-decision.html"><i class="fa fa-check"></i><b>46</b> 探索性数据分析-大学生职业决策</a>
+<ul>
+<li class="chapter" data-level="46.1" data-path="eda-career-decision.html"><a href="eda-career-decision.html#预备知识"><i class="fa fa-check"></i><b>46.1</b> 预备知识</a>
+<ul>
+<li class="chapter" data-level="46.1.1" data-path="eda-career-decision.html"><a href="eda-career-decision.html#缺失值检查-1"><i class="fa fa-check"></i><b>46.1.1</b> 缺失值检查</a></li>
+<li class="chapter" data-level="46.1.2" data-path="eda-career-decision.html"><a href="eda-career-decision.html#数据预处理"><i class="fa fa-check"></i><b>46.1.2</b> 数据预处理</a></li>
+</ul></li>
+<li class="chapter" data-level="46.2" data-path="eda-career-decision.html"><a href="eda-career-decision.html#开始-2"><i class="fa fa-check"></i><b>46.2</b> 开始</a>
+<ul>
+<li class="chapter" data-level="46.2.1" data-path="eda-career-decision.html"><a href="eda-career-decision.html#文件管理中需要注意的地方"><i class="fa fa-check"></i><b>46.2.1</b> 文件管理中需要注意的地方</a></li>
+<li class="chapter" data-level="46.2.2" data-path="eda-career-decision.html"><a href="eda-career-decision.html#缺失值检查-2"><i class="fa fa-check"></i><b>46.2.2</b> 缺失值检查</a></li>
+<li class="chapter" data-level="46.2.3" data-path="eda-career-decision.html"><a href="eda-career-decision.html#数据预处理-1"><i class="fa fa-check"></i><b>46.2.3</b> 数据预处理</a></li>
+<li class="chapter" data-level="46.2.4" data-path="eda-career-decision.html"><a href="eda-career-decision.html#标准化-1"><i class="fa fa-check"></i><b>46.2.4</b> 标准化</a></li>
+</ul></li>
+<li class="chapter" data-level="46.3" data-path="eda-career-decision.html"><a href="eda-career-decision.html#探索"><i class="fa fa-check"></i><b>46.3</b> 探索</a>
+<ul>
+<li class="chapter" data-level="46.3.1" data-path="eda-career-decision.html"><a href="eda-career-decision.html#想探索的问题"><i class="fa fa-check"></i><b>46.3.1</b> 想探索的问题</a></li>
+<li class="chapter" data-level="46.3.2" data-path="eda-career-decision.html"><a href="eda-career-decision.html#男生女生在职业探索上有所不同"><i class="fa fa-check"></i><b>46.3.2</b> 男生女生在职业探索上有所不同？</a></li>
+<li class="chapter" data-level="46.3.3" data-path="eda-career-decision.html"><a href="eda-career-decision.html#来自不同地方的学生在职业探索上有所不同"><i class="fa fa-check"></i><b>46.3.3</b> 来自不同地方的学生在职业探索上有所不同？</a></li>
+<li class="chapter" data-level="46.3.4" data-path="eda-career-decision.html"><a href="eda-career-decision.html#职业探索和决策之间有关联"><i class="fa fa-check"></i><b>46.3.4</b> 职业探索和决策之间有关联？</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="47" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html"><i class="fa fa-check"></i><b>47</b> 探索性数据分析-ames房屋价格</a>
+<ul>
+<li class="chapter" data-level="47.1" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#数据故事"><i class="fa fa-check"></i><b>47.1</b> 数据故事</a></li>
+<li class="chapter" data-level="47.2" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#探索设想"><i class="fa fa-check"></i><b>47.2</b> 探索设想</a></li>
+<li class="chapter" data-level="47.3" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#变量选取"><i class="fa fa-check"></i><b>47.3</b> 变量选取</a></li>
+<li class="chapter" data-level="47.4" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#缺失值处理"><i class="fa fa-check"></i><b>47.4</b> 缺失值处理</a></li>
+<li class="chapter" data-level="47.5" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#预处理"><i class="fa fa-check"></i><b>47.5</b> 预处理</a></li>
+<li class="chapter" data-level="47.6" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#有趣的探索"><i class="fa fa-check"></i><b>47.6</b> 有趣的探索</a>
+<ul>
+<li class="chapter" data-level="47.6.1" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#各区域的房屋价格均值"><i class="fa fa-check"></i><b>47.6.1</b> 各区域的房屋价格均值</a></li>
+<li class="chapter" data-level="47.6.2" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#房屋价格与占地面积"><i class="fa fa-check"></i><b>47.6.2</b> 房屋价格与占地面积</a></li>
+<li class="chapter" data-level="47.6.3" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#房屋价格与房屋居住面积"><i class="fa fa-check"></i><b>47.6.3</b> 房屋价格与房屋居住面积</a></li>
+<li class="chapter" data-level="47.6.4" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#车库与房屋价格"><i class="fa fa-check"></i><b>47.6.4</b> 车库与房屋价格</a></li>
+</ul></li>
+<li class="chapter" data-level="47.7" data-path="eda-ames-houseprice.html"><a href="eda-ames-houseprice.html#建模-2"><i class="fa fa-check"></i><b>47.7</b> 建模</a></li>
+</ul></li>
+<li class="chapter" data-level="48" data-path="eda-vaccine.html"><a href="eda-vaccine.html"><i class="fa fa-check"></i><b>48</b> 探索性数据分析-新冠疫苗有效率的计算</a>
+<ul>
+<li class="chapter" data-level="48.1" data-path="eda-vaccine.html"><a href="eda-vaccine.html#引言"><i class="fa fa-check"></i><b>48.1</b> 引言</a></li>
+<li class="chapter" data-level="48.2" data-path="eda-vaccine.html"><a href="eda-vaccine.html#模型"><i class="fa fa-check"></i><b>48.2</b> 模型</a></li>
+<li class="chapter" data-level="48.3" data-path="eda-vaccine.html"><a href="eda-vaccine.html#计算"><i class="fa fa-check"></i><b>48.3</b> 计算</a></li>
+<li class="chapter" data-level="48.4" data-path="eda-vaccine.html"><a href="eda-vaccine.html#结果"><i class="fa fa-check"></i><b>48.4</b> 结果</a>
+<ul>
+<li class="chapter" data-level="48.4.1" data-path="eda-vaccine.html"><a href="eda-vaccine.html#干预效果"><i class="fa fa-check"></i><b>48.4.1</b> 干预效果</a></li>
+<li class="chapter" data-level="48.4.2" data-path="eda-vaccine.html"><a href="eda-vaccine.html#疫苗有效率"><i class="fa fa-check"></i><b>48.4.2</b> 疫苗有效率</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="49" data-path="rvest.html"><a href="rvest.html"><i class="fa fa-check"></i><b>49</b> 网络爬虫</a>
+<ul>
+<li class="chapter" data-level="49.1" data-path="rvest.html"><a href="rvest.html#链家网"><i class="fa fa-check"></i><b>49.1</b> 链家网</a></li>
+<li class="chapter" data-level="49.2" data-path="rvest.html"><a href="rvest.html#猪肉价格"><i class="fa fa-check"></i><b>49.2</b> 猪肉价格</a></li>
+</ul></li>
+<li class="chapter" data-level="50" data-path="tidygraph.html"><a href="tidygraph.html"><i class="fa fa-check"></i><b>50</b> 社会网络分析</a>
+<ul>
+<li class="chapter" data-level="50.1" data-path="tidygraph.html"><a href="tidygraph.html#图论基本知识"><i class="fa fa-check"></i><b>50.1</b> 图论基本知识</a></li>
+<li class="chapter" data-level="50.2" data-path="tidygraph.html"><a href="tidygraph.html#网络分析"><i class="fa fa-check"></i><b>50.2</b> 网络分析</a>
+<ul>
+<li class="chapter" data-level="50.2.1" data-path="tidygraph.html"><a href="tidygraph.html#tidygraph-a-tidy-api-for-graph-manipulation"><i class="fa fa-check"></i><b>50.2.1</b> tidygraph: A tidy API for graph manipulation</a></li>
+<li class="chapter" data-level="50.2.2" data-path="tidygraph.html"><a href="tidygraph.html#tidy-network-anaylsis"><i class="fa fa-check"></i><b>50.2.2</b> Tidy Network Anaylsis</a></li>
+<li class="chapter" data-level="50.2.3" data-path="tidygraph.html"><a href="tidygraph.html#create-network-objects"><i class="fa fa-check"></i><b>50.2.3</b> Create network objects</a></li>
+<li class="chapter" data-level="50.2.4" data-path="tidygraph.html"><a href="tidygraph.html#use-tbl_graph"><i class="fa fa-check"></i><b>50.2.4</b> Use <code>tbl_graph</code></a></li>
+<li class="chapter" data-level="50.2.5" data-path="tidygraph.html"><a href="tidygraph.html#use-as_tbl_graph"><i class="fa fa-check"></i><b>50.2.5</b> Use <code>as_tbl_graph</code></a></li>
+<li class="chapter" data-level="50.2.6" data-path="tidygraph.html"><a href="tidygraph.html#print-out-a-network-object"><i class="fa fa-check"></i><b>50.2.6</b> Print out a network object</a></li>
+<li class="chapter" data-level="50.2.7" data-path="tidygraph.html"><a href="tidygraph.html#extract-the-current-active-data"><i class="fa fa-check"></i><b>50.2.7</b> extract the current active data</a></li>
+</ul></li>
+<li class="chapter" data-level="50.3" data-path="tidygraph.html"><a href="tidygraph.html#network-graph-manipulation"><i class="fa fa-check"></i><b>50.3</b> Network graph manipulation</a>
+<ul>
+<li class="chapter" data-level="50.3.1" data-path="tidygraph.html"><a href="tidygraph.html#car-groups-info-number-of-cylinders"><i class="fa fa-check"></i><b>50.3.1</b> Car groups info (Number of cylinders)</a></li>
+<li class="chapter" data-level="50.3.2" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-nodes-data"><i class="fa fa-check"></i><b>50.3.2</b> Modify the nodes data:</a></li>
+<li class="chapter" data-level="50.3.3" data-path="tidygraph.html"><a href="tidygraph.html#modify-the-edge-data."><i class="fa fa-check"></i><b>50.3.3</b> Modify the edge data.</a></li>
+<li class="chapter" data-level="50.3.4" data-path="tidygraph.html"><a href="tidygraph.html#display-the-final-modified-graphs-object"><i class="fa fa-check"></i><b>50.3.4</b> Display the final modified graphs object:</a></li>
+<li class="chapter" data-level="50.3.5" data-path="tidygraph.html"><a href="tidygraph.html#visualize-the-correlation-network"><i class="fa fa-check"></i><b>50.3.5</b> Visualize the correlation network</a></li>
+</ul></li>
+<li class="chapter" data-level="50.4" data-path="tidygraph.html"><a href="tidygraph.html#network-analysis"><i class="fa fa-check"></i><b>50.4</b> Network analysis</a>
+<ul>
+<li class="chapter" data-level="50.4.1" data-path="tidygraph.html"><a href="tidygraph.html#centrality"><i class="fa fa-check"></i><b>50.4.1</b> Centrality</a></li>
+<li class="chapter" data-level="50.4.2" data-path="tidygraph.html"><a href="tidygraph.html#clustering"><i class="fa fa-check"></i><b>50.4.2</b> Clustering</a></li>
+<li class="chapter" data-level="50.4.3" data-path="tidygraph.html"><a href="tidygraph.html#more-algorithms"><i class="fa fa-check"></i><b>50.4.3</b> More Algorithms</a></li>
+</ul></li>
+<li class="chapter" data-level="50.5" data-path="tidygraph.html"><a href="tidygraph.html#小结-6"><i class="fa fa-check"></i><b>50.5</b> 小结</a></li>
+<li class="chapter" data-level="50.6" data-path="tidygraph.html"><a href="tidygraph.html#network-visualization"><i class="fa fa-check"></i><b>50.6</b> Network Visualization</a>
+<ul>
+<li class="chapter" data-level="50.6.1" data-path="tidygraph.html"><a href="tidygraph.html#ggraph-a-grammar-of-graphics-for-relational-data"><i class="fa fa-check"></i><b>50.6.1</b> ggraph: A grammar of graphics for relational data</a></li>
+</ul></li>
+<li class="chapter" data-level="50.7" data-path="tidygraph.html"><a href="tidygraph.html#扩展阅读-1"><i class="fa fa-check"></i><b>50.7</b> 扩展阅读</a></li>
+</ul></li>
+<li class="chapter" data-level="51" data-path="tidytext.html"><a href="tidytext.html"><i class="fa fa-check"></i><b>51</b> 文本挖掘</a></li>
+<li class="chapter" data-level="52" data-path="tibbletime.html"><a href="tibbletime.html"><i class="fa fa-check"></i><b>52</b> 时间序列分析</a></li>
+<li class="chapter" data-level="53" data-path="stars.html"><a href="stars.html"><i class="fa fa-check"></i><b>53</b> 地理数据处理</a></li>
+<li class="chapter" data-level="54" data-path="rowwise.html"><a href="rowwise.html"><i class="fa fa-check"></i><b>54</b> tidyverse中行方向的操作</a>
+<ul>
+<li class="chapter" data-level="54.1" data-path="rowwise.html"><a href="rowwise.html#问题-2"><i class="fa fa-check"></i><b>54.1</b> 问题</a></li>
+<li class="chapter" data-level="54.2" data-path="rowwise.html"><a href="rowwise.html#rowwise函数"><i class="fa fa-check"></i><b>54.2</b> rowwise函数</a></li>
+<li class="chapter" data-level="54.3" data-path="rowwise.html"><a href="rowwise.html#row-wise-summaries"><i class="fa fa-check"></i><b>54.3</b> Row-wise Summaries</a></li>
+<li class="chapter" data-level="54.4" data-path="rowwise.html"><a href="rowwise.html#purrrmap方案"><i class="fa fa-check"></i><b>54.4</b> purrr::map方案</a></li>
+<li class="chapter" data-level="54.5" data-path="rowwise.html"><a href="rowwise.html#tidy-的方案"><i class="fa fa-check"></i><b>54.5</b> tidy 的方案</a></li>
+<li class="chapter" data-level="54.6" data-path="rowwise.html"><a href="rowwise.html#用slide方案"><i class="fa fa-check"></i><b>54.6</b> 用slide方案</a></li>
+<li class="chapter" data-level="54.7" data-path="rowwise.html"><a href="rowwise.html#rowwise-c_across"><i class="fa fa-check"></i><b>54.7</b> rowwise() + c_across()</a></li>
+<li class="chapter" data-level="54.8" data-path="rowwise.html"><a href="rowwise.html#用lay方案"><i class="fa fa-check"></i><b>54.8</b> 用lay方案</a></li>
+</ul></li>
+<li class="chapter" data-level="55" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html"><i class="fa fa-check"></i><b>55</b> 科研数据可视化</a>
+<ul>
+<li class="chapter" data-level="55.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#统计分布图"><i class="fa fa-check"></i><b>55.1</b> 统计分布图</a>
+<ul>
+<li class="chapter" data-level="55.1.1" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#points-errorbars"><i class="fa fa-check"></i><b>55.1.1</b> points-errorbars</a></li>
+<li class="chapter" data-level="55.1.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#箱线图-2"><i class="fa fa-check"></i><b>55.1.2</b> 箱线图</a></li>
+<li class="chapter" data-level="55.1.3" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#小提琴图"><i class="fa fa-check"></i><b>55.1.3</b> 小提琴图</a></li>
+<li class="chapter" data-level="55.1.4" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#sina-图"><i class="fa fa-check"></i><b>55.1.4</b> sina 图</a></li>
+<li class="chapter" data-level="55.1.5" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#山峦图-1"><i class="fa fa-check"></i><b>55.1.5</b> 山峦图</a></li>
+<li class="chapter" data-level="55.1.6" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#有颜色山峦图"><i class="fa fa-check"></i><b>55.1.6</b> 有颜色山峦图</a></li>
+</ul></li>
+<li class="chapter" data-level="55.2" data-path="ggplot2-academic.html"><a href="ggplot2-academic.html#说明"><i class="fa fa-check"></i><b>55.2</b> 说明</a></li>
+</ul></li>
+<li class="chapter" data-level="56" data-path="ggplot2-colors.html"><a href="ggplot2-colors.html"><i class="fa fa-check"></i><b>56</b> 数据可视化中的配色</a>
+<ul>
+<li class="chapter" data-level="56.1" data-path="ggplot2-colors.html"><a href="ggplot2-colors.html#配色模板"><i class="fa fa-check"></i><b>56.1</b> 配色模板</a></li>
+<li class="chapter" data-level="56.2" data-path="ggplot2-colors.html"><a href="ggplot2-colors.html#使用案例"><i class="fa fa-check"></i><b>56.2</b> 使用案例</a></li>
+<li class="chapter" data-level="56.3" data-path="ggplot2-colors.html"><a href="ggplot2-colors.html#color-wheel"><i class="fa fa-check"></i><b>56.3</b> color-wheel</a></li>
+</ul></li>
+<li class="chapter" data-level="57" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html"><i class="fa fa-check"></i><b>57</b> ggplot2之让你的数据骚动起来</a>
+<ul>
+<li class="chapter" data-level="57.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#为什么要使用动图"><i class="fa fa-check"></i><b>57.1</b> 为什么要使用动图</a></li>
+<li class="chapter" data-level="57.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#gganimate宏包"><i class="fa fa-check"></i><b>57.2</b> <code>gganimate</code>宏包</a>
+<ul>
+<li class="chapter" data-level="57.2.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#先来一张静态图"><i class="fa fa-check"></i><b>57.2.1</b> 先来一张静态图</a></li>
+<li class="chapter" data-level="57.2.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#相对复杂点的例子"><i class="fa fa-check"></i><b>57.2.2</b> 相对复杂点的例子</a></li>
+</ul></li>
+<li class="chapter" data-level="57.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#the-grammar-of-animation"><i class="fa fa-check"></i><b>57.3</b> The grammar of animation</a></li>
+<li class="chapter" data-level="57.4" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望动画随哪个变量动起来"><i class="fa fa-check"></i><b>57.4</b> 希望动画随哪个变量动起来</a>
+<ul>
+<li class="chapter" data-level="57.4.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_states"><i class="fa fa-check"></i><b>57.4.1</b> transition_states</a></li>
+<li class="chapter" data-level="57.4.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_time"><i class="fa fa-check"></i><b>57.4.2</b> transition_time</a></li>
+<li class="chapter" data-level="57.4.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_reveal"><i class="fa fa-check"></i><b>57.4.3</b> transition_reveal</a></li>
+<li class="chapter" data-level="57.4.4" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_filter"><i class="fa fa-check"></i><b>57.4.4</b> transition_filter</a></li>
+<li class="chapter" data-level="57.4.5" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#transition_layers"><i class="fa fa-check"></i><b>57.4.5</b> transition_layers</a></li>
+<li class="chapter" data-level="57.4.6" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#其他"><i class="fa fa-check"></i><b>57.4.6</b> 其他</a></li>
+</ul></li>
+<li class="chapter" data-level="57.5" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望坐标轴随数据动起来"><i class="fa fa-check"></i><b>57.5</b> 希望坐标轴随数据动起来</a>
+<ul>
+<li class="chapter" data-level="57.5.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#view_follow"><i class="fa fa-check"></i><b>57.5.1</b> view_follow</a></li>
+<li class="chapter" data-level="57.5.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#其它-1"><i class="fa fa-check"></i><b>57.5.2</b> 其它</a></li>
+</ul></li>
+<li class="chapter" data-level="57.6" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#希望动画有个记忆"><i class="fa fa-check"></i><b>57.6</b> 希望动画有个记忆</a>
+<ul>
+<li class="chapter" data-level="57.6.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_wake"><i class="fa fa-check"></i><b>57.6.1</b> shadow_wake()</a></li>
+<li class="chapter" data-level="57.6.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_trail"><i class="fa fa-check"></i><b>57.6.2</b> shadow_trail()</a></li>
+<li class="chapter" data-level="57.6.3" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#shadow_mark"><i class="fa fa-check"></i><b>57.6.3</b> shadow_mark()</a></li>
+</ul></li>
+<li class="chapter" data-level="57.7" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#定义新数据出现和旧数据退去的方式"><i class="fa fa-check"></i><b>57.7</b> 定义新数据出现和旧数据退去的方式</a>
+<ul>
+<li class="chapter" data-level="57.7.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#enterexit_fade"><i class="fa fa-check"></i><b>57.7.1</b> enter/exit_fade()</a></li>
+<li class="chapter" data-level="57.7.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#enter_growexit_shrink"><i class="fa fa-check"></i><b>57.7.2</b> enter_grow()/exit_shrink()</a></li>
+</ul></li>
+<li class="chapter" data-level="57.8" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#控制变化的节奏"><i class="fa fa-check"></i><b>57.8</b> 控制变化的节奏</a></li>
+<li class="chapter" data-level="57.9" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#标签-1"><i class="fa fa-check"></i><b>57.9</b> 标签</a></li>
+<li class="chapter" data-level="57.10" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#保存"><i class="fa fa-check"></i><b>57.10</b> 保存</a>
+<ul>
+<li class="chapter" data-level="57.10.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#renderer-options"><i class="fa fa-check"></i><b>57.10.1</b> Renderer options</a></li>
+<li class="chapter" data-level="57.10.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#常用方法"><i class="fa fa-check"></i><b>57.10.2</b> 常用方法</a></li>
+</ul></li>
+<li class="chapter" data-level="57.11" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示一"><i class="fa fa-check"></i><b>57.11</b> 案例演示一</a></li>
+<li class="chapter" data-level="57.12" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示二"><i class="fa fa-check"></i><b>57.12</b> 案例演示二</a>
+<ul>
+<li class="chapter" data-level="57.12.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#常规的方法"><i class="fa fa-check"></i><b>57.12.1</b> 常规的方法</a></li>
+<li class="chapter" data-level="57.12.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#炫酷点的"><i class="fa fa-check"></i><b>57.12.2</b> 炫酷点的</a></li>
+</ul></li>
+<li class="chapter" data-level="57.13" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#案例演示三"><i class="fa fa-check"></i><b>57.13</b> 案例演示三</a></li>
+<li class="chapter" data-level="57.14" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#课后作业-1"><i class="fa fa-check"></i><b>57.14</b> 课后作业</a>
+<ul>
+<li class="chapter" data-level="57.14.1" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#作业1"><i class="fa fa-check"></i><b>57.14.1</b> 作业1</a></li>
+<li class="chapter" data-level="57.14.2" data-path="ggplot2-gganimate.html"><a href="ggplot2-gganimate.html#作业2"><i class="fa fa-check"></i><b>57.14.2</b> 作业2</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="58" data-path="lazyman.html"><a href="lazyman.html"><i class="fa fa-check"></i><b>58</b> 懒人系列</a>
+<ul>
+<li class="chapter" data-level="58.1" data-path="lazyman.html"><a href="lazyman.html#列名太乱了"><i class="fa fa-check"></i><b>58.1</b> 列名太乱了</a></li>
+<li class="chapter" data-level="58.2" data-path="lazyman.html"><a href="lazyman.html#比count更懂我的心"><i class="fa fa-check"></i><b>58.2</b> 比count()更懂我的心</a></li>
+<li class="chapter" data-level="58.3" data-path="lazyman.html"><a href="lazyman.html#比distinct更知我心"><i class="fa fa-check"></i><b>58.3</b> 比distinct()更知我心</a></li>
+<li class="chapter" data-level="58.4" data-path="lazyman.html"><a href="lazyman.html#代码太乱了谁帮我整理下"><i class="fa fa-check"></i><b>58.4</b> 代码太乱了，谁帮我整理下</a></li>
+<li class="chapter" data-level="58.5" data-path="lazyman.html"><a href="lazyman.html#谁帮我敲模型的公式"><i class="fa fa-check"></i><b>58.5</b> 谁帮我敲模型的公式</a></li>
+<li class="chapter" data-level="58.6" data-path="lazyman.html"><a href="lazyman.html#模型有了不知道怎么写论文"><i class="fa fa-check"></i><b>58.6</b> 模型有了，不知道怎么写论文？</a></li>
+<li class="chapter" data-level="58.7" data-path="lazyman.html"><a href="lazyman.html#模型评估一步到位"><i class="fa fa-check"></i><b>58.7</b> 模型评估一步到位</a></li>
+<li class="chapter" data-level="58.8" data-path="lazyman.html"><a href="lazyman.html#统计表格不用愁"><i class="fa fa-check"></i><b>58.8</b> 统计表格不用愁</a></li>
+<li class="chapter" data-level="58.9" data-path="lazyman.html"><a href="lazyman.html#统计结果写图上"><i class="fa fa-check"></i><b>58.9</b> 统计结果写图上</a></li>
+<li class="chapter" data-level="58.10" data-path="lazyman.html"><a href="lazyman.html#正则表达式太南了"><i class="fa fa-check"></i><b>58.10</b> 正则表达式太南了</a></li>
+<li class="chapter" data-level="58.11" data-path="lazyman.html"><a href="lazyman.html#颜控怎么配色"><i class="fa fa-check"></i><b>58.11</b> 颜控怎么配色？</a></li>
+<li class="chapter" data-level="58.12" data-path="lazyman.html"><a href="lazyman.html#画图颜色好看不"><i class="fa fa-check"></i><b>58.12</b> 画图颜色好看不</a></li>
+<li class="chapter" data-level="58.13" data-path="lazyman.html"><a href="lazyman.html#宏包太多"><i class="fa fa-check"></i><b>58.13</b> 宏包太多</a></li>
+<li class="chapter" data-level="58.14" data-path="lazyman.html"><a href="lazyman.html#犹抱琵琶半遮面"><i class="fa fa-check"></i><b>58.14</b> 犹抱琵琶半遮面</a></li>
+<li class="chapter" data-level="58.15" data-path="lazyman.html"><a href="lazyman.html#整理rmarkdown"><i class="fa fa-check"></i><b>58.15</b> 整理Rmarkdown</a></li>
+<li class="chapter" data-level="58.16" data-path="lazyman.html"><a href="lazyman.html#如何有效的提问"><i class="fa fa-check"></i><b>58.16</b> 如何有效的提问</a></li>
+<li class="chapter" data-level="58.17" data-path="lazyman.html"><a href="lazyman.html#程序结束后记得提醒我"><i class="fa fa-check"></i><b>58.17</b> 程序结束后记得提醒我</a></li>
+<li class="chapter" data-level="58.18" data-path="lazyman.html"><a href="lazyman.html#多张图摆放"><i class="fa fa-check"></i><b>58.18</b> 多张图摆放</a></li>
+<li class="chapter" data-level="58.19" data-path="lazyman.html"><a href="lazyman.html#缺失值处理-1"><i class="fa fa-check"></i><b>58.19</b> 缺失值处理</a></li>
+<li class="chapter" data-level="58.20" data-path="lazyman.html"><a href="lazyman.html#看看数据什么情况"><i class="fa fa-check"></i><b>58.20</b> 看看数据什么情况</a></li>
+<li class="chapter" data-level="58.21" data-path="lazyman.html"><a href="lazyman.html#管道都不想"><i class="fa fa-check"></i><b>58.21</b> 管道都不想</a></li>
+<li class="chapter" data-level="58.22" data-path="lazyman.html"><a href="lazyman.html#各种插件任君选取"><i class="fa fa-check"></i><b>58.22</b> 各种插件，任君选取</a></li>
+</ul></li>
+<li class="appendix"><span><b>附录</b></span></li>
+<li class="chapter" data-level="A" data-path="exams.html"><a href="exams.html"><i class="fa fa-check"></i><b>A</b> 期末考试</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="exams.html"><a href="exams.html#方式"><i class="fa fa-check"></i><b>A.1</b> 方式</a></li>
+<li class="chapter" data-level="A.2" data-path="exams.html"><a href="exams.html#要求"><i class="fa fa-check"></i><b>A.2</b> 要求</a></li>
+<li class="chapter" data-level="A.3" data-path="exams.html"><a href="exams.html#数据集-1"><i class="fa fa-check"></i><b>A.3</b> 数据集</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">数据科学中的 R 语言</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="eda-olympics" class="section level1" number="40">
+<h1><span class="header-section-number">第 40 章</span> 探索性数据分析-奥林匹克</h1>
+<p>这是Nature期刊上的一篇文章<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173856/#SD2">Nature. 2004 September 30; 431(7008)</a>，</p>
+<p><img src="images/ukmss-36386-f0001.jpg" width="80%" style="display: block; margin: auto auto auto 0;" /></p>
+<p>虽然觉得这个结论不太严谨，但我却无力反驳。</p>
+<p>于是在文章补充材料里，我找到了文章使用的数据，现在的任务是，重复这张图和文章的分析过程。</p>
+<div id="导入数据-2" class="section level2" number="40.1">
+<h2><span class="header-section-number">40.1</span> 导入数据</h2>
+<div class="sourceCode" id="cb2029"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2029-1"><a href="eda-olympics.html#cb2029-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2029-2"><a href="eda-olympics.html#cb2029-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div>
+<div class="sourceCode" id="cb2030"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2030-1"><a href="eda-olympics.html#cb2030-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;./demo_data/olympics.xlsx&quot;</span>)</span>
+<span id="cb2030-2"><a href="eda-olympics.html#cb2030-2" aria-hidden="true" tabindex="-1"></a>d</span></code></pre></div>
+<pre><code>## # A tibble: 27 x 3
+##    Olympic_year Men_score Women_score
+##           &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1         1900      11          NA  
+##  2         1904      11          NA  
+##  3         1908      10.8        NA  
+##  4         1912      10.8        NA  
+##  5         1916      NA          NA  
+##  6         1920      10.8        NA  
+##  7         1924      10.6        NA  
+##  8         1928      10.8        12.2
+##  9         1932      10.3        11.9
+## 10         1936      10.3        11.5
+## # ... with 17 more rows</code></pre>
+</div>
+<div id="可视化-1" class="section level2" number="40.2">
+<h2><span class="header-section-number">40.2</span> 可视化</h2>
+<p>我们先画图看看</p>
+<div class="sourceCode" id="cb2032"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2032-1"><a href="eda-olympics.html#cb2032-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">%&gt;%</span></span>
+<span id="cb2032-2"><a href="eda-olympics.html#cb2032-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb2032-3"><a href="eda-olympics.html#cb2032-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Olympic_year, <span class="at">y =</span> Men_score), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2032-4"><a href="eda-olympics.html#cb2032-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Olympic_year, <span class="at">y =</span> Women_score), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/eda-olympics-4-1.png" width="100%" />
+这样写也是可以的，只不过最好先tidy数据</p>
+<p><img src="images/pivot.png" width="80%" style="display: block; margin: auto auto auto 0;" /></p>
+<div class="sourceCode" id="cb2033"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2033-1"><a href="eda-olympics.html#cb2033-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span></span>
+<span id="cb2033-2"><a href="eda-olympics.html#cb2033-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb2033-3"><a href="eda-olympics.html#cb2033-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>Olympic_year,</span>
+<span id="cb2033-4"><a href="eda-olympics.html#cb2033-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb2033-5"><a href="eda-olympics.html#cb2033-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;winning_time&quot;</span></span>
+<span id="cb2033-6"><a href="eda-olympics.html#cb2033-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2033-7"><a href="eda-olympics.html#cb2033-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2033-8"><a href="eda-olympics.html#cb2033-8" aria-hidden="true" tabindex="-1"></a>d1</span></code></pre></div>
+<pre><code>## # A tibble: 54 x 3
+##    Olympic_year sex         winning_time
+##           &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;
+##  1         1900 Men_score           11  
+##  2         1900 Women_score         NA  
+##  3         1904 Men_score           11  
+##  4         1904 Women_score         NA  
+##  5         1908 Men_score           10.8
+##  6         1908 Women_score         NA  
+##  7         1912 Men_score           10.8
+##  8         1912 Women_score         NA  
+##  9         1916 Men_score           NA  
+## 10         1916 Women_score         NA  
+## # ... with 44 more rows</code></pre>
+<p>然后在画图</p>
+<div class="sourceCode" id="cb2035"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2035-1"><a href="eda-olympics.html#cb2035-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="sc">%&gt;%</span></span>
+<span id="cb2035-2"><a href="eda-olympics.html#cb2035-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Olympic_year, <span class="at">y =</span> winning_time, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb2035-3"><a href="eda-olympics.html#cb2035-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2035-4"><a href="eda-olympics.html#cb2035-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_smooth(method = &quot;lm&quot;) +</span></span>
+<span id="cb2035-5"><a href="eda-olympics.html#cb2035-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb2035-6"><a href="eda-olympics.html#cb2035-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Men_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;Women_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb2035-7"><a href="eda-olympics.html#cb2035-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2035-8"><a href="eda-olympics.html#cb2035-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb2035-9"><a href="eda-olympics.html#cb2035-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2004</span>, <span class="at">by =</span> <span class="dv">4</span>),</span>
+<span id="cb2035-10"><a href="eda-olympics.html#cb2035-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2004</span>, <span class="at">by =</span> <span class="dv">4</span>)</span>
+<span id="cb2035-11"><a href="eda-olympics.html#cb2035-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2035-12"><a href="eda-olympics.html#cb2035-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2035-13"><a href="eda-olympics.html#cb2035-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">10</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">colour =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb2035-14"><a href="eda-olympics.html#cb2035-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2035-15"><a href="eda-olympics.html#cb2035-15" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/eda-olympics-7-1.png" width="100%" /></p>
+</div>
+<div id="回归分析" class="section level2" number="40.3">
+<h2><span class="header-section-number">40.3</span> 回归分析</h2>
+<p>建立年份与成绩的线性关系
+<span class="math display">\[ 
+\text{score}_i = \alpha + \beta \times \text{year}_i + \epsilon_i; \qquad \epsilon_i\in \text{Normal}(\mu, \sigma)
+\]</span></p>
+<p>我们需要求出其中系数<span class="math inline">\(\alpha\)</span>和<span class="math inline">\(\beta\)</span>，写R语言代码如下
+(<code>lm(y ~ 1 + x,data = d)</code>, 要求得 <span class="math inline">\(\alpha\)</span>和<span class="math inline">\(\beta\)</span>，就是对应 1 和 x 前的系数)</p>
+<div class="sourceCode" id="cb2036"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2036-1"><a href="eda-olympics.html#cb2036-1" aria-hidden="true" tabindex="-1"></a>fit_1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Men_score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Olympic_year, <span class="at">data =</span> d)</span>
+<span id="cb2036-2"><a href="eda-olympics.html#cb2036-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2036-3"><a href="eda-olympics.html#cb2036-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Men_score ~ 1 + Olympic_year, data = d)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.26371 -0.05270  0.00738  0.08005  0.21456 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  31.826453   1.679643    18.9  4.1e-15 ***
+## Olympic_year -0.011006   0.000859   -12.8  1.1e-11 ***
+## ---
+## Signif. codes:  
+## 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.135 on 22 degrees of freedom
+##   (3 observations deleted due to missingness)
+## Multiple R-squared:  0.882,  Adjusted R-squared:  0.876 
+## F-statistic:  164 on 1 and 22 DF,  p-value: 1.13e-11</code></pre>
+<div class="sourceCode" id="cb2038"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2038-1"><a href="eda-olympics.html#cb2038-1" aria-hidden="true" tabindex="-1"></a>fit_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Women_score <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Olympic_year, <span class="at">data =</span> d)</span>
+<span id="cb2038-2"><a href="eda-olympics.html#cb2038-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2038-3"><a href="eda-olympics.html#cb2038-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Women_score ~ 1 + Olympic_year, data = d)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.3758 -0.0846  0.0093  0.0829  0.3223 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  44.34705    4.28425   10.35  1.7e-08 ***
+## Olympic_year -0.01682    0.00218   -7.73  8.6e-07 ***
+## ---
+## Signif. codes:  
+## 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.21 on 16 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.789,  Adjusted R-squared:  0.776 
+## F-statistic: 59.8 on 1 and 16 DF,  p-value: 8.63e-07</code></pre>
+</div>
+<div id="预测-2" class="section level2" number="40.4">
+<h2><span class="header-section-number">40.4</span> 预测</h2>
+<p>使用<code>predict()</code>完成预测</p>
+<div class="sourceCode" id="cb2040"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2040-1"><a href="eda-olympics.html#cb2040-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Olympic_year =</span> <span class="dv">2020</span>)</span>
+<span id="cb2040-2"><a href="eda-olympics.html#cb2040-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2040-3"><a href="eda-olympics.html#cb2040-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit_1, <span class="at">newdata =</span> df)</span></code></pre></div>
+<pre><code>##     1 
+## 9.595</code></pre>
+<p>为了图片中的一致，我们使用1900年到2252年(<code>seq(1900, 2252, by = 4)</code>)建立预测项，并整理到数据框里</p>
+<div class="sourceCode" id="cb2042"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2042-1"><a href="eda-olympics.html#cb2042-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2042-2"><a href="eda-olympics.html#cb2042-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Olympic_year =</span> <span class="fu">as.numeric</span>(<span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2252</span>, <span class="at">by =</span> <span class="dv">4</span>))</span>
+<span id="cb2042-3"><a href="eda-olympics.html#cb2042-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2042-4"><a href="eda-olympics.html#cb2042-4" aria-hidden="true" tabindex="-1"></a>grid</span></code></pre></div>
+<pre><code>## # A tibble: 89 x 1
+##    Olympic_year
+##           &lt;dbl&gt;
+##  1         1900
+##  2         1904
+##  3         1908
+##  4         1912
+##  5         1916
+##  6         1920
+##  7         1924
+##  8         1928
+##  9         1932
+## 10         1936
+## # ... with 79 more rows</code></pre>
+<div class="sourceCode" id="cb2044"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2044-1"><a href="eda-olympics.html#cb2044-1" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> grid <span class="sc">%&gt;%</span></span>
+<span id="cb2044-2"><a href="eda-olympics.html#cb2044-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2044-3"><a href="eda-olympics.html#cb2044-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Predict_Men =</span> <span class="fu">predict</span>(fit_1, <span class="at">newdata =</span> grid),</span>
+<span id="cb2044-4"><a href="eda-olympics.html#cb2044-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Predict_Women =</span> <span class="fu">predict</span>(fit_2, <span class="at">newdata =</span> grid)</span>
+<span id="cb2044-5"><a href="eda-olympics.html#cb2044-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2044-6"><a href="eda-olympics.html#cb2044-6" aria-hidden="true" tabindex="-1"></a>tb</span></code></pre></div>
+<pre><code>## # A tibble: 89 x 3
+##    Olympic_year Predict_Men Predict_Women
+##           &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1         1900        10.9          12.4
+##  2         1904        10.9          12.3
+##  3         1908        10.8          12.3
+##  4         1912        10.8          12.2
+##  5         1916        10.7          12.1
+##  6         1920        10.7          12.0
+##  7         1924        10.7          12.0
+##  8         1928        10.6          11.9
+##  9         1932        10.6          11.8
+## 10         1936        10.5          11.8
+## # ... with 79 more rows</code></pre>
+<p>有时候我喜欢用<code>modelr::add_predictions()</code>函数实现相同的功能</p>
+<div class="sourceCode" id="cb2046"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2046-1"><a href="eda-olympics.html#cb2046-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelr)</span>
+<span id="cb2046-2"><a href="eda-olympics.html#cb2046-2" aria-hidden="true" tabindex="-1"></a>grid <span class="sc">%&gt;%</span></span>
+<span id="cb2046-3"><a href="eda-olympics.html#cb2046-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_predictions</span>(fit_1, <span class="at">var =</span> <span class="st">&quot;Predict_Men&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2046-4"><a href="eda-olympics.html#cb2046-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_predictions</span>(fit_2, <span class="at">var =</span> <span class="st">&quot;Predict_Women&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 89 x 3
+##    Olympic_year Predict_Men Predict_Women
+##           &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1         1900        10.9          12.4
+##  2         1904        10.9          12.3
+##  3         1908        10.8          12.3
+##  4         1912        10.8          12.2
+##  5         1916        10.7          12.1
+##  6         1920        10.7          12.0
+##  7         1924        10.7          12.0
+##  8         1928        10.6          11.9
+##  9         1932        10.6          11.8
+## 10         1936        10.5          11.8
+## # ... with 79 more rows</code></pre>
+</div>
+<div id="再次可视化" class="section level2" number="40.5">
+<h2><span class="header-section-number">40.5</span> 再次可视化</h2>
+<div class="sourceCode" id="cb2048"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2048-1"><a href="eda-olympics.html#cb2048-1" aria-hidden="true" tabindex="-1"></a>tb1 <span class="ot">&lt;-</span> tb <span class="sc">%&gt;%</span></span>
+<span id="cb2048-2"><a href="eda-olympics.html#cb2048-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb2048-3"><a href="eda-olympics.html#cb2048-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>Olympic_year,</span>
+<span id="cb2048-4"><a href="eda-olympics.html#cb2048-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb2048-5"><a href="eda-olympics.html#cb2048-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;winning_time&quot;</span></span>
+<span id="cb2048-6"><a href="eda-olympics.html#cb2048-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2048-7"><a href="eda-olympics.html#cb2048-7" aria-hidden="true" tabindex="-1"></a>tb1</span></code></pre></div>
+<pre><code>## # A tibble: 178 x 3
+##    Olympic_year sex           winning_time
+##           &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;
+##  1         1900 Predict_Men           10.9
+##  2         1900 Predict_Women         12.4
+##  3         1904 Predict_Men           10.9
+##  4         1904 Predict_Women         12.3
+##  5         1908 Predict_Men           10.8
+##  6         1908 Predict_Women         12.3
+##  7         1912 Predict_Men           10.8
+##  8         1912 Predict_Women         12.2
+##  9         1916 Predict_Men           10.7
+## 10         1916 Predict_Women         12.1
+## # ... with 168 more rows</code></pre>
+<div class="sourceCode" id="cb2050"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2050-1"><a href="eda-olympics.html#cb2050-1" aria-hidden="true" tabindex="-1"></a>tb1 <span class="sc">%&gt;%</span></span>
+<span id="cb2050-2"><a href="eda-olympics.html#cb2050-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb2050-3"><a href="eda-olympics.html#cb2050-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Olympic_year,</span>
+<span id="cb2050-4"><a href="eda-olympics.html#cb2050-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> winning_time,</span>
+<span id="cb2050-5"><a href="eda-olympics.html#cb2050-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> sex</span>
+<span id="cb2050-6"><a href="eda-olympics.html#cb2050-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb2050-7"><a href="eda-olympics.html#cb2050-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb2050-8"><a href="eda-olympics.html#cb2050-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> d1) <span class="sc">+</span></span>
+<span id="cb2050-9"><a href="eda-olympics.html#cb2050-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb2050-10"><a href="eda-olympics.html#cb2050-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;标记&quot;</span>,</span>
+<span id="cb2050-11"><a href="eda-olympics.html#cb2050-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb2050-12"><a href="eda-olympics.html#cb2050-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Men_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb2050-13"><a href="eda-olympics.html#cb2050-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Women_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb2050-14"><a href="eda-olympics.html#cb2050-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Predict_Men&quot;</span> <span class="ot">=</span> <span class="st">&quot;#588B8B&quot;</span>,</span>
+<span id="cb2050-15"><a href="eda-olympics.html#cb2050-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Predict_Women&quot;</span> <span class="ot">=</span> <span class="st">&quot;#C8553D&quot;</span></span>
+<span id="cb2050-16"><a href="eda-olympics.html#cb2050-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2050-17"><a href="eda-olympics.html#cb2050-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb2050-18"><a href="eda-olympics.html#cb2050-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Men_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;男性历史成绩&quot;</span>,</span>
+<span id="cb2050-19"><a href="eda-olympics.html#cb2050-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Women_score&quot;</span> <span class="ot">=</span> <span class="st">&quot;女性历史成绩&quot;</span>,</span>
+<span id="cb2050-20"><a href="eda-olympics.html#cb2050-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Predict_Men&quot;</span> <span class="ot">=</span> <span class="st">&quot;男性预测成绩&quot;</span>,</span>
+<span id="cb2050-21"><a href="eda-olympics.html#cb2050-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;Predict_Women&quot;</span> <span class="ot">=</span> <span class="st">&quot;女性预测成绩&quot;</span></span>
+<span id="cb2050-22"><a href="eda-olympics.html#cb2050-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2050-23"><a href="eda-olympics.html#cb2050-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2050-24"><a href="eda-olympics.html#cb2050-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb2050-25"><a href="eda-olympics.html#cb2050-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2252</span>, <span class="at">by =</span> <span class="dv">16</span>),</span>
+<span id="cb2050-26"><a href="eda-olympics.html#cb2050-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">as.character</span>(<span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2252</span>, <span class="at">by =</span> <span class="dv">16</span>))</span>
+<span id="cb2050-27"><a href="eda-olympics.html#cb2050-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2050-28"><a href="eda-olympics.html#cb2050-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2050-29"><a href="eda-olympics.html#cb2050-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">10</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">colour =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb2050-30"><a href="eda-olympics.html#cb2050-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2050-31"><a href="eda-olympics.html#cb2050-31" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/eda-olympics-15-1.png" width="100%" />
+早知道nature文章这么简单，10年前我也可以写啊！</p>
+</div>
+<div id="list_column" class="section level2" number="40.6">
+<h2><span class="header-section-number">40.6</span> list_column</h2>
+<p>这里是另外的一种方法</p>
+<div class="sourceCode" id="cb2051"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2051-1"><a href="eda-olympics.html#cb2051-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelr)</span></code></pre></div>
+<div class="sourceCode" id="cb2052"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2052-1"><a href="eda-olympics.html#cb2052-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> d <span class="sc">%&gt;%</span></span>
+<span id="cb2052-2"><a href="eda-olympics.html#cb2052-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb2052-3"><a href="eda-olympics.html#cb2052-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>Olympic_year,</span>
+<span id="cb2052-4"><a href="eda-olympics.html#cb2052-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb2052-5"><a href="eda-olympics.html#cb2052-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;winning_time&quot;</span></span>
+<span id="cb2052-6"><a href="eda-olympics.html#cb2052-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2052-7"><a href="eda-olympics.html#cb2052-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2052-8"><a href="eda-olympics.html#cb2052-8" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(df) <span class="fu">lm</span>(winning_time <span class="sc">~</span> Olympic_year, <span class="at">data =</span> df)</span>
+<span id="cb2052-9"><a href="eda-olympics.html#cb2052-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2052-10"><a href="eda-olympics.html#cb2052-10" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d1 <span class="sc">%&gt;%</span></span>
+<span id="cb2052-11"><a href="eda-olympics.html#cb2052-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_nest</span>(sex) <span class="sc">%&gt;%</span></span>
+<span id="cb2052-12"><a href="eda-olympics.html#cb2052-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2052-13"><a href="eda-olympics.html#cb2052-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mod =</span> <span class="fu">map</span>(data, fit_model)</span>
+<span id="cb2052-14"><a href="eda-olympics.html#cb2052-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2052-15"><a href="eda-olympics.html#cb2052-15" aria-hidden="true" tabindex="-1"></a>d2</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   sex                       data mod   
+##   &lt;chr&gt;       &lt;list&lt;tbl_df[,2]&gt;&gt; &lt;list&gt;
+## 1 Men_score             [27 x 2] &lt;lm&gt;  
+## 2 Women_score           [27 x 2] &lt;lm&gt;</code></pre>
+<div class="sourceCode" id="cb2054"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2054-1"><a href="eda-olympics.html#cb2054-1" aria-hidden="true" tabindex="-1"></a><span class="co"># d2 %&gt;% mutate(p = list(grid, grid))</span></span>
+<span id="cb2054-2"><a href="eda-olympics.html#cb2054-2" aria-hidden="true" tabindex="-1"></a><span class="co"># d3 &lt;- d2 %&gt;% mutate(p = list(grid, grid))</span></span>
+<span id="cb2054-3"><a href="eda-olympics.html#cb2054-3" aria-hidden="true" tabindex="-1"></a><span class="co"># d3</span></span>
+<span id="cb2054-4"><a href="eda-olympics.html#cb2054-4" aria-hidden="true" tabindex="-1"></a><span class="co"># d3 %&gt;%</span></span>
+<span id="cb2054-5"><a href="eda-olympics.html#cb2054-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(</span></span>
+<span id="cb2054-6"><a href="eda-olympics.html#cb2054-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     predictions = map2(p, mod, add_predictions),</span></span>
+<span id="cb2054-7"><a href="eda-olympics.html#cb2054-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   )</span></span>
+<span id="cb2054-8"><a href="eda-olympics.html#cb2054-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2054-9"><a href="eda-olympics.html#cb2054-9" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb2054-10"><a href="eda-olympics.html#cb2054-10" aria-hidden="true" tabindex="-1"></a>tb4 <span class="ot">&lt;-</span> d2 <span class="sc">%&gt;%</span></span>
+<span id="cb2054-11"><a href="eda-olympics.html#cb2054-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2054-12"><a href="eda-olympics.html#cb2054-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">predictions =</span> <span class="fu">map</span>(mod, <span class="sc">~</span> <span class="fu">add_predictions</span>(grid, .))</span>
+<span id="cb2054-13"><a href="eda-olympics.html#cb2054-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2054-14"><a href="eda-olympics.html#cb2054-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sex, predictions) <span class="sc">%&gt;%</span></span>
+<span id="cb2054-15"><a href="eda-olympics.html#cb2054-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(predictions)</span>
+<span id="cb2054-16"><a href="eda-olympics.html#cb2054-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2054-17"><a href="eda-olympics.html#cb2054-17" aria-hidden="true" tabindex="-1"></a>tb4 <span class="sc">%&gt;%</span></span>
+<span id="cb2054-18"><a href="eda-olympics.html#cb2054-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb2054-19"><a href="eda-olympics.html#cb2054-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Olympic_year,</span>
+<span id="cb2054-20"><a href="eda-olympics.html#cb2054-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> pred,</span>
+<span id="cb2054-21"><a href="eda-olympics.html#cb2054-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> sex,</span>
+<span id="cb2054-22"><a href="eda-olympics.html#cb2054-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> sex</span>
+<span id="cb2054-23"><a href="eda-olympics.html#cb2054-23" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb2054-24"><a href="eda-olympics.html#cb2054-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2054-25"><a href="eda-olympics.html#cb2054-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb2054-26"><a href="eda-olympics.html#cb2054-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb2054-27"><a href="eda-olympics.html#cb2054-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> d1,</span>
+<span id="cb2054-28"><a href="eda-olympics.html#cb2054-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb2054-29"><a href="eda-olympics.html#cb2054-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> Olympic_year,</span>
+<span id="cb2054-30"><a href="eda-olympics.html#cb2054-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> winning_time,</span>
+<span id="cb2054-31"><a href="eda-olympics.html#cb2054-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">group =</span> sex,</span>
+<span id="cb2054-32"><a href="eda-olympics.html#cb2054-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> sex</span>
+<span id="cb2054-33"><a href="eda-olympics.html#cb2054-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2054-34"><a href="eda-olympics.html#cb2054-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2054-35"><a href="eda-olympics.html#cb2054-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb2054-36"><a href="eda-olympics.html#cb2054-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2252</span>, <span class="at">by =</span> <span class="dv">16</span>),</span>
+<span id="cb2054-37"><a href="eda-olympics.html#cb2054-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">as.character</span>(<span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2252</span>, <span class="at">by =</span> <span class="dv">16</span>))</span>
+<span id="cb2054-38"><a href="eda-olympics.html#cb2054-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2054-39"><a href="eda-olympics.html#cb2054-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2054-40"><a href="eda-olympics.html#cb2054-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">10</span>, <span class="at">angle =</span> <span class="dv">45</span>, <span class="at">colour =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb2054-41"><a href="eda-olympics.html#cb2054-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb2054-42"><a href="eda-olympics.html#cb2054-42" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
+<p><img src="R4DS_files/figure-html/eda-olympics-17-1.png" width="100%" /></p>
+</div>
+<div id="课后作业" class="section level2" number="40.7">
+<h2><span class="header-section-number">40.7</span> 课后作业</h2>
+<ul>
+<li>探索数据，建立身高体重的线性模型</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="eda-nobel.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="eda-covid2019.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-chinese/edit/master/eda_olympics.Rmd",
+"text": "编辑"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["R4DS.pdf", "R4DS.epub"],
+"toc": {
+"collapse": "none"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

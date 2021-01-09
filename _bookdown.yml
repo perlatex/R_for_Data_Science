@@ -55,6 +55,7 @@ rmd_files: [
   "logistic_regression.Rmd",
   "ordinal.Rmd",
   "tidymodels.Rmd",
+  "bayesian_models.Rmd",
 
   # 应用篇
   "eda_nobel.Rmd",

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+<g stroke="#467AAC" stroke-width="1" stroke-linecap="round">
+  <circle cx="10" cy="10" r="8"  fill = "transparent" />
+  <line x1="10" x2="10" y1="9.5" y2="15" />
+  <line x1="10" x2="10" y1="6" y2="7.5"  />
+</g>
+</svg>
