@@ -600,7 +600,10 @@ ggplot(data = mpg) +
     family = "fzshuliu"
   )
 
+
 # ggsave("showtext-example-9.pdf", width = 7, height = 4, dpi = 200)
+
+showtext_auto(FALSE)
 ```
 
 

@@ -164,7 +164,7 @@ ggsave("bayes-three-panels.png", width = 9, height = 3)
 
 
 
-```{r bayes-02, out.width = '85%', echo = FALSE}
+```{r bayes-02, out.width = '100%', echo = FALSE}
 knitr::include_graphics("./images/bayes-three-panels.png")
 ```
 
@@ -288,7 +288,7 @@ rstan::extract(fit_normal, par = "beta")$beta
 
 
 
-```{r bayes-06}
+```{r bayes-06, eval=FALSE}
 fit_normal %>% 
   tidybayes::gather_draws(alpha, beta) %>% 
   ggplot(aes(x = .value, y = as_factor(.variable)) ) +
@@ -298,7 +298,7 @@ fit_normal %>%
 
 
 
-事实上，`bayesplot`宏包提供了大量模型评估函数，大爱
+事实上，`bayesplot`宏包提供了大量模型评估函数，大爱!!
 
 ```{r bayes-07, message=FALSE, results=FALSE}
 true_alpha_beta <- c(alpha_real, beta_real, sigma_real)
