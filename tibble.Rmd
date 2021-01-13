@@ -12,7 +12,7 @@ library(tibble) # 事实上，library(tidyverse)已经加装了library(tibble)
 
 
 | 功能 | 宏包        |
-|------|-------------|
+|:-----|:------------|
 有颜值担当 | ggplot2 |
 数据处理王者 | dplyr |
 数据转换专家  | tidyr |

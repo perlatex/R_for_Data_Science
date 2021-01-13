@@ -189,8 +189,10 @@ df %>% select(-type)
 ```
 
 
-
-
+或者"!"，结果与上面的一样
+```{r dplyr-23-1, eval=FALSE}
+df %>% select(!type)
+```
 
 
 

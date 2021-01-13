@@ -18,11 +18,12 @@ gredata
 $$
 \begin{align*}
 \text{admit}_{i} &\sim \mathrm{Binomial}(1, p_{i}) \\
-logit(p_{i}) &= log\Big(\frac{p_{i}}{1 - p_{i}}\Big) = \alpha + \beta \cdot \text{gre}_{i} 
+\text{logit}(p_{i}) &= \log\Big(\frac{p_{i}}{1 - p_{i}}\Big) = \alpha + \beta \cdot \text{gre}_{i} \\
+
+\text{equivalent to,} \quad p_{i} &= \frac{1}{1 + \exp[- (\alpha + \beta \cdot \text{gre}_{i})]} \\
+& = \frac{\exp(\alpha + \beta \cdot \text{gre}_{i})}{1 + \exp (\alpha + \beta \cdot\text{gre}_{i})} \\
 \end{align*}
 $$
-
-
 
 这里 $p_i$ 就是被录取的概率。预测因子 $gre$ 的线性组合**模拟**的是 $log\Big(\frac{p_{i}}{1 - p_{i}}\Big)$ ，即对数比率(log-odds).
 
