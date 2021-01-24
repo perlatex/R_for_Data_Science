@@ -15,7 +15,7 @@ showtext_auto()
 
 
 
-新型冠状病毒（俗称武汉肺炎）疫情在多国蔓延，本章通过分析[疫情数据](https://github.com/CSSEGISandData/COVID-19)，了解疫情发展，祝愿人类早日会战胜病毒！
+新型冠状病毒（COVID-19）疫情在多国蔓延，本章通过分析[疫情数据](https://github.com/CSSEGISandData/COVID-19)，了解疫情发展，祝愿人类早日会战胜病毒！
 
 
 
