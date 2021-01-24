@@ -197,7 +197,18 @@ pvalue
 
 -   结论
 
-在构建的虚拟($\Delta = 0$)的平行世界里，出现实际观察值（`r obs_diff$stat`）的概率很小，这里是（`r pvalue$p_value`）。 如果以(p\< 0.05)为标准，那我们有足够的证据证明，H0不成立，即爱情电影和动作电影的评分均值存在**显著差异**，具体来说，动作电影的平均评分要比爱情电影低些。
+```{r, echo=FALSE}
+less_than_significance_text <- glue::glue(
+  "`p_value < 0.05`, 那我们有足够的证据证明，H0不成立，即爱情电影和动作电影的评分均值存在**显著差异**，具体来说，动作电影的平均评分要比爱情电影低些。"
+  )
+
+greater_then_significance_text <- glue::glue(
+    "`p_value > 0.05`，不能拒绝 H0，即我们没有足够的证据证明爱情电影和动作电影的评分均值存在**显著差异**。"
+  )
+```
+
+在构建的虚拟($\Delta = 0$)的平行世界里，出现实际观察值（`r obs_diff$stat`）的概率为（`r pvalue$p_value`）。 如果以(p \< 0.05)为标准，我们看到`r ifelse(pvalue$p_value < 0.05,  less_than_significance_text, greater_then_significance_text)`
+
 
 ## 案例2: 航天事业的预算有党派门户之见？
 
