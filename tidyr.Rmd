@@ -153,7 +153,7 @@ wide
 ```
 
 
-## 复杂的情形
+## 列名转换成多个变量
 
 假定 `A`, `B`, `C` 三种植物每天生长的记录，包括三个特征（height, width, depth）
 
@@ -170,17 +170,20 @@ plant_record <- data.frame(
      C_width = c(8.1, 8.2, 8.3, 8.4, 8.5),
      C_depth = c(9.1, 9.2, 9.3, 9.4, 9.5)
 )
-plant_record
+plant_record %>% 
+  knitr::kable()
 ```
 
-我们想转换成这样的
+
+我们想原始数据框的**列名**，转换成多个变量，比如`A,B,C`成为物种(species)变量，（height, width, depth）成为parameter变量
+
 ```{r tidyr-60, out.width = '100%', fig.align='left', echo = FALSE}
-knitr::include_graphics("images/make_data_tidy2.jpg")
+knitr::include_graphics("images/make_data_tidy1.png")
 ```
 
+用`pivot_longer()`函数，
 
-原来的列名需要转换成多个变量，还是用`pivot_longer()`函数，
-```{r}
+```{r tidyr-601}
 plant_record %>% 
   tidyr::pivot_longer(
     cols = !day,
@@ -190,9 +193,20 @@ plant_record %>%
 )
 ```
 
-感觉不是我们想要的结果，正确答案是下面这个，你看明白`.value`它代表的意思了吗？
 
-```{r}
+
+## 复杂的情形
+
+我们希望原始数据框的列名中，一部分进入变量，一部分保持原来的列名，比如，
+
+```{r tidyr-602, out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/make_data_tidy2.jpg")
+```
+
+
+
+
+```{r tidyr-603}
 plant_record %>% 
   tidyr::pivot_longer(
    cols = !day,
@@ -201,6 +215,15 @@ plant_record %>%
 )
 ```
 
+
+
+```{block tidyr-604, type="danger"}
+看明白`.value`它代表的意思了吗？
+
+- 注意 .value 而不是value，说明这里不是单个列名，而是匹配得到的多个值做列名
+```
+
+ 
 
 ##  tidy data原则
 

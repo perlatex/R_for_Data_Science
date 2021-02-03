@@ -415,7 +415,7 @@ ggplot(data = data.frame(x = c(-1, 3)), aes(x = x)) +
 d <- tibble(x = rnorm(2000, mean = 2, sd = 4))
 
 ggplot(data = d, aes(x = x)) +
-  geom_histogram(aes(y = stat(density))) +
+  geom_histogram(aes(y = after_stat(density))) +
   geom_density() +
   stat_function(fun = dnorm, args = list(mean = 2, sd = 4), colour = "red")
 ```
