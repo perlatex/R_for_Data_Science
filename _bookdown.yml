@@ -39,6 +39,7 @@ rmd_files: [
   "adv_dplyr.Rmd",
   "colwise.Rmd",
   "beauty_of_across.Rmd",
+  "beauty_of_across2.Rmd",
   "tidyverse_NA.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",
