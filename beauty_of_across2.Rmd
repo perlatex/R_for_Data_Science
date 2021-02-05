@@ -90,11 +90,19 @@ penguins %>%
 ```
 
 
+当然可以弄成更骚一点喔
+```{r beauty-of-across2-71}
+penguins %>% 
+  filter(if_all(contains("bill"), `>`, 21))
+```
+
+
 - 筛选企鹅嘴峰(长度或者厚度)大于21mm的行
 ```{r beauty-of-across2-8}
 penguins %>% 
   filter(if_any(contains("bill"), ~ . > 21))
 ```
+
 
 
 
