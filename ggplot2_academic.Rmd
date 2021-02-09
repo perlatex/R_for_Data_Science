@@ -338,6 +338,12 @@ lincoln_final <- cowplot::insert_xaxis_grob(lincoln_base, xax, position = "botto
 ggdraw(lincoln_final)
 ```
 
+## 简单回顾
+
+```{r ggplot2-academic-50, echo = F}
+knitr::include_graphics("images/ggplot2-academic-summary.jpg")
+```
+
 
 ## 说明
 

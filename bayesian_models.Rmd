@@ -31,7 +31,7 @@ $$
 
 ## 三张图讲贝叶斯分析
 
-```{r bayes-three-panels, eval=FALSE, include=FALSE}
+```{r bayes-three-panels-brms, eval=FALSE, include=FALSE}
 # https://www.tjmahr.com/bayes-theorem-in-three-panels/
 
 d <- tibble(
@@ -161,6 +161,145 @@ p1 + p2 + p3
 ggsave("bayes-three-panels.png", width = 9, height = 3)
 ```
 
+
+
+```{r bayes-three-panels-stan, eval=FALSE, include=FALSE}
+#用stan重新写一次
+
+## 看到数据之前，可能的曲线
+## 在看到数据之前，我们认为这个系数，应该是某个值，且服从正态分布
+stan_program <- "
+data {
+  int M;
+  vector[M] x;
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  alpha ~ normal(100, 20);
+  beta ~ normal(4, 2);
+  //sigma ~ normal(0, 1);
+}
+generated quantities {
+  vector[M] y_fit; 
+  //vector[M] y_rep; 
+  for (i in 1:M) 
+    y_fit[i] = alpha + beta * x[i];                     // tidybayes::add_fitted_draws
+   //y_rep[i] = normal_rng(alpha + beta * x[i], sigma); // tidybayes::add_predict_draws
+}
+
+"
+
+stan_data <- list(
+  M = 31,
+  x = 0:30
+)
+
+fit_normal01 <- stan(model_code = stan_program, data = stan_data)
+
+
+
+p1 <- fit_normal01 %>%
+  tidybayes::gather_draws(y_fit[i], n = 100) %>%
+  ggplot(aes(x = i, y = .value)) +
+  geom_line(aes(group = .draw), alpha = .2) +
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) + 
+  ggtitle("看到数据之前，可能的曲线")
+p1
+
+
+
+
+## 曲线与数据匹配得怎么样?
+## 哪条曲线与数据匹配的最好？
+## Maximum likelihood estimate
+fm1 <- lm(salary ~ experience, data = d)
+new_data <- tibble(experience = 0:30) %>% 
+  mutate(
+    fit = predict(fm1, newdata = .)
+  )
+
+
+p2 <- ggplot(data = d) + 
+  aes(x = experience, y = salary) + 
+  geom_line(aes(y = fit), data = new_data, size = 1) +
+  geom_point(color = "#FB6542", size = 2) + 
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) + 
+  ggtitle("曲线与数据匹配得怎么样")
+p2
+
+
+
+## 看到数据之后，可能的曲线
+stan_program <- "
+data {
+  int N;
+  vector[N] x;
+  vector[N] y;
+  int M;
+  vector[M] x_new;
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  alpha ~ normal(100, 20);
+  beta ~ normal(4, 2);
+  sigma ~ normal(0, 1);
+  y ~ normal(alpha + beta * x, sigma);
+}
+generated quantities {
+  vector[M] y_fit; 
+  for (i in 1:M) 
+    y_fit[i] = alpha + beta * x_new[i];           // tidybayes::add_fitted_draws
+  //y_rep[i] = normal_rng(alpha + beta * x[i], sigma); // tidybayes::add_predict_draws
+}
+
+"
+
+
+stan_data <- list(
+  N = nrow(d),
+  x = d$experience,
+  y = d$salary,
+  M = 31,
+  x_new = 0:30
+)
+
+fit_normal3 <- stan(model_code = stan_program, data = stan_data)
+
+
+
+p3 <- fit_normal3 %>%
+  tidybayes::gather_draws(y_fit[i], n = 100) %>%
+  ggplot(aes(x = i, y = .value)) +
+  geom_line(aes(group = .draw), alpha = .2) +
+  geom_point(
+    aes(x =  experience, y = salary), 
+    color = "#FB6542", size = 2, 
+    data = d
+  ) +
+  theme(
+    axis.ticks = element_blank(), 
+    axis.text = element_blank(), 
+    axis.title = element_blank()
+  ) +
+  ggtitle("看到数据之后，可能的曲线")
+p3
+```
 
 
 
