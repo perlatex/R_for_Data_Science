@@ -248,6 +248,12 @@ df %>%
 ```
 
 
+## 参考资料
+
+- <https://ggplot2tor.com/scales/>
+
+
+
 
 ```{r ggplot2-scales-18, echo = F}
 # remove the objects

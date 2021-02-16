@@ -278,3 +278,4 @@ knitr::include_graphics("images/meme.png")
 -   [为什么R语言是当今最值得学习的数据科学语言](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)
 -   [R for Data Science](https://r4ds.had.co.nz/)
 -   <https://www.tidyverse.org/>
+-  <https://www.business-science.io/business/2020/12/17/six-reasons-to-use-R-for-business-2021.html>
