@@ -198,7 +198,8 @@ df %>% select(!type)
 
 ## `filter() `
 
-`select`是列方向的选择，我们还可以对数据行方向的选择和筛选，选出符合我们条件的某些行
+`select`是列方向的选择，我们还可以对数据行方向的选择和筛选，选出符合我们条件的某些行^[
+注意，这里filter()函数不是字面上“过滤掉”的意思，而是保留符合条件的行，也就说keep，不是drop的意思。 第一次会有一点点迷惑，我相信习惯就好了]
 
 ```{r dplyr-24, out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-filter.png")

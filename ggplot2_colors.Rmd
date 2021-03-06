@@ -31,13 +31,28 @@ knitr::include_graphics("images/hcl-palettes-principles.png")
 三种类型对应着三个函数 `qualitative_hcl()`, `sequential_hcl()`, 和 `diverging_hcl()`. 
 
 
+
 ## 配色模板
 
 ```{r ggplot2-colors-4, out.width = '100%'}
 hcl_palettes(plot = TRUE)
 ```
 
-## 使用案例
+**colorspace** 模板使用起来很方便，有统一格式`scale_<aesthetic>_<datatype>_<colorscale>()`, 
+
+- 这里 `<aesthetic>` 是指定映射 (`fill`, `color`, `colour`),
+- 这里 `<datatype>` 是表明数据变量的类型 (`discrete`, `continuous`, `binned`), 
+- 这里 `colorscale` 是声明颜色标度类型 (`qualitative`, `sequential`, `diverging`, `divergingx`).
+
+
+|Scale function                       | Aesthetic | Data type  | Palette type |
+|:-----------                         | :--------  | :--------- | :------------|
+|`scale_color_discrete_qualitative()` | `color`    | discrete   | qualitative |
+|`scale_fill_continuous_sequential()` | `fill`     | continuous | sequential |
+|`scale_colour_continous_divergingx()` | `colour`   | continuous | diverging |
+
+
+## 使用案例1
 
 ggplot2默认
 ```{r ggplot2-colors-5}
@@ -66,6 +81,126 @@ penguins %>%
    scale_fill_discrete_qualitative(palette = "cold")
 ```
 
+
+## 使用案例2
+
+
+```{r ggplot2-colors-8}
+temps_months <- read_csv("./demo_data/tempnormals.csv") %>%
+  group_by(location, month_name) %>%
+  summarize(mean = mean(temperature)) %>%
+  mutate(
+    month = factor(
+      month_name,
+      levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    ),
+    location = factor(
+      location, levels = c("Death Valley", "Houston", "San Diego", "Chicago")
+    )
+  ) %>%
+  select(-month_name)
+
+temps_months
+```
+
+
+
+
+
+```{r ggplot2-colors-9}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic()
+```
+
+
+```{r ggplot2-colors-10}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_gradient()
+```
+
+
+```{r ggplot2-colors-11}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_viridis_c()
+```
+
+
+```{r ggplot2-colors-12}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_viridis_c(option = "B", begin = 0.15)
+```
+
+
+```{r ggplot2-colors-13}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_continuous_sequential(palette = "YlGnBu", rev = FALSE)
+```
+
+
+```{r ggplot2-colors-14}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_continuous_sequential(palette = "Viridis", rev = FALSE)
+```
+
+
+```{r ggplot2-colors-15}
+temps_months %>% 
+  ggplot( aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_continuous_sequential(palette = "Inferno", begin = 0.15, rev = FALSE)
+```
+
+
+```{r ggplot2-colors-16}
+temps_months %>% 
+  ggplot(aes(x = month, y = location, fill = mean)) +
+  geom_tile(width = 0.95, height = 0.95) +
+  coord_fixed(expand = FALSE) +
+  theme_classic() +
+  scale_fill_continuous_sequential(palette = "Plasma", begin = 0.35, rev = FALSE)
+```
+
+## 配色
+
+```{block ggplot2-colors-17, type="danger"}
+这里有个小小的提示：
+
+- 尽可能不避免使用`"red"`, `"green"`, `"blue"`, `"cyan"`, `"magenta"`, `"yellow"`颜色
+- 使用相对柔和的颜色`"firebrick"`, `"springgreen4"`, `"blue3"`, `"turquoise3"`, `"darkorchid2"`, `"gold2"`，会让人觉得舒服
+
+```
+
+
+可以对比下
+```{r ggplot2-colors-18}
+colorspace::swatchplot(c("red", "green", "blue", "cyan", "magenta", "yellow"))
+colorspace::swatchplot(c("firebrick", "springgreen4", "blue3", "turquoise3", "darkorchid2", "gold2"))
+```
 
 
 ## color-wheel

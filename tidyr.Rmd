@@ -153,6 +153,8 @@ wide
 ```
 
 
+
+
 ## 列名转换成多个变量
 
 假定 `A`, `B`, `C` 三种植物每天生长的记录，包括三个特征（height, width, depth）
@@ -207,17 +209,47 @@ knitr::include_graphics("images/make_data_tidy2.jpg")
 
 
 ```{r tidyr-603}
-plant_record %>% 
+plant_record_longer <- plant_record %>% 
   tidyr::pivot_longer(
    cols = !day,
    names_to = c("species", ".value"),
    names_pattern = "(.*)_(.*)"
 )
+plant_record_longer
+```
+
+
+如果，反过来，又该怎么弄呢？
+
+```{r tidyr-604, out.width = '100%', fig.align='left', echo = FALSE}
+knitr::include_graphics("images/make_data_tidy3.jpg")
 ```
 
 
 
-```{block tidyr-604, type="danger"}
+```{r, eval=FALSE}
+us_rent_income %>%
+  pivot_wider(
+    names_from = variable,
+    names_glue = "{variable}_{.value}",
+    values_from = c(estimate, moe)
+  )
+```
+
+
+```{r tidyr-605}
+plant_record_longer %>% 
+  tidyr::pivot_wider(
+    names_from = species,
+    values_from = c(height, width, depth),
+    names_glue = "{species}_{.value}"
+  )
+```
+
+
+
+
+```{block tidyr-6041, type="danger"}
 看明白`.value`它代表的意思了吗？
 
 - 注意 .value 而不是value，说明这里不是单个列名，而是匹配得到的多个值做列名
@@ -263,7 +295,7 @@ long
 
 ```{r tidyr-17, echo = F}
 # remove the objects
-rm(long, wide, plant_height, plant_record)
+rm(long, wide, plant_height, plant_record, plant_record_longer)
 ```
 
 ```{r tidyr-18, echo = F, message = F, warning = F, results = "hide"}

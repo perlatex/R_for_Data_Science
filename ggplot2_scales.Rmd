@@ -1,5 +1,10 @@
 # ggplot2之标度 {#ggplot2-scales}
 
+> 用 ggplot2 画图，有种恋爱的感觉:
+> “你懂我的图谋不轨，我懂你的故作矜持”
+
+
+
 这一章我们一起学习ggplot2中的scales语法，推荐大家阅读Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)，但如果需要详细了解**标度**参数体系，还是要看[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
 
 

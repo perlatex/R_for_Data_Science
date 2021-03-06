@@ -64,7 +64,7 @@ bind_cols(
 )
 
 
-predict(model, new_data = testing_data) %>% 
+predict(model_logistic, new_data = testing_data) %>% 
   bind_cols(testing_data) %>% 
   count(.pred_class, species)
 ```

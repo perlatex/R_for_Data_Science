@@ -1,0 +1,234 @@
+# 谁是数据分析中最好用的宏包 {#Pandas-vs-dplyr}
+
+本章，我们用一些例子来比较数据科学领域Pandas vs. dplyr 两个宏包的用法
+
+
+```{r Pandas01, echo=FALSE}
+knitr::opts_chunk$set(
+  engine.path = list(python = "G:\\Anaconda3\\python.exe")
+  )
+```
+
+首先，需要加载这个宏包
+```{r Pandas02}
+library(reticulate)
+```
+
+  
+## 加载数据
+
+这是用 Pandas 方法，
+```{python}
+import pandas as pd
+
+gapminder = pd.read_csv("./demo_data/gapminder.csv")
+```
+
+
+
+这是用 dplyr 方法
+
+```{r Pandas03}
+library(dplyr)
+
+gapminder <- readr::read_csv("./demo_data/gapminder.csv")
+```
+
+
+这个过程，两者没什么区别。再往下看
+
+
+
+
+## 过滤
+
+### 问题1 – 找出2007年的所用记录.
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[gapminder['year'] == 2007]
+```
+
+这是用 dplyr 方法，
+```{r Pandas04}
+gapminder %>%
+  filter(year == 2007)
+```
+
+
+### 问题2 – 找出2007年中 continent为 Americas 的记录
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[(gapminder['year'] == 2007) & (gapminder['continent'] == 'Americas')]
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas05}
+gapminder %>%
+  filter(
+    year == 2007,
+    continent == "Americas"
+  )
+```
+
+
+
+### 问题3 – 找出2007年中 continent为 Americas，且只包含美国 的记录
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[(gapminder['year'] == 2007) & 
+          (gapminder['continent'] == 'Americas') &
+          (gapminder['country'] == 'United States')]
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas06}
+gapminder %>%
+  filter(
+    year == 2007,
+    continent == "Americas",
+    country == "United States"
+  )
+```
+
+
+## 统计
+
+我们再看看Pandas 和 dplyr 在常用的统计分析方面的表现。
+
+
+
+### 问题1 – 计算2007年全球寿命均值
+
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[gapminder['year'] == 2007]['lifeExp'].mean()
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas07}
+gapminder %>%
+  filter(year == 2007) %>%
+  summarize(mean(lifeExp))
+```
+
+
+### 问题2 – 计算2007年每一个洲的寿命均值
+
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[gapminder['year'] == 2007].groupby(by='continent').mean()['lifeExp']
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas08}
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarize(mean(lifeExp))
+```
+
+### 问题3 – 计算2007年每一个洲的人口总数然后降序输出。
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder[gapminder['year'] == 2007].groupby(by='continent').sum()['pop'].sort_values(ascending=False)
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas09}
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarize(total_pop = sum(pop)) %>%
+  arrange(desc(total_pop))
+```
+
+
+## 创建新变量
+
+### 问题1 – 创建国内生产总值(GDP)变量，即人口数量乘以人均GDP
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder['GDP'] = gapminder['pop'] * gapminder['gdpPercap']
+gapminder.head()
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas10}
+gapminder %>%
+  mutate(GDP = pop * gdpPercap)
+```
+
+### 问题2 – 人均GDP排名前90%的前十个国家
+
+这是用 Pandas 方法，
+
+```{python}
+gapminder_2007 = gapminder[gapminder['year'] == 2007]
+gapminder_2007['percentile'] = gapminder_2007['gdpPercap'].rank(pct=True)
+gapminder_2007.sort_values(by='percentile', ascending=False)[:10]
+```
+
+
+这是用 dplyr 方法
+
+```{r Pandas11}
+gapminder %>%
+  filter(year == 2007) %>%
+  mutate(percentile = ntile(gdpPercap, 100)) %>%
+  arrange(desc(percentile)) %>%
+  top_n(10, wt = percentile)
+```
+
+## 小节
+
+根据以上有限的对比，感觉dplyr语法要简练和清晰些。但是，这并不意味我们一定在Pandas 和 dplyr做取舍，因为解决现实问题，往往取决于我们对工具的熟练程度。以上只是个人观点（哈哈哈）。
+
+## 参考
+
+- <https://appsilon.com/pandas-vs-dplyr/>
+- <https://github.com/rstudio/reticulate/issues/863>
+- <https://rstudio.github.io/reticulate/articles/python_packages.html>
+
+
+
+
+```{r Pandas99, echo = F}
+# remove the objects
+# ls() %>% stringr::str_flatten(collapse = ", ")
+
+#rm(cutoffs, d1, d2, df, mult, std, weights, replace_col_max)
+```
+
+
+
+```{r Pandas100, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
+

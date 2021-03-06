@@ -21,9 +21,13 @@ always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE}
-options(
-  htmltools.dir.version = FALSE, formatR.indent = 2, width = 55, digits = 4
-)
+options(digits = 4, 
+        dplyr.print_min = 6, 
+        dplyr.print_max = 6,
+        htmltools.dir.version = FALSE, 
+        formatR.indent = 2, 
+        width = 55
+        )
 
 knitr::opts_chunk$set(
                       echo = TRUE, 
@@ -86,6 +90,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
    - 第 \@ref(ggplot2-customize) 章ggplot2扩展内容
    - 第 \@ref(ggplot2-stat-layer) 章ggplot2统计图层
+   - 第 \@ref(ggplot2-colors) 章介绍数据可视化中的配色
    - 第 \@ref(workflow) 章回望tidyverse之旅
    - 第 \@ref(tips) 章介绍tidyverse常用技巧
    - 第 \@ref(advR) 章介绍tidyverse进阶技巧
@@ -126,9 +131,9 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(stars) 章介绍地理数据处理
    - 第 \@ref(rowwise) 章介绍tidyverse中行方向的操作
    - 第 \@ref(ggplot2-academic) 章介绍科研数据可视化中的统计分布图
-   - 第 \@ref(ggplot2-colors) 章介绍数据可视化中的配色
    - 第 \@ref(ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(lazyman) 章介绍我收集的一些有用和有趣的宏包
+   - 第 \@ref(practice) 章一日一练，有些题目还是很有挑战性的喔
 
 
 

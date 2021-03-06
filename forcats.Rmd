@@ -14,6 +14,7 @@
 ## 创建因子
 ```{r forcats-1}
 library(tidyverse)
+library(palmerpenguins)
 ```
 
 ```{r forcats-2}
@@ -167,13 +168,154 @@ d %>%
 ```
 
 
-```{r forcats-20, echo = F}
+
+## 可视化中应用 
+可能没说明白，那就看企鹅柱状图吧
+```{r forcats-20}
+ggplot(penguins, aes(y = species)) +
+  geom_bar()
+```
+
+
+```{r forcats-21}
+ggplot(penguins, aes(y = fct_rev(species))) +
+  geom_bar()
+```
+
+
+
+
+
+```{r forcats-22a, eval=FALSE}
+penguins %>% 
+  count(species) %>% 
+  pull(species)
+
+penguins %>% 
+  count(species) %>% 
+  mutate(species = fct_relevel(species, "Chinstrap", "Gentoo", "Adelie")) %>% 
+  pull(species)
+```
+
+
+
+```{r forcats-22}
+# Move "Chinstrap" in front, rest alphabetic
+ggplot(penguins, aes(y = fct_relevel(species, "Chinstrap"))) +
+  geom_bar()
+```
+
+
+
+```{r forcats-23}
+# Use order "Chinstrap", "Gentoo", "Adelie"
+ggplot(penguins, aes(y = fct_relevel(species, "Chinstrap", "Gentoo", "Adelie"))) +
+  geom_bar()
+```
+
+
+```{r forcats-24}
+penguins %>%
+  mutate(species = fct_relevel(species, "Chinstrap", "Gentoo", "Adelie")) %>%
+  ggplot(aes(y = species)) +
+  geom_bar()
+```
+
+
+```{r forcats-25}
+ggplot(penguins, aes(y = fct_relevel(species, "Adelie", after = Inf))) +
+  geom_bar()
+```
+
+
+```{r forcats-26}
+# Use the order defined by the number of penguins of different species
+# The order is descending, from most frequent to least frequent
+
+penguins %>%
+  mutate(species = fct_infreq(species)) %>%
+  ggplot(aes(y = species)) +
+  geom_bar()
+```
+
+
+```{r forcats-27}
+penguins %>%
+  mutate(species = fct_rev(fct_infreq(species))) %>%
+  ggplot(aes(y = species)) + 
+  geom_bar()
+```
+
+
+```{r forcats-28}
+# Reorder based on numeric values
+penguins %>%
+  count(species) %>%
+  mutate(species = fct_reorder(species, n)) %>%
+  ggplot(aes(n, species)) + 
+  geom_col()
+```
+
+## 作业
+
+- 画出的2007年美洲人口寿命的柱状图，要求从高到低排序
+```{r forcats-29}
+library(gapminder)
+gapminder %>%
+   filter(
+     year == 2007,
+     continent == "Americas"
+)
+```
+
+
+```{r forcats-30, eval=FALSE, echo = FALSE}
+gapminder %>%
+  filter( year == 2007, continent == "Americas") %>%
+  mutate( country = fct_reorder(country, lifeExp)) %>%
+  ggplot(aes(lifeExp, country)) +
+  geom_point()
+```
+
+- 这是四个国家人口寿命的变化图
+```{r forcats-31}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+- 要求给四个分面排序，按每个国家寿命的中位数
+```{r forcats-32, eval=FALSE, echo = FALSE}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  mutate(country = fct_reorder(country, lifeExp)) %>% # default: order by median
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+
+
+- 要求给四个分面排序，按每个国家寿命差（最大值减去最小值）
+
+```{r forcats-33, eval=FALSE, echo = FALSE}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  # order by custom function: here, difference between max and min
+  mutate(country = fct_reorder(country, lifeExp, function(x) { max(x) - min(x) })) %>%
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+
+
+```{r forcats-34, echo = F}
 # remove the objects
 # rm(list=ls())
 rm(d, income, x)
 ```
 
 
-```{r forcats-21, echo = F, message = F, warning = F, results = "hide"}
+```{r forcats-35, echo = F, message = F, warning = F, results = "hide"}
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

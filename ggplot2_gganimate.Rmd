@@ -466,7 +466,7 @@ transition_reveal(along = ) +
 ### Renderer options
 
 ```{r renderer-tbl, echo=FALSE}
-tribble(
+tibble::tribble(
   ~Function, ~Description,
   "gifski_renderer", "Default, super fast gif renderer.",
   "magick_renderer", "Somewhat slower gif renderer.",
