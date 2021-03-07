@@ -1,5 +1,7 @@
 # 一天一练 {#practice}
 
+> “表达我自己比被人喜欢更重要。” 加油
+
 尽可能的在tidyverse的框架下完成
 ```{r practice00}
 library(tidyverse)
@@ -108,6 +110,7 @@ data
 ```
 
 先按id分组，
+
 - 如果corr中都是0  就"none"
 - 如果corr中都是1  就"both"
 - 如果corr中只有一个1，就输出1对应period
@@ -272,6 +275,143 @@ d %>%
 
 ggsave("myplot.pdf", width = 10, height = 5, units = "in")
 ```
+
+## day07
+
+告诉你一个你可能不知道的事情，`summarise()`一定要输出数据框吗？
+
+```{r practice15, eval=FALSE, echo=TRUE}
+iris %>%
+  nest_by(Species) %>%
+  rowwise() %>%
+  summarise(
+    write_csv(data, glue("{Species}.cvs"))
+    )
+```
+
+
+
+## day08
+
+运行以下两个代码，结果和你期望的一样？为什么？
+
+```{r practice16, eval=FALSE, echo=TRUE}
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = .))
+  )
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt))
+  )
+```
+
+
+
+
+
+
+```{r practice17, eval=FALSE, echo=FALSE}
+# 答案，以上两段代码，分别等价于
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = mtcars))
+  )
+
+
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarise(
+    broom::tidy(lm(mpg ~ wt, data = cur_data())) 
+  )
+```
+
+## day09
+
+缺失值替换，数值型的缺失值用0替换，字符串型的用""
+```{r practice18, eval=FALSE, echo=TRUE}
+df <- tibble(
+  x = c(NA, 1, 2),
+  y = c("a", NA, NA),
+)
+
+```
+
+
+```{r practice19, eval=FALSE, echo=FALSE}
+df %>% mutate(
+  across(is.numeric, coalesce, 0),
+  across(is.character, coalesce, "")
+)
+```
+
+
+
+## day10
+
+六年级的年级主任让学生提交自己所在的班级号，看到结果后，他很苦恼，你能帮忙他规整下？
+```{r practice20}
+d <- tibble::tribble(
+               ~id,
+               "2",
+              "03",
+       "小学2015级2班",
+       "小学2015级3班",
+            "0601",
+            "0602",
+          "201502",
+          "201604",
+            "6.10",
+            "6.11",
+             "6.5",
+             "6.8",
+              "06"
+       )
+d
+```
+
+
+```{r practice21, eval=FALSE, echo=FALSE}
+parse_class_id <- function(x) {
+  res <- NA_character_
+   
+  if ( stringr::str_length(x) < 3 ) {
+    res <- x
+  }
+  
+  if ( stringr::str_detect(x, "班$") ) {
+    res <- stringr::str_extract(x, "\\d+(?=班)")
+  }
+  
+  if ( stringr::str_detect(x, "\\.") ) {
+    res <- stringr::str_extract(x, "(?<=\\.)\\d+")
+  }
+  
+  if ( stringr::str_detect(x, "\\d{6}$") ) {
+    res <- stringr::str_extract(x, "\\d{2}$")
+  }
+  
+  if ( stringr::str_detect(x, "\\d{4}$") ) {
+    res <- stringr::str_extract(x, "\\d{2}$")
+  }
+  
+  res <- stringr::str_pad(res, width = 2, side = "left", pad = "0")
+  return(res)
+}
+
+
+
+d %>% mutate(
+  x = map_chr(id, ~parse_class_id(.))
+)
+```
+
 
 
 

@@ -94,15 +94,28 @@ covnat %>%
 美国疫情变化情况
 
 ```{r, fig.showtext = TRUE}
-covnat %>% 
-  filter(iso3 == "USA") %>% 
-  filter(cu_cases > 0) %>% 
-  ungroup() %>% 
-  ggplot(aes(x = date, y = cases)) +
-  geom_line() +
+elect_df <- tibble(
+  start = c("2020-10-01"),
+  end   = c("2020-11-03")
+) %>%
+  mutate(across(everything(), as.Date))
+
+covnat %>%
+  filter(iso3 == "USA") %>%
+  filter(cu_cases > 0) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_line(aes(x = date, y = cases)) +
+  geom_rect(
+    data = elect_df,
+    aes(xmin = start, xmax = end, ymin = -Inf, ymax = +Inf),
+    fill = "gray", alpha = 0.5
+  ) +
   scale_x_date(name = NULL, breaks = "month") +
-  labs(title = "美国新冠肺炎累积确诊病例",
-       subtitle = "数据来源https://kjhealy.github.io/covdata/") 
+  labs(
+    title = "美国新冠肺炎累积确诊病例",
+    subtitle = "数据来源https://kjhealy.github.io/covdata/"
+  ) 
 ```
 
 

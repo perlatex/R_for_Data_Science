@@ -3,7 +3,7 @@
 
 ggplot2的强大，还在于它的扩展包。本章在介绍ggplot2新的内容的同时还会引入一些新的宏包，需要提前安装
 ```{r ggplot2-customize-1, eval=FALSE}
-install.packages(c("sf", "cowplot", "patchwork", "gghighlight", "ggforce"))
+install.packages(c("sf", "cowplot", "patchwork", "gghighlight", "ggforce", "ggfx"))
 ```
 
 如果安装不成功，请先update宏包，再执行上面安装命令
@@ -379,6 +379,24 @@ gapdata %>%
   ) +
   facet_wrap(vars(country))
 ```
+
+
+## 3D效果
+
+```{r ggplot2-customize-231}
+library(ggfx) 
+# https://github.com/thomasp85/ggfx
+
+mtcars %>% 
+  ggplot(aes(mpg, disp)) +
+  with_shadow(
+    geom_smooth(alpha = 1), sigma = 4 
+  ) +
+  with_shadow(
+    geom_point(), sigma = 4
+  )
+```
+
 
 ## 函数图
 
