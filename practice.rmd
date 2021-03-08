@@ -412,6 +412,48 @@ d %>% mutate(
 )
 ```
 
+## day11
+
+每行以x为均值生成一个随机数, 以下哪个是正确的？
+
+```{r practice22, eval=FALSE, echo=TRUE}
+# A
+tibble(x = 1:5) %>% 
+  mutate(normal_mean = rnorm(1, mean = x))     
+
+# B
+tibble(x = 1:5) %>% 
+  mutate(normal_mean = rnorm(n(), mean = x))
+
+# C
+tibble(x = 1:5) %>% 
+  mutate(normal_mean = map_dbl(x, ~rnorm(1, mean = .)))
+
+# D
+tibble(x = 1:5) %>% 
+  mutate(normal_mean = map_dbl(x, ~rnorm(1), mean = .))
+
+# E
+tibble(x = 1:5) %>% 
+  rowwise() %>% 
+  mutate(normal_mean = rnorm(1, mean = x))
+```
+
+
+## day12
+
+
+`purrr::map()`的辅助参数放里面和放外面，有什么区别？
+
+```{r practice23, eval=FALSE, echo=TRUE}
+x <- rep(0, 3)
+plus <- function(x, y) x + y
+
+map_dbl(x, plus, runif(1))
+map_dbl(x, ~plus(.x, runif(1)) )
+```
+
+
 
 
 
