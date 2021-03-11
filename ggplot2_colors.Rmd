@@ -34,10 +34,37 @@ knitr::include_graphics("images/hcl-palettes-principles.png")
 
 ## 配色模板
 
+根据你需要颜色的三大种类，先找适合的模板palettes
+
 ```{r ggplot2-colors-4, out.width = '100%'}
 hcl_palettes(plot = TRUE)
 ```
 
+或者指定某个种类，显示所有的模板
+```{r, eval=FALSE}
+hcl_palettes("qualitative", plot = TRUE)
+hcl_palettes("sequential (single-hue)", n = 7, plot = TRUE)
+hcl_palettes("sequential (multi-hue)", n = 7, plot = TRUE)
+hcl_palettes("diverging", n = 7, plot = TRUE)
+```
+
+如果看中某个模板的颜色，可以获取它的值，比如sequential种类下的 "Peach"模板，
+
+```{r ggplot2-colors-41}
+#colorspace::diverging_hcl(n = 7, "Dark 2")
+#colorspace::qualitative_hcl(4, palette = "myset")
+colorspace::sequential_hcl(n =7, palette = "Peach")
+```
+当然，在用之前，我们先检验下
+
+```{r ggplot2-colors-42}
+colorspace::sequential_hcl(n = 7, palette = "Peach") %>% 
+  colorspace::swatchplot()
+```
+
+## 在ggplot2中使用
+
+在ggplot2中可以免去手工操作，而直接使用。事实上，
 **colorspace** 模板使用起来很方便，有统一格式`scale_<aesthetic>_<datatype>_<colorscale>()`, 
 
 - 这里 `<aesthetic>` 是指定映射 (`fill`, `color`, `colour`),
@@ -73,7 +100,7 @@ penguins %>%
 ```
 
 
-模板配色
+使用colorspace模板配色
 ```{r ggplot2-colors-7}
 penguins %>% 
    ggplot(aes(bill_length_mm, fill = species)) +
@@ -82,8 +109,31 @@ penguins %>%
 ```
 
 
-## 使用案例2
 
+```{r ggplot2-colors-71}
+penguins %>% 
+   ggplot(aes(bill_length_mm, fill = species)) +
+   geom_density(alpha = 0.6) +
+   scale_fill_discrete_qualitative(palette = "cold", nmax = 4, order = 2:4)
+```
+```{r ggplot2-colors-72}
+sequential_hcl(palette = "Purples 3", n = 6) %>% 
+  swatchplot()
+
+penguins %>% 
+   ggplot(aes(bill_length_mm, fill = species)) +
+   geom_density(alpha = 0.6) +
+   scale_fill_discrete_sequential(palette = "Purples 3", 
+                                  nmax = 6, 
+                                  rev = FALSE, 
+                                  order = 3:5)
+
+```
+
+
+
+
+## 使用案例2
 
 ```{r ggplot2-colors-8}
 temps_months <- read_csv("./demo_data/tempnormals.csv") %>%
