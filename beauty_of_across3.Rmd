@@ -7,7 +7,7 @@ library(tidyverse)
 
 ## 问题
 
-每天水分和食物比例， 比如第一天water和food都是10.0，那么各自比例都是50%.
+计算每天水分和食物的所占比例， 比如第一天water和food都是10.0，那么各自比例都是50%.
 ```{r beauty-of-across3-2}
 d <- tibble::tribble(
   ~water, ~food,
@@ -46,7 +46,7 @@ d %>%
 
 传统的方法，用到基本的dplyr函数，思路很清晰，但有点周折。下面，我列出几个比较新颖的方法，当然这些方法都来源于强大across()函数
 
-
+### 方法1
 ```{r beauty-of-across3-4}
 d %>%
   mutate(100 * across(.names = "%{.col}") / rowSums(across())) %>%
@@ -54,7 +54,7 @@ d %>%
 ```
 
 
-
+### 方法2
 ```{r beauty-of-across3-5}
 rowPercent <- function(df) {
   df / rowSums(df) * 100
@@ -66,7 +66,7 @@ d %>%
 
 
 
-
+### 方法3
 ```{r beauty-of-across3-6}
 d %>%
   rowwise() %>%
@@ -77,7 +77,7 @@ d %>%
 
 
 
-
+### 方法4
 ```{r beauty-of-across3-7}
 scale <- function(x) {
   100 * x / sum(x, na.rm = TRUE)
@@ -92,7 +92,7 @@ d %>%
 
 
 
-
+### 方法5
 ```{r beauty-of-across3-8}
 d %>%
   rowwise() %>% 

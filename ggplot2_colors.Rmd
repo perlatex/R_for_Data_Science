@@ -255,5 +255,6 @@ colorspace::swatchplot(c("firebrick", "springgreen4", "blue3", "turquoise3", "da
 
 ## color-wheel
 
-[Adobe Color](https://color.adobe.com/zh/create/color-wheel)
-[scheme Color](https://schemecolor.com)
+- [Adobe Color](https://color.adobe.com/zh/create/color-wheel)
+
+- [scheme Color](https://schemecolor.com)
