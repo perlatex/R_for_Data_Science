@@ -41,6 +41,7 @@ rmd_files: [
   "colwise.Rmd",
   "beauty_of_across.Rmd",
   "beauty_of_across2.Rmd",
+  "beauty_of_across3.Rmd",
   "tidyverse_NA.Rmd",
   "dot.Rmd",
   "tidyeval.Rmd",

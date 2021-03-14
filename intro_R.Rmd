@@ -236,8 +236,9 @@ class(vec)
 
 ```{r intro-R-27}
 c(TRUE, 1)                   # 被转换成了数值型
-c(      1,  "R")         # 被转换成了字符串型
+c(      1,  "R")             # 被转换成了字符串型
 c(TRUE, 1,  "R")             # 被转换成了字符串型
+c("R", 1, 1L, TRUE)          # logical -> integer -> double -> character.
 ```
 
 
