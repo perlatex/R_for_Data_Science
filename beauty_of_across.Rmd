@@ -438,7 +438,7 @@ df %>%
   mutate(across(x:z, ~ . / total))
 ```
 
-
+更神奇的方法，请看第 \@ref(beauty-of-across3) 章。
 
 看一行中哪个最大，最大的变为1，其余的变为0
 
