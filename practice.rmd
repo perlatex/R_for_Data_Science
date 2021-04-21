@@ -493,6 +493,24 @@ d %>%
 ```
 
 
+## day14
+
+以下代码哪些会给出相同的图形?
+
+```{r, eval=FALSE}
+tb <- tibble(
+     x = rep(c(1,2,3), 2),
+     y = c(1:6),
+    group = c(rep("group1", 3),  rep("group2", 3) )
+
+)
+```
+
+
+1. `ggplot(tb, aes(x,y)) + geom_line()`
+2. `ggplot(tb, aes(x,y,group=group)) + geom_line()` 
+3. `ggplot(tb, aes(x,y,fill=group)) + geom_line()` 
+4. `ggplot(tb, aes(x,y,color=group)) + geom_line()` 
 
 
 
