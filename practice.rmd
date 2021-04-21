@@ -513,6 +513,94 @@ tb <- tibble(
 4. `ggplot(tb, aes(x,y,color=group)) + geom_line()` 
 
 
+## day15
+
+重复这张图
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images","to_reproduce2.png"))
+```
+
+数据在下面
+
+```{r}
+library(tidyverse)
+raw_df <- read_rds(here::here("demodata", "rude_behavior_in_airplane.rds")) 
+raw_df
+```
+
+
+
+
+```{r, eval=FALSE, echo=FALSE}
+df <- raw_df %>%
+  group_by(type) %>%
+  mutate(
+    percent = n / sum(n)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    percent = if_else(str_detect(judgment, "Not"),  -1 * percent, percent)
+  )
+df
+```
+
+```{r, eval=FALSE, echo=FALSE}
+df_no <- df %>%
+  filter(judgment == "Not rude")
+
+df_yes <- df %>%
+  filter(judgment != "Not rude")
+
+Somewhat_rude <- df_yes %>%
+  filter(judgment == "Somewhat rude")
+
+Very_Rude <- df_yes %>%
+  filter(judgment == "Very Rude")
+```
+
+
+
+```{r, eval=FALSE, echo=FALSE}
+ggplot() +
+  geom_col(data = df_no, aes(x = percent, y = fct_reorder(type, percent), fill = judgment)) +
+  geom_col(data = df_yes, aes(x = percent, y = type, fill = fct_rev(judgment))) +
+  geom_vline(xintercept = 0, color = "black", linetype = "dashed") +
+  
+  geom_text(
+    data = df_no, aes(x = percent/2, y = type, label = paste0(abs(round(100*percent)), "%"))
+  ) +
+  
+  geom_text(
+    data = Somewhat_rude, aes(x = percent/2, y = type, label = paste0(abs(round(100*percent)), "%"))
+  ) +
+  
+  
+  geom_text(
+    data = Very_Rude, 
+    aes(x = Somewhat_rude$percent + percent/2, y = type, 
+        label = paste0(abs(round(100*percent)), "%")),
+    hjust = ifelse(Very_Rude$percent > 0.05, 0.5, -.4)
+  ) +
+  
+  
+  scale_fill_manual(
+    values = c("Not rude" = "#F2B138", "Very Rude" = "#32A685", "Somewhat rude" = "#77C2EA")
+  ) +
+  
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    plot.title.position = "plot",
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(face = c("bold", "plain", "bold", "plain", 'bold', 'plain', 'bold', 'plain', 'bold'))
+  ) +
+  labs(x = NULL, y = NULL, fill = "",
+       title = "what is the rudest airplane behavior?")
+  
+```
+
+
 
 
 ```{r practice99, echo = F}
