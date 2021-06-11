@@ -27,7 +27,7 @@ library(tidyverse)
 
 教育代际传递。通俗点说子女的教育程度是否受到父母教育程度的影响。我这个案例思路参考了南京大学池彪的《教育人力资本的代际传递研究》硕士论文，这篇文章思路很清晰，建议大家可以看看。根据文中提供的数据来源，我们下载2016年的中国家庭追踪调查数据[CFPS](http://www.isss.pku.edu.cn/cfps/)，并整理了部分数据。
 
-```{r ordinal-2, echo=FALSE, out.width = "90%"}
+```{r ordinal-2, echo=FALSE, out.width = "80%"}
 knitr::include_graphics(path = "images/variables.png")
 ```
 
@@ -161,7 +161,7 @@ df %>%
 
 ### 父亲和母亲谁的影响大
 
-这里需要用到**有序logistic回归**，我们使用`MASS::polr`函数。
+这里需要用到**有序logistic回归**。
 为了理解模型的输出，我们需要先简单介绍下模型的含义。假定被解释变量$Y$有$J$类且有序，那么$Y$ 小于等于某个具体类别$j$的累积概率，可以写为$P(Y \le j)$，这里$j = 1, \cdots, J-1$. 
 
 从而，小于等于某个具体类别$j$的**比率**就可以定义为
@@ -172,10 +172,20 @@ $$\frac{P(Y \le j)}{P(Y>j)}$$
 
 $$log \frac{P(Y \le j)}{P(Y>j)} = logit (P(Y \le j)).$$
 
-在R语言中，有序logistic回归的数学模型就是
+，有序logistic回归的数学模型就是
 
 $$logit (P(Y \le j)) = \alpha_{j} + \beta_{1}x_1 + \beta_{2}x_2 $$
-$\alpha$ 是截距 $\beta$ 是回归系数，注意到有序分类 logistic 回归模型中就有 $J-1$ 个 logit 模型。对于每个模型，系数是相同的，截距不同。下面我们通过代码来演示
+$\alpha$ 是截距 $\beta$ 是回归系数，注意到有序分类 logistic 回归模型中就有 $J-1$ 个 logit 模型。对于每个模型，系数是相同的，截距不同。
+
+
+
+
+在R语言中，我们可以使用`MASS::polr`函数，但需要注意的是，使用这个函数，对应的模型表达式为^[感谢@huanfachen指出我之前的错误]，斜率符号写为负号
+
+$$logit (P(Y \le j)) = \alpha_{j} - \beta_{1}x_1 - \beta_{2}x_2 $$
+
+
+下面我们通过代码来演示
 
 
 ```{r ordinal-13}
@@ -199,21 +209,20 @@ summary(mod_mass)
 
 
 
-
 $$
 \begin{aligned}
-\text{logit}(\hat{P}(Y \le 1))&= \text{logit}\left(p_{1}\right) = \ln \left(\frac{p_{1}}{1 - p_{1}}\right) =  -0.8385 + \\ 
-\text{logit}(\hat{P}(Y \le 2))&= \text{logit}\left(p_{1} + p_{2}\right) = \ln \left(\frac{p_{1} + p_{2}}{1 - p_{1} - p_{2}}\right) =  0.6742 + \\ 
-\text{logit}(\hat{P}(Y \le 3))&= \text{logit}\left(p_{1} + p_{2} + p_{3}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3}}{1 - p_{1} - p_{2} - p_{3}}\right) =  2.5093\\ 
-\text{logit}(\hat{P}(Y \le 4))&= \text{logit}\left(p_{1} + p_{2} + p_{3} + p_{4}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3} + p_{4}}{1 - p_{1} - p_{2} - p_{3} - p_{4}}\right) = 3.5454\\ 
+\text{logit}(\hat{P}(Y \le 1))&= \text{logit}\left(p_{1}\right) = \ln \left(\frac{p_{1}}{1 - p_{1}}\right) =  -0.8385 - 0.46 \times \text{edu_f} - 0.51 \times\text{edu_m}  -(-0.46)\times\text{sex1} -(-0.15)\times \text{num_siblings} -0.96 \times\text{urban1} \\ 
+\text{logit}(\hat{P}(Y \le 2))&= \text{logit}\left(p_{1} + p_{2}\right) = \ln \left(\frac{p_{1} + p_{2}}{1 - p_{1} - p_{2}}\right) =  0.6742 - 0.46 \times \text{edu_f} - 0.51 \times\text{edu_m}  -(-0.46)\times\text{sex1} -(-0.15)\times \text{num_siblings} -0.96 \times\text{urban1} \\ 
+\text{logit}(\hat{P}(Y \le 3))&= \text{logit}\left(p_{1} + p_{2} + p_{3}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3}}{1 - p_{1} - p_{2} - p_{3}}\right) =  2.5093 - 0.46 \times \text{edu_f} - 0.51 \times\text{edu_m}  -(-0.46)\times\text{sex1} -(-0.15)\times \text{num_siblings} -0.96 \times\text{urban1}\\ 
+\text{logit}(\hat{P}(Y \le 4))&= \text{logit}\left(p_{1} + p_{2} + p_{3} + p_{4}\right) = \ln \left(\frac{p_{1} + p_{2} + p_{3} + p_{4}}{1 - p_{1} - p_{2} - p_{3} - p_{4}}\right) = 3.5454 - 0.46 \times \text{edu_f} - 0.51 \times\text{edu_m}  -(-0.46)\times\text{sex1} -(-0.15)\times \text{num_siblings} -0.96 \times\text{urban1}\\ 
 \end{aligned}
 $$
 
 
 
-写起很麻烦，偷个懒吧
+<!-- 写起很麻烦，偷个懒吧 -->
 
-```{r ordinal-14}
+```{r ordinal-14, eval=FALSE, echo=FALSE}
 library(equatiomatic)
 extract_eq(mod_mass, use_coefs = TRUE)
 ```
@@ -225,6 +234,8 @@ extract_eq(mod_mass, use_coefs = TRUE)
 
 
 ### 系数的解释
+
+关于系数的解释，推荐您阅读[这里](https://stats.idre.ucla.edu/r/faq/ologit-coefficients/)。
 
 先将系数转换成odds ratios(OR)
 

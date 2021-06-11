@@ -525,7 +525,7 @@ knitr::include_graphics(here::here("images","to_reproduce2.png"))
 
 ```{r}
 library(tidyverse)
-raw_df <- read_rds(here::here("demodata", "rude_behavior_in_airplane.rds")) 
+raw_df <- read_rds(here::here("demo_data", "rude_behavior_in_airplane.rds")) 
 raw_df
 ```
 
