@@ -17,6 +17,7 @@ rmd_files: [
   "intro_ds.Rmd",
   "intro_R.Rmd",
   "subsetting.Rmd",
+  "functions.Rmd",
 
   # tidyverse篇
   "rmarkdown.Rmd",

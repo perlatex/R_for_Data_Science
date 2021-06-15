@@ -74,6 +74,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(intro-ds) 章介绍数据科学基础
    - 第 \@ref(intro-R) 章介绍R语言基本概念
    - 第 \@ref(subsetting) 章介绍R语言中的子集选取
+   - 第 \@ref(functions) 章介绍R语言中的函数
 - tidyverse篇
    - 第 \@ref(rmarkdown) 章介绍可重复性报告
    - 第 \@ref(readr) 章介绍数据读入

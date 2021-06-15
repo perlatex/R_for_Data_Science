@@ -1,0 +1,293 @@
+# 函数 {#functions}
+
+R 语言的强大在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
+
+
+## 基础函数
+
+R 语言内置了很多统计函数，比如对于向量`x`
+```{r}
+x <- c(2, 7, 8, 9, 3)
+```
+
+打印向量`x`
+```{r}
+print(x)
+```
+
+求向量元素之和
+```{r}
+sum(x)
+```
+
+求向量元素的均值
+```{r}
+mean(x)
+```
+
+求向量元素的标准差
+```{r}
+sd(x)
+```
+
+找出向量元素中的最小值
+```{r}
+min(x)
+```
+
+找出向量元素中的最大值
+```{r}
+max(x)
+```
+
+计算向量元素的个数
+```{r}
+length(x)
+```
+
+判断是否为数值型/字符串型
+```{r}
+is.numeric(x)
+is.character(x)
+```
+
+判断向量元素是否大于5
+
+```{r}
+ifelse(x > 5, TRUE, FALSE)
+```
+
+
+
+## 自定义函数
+
+自己定义函数，需要四个关键部件：
+
+```{r, eval=FALSE}
+myFunction <- function(x, y) {
+   ...
+}
+```
+
+
+- 创建，由`function(...)`创建一个函数
+- 参数，由`(...)` 里指定参数，比如`function(x, y)`中的参数为 `x` 和 `y`
+- 函数主体，一般情况下，在`function(...)`后跟随一对大括号`{ }`，在大括号里声明具体函数功能，在代码最后一行，可以用return返回计算后的值，当然，这个return不是必需的。
+- 函数名，`function() { }` 赋值给新对象，比如这里的`myFunction`
+
+用一个简单的案例说明。这里我们想让输入的向量每个元素增加1，可以这样写函数
+```{r}
+add_one <- function(x) {
+   y <- x + 1
+   return(y)  # 返回计算后的值
+}
+```
+
+
+## 函数调用
+```{r}
+add_one(x = 10)
+add_one(x = 1:6)
+```
+
+
+## 灵活的语法
+
+R语言里面，完成一件事情往往有很多中方法，定义函数也不例外。比如我们定义简单的函数`add2`(对输入的数加2)，可以好几种写法
+
+
+方法1：
+```{r}
+add2 <- function(x) {
+    return(x + 2)
+}
+```
+
+
+
+方法2：
+```{r}
+add2 <- function(x) { return(x + 2) }
+```
+
+
+
+
+方法3：
+```{r}
+add2 <- function(x) return(x + 2)
+```
+
+
+
+方法4：
+```{r}
+add2 <- function(x) x + 2
+```
+
+
+
+方法5：
+```{r}
+add2 <- function(x) {
+    x + 2
+}
+```
+
+
+
+
+## 案例
+
+根据方差的数学表达式
+
+$$
+\mathrm{Var}(x) = \frac{1}{n - 1} \sum_{i=1}^n (x_i - \bar{x}) ^2 
+$$
+
+计算`w`的方差
+
+```{r}
+w <- c(2, 7, 8, 9, 3, 6, 8, 12, 6, 9)
+w
+```
+
+
+
+
+```{r}
+varfun <- function(x) {
+  res <- sum((x - mean(x))^2) / (length(x) - 1)
+  return(res)
+}
+
+
+varfun(w)
+```
+
+
+```{r, eval=FALSE, echo = FALSE}
+var(w)
+```
+
+
+
+ 
+
+## 多个参数
+
+```{r}
+sum_two <- function(num1, num2) {
+  sum  <- num1 + num2
+  return(sum)
+}
+
+
+sum_two(num1 = 1, num2 = 2)
+sum_two(12, 9)
+```
+
+
+练习：说说这个函数的意思
+```{r}
+norm_by_y <- function(num1, num2) {
+   result  <- (num1 - num2)/num2
+   return(result)
+}
+```
+
+
+
+## 条件语句
+
+使用 `if-else` 语句
+```{r, eval=FALSE}
+if(condition) {
+   Do something
+} else {
+   Alternative something
+}
+```
+
+
+
+比如，先判断是否为数值，如果是返回它的平方，如果不是数值，就返回提示语句
+
+
+```{r}
+square_if <- function(num) {
+    if(is.numeric(num)) {
+      num^2
+    } else {
+     "Your input is not numeric."
+    }
+}
+
+
+square_if("a")
+square_if(3)
+```
+
+
+
+
+练习：将上面`sum_two()`函数增加数据类型判断语句，让函数更安全。
+```{r, eval=FALSE}
+sum_two("a", "b")
+```
+
+
+
+## 返回多个结果
+
+如果要返回多个统计结果，可以把结果先放在list或者data.frame中，然后再返回。
+```{r}
+mystat <- function(x){
+   meanval <- mean(x) 
+   sdval <- sd(x)
+   
+   list(sd = sdval, mean = meanval)
+}
+```
+
+或者
+```{r}
+mystat <- function(x){
+   meanval <- mean(x) 
+   sdval <- sd(x)
+   
+   data.frame(  sd = sdval, 
+              mean = meanval)
+}
+```
+
+```{r}
+mystat(w)
+```
+
+
+
+## 作业
+
+- 对 `w` 进行**数据标准化**
+$$
+\mathrm{std}(x) = \frac{x_i - \bar{x}}{\mathrm{sd}(x)}  
+$$
+```{r, eval=FALSE, echo = FALSE}
+std <- function(x) {
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
+```
+
+
+- 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
+
+```{r, eval=FALSE}
+mean_above_threshod <- function(vector, threshold) {
+  
+}
+```
+
+## 阅读
+
+- 推荐您阅读(https://r4ds.had.co.nz/functions.html)
