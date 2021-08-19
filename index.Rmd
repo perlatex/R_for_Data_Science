@@ -58,6 +58,8 @@ summary_monthly_temp <- weather %>%
             std_dev = sd(temp))
 ```
 
+文中大量使用形象化的比喻，从计算机科学的角度来讲，这些比喻是不严谨的，但是可以帮助大家理解其中概念，激励动手操作，提升信心。因为我们的目的，是让大家不害怕编程，而不是把大家培养成程序员。
+
 
 在**跟进**本课程的同时， 我强烈推荐大家阅读Hadley Wickham的
 [r4ds](https://r4ds.had.co.nz/)这本书 [@Wickham2017]。作者可是2019年8月刚刚获得考普斯总统奖（被誉为统计学的诺贝尔奖）的大神喔，点击[这里](http://hadley.nz/)可以看他照片。
@@ -74,6 +76,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(intro-ds) 章介绍数据科学基础
    - 第 \@ref(intro-R) 章介绍R语言基本概念
    - 第 \@ref(subsetting) 章介绍R语言中的子集选取
+   - 第 \@ref(operators) 章介绍R语言中的运算符
    - 第 \@ref(functions) 章介绍R语言中的函数
 - tidyverse篇
    - 第 \@ref(rmarkdown) 章介绍可重复性报告
@@ -185,7 +188,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r index-3, eval = FALSE}
 my_packages <- 
-   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "namer", "ggfx", "equatiomatic")
+   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "namer", "ggfx", "equatiomatic")
 ```
 
 

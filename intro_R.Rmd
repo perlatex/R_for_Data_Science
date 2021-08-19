@@ -84,14 +84,14 @@ log(8)
 
 
 在R中存储的数据称为**对象**， R语言数据处理实际上就是不断的创建和操控这些对象。创建一个R对象，首先确定一个名称，然后使用
-赋值操作符 `<-`，将数据赋值给它。比如，如果想给变量 x 赋值为5，在命令行中可以这样写 `x <- 5` ，然后回车.
+赋值操作符 `<-` (在Rstudio中同时按下`alt` 和 `-`，就可以产生赋值箭头)，将数据赋值给它。比如，如果想给变量 x 赋值为5，在命令行中可以这样写 `x <- 5` ，然后回车。
 
 ```{r assignment operator}
 x <- 5
 ```
 
 
-
+可以把 x 想象成一个**盒子**，里面装着一个大小等于5的数。
 当键入`x` 然后回车，就打印出 x 的值。当然也可以使用命令`print(x)`，结果一样。
 ```{r print x}
 x
@@ -108,34 +108,34 @@ x + 2
 
 
 ```{r intro-R-9, echo=TRUE, message=TRUE, warning=TRUE}
-die <- 1:6
+d <- 1:6
 ```
 
 
 ```{r intro-R-10, echo=TRUE, message=TRUE, warning=TRUE}
-die
+d
 ```
 
 
 ```{r intro-R-11, echo=TRUE, message=TRUE, warning=TRUE}
-die / 2
+d / 2
 ```
 
 
 ```{r intro-R-12, echo=TRUE, message=TRUE, warning=TRUE}
-die * die
+d * d
 ```
 
 
 
 ```{r intro-R-13, echo=TRUE, message=TRUE, warning=TRUE}
-die %*% die
+d %*% d
 ```
 
 
 
 ```{r intro-R-14, echo=TRUE, message=TRUE, warning=TRUE}
-die %o% die
+d %o% d
 ```
 
 
@@ -155,7 +155,7 @@ knitr::include_graphics("images/data_type.png")
 class(0.0001)
 ```
 
-- 字符串型
+- 字符串型，要用引号
 ```{r intro-R-17}
 "hello"
 "girl"
@@ -183,9 +183,33 @@ class(T)
 3 < 4
 ```
 
-- 因子型
+- 因子型(factor)
 
-因子型可以看作是字符串向量的增强版，比如 "Alice", "Bob", "Carol", "Ted" 是四个人名的字符串，因子型就在字符串的基础上，告诉计算机他们每个人都是有官阶层级的，比如  "排长"，"团长", "师长", "军长", 也就说"Ted"排第一，"Carol"排第二，"Bob"排第三，"Alice" 排最后， 相比字符串而言，多了官阶层级信息。
+因子型可以看作是字符串向量的增强版，它是带有层级（Levels）的字符串向量。比如这里四个季节的名称，他们构成一个向量
+
+```{r}
+four_seasons <- c("spring", "summer", "autumn", "winter")
+four_seasons
+```
+我们使用 factor() 函数可以将向量转换成因子型向量
+
+```{r}
+four_seasons_factor <- factor(four_seasons)
+four_seasons_factor
+```
+
+可以看到，它在输出因子型向量的时候，同时也输出了层级信息，默认的情况，它是按照字符串首字母的顺序排序，也可以指定我们喜欢的顺序，比如按照我对四个季节的喜欢排序
+
+```{r}
+four_seasons <- c("spring", "summer", "autumn", "winter")
+four_seasons_factor <- factor(four_seasons, 
+                              levels = c("summer", "winter", "spring", "autumn")
+                              )
+four_seasons_factor
+```
+
+
+再比如 "Alice", "Bob", "Carol", "Ted" 是四个人名的字符串，因子型就在字符串的基础上，告诉计算机他们每个人都是有官阶层级的，比如  "排长"，"团长", "师长", "军长", 也就说"Ted"排第一，"Carol"排第二，"Bob"排第三，"Alice" 排最后， 相比字符串而言，多了官阶层级信息。
 
 
 ```{r intro-R-22}
@@ -194,6 +218,7 @@ fac <- factor(c("Alice", "Bob", "Carol", "Ted"),
        )
 fac
 ```
+
 ```{r intro-R-23}
 class(fac)
 ```
@@ -202,10 +227,13 @@ class(fac)
 再比如，General上将；Colonel上校；Captain上尉, 如果没有指定层级levels，`c("Colonel", "General", "Captain")`就是一个常规的字符串向量，若指定了层级levels，这个字符串就有了军衔信息.
 ```{r intro-R-23-1}
 factor(c("Colonel", "General", "Captain"), 
-              levels = c("General", "Colonel", "Captain")
+       levels = c("General", "Colonel", "Captain")
        )
 
 ```
+
+
+
 
 
 
@@ -213,11 +241,17 @@ factor(c("Colonel", "General", "Captain"),
 
 - 大家前面看到`x <- 1` 和 `x <- c(1, 2, 3)`，这就是最简单的数据对象，叫**原子型向量**。
 - 用`c`函数将一组数据**构造**成向量，要求每个元素用逗
-号分隔，且每个元素的数据类型是一致的，可以把它想象成**手里拿着一个糖葫芦**
+号分隔，且每个元素的数据类型是一致的，可以把它想象成**手里拿着一个糖葫芦**，或者想象成有很多个格子的抽屉
 
 ```{r intro-R-24, echo=TRUE, message=TRUE, warning=TRUE}
-die <- c(2, 4, 3, 1, 5, 7)
-die
+x <- c(2, 4, 3, 1, 5, 7)
+x
+```
+
+將四季的名称构成一个向量，可以想象他们分别放在一个有四个格子的抽屉里
+```{r}
+four_seasons <- c("spring", "summer", "autumn", "winter")
+four_seasons
 ```
 
 长度为 1 的原子型向量
@@ -245,28 +279,27 @@ c("R", 1, 1L, TRUE)          # logical -> integer -> double -> character.
 
 
 
-- 大家看到前面`die %o% die` 是**矩阵**类型，矩阵就是二维数组
-- 可以用`matrix` 函数创建，可以想象成糖葫芦太多，一个棒子串不下，就多用几根棒子串。
+- 大家看到前面`d %o% d` 是**矩阵**类型，矩阵就是二维数组。可以用`matrix` 函数创建，可以想象成糖葫芦太多，一个棒子串不下，就多用几根棒子串。
 ```{r intro-R-28, echo=TRUE, message=TRUE, warning=TRUE}
 m <- matrix(c(2, 4, 3, 1, 5, 7),
   nrow = 2, ncol = 3, byrow = TRUE
 )
-```
 
-
-```{r intro-R-29, echo=TRUE, message=TRUE, warning=TRUE}
 m
 ```
 
 
-- 数据对象：**数组**
-- `array` 函数生成`n`维数组，可以想象成我们吃的土司面包一样。
+- 数据对象：**数组**，
+
+矩阵被限制为二维，但阵列可以具有任何数量的维度。`array` 函数使用一个 dim 属性创建所需的维数， 在下面的例子中，我们创建了一个包含3个元素的数组，每个元素为 2x2 的矩阵。
+
+
 ```{r intro-R-30, echo=TRUE, message=TRUE, warning=TRUE}
 ar <- array(c(11:14, 21:24, 31:34), dim = c(2, 2, 3))
 ar
 ```
 
-
+可以想象成我们吃的土司面包一样，这里有3层土司，每个土司是一个 2x2 的矩阵。
 
 
 
@@ -526,7 +559,17 @@ R 语言社区非常友好，可以在这里找到你问题的答案
 - 数据框可以装载哪些数据类型的数据？
 - 数据框和列表区别在哪里？
 - ()与[]区别？
+- 形容温度的文字
+```{r, eval=FALSE}
+temperatures <- c("warm", "hot", "cold")
+```
 
+要求转换成因子类型向量，并按照温度有高到低排序
+
+```{r, eval=FALSE, include=FALSE}
+temp_factors <- factor(temperatures, ordered = TRUE, levels = c("cold", "warm", "hot"))
+temp_factors
+```
 
 
 ```{r intro-R-53, echo = F}

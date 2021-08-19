@@ -237,6 +237,23 @@ sum_two("a", "b")
 ```
 
 
+多个条件的，就需要`if-else if-else`语句，比如这里判断一个数是正数、负数还是0
+```{r}
+check_number <- function(x) {
+  if (x < 0) {
+    print("Negative number")
+  } else if (x > 0) {
+    print("Positive number")
+  } else {
+    print("Zero")
+  }
+}
+
+
+x <- 0
+check_number(x)
+```
+
 
 ## 返回多个结果
 
@@ -280,6 +297,21 @@ std <- function(x) {
 ```
 
 
+
+- 自定义函数，它的作用是将输入的身高height(cm)与体重weight(kg)计算之后的BMI结果返回，BMI的计算公式为：
+
+$$
+\mathrm{BMI} = \frac{weight(kg)}{height(m)^2}  
+$$
+```{r, eval=FALSE}
+get_bmi <- function(height, weight) {
+  # ...
+}
+get_bmi(175, 65)
+```
+
+
+
 - 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
 
 ```{r, eval=FALSE}
@@ -287,6 +319,9 @@ mean_above_threshod <- function(vector, threshold) {
   
 }
 ```
+
+
+
 
 ## 阅读
 
