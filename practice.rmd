@@ -600,13 +600,45 @@ ggplot() +
   
 ```
 
+## day16
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+genes <- paste0("gene", 1:5) %>% set_names(.)
+genes
+```
+
+这里有一个列表，其元素`list1, list2, list3`是3个长度不等的向量
+```{r, message=FALSE, warning=FALSE}
+big_list <- list(  
+  list1 = paste0("gene", c(1:2, 6:7)), 
+  list2 = paste0("gene", c(6:7)), 
+  list3 = paste0("gene", c(1, 4:7))
+  )
+big_list
+```
+
+需求：想看下 `r genes` 是否出现在 `list1, list2, list3`中，并统计成下表
+
+
+```{r, echo=FALSE}
+map(genes, ~{
+    gene = .x
+    mm = map_int(big_list, ~ (gene %in% .x))
+  }) %>% 
+    tibble::enframe(x = .) %>% 
+    unnest_wider(value)
+```
+
 
 
 
 ```{r practice99, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(d, data, my_function, text_subtitle)
+rm(d, data, my_function, text_subtitle, genes, big_list)
 ```
 
 
