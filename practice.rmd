@@ -626,10 +626,18 @@ big_list
 ```{r, echo=FALSE}
 map(genes, ~{
     gene = .x
-    mm = map_int(big_list, ~ (gene %in% .x))
+    mm = map_int(big_list, ~ (gene %in% .x)) # 这里出现了2个.x, 属于不同的map，会造成混淆.
   }) %>% 
     tibble::enframe(x = .) %>% 
     unnest_wider(value)
+
+# 因此，推荐
+tibble(name = genes) %>%
+  rowwise() %>%
+  mutate( 
+    list = list(map_int(big_list, ~ (name %in% .x)))
+  ) %>% 
+  unnest_wider(list)
 ```
 
 
