@@ -622,7 +622,6 @@ big_list
 
 需求：想看下 `r genes` 是否出现在 `list1, list2, list3`中，并统计成下表
 
-
 ```{r, echo=FALSE}
 map(genes, ~{
     gene = .x
@@ -630,6 +629,23 @@ map(genes, ~{
   }) %>% 
     tibble::enframe(x = .) %>% 
     unnest_wider(value)
+```
+
+
+```{r, include=FALSE}
+map(genes, ~{
+    gene = .x
+    mm = map_int(big_list, ~ (gene %in% .x)) # 这里出现了2个.x, 属于不同的map，会造成混淆.
+  }) %>% 
+    tibble::enframe(x = .) %>% 
+    unnest_wider(value)
+
+# 这个更简洁
+imap_dfr(genes,.id = "genes", ~{
+  gene = .x                             # 这里出现了2个.x, 属于不同的map，会造成混淆.
+  map_int(big_list, ~ (gene %in% .x))
+}) 
+
 
 # 因此，推荐
 tibble(name = genes) %>%
