@@ -789,7 +789,57 @@ tb %>%
   )
 ```
 
- 
+- 用`:`分隔y列，并且只要前4个，构成新的数据框，并给列名c("e1", "e2", "e3", "e4")
+```{r}
+df <- tibble( 
+  x = 1:2,
+  y = c("A1:A2:A3:A4:A5:A6",  "B1:B2:B3:B4:B5:B6")
+  )
+df
+```
+
+
+```{r}
+## 最好的办法
+df %>% 
+  separate(y, sep = ":", into = c("e1", "e2", "e3", "e4", "e5", "e6"), remove = FALSE) %>%
+  select(1:6)
+
+# str_split(df$y, ":", simplify = TRUE, n = 6)   # or
+str_split_fixed(df$y, ":", 6) %>%                # 返回matrix
+  as_tibble() %>%
+  select(1:4) %>%
+  set_names(c("e1", "e2", "e3", "e4"))
+
+
+# 逻辑清晰，不错的选择
+df %>%
+  mutate(
+    new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map(., ~.x[1:4]) # 返回 list-column: a list of vectors
+  ) %>%
+  unnest_wider(col = new, 1:4)  # 利用原来的列名"new"和1:4，构成新列名new11 new22 new33 new44
+
+
+
+# 笨办法
+df %>%
+  mutate(
+    e1 = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map_chr(1) 
+  ) %>%
+  mutate(
+    e2 = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map_chr(2) 
+  )  %>%
+  mutate(
+    e3 = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map_chr(3) 
+  )  %>%
+  mutate(
+    e4 = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map_chr(4) 
+  )
+```
+
+
+
+
 ```{r tidyverse-tips-63, echo = F}
 # remove the objects
 # rm(list=ls())
