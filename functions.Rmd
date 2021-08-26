@@ -321,6 +321,22 @@ mean_above_threshod <- function(vector, threshold) {
 ```
 
 
+```{r, include=FALSE}
+x <- 1:10
+x[x > 5]
+mean(x[x > 5])
+
+
+
+mean_above_threshod <- function(vector, threshold) {
+  
+  x <- vector[vector > threshold]
+  
+  mean(x, na.rm = TRUE)
+  
+}
+
+```
 
 
 ## 阅读

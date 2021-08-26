@@ -647,6 +647,11 @@ imap_dfr(genes,.id = "genes", ~{
 }) 
 
 
+big_list %>%
+  map_dfc(~ as.numeric(genes %in% .x)) %>%
+  mutate(name = genes, .before = list1)
+
+
 # 因此，推荐
 tibble(name = genes) %>%
   rowwise() %>%
@@ -657,12 +662,41 @@ tibble(name = genes) %>%
 ```
 
 
+## day17
+
+统计每支球队，比赛次数以及赢得比赛的分数之和
+```{r}
+games <- tibble::tribble(
+  ~team, ~outcome, ~points,
+    "A",    "Win",      3,
+    "A",   "Lose",      1,
+    "A",    "Win",      1,
+    "A",    "Win",      2,
+    "B",    "Win",      1,
+    "B",    "Win",      1,
+    "B",   "Lose",      3,
+    "B",   "Lose",      1
+  )
+games
+```
+
+```{r, include=FALSE}
+# 同时对**所有行**以及**部分行**，统计
+# summarize (all group values) and (a conditional subset) in the one summarise()
+
+games %>%
+  group_by(team) %>%
+  summarise(
+    n_game = n(),
+    points_when_won = sum(points[outcome == "Win"])
+  )
+```
 
 
 ```{r practice99, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(d, data, my_function, text_subtitle, genes, big_list)
+rm(d, data, my_function, text_subtitle, genes, big_list, games)
 ```
 
 

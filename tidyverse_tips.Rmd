@@ -758,6 +758,36 @@ sim_rep %>%
 数值模拟我们会在第 \@ref(sampling) 章专门介绍。
 
 
+## 作业
+
+- 新建一列ratio，当sign为"positive"时，ratio等于 A除以B，当sign为"negative"时，ratio等于 B除以A
+```{r}
+tb <- tibble::tribble(
+  ~A, ~B, ~sign,
+  100L, 50L, "positive",
+  50L, 100L, "negative",
+  100L, 50L, "positive",
+  50L, 100L, "negative"
+)
+tb
+```
+
+
+```{r, include=FALSE}
+tb %>%
+  mutate(
+    ratio = if_else(sign == "positive",  A / B, B / A)
+  )
+
+# or
+tb %>%
+  mutate(
+    ratio = case_when(
+      sign == "positive" ~ A / B,
+      TRUE ~ B / A
+    )
+  )
+```
 
  
 ```{r tidyverse-tips-63, echo = F}
