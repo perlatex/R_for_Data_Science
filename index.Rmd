@@ -2,22 +2,17 @@
 title: "数据科学中的 R 语言"
 author: "王敏杰"
 date: "`r Sys.Date()`"
-documentclass: ctexbook
-output:
-  bookdown::gitbook:
-    df_print: paged
-bibliography: [book.bib, packages.bib, yet-another.bib]
+site: bookdown::bookdown_site
+knit: bookdown::render_book
+output: bookdown::bs4_book
+documentclass: book
+bibliography: [references.bib]
 biblio-style: apalike
 link-citations: yes
-colorlinks: yes
-lot: yes
-lof: yes
-geometry: [a4paper, tmargin=2.5cm, bmargin=2.5cm, lmargin=2cm, rmargin=2cm]
-site: bookdown::bookdown_site
-description: "一个简单的中文书示例。"
-github-repo: perlatex/R_for_data_science
+github-repo: perlatex/R4DS-book
+url: "https://bookdown.org/wangminjie/R4DSBook/"
 #cover-image: images/cover.jpg
-always_allow_html: yes
+description: "This book is an overview of how practitioners can acquire, wrangle, visualize, and model data with the R and Stan."
 ---
 
 ```{r setup, include=FALSE}
@@ -39,7 +34,7 @@ knitr::opts_chunk$set(
                       )
 ```
 
-# 前言 {-}
+# 前言 {.unnumbered}
 你好，这里是四川师范大学研究生公选课《数据科学中的R语言》的课程内容。考虑到大家来自不同的学院，有着不同的学科背景，因此讲授的内容不会太深奥（要有信心喔）。
 
 比如在课程中以下内容就不会出现
@@ -58,7 +53,7 @@ summary_monthly_temp <- weather %>%
             std_dev = sd(temp))
 ```
 
-文中大量使用形象化的比喻，从计算机科学的角度来讲，这些比喻是不严谨的，但是可以帮助大家理解其中概念，激励动手操作，提升信心。因为我们的目的，是让大家不害怕编程，而不是把大家培养成程序员。
+R语言是统计编程的第一语言，近几年Tidyverse的推出大大降低了R语言的学习难度。Tidyverse是一系列R包的集合，包含了dplyr、ggplot2、tidyr、stringr等，从数据导入预处理，再到高级转化、可视化、建模和展示。因为其代码清晰可读的编程风格，得到越来越多人的喜爱。文中大量使用形象化的比喻，从计算机科学的角度来讲，这些比喻是不严谨的，但是可以帮助大家理解其中概念，激励动手操作，提升信心。因为我们的目的，是让大家不害怕编程，而不是把大家培养成程序员。
 
 
 在**跟进**本课程的同时， 我强烈推荐大家阅读Hadley Wickham的
@@ -74,10 +69,14 @@ knitr::include_graphics("images/rbook1.png")
 
 - 基础篇
    - 第 \@ref(intro-ds) 章介绍数据科学基础
-   - 第 \@ref(intro-R) 章介绍R语言基本概念
-   - 第 \@ref(subsetting) 章介绍R语言中的子集选取
-   - 第 \@ref(operators) 章介绍R语言中的运算符
+   - 第 \@ref(install) 章介绍安装与环境配置 
+   - 第 \@ref(objects) 章介绍R语言中一切都是对象
+   - 第 \@ref(vectors) 章介绍向量
+   - 第 \@ref(data-structure) 章介绍R语言数据结构
+   - 第 \@ref(operators) 章介绍运算符及向量运算
    - 第 \@ref(functions) 章介绍R语言中的函数
+   - 第 \@ref(subsetting) 章介绍R语言中的子集选取
+
 - tidyverse篇
    - 第 \@ref(rmarkdown) 章介绍可重复性报告
    - 第 \@ref(readr) 章介绍数据读入
@@ -88,7 +87,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(forcats) 章介绍因子类型数据
    - 第 \@ref(purrr) 章介绍函数式编程
    - 第 \@ref(tibble) 章介绍简单数据框
-   - 第 \@ref(ggplot2-geom) 章ggplot2几何对象
+   - 第 \@ref(ggplot2-geom) 章ggplot2几何图形
    - 第 \@ref(ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(ggplot2-guides) 章ggplot2的图例
@@ -129,7 +128,6 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-penguins) 章介绍探索性数据分析-企鹅的故事
    - 第 \@ref(eda-career-decision) 章介绍探索性数据分析-大学生职业决策
    - 第 \@ref(eda-ames-houseprice) 章介绍探索性数据分析-ames房屋价格
-   - 第 \@ref(eda-vaccine) 章介绍探索性数据分析-新冠疫苗有效率的计算
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘

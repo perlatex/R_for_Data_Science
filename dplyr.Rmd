@@ -1,6 +1,5 @@
 # 数据处理 {#dplyr}
 
-
 我们用一个应用场景，复习上两章讲的数据类型和数据结构等概念。比如，这里有一个表格
 
 - 如果构建学生们的成绩，需要用到是**向量**，一列就可以了。
@@ -17,360 +16,433 @@
 
 
 
-
-本章我们介绍tidyverse里数据处理的神器dplyr宏包。首先，我们加载该宏包
-```{r dplyr-1, message = FALSE, warning = FALSE}
+本章我们介绍tidyverse里被誉为“瑞士军刀”的数据处理的工具dplyr宏包。首先，我们加载该宏包
+```{r message = FALSE, warning = FALSE}
 library(dplyr)
 ```
 
 
 
-dplyr 定义了数据处理的规范语法，其中主要包含以下九个主要的函数。
+dplyr 定义了数据处理的规范语法，其中主要包含以下10个主要的函数。
 
 
 
-* `mutate() `, `select() `, `filter() ` 
-* `summarise() `, `group_by()`, `arrange() `
+* `mutate()`, `select()`, `rename()` , `filter()` 
+* `summarise()`, `group_by()`, `arrange()`
 * `left_join()`, `right_join()`， `full_join()`
 
-```{r dplyr-2, out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/dplyr-verbs.png")
-```
 
 
-我们依次介绍
 
+我们用一个案例依次讲解这些函数的功能。假定这里有三位同学的英语和数学成绩
 
-## `mutate() `
-
-假定我们有一数据框，包含三位学生的英语和数学
-
-```{r dplyr-3}
-df <- data.frame(
-      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
-      type = c("english", "math", "english", "math", "english", "math")
-)
-
+```{r message = FALSE, warning = FALSE}
+df <- readr::read_csv(here::here("demo_data", "score.csv"))
 df
 ```
 
-这里有他们的最近的考试成绩，我们想增加到数据框里去
-```{r dplyr-4}
-score2020 <- c(80.2, 90.5, 92.2, 90.8, 82.5, 84.6)
-score2020
+
+
+## 新增一列 `mutate()` 
+
+同学们表现不错，分别得到额外的奖励分 `c(2, 5, 9, 8, 5, 6)`
+
+```{r}
+reward <- c(2, 5, 9, 8, 5, 6)
 ```
 
 
-使用传统的方法
-```{r dplyr-5}
-df$newscore <- score2020
-df
-```
+那么，如何把奖励分加到表中呢？用`mutate()`函数可以这样写\index{mutate()} 
+第一次觉得这个单词很陌生，可以理解为modify
 
-```{r dplyr-6, include=FALSE}
-df <- data.frame(
-      name = c("Alice", "Alice", "Bob", "Bob", "Carol", "Carol"),
-      type = c("english", "math", "english", "math", "english", "math")
-)
+```{r}
+mutate(.data = df, extra = reward) 
 ```
 
 
-dplyr语法这样写
+`mutate()`函数使用语法为 `mutate(.data = df, name = value)`：
 
 
-```{r dplyr-7}
-mutate(df, newscore = score2020)
-```
-
-
-`mutate()` 函数
-
-```{r dplyr-8, eval=FALSE}
-mutate(.data = df, newscore = score2020)
-```
-
-- 第一参数是我们要处理的数据框，比如这里的`df`，
-- 第二个参数是`newscore = score2020`，等号左边的`newscore`是我们打算创建一个新列，而取的列名；
-等号右边是装着学生成绩的**向量**（注意，向量 的长度要与数据框的行数相等，比如这里长度都是6）
+- 第一参数`.data`，接受要处理的数据框，比如这里的`df`。
+- 第二个参数是`Name-value`对, 比如`extra = reward`，等号左边的`extra`是我们打算创建一个新列而取的列名，因为数据框每一列都是要有名字的；
+等号右边的`reward`是装着学生成绩的**向量**。注意，向量 的长度要么为1，要么与数据框的行数相等，比如这里长度都是6。如果长度为1，那么新增列的所有的值都是一样的，如果向量的长度与数据框的行数相等，那么刚好与数据框的行对齐，相当于给每行增加了一个新值。
 
 ```{r dplyr-9, out.width = '60%', echo = FALSE}
 knitr::include_graphics("images/dplyr-mutate.png")
 ```
 
 
-## `管道` %>%
-
-这里有必要介绍下管道操作符[ `%>%` ](https://magrittr.tidyverse.org/).
-
-```{r dplyr-10}
-c(1:10)
+因为`mutate()`函数处理的是数据框，并且固定放置在第一位置上（**几乎所有dplyr的函数都是这样要求的**），所以这个`.data`可以偷懒不写，直接写`mutate(df, extra = reward)`。另外，如果想同时新增多个列，只需要提供多个`Name-value`对即可，比如
+```{r, eval=FALSE}
+mutate(df, 
+       extra1 = c(2, 5, 9, 8, 5, 6),
+       extra2 = c(1, 2, 3, 3, 2, 1),
+       extra3 = c(8)
+       ) 
 ```
 
-```{r dplyr-11}
+## 管道 `%>%`
+
+实际运用中，我们经常要使用函数，比如计算向量`c(1:10)`所有元素值的和
+
+```{r}
 sum(c(1:10))
 ```
 
 
-与下面的写法是等价的,
-```{r dplyr-12}
+现在有个与上面的等价的写法，就是使用管道操作符[ `%>%` ](https://magrittr.tidyverse.org/)。\index{\%>\%} 
+```{r}
 c(1:10) %>% sum()
 ```
 
-这条语句的意思，向量`c(1:10)` 通过管道操作符 `%>%` ，传递到函数`sum()`的第一个参数位置，即`sum(c(1:10))`， 这个`%>%`管道操作符还是很形象的，
+这条语句的意思是`f(x)` 写成 `x %>% f()`，这里向量 `c(1:10)` 通过管道操作符 `%>%` ，传递到函数`sum()`的第一个参数位置，即`sum(c(1:10))`， 这个 `%>%` 管道操作符还是很形象的。
 
-```{r dplyr-13, out.width = '50%', echo = FALSE}
+```{r out.width = '45%', echo = FALSE}
 knitr::include_graphics("images/pipe1.png")
 ```
 
 
 
-当对执行多个函数操作的时候，就显得格外方便，代码可读性更强。
+当执行多个函数操作的时候，管道操作符 `%>%` 就显得格外方便，代码可读性也更强。比如
 
-```{r dplyr-14}
+```{r}
 sqrt(sum(abs(c(-10:10))))
 ```
 
-
-```{r dplyr-15}
-# sqrt(sum(abs(c(-10:10)))) 
+使用管道操作符
+```{r}
 c(-10:10) %>% abs() %>% sum() %>% sqrt()
 ```
 
 
+那么，之前增加学生奖励分成绩的语句 `mutate(df, extra = reward)`，也可以使用管道
 
-
-
-
-那么，上面增加学生成绩的语句`mutate(df, newscore = score2020)`就可以使用管道
-
-```{r dplyr-16, out.width = '50%', echo = FALSE}
+```{r out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/pipe2.png")
 ```
 
 
 
-```{r dplyr-17}
-# 等价于
-df %>% mutate(newscore = score2020)
+```{r}
+# using `%>%`
+df %>% mutate(extra = reward) 
 ```
-是不是很赞？
+是不是很赞。现在有个问题，此时 `df` 有没发生变化？是否包含额外的奖励分呢？
+事实上，此时`df`并没有发生改变，还是原来的状态。如果需要保存计算结果，就需要把计算的结果重新赋值给新的对象，当然，也可以赋值给`df`本身，这样`df`存储的数据就**更新**为计算后的结果。
 
 
-注意此时`df`没有变化喔。好比把`df` 传给了`f()` 执行了`f(df)`, 但`df`本身没有变化。
-如果想保留`f(df)`结果，需要把`f(df)`赋值给新的对象，当然也可以赋值给`df`, 即替换.
-
-```{r dplyr-18}
-df <- df %>% mutate(newscore = score2020)
+好，现在我们把添加奖励分、计算总成绩和保存结果这三个步骤一气呵成的完成
+```{r}
+df <- df %>% 
+  mutate(extra = reward) %>% 
+  mutate(total = score + extra)
 df
 ```
 
 
 
 
-## `select() `
 
-`select() `顾名思义`选择`，就是选择数据框的某一列，或者某几列
 
+## 选取列 `select()`
+
+`select() `顾名思义选择，就是选择数据框的某一列，或者某几列。
 
 ```{r dplyr-19, out.width = '80%', echo = FALSE}
 knitr::include_graphics("images/dplyr-select.png")
 ```
 
 
-我们还是以学生成绩的数据框为例
-
-我们可以选择`name`列, 结果是只有一列的数据框（仍然数据框喔）
-
-- 使用传统的方法
-```{r dplyr-20}
-df["name"]
-```
+我们以上面学生成绩的数据框为例，这里选择`name`列 \index{select()} 
 
 
-- dplyr 的方法
-```{r dplyr-21}
+```{r}
 df %>% select(name)
 ```
 
-
-- 如果选取多列，用dplyr 就只是再写一个就行了
-```{r dplyr-22}
-df %>% select(name, newscore)
+注意，结果是只有一列的数据框（仍然数据框喔，**数据框进数据框出是dplyr函数的第二个特点**）。如果要选取多列，就再多写几个列名就行了
+```{r}
+df %>% select(name, extra)
+df %>% select(name, score, extra, total)
 ```
 
 
-如果不想要某列， 可以在变量前面加`-`， 结果与上面的一样
-```{r dplyr-23}
+如果不想要某列，可以在变量前面加 `-` 或者 `!`，两者的结果是一样的。
+```{r}
 df %>% select(-type)
-```
-
-
-或者"!"，结果与上面的一样
-```{r dplyr-23-1, eval=FALSE}
 df %>% select(!type)
 ```
 
 
+也可以通过位置索引进行选取，比如选取头三列
+```{r}
+df %>% select(1, 2, 3)
+df %>% select(2:3)
+```
 
-## `filter() `
 
-`select`是列方向的选择，我们还可以对数据行方向的选择和筛选，选出符合我们条件的某些行^[
-注意，这里filter()函数不是字面上“过滤掉”的意思，而是保留符合条件的行，也就说keep，不是drop的意思。 第一次会有一点点迷惑，我相信习惯就好了]
+
+如果要选取数据框的列很多，我们也可以先观察列名的特征，用特定的函数进行选取，比如选取以"s"开头的列
+```{r}
+df %>% select(starts_with("s"))
+
+```
+
+选取以"e"结尾的列
+```{r}
+df %>% select(ends_with("e"))
+```
+
+选取含有以"score"的列
+```{r}
+df %>% select(contains("score"))
+```
+
+当然，也可以通过变量的类型来选取，比如选取所有字符串类型的列
+```{r}
+df %>% select(where(is.character))
+```
+
+选取所有数值类型的列
+```{r}
+df %>% select(where(is.numeric))
+```
+
+
+
+选取所有数值类型的并且以"s"开头的列
+```{r}
+df %>% select(where(is.numeric) & starts_with("t"))
+```
+
+选取以"s"开头或者以"e"结尾的列
+```{r}
+df %>% select(starts_with("s") | ends_with("e"))
+```
+
+
+```{r}
+df %>% select(!starts_with("s"))
+```
+
+
+## 修改列名 `rename()`
+
+用`rename()`修改列的名字, 具体方法是`rename(.data, new_name = old_name)`，和`mutate()`一样，等号左边是新的变量名，右边是已经存在的变量名（这是dplyr函数的第三个特征^[有一个例外是recode函数]）。比如，我们这里将`total`修改为`total_score`
+\index{rename()} 
+
+```{r}
+df %>% 
+  select(name, type, total) %>% 
+  rename(total_score = total)
+```
+
+
+
+## 筛选 `filter()`
+
+
+前面`select()`是列方向的选择，而用`filter()`函数，我们可以对数据框**行方向**进行筛选，选出符合特定条件的某些行。
+
 
 ```{r dplyr-24, out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-filter.png")
 ```
 
-比如这里把**成绩高于90分的**同学筛选出来
+注意，这里filter()函数不是字面上“过滤掉”的意思，而是保留符合条件的行，也就说keep，不是drop的意思。 第一次会有一点点迷惑，我相信习惯就好了。
 
-```{r dplyr-25}
-df %>% filter(newscore >= 90)
+比如这里把**成绩等于90分的**同学筛选出来 \index{filter()} 。
+```{r, error=TRUE}
+df %>% filter(score = 90)
+```
+
+注意，这里判断是否相等要使用 `==` 而不是 `=`
+```{r, error=TRUE}
+df %>% filter(score == 90)
+```
+
+R提供了其他比较关系的算符: `<`, `>`, `<=`, `>=`, `==` (equal), and `!=` (not equal). 
+
+比如把**成绩大于等于80分的**同学筛选出来
+```{r}
+df %>% filter(score >= 80)
 ```
 
 
+也可以限定多个条件进行筛选, 比如，限定英语学科，同时要求成绩高于75分的所有条目筛选出来
 
-也可以限定多个条件进行筛选, 英语成绩高于90分的筛选出来
-```{r dplyr-26}
-df %>% filter(type == "english", newscore >= 90)
+```{r}
+df %>% filter(type == "english", score >= 75)
+```
+
+也就说，逗号分隔的两个条件都要满足。
+
+
+### 逻辑算符
+
+多个参数的情形，本质上是逻辑与的关系，每个条件都返回TRUE
+
+```{r}
+df %>% filter(type == "english" & score >= 75)
+```
+当然也可以使用其他的布尔算符 (& is “and,” | is “or,” and ! is “not.”).
+
+比如，以下代码找出成绩等于70**或者**等于90的行
+```{r}
+df %>% filter(score == 70 | score == 90)
+```
+在filter()中有一个非常有效的等价方法，即使用 `x %in% y`，意思是**如果当前x的值是向量y的一员，那么就选出当前行**，因此，我们可以重写上面代码:
+
+```{r}
+df %>% filter(score %in% c(70, 90))
+```
+
+当然还可以配合一些函数使用，比如把最高分的同学找出来
+```{r}
+df %>% filter(score == max(score))
+```
+
+把成绩高于均值的找出来
+```{r}
+df %>% filter(score > mean(score))
 ```
 
 
-
-
-## `summarise() `统计
-
+## 统计汇总 `summarise()`
 
 ```{r dplyr-27, out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/dplyr-summarize.png")
 ```
 
+`summarise() `函数非常强大，主要用于统计汇总，往往与其他函数配合使用，比如计算所有同学考试成绩的均值 \index{summarise()} 
 
-
-
-`summarise() `主要用于统计，往往与其他函数配合使用，比如计算所有同学考试成绩的均值
-```{r dplyr-28}
-df %>% summarise( mean_score = mean(newscore))
+```{r}
+df %>% summarise(mean_score = mean(score))
 ```
 
 
-比如，计算所有同学的考试成绩的标准差
-```{r dplyr-29}
-df %>% summarise( mean_score = sd(newscore))
+计算所有同学的考试成绩的标准差
+```{r}
+df %>% summarise( sd_score = sd(score))
 ```
 
 
-
-还同时完成多个统计
-```{r dplyr-30}
+还可以同时完成多个统计
+```{r}
 df %>% summarise(
-  mean_score = mean(newscore),
-  median_score = median(newscore),
-  n = n(),
-  sum = sum(newscore)
+  mean_score   = mean(score),
+  median_score = median(score),
+  n            = n(),
+  sum          = sum(score)
 )
 ```
 
 
-注意，`mutate()`, `select()` 和 `filter()`是在原数据框的基础上增减, 而`summarise()`返回的是一个新的数据框。
+注意，`mutate()`, `select()`， `rename()` 和 `filter()`是在原数据框的基础上增减, 而`summarise()`返回的是一个新的数据框。
 
 
-## `group_by()`分组
 
-```{r dplyr-31, out.width = '85%', echo = FALSE}
+
+## 分组统计 `group_by()` 
+
+实际运用中，`summarise() `函数往往配合`group_by()`一起使用，即，先分组再统计。
+
+```{r dplyr-31, out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/dplyr-group-by.png")
 ```
 
 
 
+比如，我们想统计每个学生的平均成绩，那么就需要先按照学生`name`分组，然后每组求平均 \index{group\_by()} 
 
-事实上，`summarise() `往往配合`group_by()`一起使用，即，先分组再统计。比如，我们想统计每个学生的平均成绩，那么就需要先按学生`name`分组，然后求平均
-```{r dplyr-32}
-df %>% 
-  group_by(name) %>% 
-  summarise( 
-    mean_score = mean(newscore),
-   sd_score = sd(newscore)
+```{r}
+df %>%
+  group_by(name) %>%
+  summarise(
+    mean_score = mean(total),
+    sd_score   = sd(total)
   )
 ```
 
 
 
 
+## 排序 `arrange()`
 
-## `arrange() `排序
 
-```{r dplyr-33, out.width = '65%', echo = FALSE}
+`arrange()`这个很好理解的，就是按照某个变量排序。
+
+```{r dplyr-33, out.width = '55%', echo = FALSE}
 knitr::include_graphics("images/dplyr-arrange.png")
 ```
 
 
-这个很好理解的。比如我们按照考试成绩从低到高排序，然后输出
-```{r dplyr-34}
-df %>% arrange(newscore)
+比如我们按照考试总成绩从低到高排序，然后输出 \index{arrange()} 
+
+```{r}
+df %>% arrange(total)
 ```
 
 
-如果从高到低排序呢，有两种方法:
-```{r dplyr-35}
-df %>% arrange(-newscore)
+默认情况是从小到大排序，如果从高到低降序排序呢，有两种方法，第一种方法是在用于排序的变量前面加 `-` 号，
+```{r}
+df %>% arrange(-total)
 ```
 
 
-
-写成下面这种形式也是降序排列，但可读性更强些
-```{r dplyr-36}
-df %>% arrange(desc(newscore))
+第二种方法可读性更强些，需要使用`desc()`函数
+```{r}
+df %>% arrange(desc(total))
 ```
 
 
-也可对多个变量先后排序。先按学科排，然后按照成绩从高到底排序
-```{r dplyr-37}
+也可对多个变量依次排序。比如，我们先按学科类型排序，然后按照成绩从高到底降序排列
+```{r}
 df %>% 
-  arrange(type, desc(newscore))
+  arrange(type, desc(total))
 ```
 
 
 
+## 左联结 `left_join()` 
 
+实际操作中，也会遇到数据框合并的情形。假定我们已经统计了每个同学的平均成绩，存放在`df1`
 
-## `left_join()`
-数据框合并，假定我们已经统计了每个同学的平均成绩，存放在`df1`
+\index{left\_join()}
 
-```{r dplyr-38}
+```{r}
 df1 <- df %>% 
   group_by(name) %>% 
-  summarise( mean_score = mean(newscore) )
-
+  summarise( 
+    mean_score = mean(total) 
+  )
 df1
 ```
 
 
 
-我们有新一个数据框`df2`，包含同学们的年龄信息
-```{r dplyr-39}
+现在我们又有新一个数据框`df2`，它包含一些同学的年龄信息
+```{r}
 df2 <- tibble(
-      name = c("Alice", "Bob"),
-      age =  c(12, 13)
+      name = c("Alice", "Bob", "Dave"),
+      age =  c(12, 13, 14)
 )
-
 df2
 ```
 
 
+可以使用 `left_join()`函数 把两个数据框`df1`和`df2`合并连接在一起。这两个数据框是通过姓名`name`连接的，因此需要指定`by = "name"`，代码如下
 
 
-可以用 `left_join`把两个数据框`df1`和`df2`，合并连接再一起, 两个数据框是通过姓名`name`连接的，因此需要指定`by = "name"`
-
-
-```{r dplyr-40}
+```{r}
 left_join(df1, df2, by = "name")
 ```
 
 
+用管道 `%>%`写，可读性更强
 
-
-```{r dplyr-41, message=FALSE}
-# 
+```{r, message=FALSE}
+# using %>%
 df1 %>% left_join(df2, by = "name")
 ```
 
@@ -378,29 +450,79 @@ df1 %>% left_join(df2, by = "name")
 
 
 
-
-## `right_join()`
-
-我们再试试`right_join()`
-
-```{r dplyr-42, message=FALSE}
-df1 %>% right_join(df2, by = "name")
-```
-Carol同学的信息没有了？ 大家想想又为什么呢？
+## 右联结 `right_join()`
 
 
-事实上，答案就在函数的名字上，`left_join()`是左合并，即以左边数据框`df1`中的学生姓名`name`为准，在右边数据框`df2`里，有`Alice`和`Bob`的年龄，那么就对应合并过来，没有`Carol`，就为缺失值`NA`
+我们再试试`right_join()`  \index{right\_join()}
 
-`right_join()`是右合并，即以右边数据框`df2`中的学生姓名`name`为准，只有`Alice`和`Bob`，因此而`df1`只需要把`Alice`和`Bob`的信息粘过来。
-
-
-
-```{r dplyr-42-1, out.width = '99%', echo = FALSE}
-knitr::include_graphics("images/join_examples.jpg")
+```{r, message=FALSE}
+df1 %>% dplyr::right_join(df2, by = "name")
 ```
 
+Carol同学的信息没有显示？ Dave 同学显示了但没有考试成绩？大家想想又为什么呢？
 
 
+事实上，答案就在函数的名字上，`left_join()`是左联结，即以左边数据框`df1`中的学生姓名`name`为准，在右边数据框`df2`里，有`Alice`和`Bob`的年龄，那么就对应联结过来，没有`Carol`的年龄，自然就为缺失值`NA`。
+
+`right_join()`是右联结，要以右边数据框`df2`中的学生姓名`name`为准，即`Alice`，`Bob`和`Dave`，而`df1`只有`Alice`和`Bob`的信息，没有`Dave`的信息，因此`Dave`对应的成绩为`NA`。
+
+## 满联结 `full_join()`
+
+有时候，我们不想丢失项，可以使用`full_join()`，该函数确保条目是完整的，信息缺失的地方为`NA`。 \index{full\_join()} 
+
+```{r, message=FALSE}
+df1 %>% full_join(df2, by = "name")
+```
+
+
+## 习题
+
+1、总结 dplyr 系列函数的三个特征。
+
+2、用本章中的数据框`df`运行以下代码，然后理解代码含义。
+```{r, eval=FALSE}
+df %>% 
+  filter(score > mean(score))
+```
+
+3、 统计每位同学成绩高于75分的科目数
+
+
+```{r eval=FALSE, include=FALSE}
+df %>% 
+  group_by(name) %>% 
+  mutate(num_of_bigger_than_75 = sum(score >75))
+```
+
+
+4、运行以下代码，比较差异在什么地方。
+```{r, eval=FALSE}
+df %>%
+  group_by(name) %>%
+  summarise(mean_score = mean(score))
+```
+
+```{r, eval=FALSE}
+df %>%
+  group_by(name) %>%
+  mutate(mean_score = mean(score))
+```
+
+5、排序，要求按照score从大往小排，但希望all是最下面一行。
+```{r, echo=FALSE}
+d <-
+  tibble::tribble(
+    ~name, ~score,
+    "a1", 2,
+    "a2", 5,
+    "a3", 3,
+    "a4", 7,
+    "a5", 6,
+    "all", 23
+  )
+
+d
+```
 
 ## 延伸阅读
 
@@ -411,24 +533,4 @@ knitr::include_graphics("images/join_examples.jpg")
 ```{r dplyr-43, echo=FALSE}
 # a single file
 xfun::embed_file('./data/nycflights.Rmd')
-```
-
-- 统计每位同学成绩高于75分的科目数
-
-
-```{r eval=FALSE, include=FALSE}
-df %>% 
-  group_by(name) %>% 
-  mutate(num_of_bigger_than_75 = sum(score >75))
-```
-
-
-
-```{r dplyr-44, echo = F}
-# remove the objects
-rm(df, df1, df2, score2020)
-```
-
-```{r dplyr-45, echo = F, message = F, warning = F, results = "hide"}
-pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

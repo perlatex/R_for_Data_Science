@@ -1,0 +1,391 @@
+# ggplot2之可视化进阶 {#ggplot2-geom2}
+
+
+## 图形语法
+
+```{r ggplot2-geom2-1, out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/ggplot_template.png")
+```
+
+## 图形部件
+
+1. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
+
+2. `aes`: 数据框中的变量**映射**到图形属性。什么叫图形属性？就是图中点的位置、形状，大小，颜色等眼睛能看到的东西。什么叫映射？就是一种对应关系，比如数学中的函数`b = f(a)`就是`a`和`b`之间的一种映射关系, `a`的值决定或者控制了`b`的值，在ggplot2语法里，`a`就是我们输入的数据变量，`b`就是图形属性， 这些图形属性包括：
+    + x（x轴方向的位置）
+    + y（y轴方向的位置）
+    + color（点或者线等元素的颜色）
+    + size（点或者线等元素的大小）
+    + shape（点或者线等元素的形状）
+    + alpha（点或者线等元素的透明度）
+    
+3. `geoms`: 几何对象，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何对象推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
+
+    + `geom_bar()`
+    + `geom_density()`
+    + `geom_freqpoly()`
+    + `geom_histogram()`
+    + `geom_violin()`
+    + `geom_boxplot()`
+    + `geom_col()`
+    + `geom_point()`
+    + `geom_smooth()`
+    + `geom_tile()`
+    + `geom_density2d()`
+    + `geom_bin2d()`
+    + `geom_hex()`
+    + `geom_count()`
+    + `geom_text()`
+    + `geom_sf()`
+    
+    
+    
+```{r ggplot2-geom2-2, out.width = '70%', echo = FALSE}
+knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
+```
+
+
+4. `stats`:  统计变换
+5. `scale`:  标度
+6. `coord`:  坐标系统
+7. `facet`:  分面
+8. `theme`:  主题风格
+9. `save`:   保存图片
+
+
+
+
+## 应用
+
+还是用企鹅数据
+```{r ggplot2-geom2-3, message=FALSE, warning=FALSE}
+library(tidyverse)
+penguins <- read_csv("./demo_data/penguins.csv") %>% 
+            drop_na()
+penguins
+```
+
+
+
+```{md ggplot2-geom2-4}
+前面讲到R语言数据类型有字符串型、数值型、因子型、逻辑型、日期型等，ggplot2会将字符串型、因子型、逻辑型、日期型默认为**离散变量**，而数值型默认为**连续变量**。我们在而呈现数据的时候，可能会同时用到多种类型的数据，比如
+
+* 一个离散
+* 一个连续
+
+* 两个离散
+* 两个连续
+* 一个离散, 一个连续
+
+* 三个连续
+
+```
+
+
+### 柱状图
+常用于一个离散变量
+
+
+```{r ggplot2-geom2-5}
+penguins %>% 
+    ggplot(aes(x = species)) +
+    geom_bar(fill = "gray50")
+```
+
+
+
+```{r ggplot2-geom2-6}
+penguins %>% 
+  count(species) %>% 
+  ggplot(aes(x = species, y = n)) +
+  geom_col()
+```
+
+
+### 直方图
+常用于一个连续变量
+```{r ggplot2-geom2-7}
+penguins %>% 
+    ggplot(aes(x = bill_length_mm, color = species)) +
+    geom_histogram() 
+```
+
+
+```{r ggplot2-geom2-8}
+penguins %>% 
+    ggplot(aes(x = bill_length_mm, color = species)) +
+    geom_density()
+```
+
+
+```{r ggplot2-geom2-9}
+penguins %>% 
+  ggplot(aes(x = bill_depth_mm, 
+             y = after_stat(count / max(count)))
+         )+
+  geom_histogram() +
+  geom_density()
+```
+
+
+
+### 抖散图
+点重叠的处理方案
+
+```{r ggplot2-geom2-10}
+penguins %>% 
+    ggplot(aes(x = species, y = bill_length_mm)) +
+    geom_jitter()
+```
+
+
+
+
+### 箱线图
+一个离散变量 + 一个连续变量
+
+```{r ggplot2-geom2-11}
+penguins %>% 
+    ggplot(aes(x = species, y = bill_length_mm)) +
+    geom_boxplot() +
+    geom_jitter()
+```
+
+
+### 小提琴图
+```{r ggplot2-geom2-12}
+penguins %>% 
+    ggplot(aes(x = species, y = bill_length_mm)) +
+    geom_violin(fill = "grey90") +
+    geom_jitter()
+```
+
+
+### sina图
+```{r ggplot2-geom2-13}
+library(ggforce)
+penguins %>%
+  ggplot(aes(x = species, y = bill_length_mm, fill = species)) +
+  geom_violin() +
+  ggforce::geom_sina(alpha = 0.5)
+
+```
+
+### 山峦图
+常用于一个离散变量 + 一个连续变量
+
+```{r ggplot2-geom2-14}
+library(ggridges)
+penguins %>%
+  ggplot(aes(y = species, x = bill_length_mm, fill = species)) +
+  ggridges::geom_density_ridges(alpha = 0.5)
+
+```
+
+
+
+### 云雨图
+
+```{r ggplot2-geom2-15}
+source("scripts/half_flat_violinplot.R")
+
+penguins %>%
+    ggplot(aes(species,flipper_length_mm, fill = species)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0)) +
+    geom_jitter(aes(color = species),
+                width=0.15, alpha = 0.6) +
+    geom_boxplot(width = .1, outlier.shape = NA, alpha = 0.5) +
+    
+    coord_flip()+
+    theme(legend.position="none")
+```
+
+
+### 散点图
+
+常用于两个连续变量
+
+```{r ggplot2-geom2-16}
+penguins %>% 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+    geom_point(aes(color = species)) +
+    geom_smooth(method = "lm")
+```
+
+
+### 分面
+
+分组呈现
+
+```{r ggplot2-geom2-17}
+penguins %>% 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+    geom_point(aes(color = species)) +
+    facet_wrap(vars(species))
+```
+
+
+```{r ggplot2-geom2-18}
+penguins %>% 
+    ggplot(
+      aes(x = bill_length_mm, y = bill_depth_mm)
+      ) +
+    geom_point(data = dplyr::select(penguins, -species), 
+               color = "gray80") +
+    geom_point(aes(color = species)) +
+    facet_wrap(vars(species))
+```
+
+不要试图去理解它，感受它
+
+```{r ggplot2-geom2-19, out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/tenet.jpg")
+```
+
+
+
+### 瓦片图
+
+```{r ggplot2-geom2-20}
+penguins %>%
+  group_by(species, sex) %>% 
+  summarise(
+    mean_weight = mean(body_mass_g)
+  ) %>% 
+  ungroup() %>% 
+  
+  ggplot(aes(x = species, y = sex, fill = mean_weight)) +
+  geom_tile() +
+  geom_text(aes(label = round(mean_weight, 2)))
+
+
+```
+
+
+
+### 关联图
+```{r ggplot2-geom2-21}
+corm <- 
+  penguins %>%
+  select(ends_with("_mm")) %>% 
+  corrr::correlate(diagonal = 1) %>%
+  corrr::shave(upper = FALSE) 
+corm
+```
+
+
+
+```{r ggplot2-geom2-22}
+corm <- corm %>%
+  pivot_longer(
+    cols = -rowname, 
+    names_to = "colname", 
+    values_to = "corr"
+  ) %>% 
+  mutate(rowname = fct_inorder(rowname),
+         colname = fct_inorder(colname))
+corm
+```
+
+
+```{r ggplot2-geom2-23}
+corm %>% 
+  ggplot(aes(rowname, fct_rev(colname), fill = corr)) + 
+  geom_tile() + 
+  geom_text(aes(
+    label = format(round(corr, 2), nsmall = 2),
+    color = abs(corr) < .75
+  )) +
+  coord_fixed(expand = FALSE) +
+  scale_color_manual(values = c("white", "black"), 
+                     guide = "none") +
+  scale_fill_distiller(
+    palette = "PuOr", na.value = "white",
+    direction = 1, limits = c(-1, 1)
+  ) + 
+  labs(x = NULL, y = NULL) +
+  theme(panel.border = element_rect(color = NA, fill = NA),
+        legend.position = c(.85, .8))
+```
+
+
+### 主题风格
+
+
+```{r ggplot2-geom2-24}
+penguins %>% 
+    ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point() +
+    theme_minimal()
+```
+
+
+```{r ggplot2-geom2-25}
+library(ggthemes)
+penguins %>% 
+    ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point() +
+    ggthemes::theme_economist()
+```
+
+
+
+
+
+### 标度
+使用自己喜欢的颜色
+
+
+```{r ggplot2-geom2-26}
+penguins %>% 
+    ggplot(aes(x = bill_depth_mm, 
+               y = bill_length_mm,
+               color = sex)) +
+    geom_point() +
+    scale_color_manual(
+        values = c("female" = "#008148", "male" = "#ef8a17")
+    )
+```
+
+
+## 课后思考题
+
+哪画图的代码中，哪两张图的结果是一样？为什么？
+
+```{r ggplot2-geom2-27, eval=FALSE}
+library(tidyverse)
+
+tbl <-
+  tibble(
+    x = rep(c(1, 2, 3), times = 2),
+    y = 1:6,
+    group = rep(c("group1", "group2"), each = 3)
+  )
+
+
+ggplot(tbl, aes(x, y)) + geom_line()
+
+ggplot(tbl, aes(x, y, group = group)) + geom_line()
+
+ggplot(tbl, aes(x, y, fill = group)) + geom_line()
+
+ggplot(tbl, aes(x, y, color = group)) + geom_line()
+```
+
+
+## 参考资料
+
+
+* [Chapter 3: Data Visualisation](http://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science*
+* [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf)
+
+
+```{r ggplot2-geom2-28, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(penguins, geom_flat_violin, `%||%`, GeomFlatViolin, corm)
+```
+
+```{r ggplot2-geom2-29, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

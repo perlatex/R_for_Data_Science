@@ -167,7 +167,6 @@ tb1 %>%
   geom_line(size = 2) +
   geom_point(data = d1) +
   scale_color_manual(
-    name = "标记",
     values = c(
       "Men_score" = "blue",
       "Women_score" = "red",
@@ -175,10 +174,10 @@ tb1 %>%
       "Predict_Women" = "#C8553D"
     ),
     labels = c(
-      "Men_score" = "男性历史成绩",
-      "Women_score" = "女性历史成绩",
-      "Predict_Men" = "男性预测成绩",
-      "Predict_Women" = "女性预测成绩"
+      "Men_score" = "Men score",
+      "Women_score" = "Women score",
+      "Predict_Men" = "Men Predict score",
+      "Predict_Women" = "Women Predict score"
     )
   ) +
   scale_x_continuous(

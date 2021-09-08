@@ -53,7 +53,7 @@ hcl_palettes("diverging", n = 7, plot = TRUE)
 ```{r ggplot2-colors-41}
 #colorspace::diverging_hcl(n = 7, "Dark 2")
 #colorspace::qualitative_hcl(4, palette = "myset")
-colorspace::sequential_hcl(n =7, palette = "Peach")
+colorspace::sequential_hcl(n = 7, palette = "Peach")
 ```
 当然，在用之前，我们先检验下
 
@@ -237,13 +237,12 @@ temps_months %>%
 
 ## 配色
 
-```{block ggplot2-colors-17, type="danger"}
+
 这里有个小小的提示：
 
 - 尽可能不避免使用`"red"`, `"green"`, `"blue"`, `"cyan"`, `"magenta"`, `"yellow"`颜色
 - 使用相对柔和的颜色`"firebrick"`, `"springgreen4"`, `"blue3"`, `"turquoise3"`, `"darkorchid2"`, `"gold2"`，会让人觉得舒服
 
-```
 
 
 可以对比下

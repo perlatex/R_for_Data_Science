@@ -199,15 +199,14 @@ str_squish(" excess    whitespace in a string be gone!")
 3:10 %in% c(1:5)
 ```
 
-有时候需要一个**不属于**的操作符
+有时候需要一个**不属于**的操作符，可以自定义一个不属于操作符
 ```{r tidyverse-tips-23}
-# 自定义一个不属于操作符
 `%nin%` <- Negate(`%in%`)
 3:10 %nin% c(1:5)
 ```
 
+或者使用purrr::negate()自定义反向操作符
 ```{r tidyverse-tips-24}
-# 使用purrr::negate()自定义反向操作符
 `%nin%` <- purrr::negate(`%in%`)
 3:10 %nin% c(1:5)
 ```
@@ -313,13 +312,13 @@ gapminder %>%
   )
 ```
 
-summarize()也可以生成一个list，
+summarize()也可以生成一个list，比如下面做单样本的t检验
 
 ```{r tidyverse-tips-32}
 library(gapminder)
 gapminder %>%
   group_by(continent) %>%
-  summarise(test = list(t.test(gdpPercap))) %>% # 单样本的t检验
+  summarise(test = list(t.test(gdpPercap))) %>% 
 
   mutate(tidied = purrr::map(test, broom::tidy)) %>%
   unnest(tidied) %>%
@@ -332,10 +331,13 @@ gapminder %>%
 ```
 
 
+
+或者线性回归
+
 ```{r tidyverse-tips-33}
 gapminder %>%
   group_by(continent) %>%
-  summarise(test = list(lm(lifeExp ~ gdpPercap))) %>% # 线性回归
+  summarise(test = list(lm(lifeExp ~ gdpPercap))) %>% 
 
   mutate(tidied = purrr::map(test, broom::tidy, conf.int = TRUE)) %>%
   unnest(tidied) %>%
@@ -414,7 +416,7 @@ gapminder %>%
   theme(legend.position = "none",
         axis.text = element_text(size = 11)
         ) +
-  labs(title = "我的标题", x = "")
+  labs(title = "My title", x = "")
 ```
 
 
@@ -441,7 +443,7 @@ gapminder %>%
   theme(legend.position = "none",
         axis.text = element_text(size = 11)
         ) +
-  labs(title = "我的标题", x = "")
+  labs(title = "My title", x = "")
 ```
 
 
@@ -473,28 +475,32 @@ gapminder %>%
 
 ## fct_lump
 
-门诊病症的流水记录
+门诊病症的流水记录：
+"Stuffy nose （鼻塞）", "Runny（流涕）", "Fever（发热）", "Diarrhea（腹泻）", "Vomiting（呕吐）", 
+"Cough（咳嗽）", "Sore throat（咽痛）", "Fatigue（乏力）", "Abdominal pain（腹痛）", "Delusion（妄想）", 
+"Auditory hallucination（幻听）", "Insomnia（失眠）", "Anemia（贫血）", "Hyperactivity（多动）", 
+"Chest pain（胸痛）", "Chest tightness（胸闷）", 
 
 ```{r tidyverse-tips-43}
 tb <- tibble::tribble(
-  ~disease,  ~n,
-      "鼻塞", 112,
-      "流涕", 130,
-      "发热",  89,
-      "腹泻",   5,
-      "呕吐",  12,
-      "咳嗽", 102,
-      "咽痛",  98,
-      "乏力",  15,
-      "腹痛",   2,
-      "妄想",   3,
-      "幻听",   6,
-      "失眠",   1,
-      "贫血",   8,
-      "多动",   2,
-      "胸痛",   4,
-      "胸闷",   5
-  )
+  ~disease, ~n,
+  "Stuffy nose", 112,
+  "Runny", 130,
+  "Fever", 89,
+  "Diarrhea", 5,
+  "Vomiting", 12,
+  "Cough", 102,
+  "Sore throat", 98,
+  "Fatigue", 15,
+  "Abdominal pain", 2,
+  "Delusion", 3,
+  "Auditory hallucination", 6,
+  "Insomnia", 1,
+  "Anemia", 8,
+  "Hyperactivity", 2,
+  "Chest pain", 4,
+  "Chest tightness", 5
+)
 ```
 
 ```{r tidyverse-tips-44}
@@ -576,8 +582,8 @@ dfa <- tribble(
    ~school, ~class,
   "chuansi", "01",
   "chuansi", "02",
-  "shude", "07",
-  "shude", "08",
+  "shude",   "07",
+  "shude",   "08",
   "huapulu", "101",
   "huapulu", "103"
 )
@@ -798,30 +804,41 @@ df <- tibble(
 df
 ```
 
+最好的办法
 
 ```{r}
-## 最好的办法
 df %>% 
   separate(y, sep = ":", into = c("e1", "e2", "e3", "e4", "e5", "e6"), remove = FALSE) %>%
   select(1:6)
+```
 
-# str_split(df$y, ":", simplify = TRUE, n = 6)   # or
-str_split_fixed(df$y, ":", 6) %>%                # 返回matrix
+
+其他的方法逻辑清晰, 也不错
+
+```{r}
+str_split_fixed(df$y, ":", 6) %>%                   # return matrix
+  # or str_split(df$y, ":", simplify = TRUE, n = 6) # return matrix
   as_tibble() %>%
   select(1:4) %>%
   set_names(c("e1", "e2", "e3", "e4"))
+```
 
 
-# 逻辑清晰，不错的选择
+```{r}
 df %>%
   mutate(
-    new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map(., ~.x[1:4]) # 返回 list-column: a list of vectors
+    new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map(., ~.x[1:4]) # return list-column: a list of vectors
   ) %>%
-  unnest_wider(col = new, 1:4)  # 利用原来的列名"new"和1:4，构成新列名new11 new22 new33 new44
+  unnest_wider(col = new, 1:4) 
 
+```
 
+上面`unnest_wider()`利用原来的列名"new"和指定的1:4，构成新列名new11, new22, new33, new44
+ 
+ 
 
-# 笨办法
+笨办法
+```{r}
 df %>%
   mutate(
     e1 = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map_chr(1) 

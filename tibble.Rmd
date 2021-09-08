@@ -3,8 +3,11 @@
 
 ```{r tibble-1, message = FALSE, warning = FALSE}
 library(tidyverse)
-library(tibble) # 事实上，library(tidyverse)已经加装了library(tibble)
+library(tibble) 
 ```
+
+事实上，library(tidyverse)已经加装了library(tibble)
+
 
 ## tidyverse 家族
 
@@ -175,7 +178,7 @@ tribble(
 
 #### data.frame转换成tibble
 ```{r tibble-11}
-t1 <- iris[1:6, 1:4] # data.frame类型:
+t1 <- iris[1:6, 1:4] # data.frame
 class(t1)
 ```
 
@@ -282,7 +285,7 @@ df
 
 
 ```{r tibble-24}
-# 转为vector
+# change to vector
 deframe(df)
 ```
 
@@ -304,17 +307,17 @@ read_csv("./demo_data/wages.csv")
 data.frame是支持行名的，但tibble不支持行名，**这也是两者不同的地方**
 
 ```{r tibble-26}
-# 创建data.frame
+#  create data.frame
 df <- data.frame(x = 1:3, y = 3:1)
 
-# 给df增加行名
+# add row name
 row.names(df) <- LETTERS[1:3]
 df
 ```
 
 
+判断是否有行名
 ```{r tibble-27}
-# 判断是否有行名
 has_rownames(df)
 ```
 
@@ -342,16 +345,16 @@ df <- mtcars[1:3, 1:3]
 df
 ```
 
+
+把行名转换为单独的一列
 ```{r tibble-31}
-# 把行名转换为单独的一列
 rownames_to_column(df, var = "rowname")
 ```
 
 
 
-
+把行索引转换为单独的一列
 ```{r tibble-32}
-# 把行索引转换为单独的一列
 rowid_to_column(df, var = "rowid")
 ```
 

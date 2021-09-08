@@ -1,5 +1,6 @@
 book_filename: R4DS
 clean: [packages.bib, bookdown.bbl]
+delete_merged_file: true
 language:
   label:
     fig: "图 "
@@ -15,12 +16,17 @@ rmd_files: [
 
   # 基础篇
   "intro_ds.Rmd",
-  "intro_R.Rmd",
-  "subsetting.Rmd",
-  "operators.Rmd",
-  "functions.Rmd",
+  "install.Rmd",
+  "objects.Rmd",
 
-  # tidyverse篇
+  "vector.Rmd",
+  "data-structure.Rmd",
+  "operators.Rmd",
+
+  "functions.Rmd",
+  "subsetting.Rmd",
+
+ # tidyverse篇
   "rmarkdown.Rmd",
   "readr.Rmd",
   "dplyr.Rmd",
@@ -49,7 +55,7 @@ rmd_files: [
   "dot.Rmd",
   "tidyeval.Rmd",
 
-  # 建模篇
+ # 建模篇
   "sampling.Rmd",
   "lm.Rmd",
   "broom.Rmd",
@@ -63,7 +69,7 @@ rmd_files: [
   "tidymodels.Rmd",
   "bayesian_models.Rmd",
 
-  # 应用篇
+ # 应用篇
   "eda_nobel.Rmd",
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",
@@ -73,19 +79,17 @@ rmd_files: [
   "eda_penguins.Rmd",
   "eda_career_decision.Rmd",
   "eda_ames_houseprice.Rmd",
-  "eda_vaccine_effectiveness.Rmd",
-  "rvest.Rmd",
+ # "rvest.Rmd",              #
   "tidygraph.Rmd",
   "tidytext.Rmd",
   "slider.Rmd",
   "stars.Rmd",
   "rowwise.Rmd",
-  "ggplot2_academic.Rmd",
-
-  "ggplot2_gganimate.Rmd",
+ # "ggplot2_academic.Rmd",   #
+ # "ggplot2_gganimate.Rmd",  #
   "lazyman.Rmd",
- # "pandas.Rmd",
-  "practice.Rmd",
+ # "pandas.Rmd",            #
+ # "practice.Rmd",          #
 
   "Appendix.Rmd",
   "references.Rmd"

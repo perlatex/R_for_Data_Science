@@ -239,7 +239,7 @@ penguins_pred <-
   predict(
     wflow_fit, 
     new_data = testing_data %>% dplyr::select(-bill_length_mm),
-    type= "numeric"
+    type = "numeric"
   ) %>% 
   dplyr::bind_cols(testing_data %>% dplyr::select(bill_length_mm))
 
@@ -265,9 +265,8 @@ penguins_pred %>%
 ```
 
 
-
+自定义一个指标评价函数my_multi_metric，就是放一起，感觉不够tidyverse
 ```{r tidymodels-19}
-# 自定义一个指标评价函数my_multi_metric，就是放一起，感觉不够tidyverse
 my_multi_metric <- yardstick::metric_set(rmse, rsq, mae, ccc)
 
 penguins_pred %>%

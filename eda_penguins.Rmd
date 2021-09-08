@@ -239,7 +239,11 @@ penguins %>%
 ```{r eda-penguins-22}
 penguins %>%
   dplyr::select(species,sex, bill_length_mm:body_mass_g) %>%
-  pivot_longer(-c(species, sex), names_to = "measurement", values_to = "value") %>%
+  pivot_longer(
+    -c(species, sex), 
+    names_to = "measurement", 
+    values_to = "value"
+    ) %>%
   ggplot(aes(x = value, y = species, fill = sex)) +
   ggridges::geom_density_ridges() +
   facet_wrap(vars(measurement), scales = "free")
@@ -455,7 +459,7 @@ penguins %>%
 建模需要标准化数据，并对分类变量（比如sex）编码为 1 和 0; （这是第二个好习惯）
 
 ```{r eda-penguins-38}
-scale_fun <- function(x) {  # 标准化的子函数
+scale_fun <- function(x) {  
   (x - mean(x)) / sd(x)
 }
 

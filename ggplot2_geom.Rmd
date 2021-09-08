@@ -1,4 +1,4 @@
-# ggplot2之几何对象 {#ggplot2-geom}
+# ggplot2之几何图形 {#ggplot2-geom}
 
 > 采菊东篱下，悠然见南山。
 >
@@ -53,7 +53,6 @@ df %>%
 ```{r ggplot2-geom-5, fig.asp=1.2}
 ggplot(df, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
-  # geom_smooth(method = lm) +
   theme(legend.position = "none") +
   facet_wrap(~dataset, ncol = 3)
 ```
@@ -153,9 +152,10 @@ gapdata
 ```
 
 ### 检查数据
-```{r ggplot2-geom-12}
-# 是否有缺失值
 
+是否有缺失值
+
+```{r ggplot2-geom-12}
 gapdata %>%
   summarise(
     across(everything(), ~ sum(is.na(.)))
@@ -248,7 +248,7 @@ gapdata %>%
 ```{r ggplot2-geom-21}
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
-  geom_histogram() # 对应的stat_bin()
+  geom_histogram() # corresponding to stat_bin()
 ```
 
 
@@ -259,16 +259,16 @@ gapdata %>%
 ```
 
 
+`geom_histograms()`, 默认使用 `position = "stack"`
+
 ```{r ggplot2-geom-23}
-#' histograms, 默认使用 `position = "stack"`
 gapdata %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
   geom_histogram()
 ```
 
-
+也可以指定 `position = "identity"`
 ```{r ggplot2-geom-24}
-#' 使用`position = "identity"`
 gapdata %>%
   ggplot(aes(x = lifeExp, fill = continent)) +
   geom_histogram(position = "identity")
@@ -283,7 +283,7 @@ gapdata %>%
 
 
 ```{r ggplot2-geom-26}
-#' smooth histogram = densityplot
+#' smooth histogram = density plot
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_density()
@@ -297,10 +297,9 @@ gapdata %>%
 ```
 
 
+`geom_density()` 中adjust 用于调节bandwidth, adjust = 1/2 means use half of the default bandwidth.
 
 ```{r ggplot2-geom-28}
-# adjust 调节bandwidth,
-# adjust = 1/2 means use half of the default bandwidth.
 gapdata %>%
   ggplot(aes(x = lifeExp)) +
   geom_density(adjust = 1)
@@ -366,17 +365,18 @@ gapdata %>%
 
 
 ### 箱线图
-一个离散变量 + 一个连续变量
+
+一个离散变量 + 一个连续变量，思考下结果为什么是这样？
 ```{r ggplot2-geom-35}
-#' 思考下结果为什么是这样？
 gapdata %>%
   ggplot(aes(x = year, y = lifeExp)) +
   geom_boxplot()
 ```
 
 
+数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
+
 ```{r ggplot2-geom-36}
-# 数据框中的year变量是数值型，需要先转换成因子型，弄成离散型变量
 gapdata %>%
   ggplot(aes(x = as.factor(year), y = lifeExp)) +
   geom_boxplot()
@@ -384,9 +384,8 @@ gapdata %>%
 
 
 
-
+明确指定分组变量
 ```{r ggplot2-geom-37}
-# 明确指定分组变量
 gapdata %>%
   ggplot(aes(x = year, y = lifeExp)) +
   geom_boxplot(aes(group = year))
@@ -410,24 +409,28 @@ gapdata %>%
 点重叠的处理方案
 
 ```{r ggplot2-geom-39}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+gapdata %>% 
+  ggplot(aes(x = continent, y = lifeExp)) +
   geom_point()
 ```
 
 
 ```{r ggplot2-geom-40}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+gapdata %>% 
+  ggplot(aes(x = continent, y = lifeExp)) +
   geom_jitter()
 ```
 
 
 ```{r ggplot2-geom-41}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+gapdata %>% 
+  ggplot(aes(x = continent, y = lifeExp)) +
   geom_boxplot()
 ```
 
 ```{r ggplot2-geom-42}
-gapdata %>% ggplot(aes(x = continent, y = lifeExp)) +
+gapdata %>% 
+  ggplot(aes(x = continent, y = lifeExp)) +
   geom_boxplot() +
   geom_jitter()
 ```
@@ -702,8 +705,8 @@ gapdata %>%
   geom_point() +
   ggforce::geom_mark_ellipse(aes(
     filter = gdpPercap > 70000,
-    label = "有钱的国家",
-    description = "他们是什么国家?"
+    label = "Rich country",
+    description = "What country are they?"
   ))
 ```
 
@@ -956,7 +959,23 @@ gapdata %>%
 
 
 
+## 课后思考题
 
+哪画图的代码中，哪两张图的结果是一样？为什么？
+
+```{r ggplot2-geom2-27, eval=FALSE}
+library(tidyverse)
+tbl <-
+  tibble(
+    x = rep(c(1, 2, 3), times = 2),
+    y = 1:6,
+    group = rep(c("group1", "group2"), each = 3)
+  )
+ggplot(tbl, aes(x, y)) + geom_line()
+ggplot(tbl, aes(x, y, group = group)) + geom_line()
+ggplot(tbl, aes(x, y, fill = group)) + geom_line()
+ggplot(tbl, aes(x, y, color = group)) + geom_line()
+```
 
 
 

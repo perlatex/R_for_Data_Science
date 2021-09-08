@@ -51,7 +51,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy")
 ```
 
@@ -73,7 +73,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     plot.background = element_rect(fill = "orange", color = "black", size = 10),
@@ -98,7 +98,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     axis.line = element_line(color = "orange", size = 2),
@@ -128,7 +128,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     panel.background = element_rect(fill = "orange", color = "red"),
@@ -142,7 +142,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     panel.background = element_rect(fill = "orange"),
@@ -174,7 +174,7 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     legend.background = element_rect(fill = "orange"),
@@ -204,12 +204,12 @@ df %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
   geom_point() +
   facet_grid(vars(manufacturer), vars(class)) +
-  ggtitle("这是我的标题") +
+  ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
   theme(
     strip.background = element_rect(fill = "orange"),
     strip.text = element_text(color = "red"),
-    panel.spacing = unit(0.3, "inch") # ,
+    panel.spacing = unit(0.3, "inch") 
     # strip.switch.pad.grid =
   )
 ```

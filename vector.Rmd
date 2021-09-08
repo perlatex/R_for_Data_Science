@@ -1,0 +1,276 @@
+# 向量 {#vectors}
+
+向量是R语言最基础的数据类型。
+
+
+
+## 向量就像冰糖葫芦
+
+前面，我们把6这个数放入盒子 `x`，
+
+```{r}
+x <- 6
+```
+
+现在，我们想多装一些数据（有顺序、好取出），比如`3,4,5,6,7`
+
+```{r, eval=FALSE}
+x <- 3, 4, 5, 6, 7   # work？
+```
+
+
+为了方便管理，那我们就希望这些数有一定的顺序，并且按照一定的结构组织在一起，我能想到的最好的结构就是---我们小时候吃的冰糖葫芦，中间用一根木棒把水果串起来，有先后顺序，而且方便取出。
+
+```{r, echo=FALSE, out.width = '30%'}
+knitr::include_graphics("images/vector_like11.jpg", dpi = 300)
+```
+
+对应到R语言里，我们可以用 `c()` 函数实现类似**结构**，一个水果对应一个数值
+
+
+```{r, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("images/vector_like.jpg", dpi = 300)
+```
+
+
+```{r, eval=FALSE}
+x <- c(3, 4, 5, 6, 7)
+x
+```
+
+我们观察到`c()`函数构造向量的几个要求
+
+- 这里的`c`就是 combine 或 concatenate 的意思
+- 它要求元素之间用**英文的逗号**分隔
+- 且元素的数据类型是统一的，比如这里都是数值
+
+这样，`c()` 函数把一组数据聚合到了一起，就构成了一个**向量**。向量是R语言最基础的数据结构。
+
+
+`c()` 函数还可以把两个向量聚合成一个新的向量。
+```{r}
+low <- c(1, 2, 3)
+high <- c(4, 5, 6)
+sequence <- c(low, high)
+sequence
+```
+
+
+
+
+我们再回头看看之前的
+
+```{r, eval=FALSE}
+x <- 6
+```
+
+它实际上就是
+```{r}
+x <- c(6)
+```
+
+即长度为 1 的向量，相当于，只有一个草莓的糖葫芦。在我看来，`x <- 6` 是 `x <- c(6)` 偷懒的写法。
+
+
+
+我们再来看看向量的两个基本属性**类型**与**长度**
+
+- 类型
+```{r}
+x <- c(3, 4, 5, 6, 7)
+typeof(x)
+```
+
+- 长度
+```{r}
+length(x)
+```
+
+
+```{r, include = FALSE, echo=TRUE, message=TRUE, warning=TRUE}
+a <- 2 # a <- c(2)
+is.vector(a)
+typeof(a)
+length(a)
+
+aa <- c(2, 4, 3, 1, 5, 7)
+is.vector(aa)
+typeof(aa)
+length(aa)
+```
+
+
+
+## 数值型向量
+
+向量的元素都是数值类型，因此也叫数值型向量。数值型的向量，主要有两种：
+
+- 一般型
+- 科学计数法
+
+```{r}
+x <- c(123, -0.125)    # General 
+x <- c(3e+06, 1.23e2)  # Scientific notation
+```
+
+
+但如果向量元素很多，用手工一个个去输入，不现实。在特定情况下，有几种偷懒方法:
+
+- `seq()` 函数可以生成等差数列，`from` 参数指定数列的起始值，`to` 参数指定数列的终止值，`by` 参数指定数值的间距：
+
+```{r}
+s1 <- seq(from = 0, to = 10, by = 0.5)
+s1
+```
+
+
+
+- `rep()` 是 repeat（重复）的意思，可以用于产生重复出现的数字序列：`x` 用于重复的向量，`times` 参数可以指定要生成的个数，`each` 参数可以指定每个元素重复的次数
+
+```{r}
+s2 <- rep(x = c(0, 1), times = 3)
+s2
+
+s3 <- rep(x = c(0, 1), each = 3)
+s3
+```
+
+
+
+- `m:n`，如果单纯是要生成数值间距为1的数列，用 `m:n` 更快捷，它产生从 m 到 n 的间距为1的数列
+```{r}
+s4 <- 0:10  # Colon operator (with by = 1):
+s4
+```
+
+
+
+```{r}
+s5 <- 10:1
+s5
+```
+
+## 字符串型向量
+
+字符串（String）数据类型，实际上就是文本类型，必须用单引号或者是双引号包含，例如：
+
+
+```{r}
+x <- c("a", "b", "c")    
+x <- c('Alice', 'Bob', 'Charlie', 'Dave')    
+x <- c("hello", "baby", "I love you!") 
+```
+
+需要注意的是，`x1`是字符串型向量，`x2`是数值型向量
+```{r}
+x1 <- c("1", "2", "3")
+x2 <- c(1, 2, 3)
+```
+
+
+
+## 逻辑型向量
+
+逻辑型常称为布尔型（Boolean）：
+
+- 常量值只有 TRUE 和 FALSE。
+- TRUE 和 FALSE 在R语言中是保留词汇
+
+```{r}
+x <- c(TRUE, TRUE, FALSE, FALSE)
+x <- c(T, T, F, F)            # Equivalent, but not recommended
+```
+
+注意这里布尔值TRUE和FALSE在R语言中是特殊的词汇(类似好比圆周率$\pi$)，不加引号，如果加了引号，就是字符串型向量。两者不要混淆
+
+
+```{r}
+x <- c(TRUE, FALSE)             # logical
+x <- c("TRUE", "FALSE")         # character
+```
+
+## 因子型向量
+
+因子型可以看作是字符串向量的增强版，它是带有层级（Levels）的字符串向量。比如这里四个季节的名称，他们构成一个向量
+
+```{r}
+four_seasons <- c("spring", "summer", "autumn", "winter")
+four_seasons
+```
+
+我们使用 `factor()` 函数可以将这里的字符串向量转换成因子型向量
+
+```{r}
+four_seasons_factor <- factor(four_seasons)
+four_seasons_factor
+```
+
+查看因子型向量的时候，也会输出了层级信息，默认的情况，它是按照字符串首字母的顺序排序，当然也可以指定顺序，比如按照我对四个季节的喜欢**排序**
+
+```{r}
+four_seasons <- c("spring", "summer", "autumn", "winter")
+four_seasons_factor <- factor(four_seasons, 
+                              levels = c("summer", "winter", "spring", "autumn")
+                              )
+four_seasons_factor
+```
+
+
+再比如，General上将；Colonel上校；Captain上尉, 如果没有指定层级levels，`c("Colonel", "General", "Captain")`就是一个常规的字符串向量，若指定了层级levels，这个字符串就多了军衔信息.
+
+```{r}
+soldier <- factor(c("Colonel", "General", "Captain"), 
+                 levels = c("General", "Colonel", "Captain")
+       )
+soldier
+```
+
+
+
+
+## 小结
+
+```{r, out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/create_vectors.png")
+```
+
+
+
+```{r, include = FALSE}
+c(1, 0.5, 3, 7)
+c("Alice", "love", "30", "dog")
+c(TRUE, FALSE, TRUE, FALSE)
+factor(c("a", "c", "c", "b"))
+```
+
+
+
+## 习题
+
+- 请说出fun3的结果
+```{r, eval=FALSE}
+fun <- c("programming", "in", "R") 
+fun2 <- c("Have", "fun")
+fun3 <- c(fun2, fun)
+fun3
+
+```
+
+- 数据类型必须一致是构建向量的基本要求，如果数值型、字符串型和逻辑型写在一起，用`c()`函数构成向量，猜猜会发生什么？
+
+```{r, eval=FALSE}
+x <- c(1, "USA", TRUE)
+x
+```
+
+- 形容温度的文字
+```{r, eval=FALSE}
+temperatures <- c("warm", "hot", "cold")
+```
+
+要求转换成因子类型向量，并按照温度有高到低排序
+
+```{r, eval=FALSE, include=FALSE}
+temp_factors <- factor(temperatures, ordered = TRUE, levels = c("cold", "warm", "hot"))
+temp_factors
+```

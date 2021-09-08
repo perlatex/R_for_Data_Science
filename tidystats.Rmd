@@ -86,7 +86,7 @@ my_data %>%
   ggplot(aes(x = supp, y = len, fill = supp)) +
   geom_boxplot(position = position_dodge()) +
   facet_wrap(vars(dose)) +
-  labs(title = "VC剂量和摄入方式对豚鼠牙齿的影响")
+  labs(title = "Effects of VC dose and intake mode on teeth of guinea pigs")
 ```
 
 

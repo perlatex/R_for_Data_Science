@@ -241,7 +241,7 @@ out_tidy %>%
   )) +
   geom_pointrange(position = position_dodge(width = 0.25)) +
   theme(legend.position = "top") +
-  labs(x = NULL, y = "Estimate", color = "系数")
+  labs(x = NULL, y = "Estimate", color = "coef")
 ```
 
 ## 练习

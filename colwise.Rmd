@@ -221,9 +221,9 @@ df %>% select(where(is.numeric) & starts_with("x"))
 df %>% select(starts_with("g") | ends_with("y"))
 ```
 
-```{r colwise-22, eval=FALSE}
-# 注意any_of和all_of的区别
 
+注意any_of和all_of的区别
+```{r colwise-22, eval=FALSE}
 vars <- c("x", "y", "z")
 df %>% select(all_of(vars))
 df %>% select(any_of(vars))

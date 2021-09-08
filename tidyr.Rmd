@@ -121,7 +121,7 @@ flair::decorate("how-to-pivot") %>%
 ```{r tidyr-11, eval=FALSE}
 plant_height %>% 
   pivot_longer(
-  cols = -Day,         # A:D 或者 c(A, B, C, D) 或者 c("A", "B", "C", "D")
+  cols = -Day,         # A:D or c(A, B, C, D) or c("A", "B", "C", "D")
   names_to = "plant",
   values_to = "height"
 )

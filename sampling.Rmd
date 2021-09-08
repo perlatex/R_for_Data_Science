@@ -134,13 +134,12 @@ sigma_b <- 0.5
 rho <- -0.7
 
 mu <- c(a, b)
-cov_ab <- sigma_a * sigma_b * rho # 协方差
+cov_ab <- sigma_a * sigma_b * rho # covariance
 ```
 
 
-
+构建协方差矩阵
 ```{r sampling-10}
-# 构建协方差矩阵
 sigma <- matrix(c(
   sigma_a^2, cov_ab,
   cov_ab, sigma_b^2
@@ -302,7 +301,7 @@ ggplot(pop.distn) +
   ) +
   labs(
     x = "Height (cm)", y = "Density",
-    title = "川师男生身高分布"
+    title = "Height distribution of boys"
   )
 ```
 
@@ -433,8 +432,7 @@ df.samples.of.30 %>%
   geom_histogram(bins = 25, fill = "firebrick", alpha = 0.5) +
   geom_vline(xintercept = true.mean, linetype = "dashed", color = "red") +
   labs(
-    title = "抽样2500次（每次30个男生）身高均值的分布",
-    subtitle = "Distribution of mean heights for 2500 samples of size 30"
+    title = "Distribution of mean heights for 2500 samples of size 30"
   )
 ```
 注意到，这不是男生身高的分布，而是**每次抽样计算的均值**构成的分布.
@@ -555,7 +553,7 @@ df.se.mean.theory
 ```
 
 
-
+平均值标准误差随样本大小变化
 ```{r sampling-43}
 sampling.distn.mean.table %>%
   ggplot(aes(x = sample.size, y = sd.of.means)) +
@@ -566,7 +564,7 @@ sampling.distn.mean.table %>%
   ) +
   labs(
     x = "Sample size", y = "Std Error of Mean",
-    title = "平均值标准误差随样本大小变化（理论值和模拟值对比）"
+    title = "Standard error of mean value varies with sample size (comparison between theoretical value and simulated value)"
   )
 ```
 

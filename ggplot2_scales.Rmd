@@ -45,8 +45,8 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 ggplot(mpg, aes(x = displ, y = hwy)) + 
   geom_point(aes(colour = class)) +
   
-  scale_x_continuous(name = "这是我的x坐标") + 
-  scale_y_continuous(name = "这是我的y坐标") + 
+  scale_x_continuous(name = "This is my x axis") + 
+  scale_y_continuous(name = "This is my y axis") + 
   scale_colour_brewer()
 ```
 
@@ -162,9 +162,9 @@ newgapdata %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
     geom_point(aes(color = continent, size = pop)) +
     scale_x_log10(
-      name = "人均GDP",
+      name = "GDP per capita",
       breaks = c(500, 1000, 3000, 10000, 30000),
-      labels = scales::unit_format(unit = "美元"))
+      labels = scales::unit_format(unit = "dollar"))
 ```
 
 
@@ -195,16 +195,16 @@ newgapdata %>%
     geom_point(aes(color = continent, size = pop)) +
     scale_x_log10() +
     scale_color_manual(
-      name = "五大洲",
+      name = "continents",
       values = c("Africa" = "red", "Americas" = "blue", "Asia" = "orange",
                  "Europe" = "black", "Oceania" = "gray"),
       breaks = c("Africa", "Americas", "Asia", "Europe", "Oceania"),
-      labels = c("非洲", "美洲", "亚洲", "欧洲", "大洋洲")
+      labels = c("africa", "americas", "asia", "europe", "oceania")
     ) +
    scale_size(
-     name = "人口数量",
+     name = "population size",
      breaks = c(2e8, 5e8, 7e8),
-     labels = c("2亿", "5亿", "7亿")
+     labels = c("200 million", "500 million", "700 million")
    )
 ```
 

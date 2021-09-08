@@ -175,7 +175,7 @@ c("a", NA, NA_character_) %>%
 c(123, NA, NA_real_) %>% 
   purrr::map(., ~is.numeric(.))
 
-c(NA_real_, NA_complex_, NA_character_, NA_integer_, NA) %>% #被强制转换成character类型
+c(NA_real_, NA_complex_, NA_character_, NA_integer_, NA) %>% # coercion to character type
   purrr::map(., ~is.character(.))
 ```
 
@@ -191,11 +191,11 @@ c(TRUE, TRUE, FALSE, FALSE) %>% as.integer() %>% sum()
 c(TRUE, TRUE, FALSE, FALSE) %>% sum()
 ```
 
-```{block tidyverse-NA-16, type="danger"}
+
 常用的方法：
 
 先用`is.na()`判断出是否为缺失值，缺失值是TRUE，不是缺失值为FALSE；然后TRUE/FALSE转换成数值，即TRUE -> 1; FALSE -> 0；最后把所有的1加起来，就知道数据中有多少个缺失值。
-```
+
 
 
 具体代码为
@@ -315,13 +315,13 @@ penguins %>% filter_all(
 
 ## 更多
 
-```{block tidyverse-NA-28, type="danger"}
+
 注意区分NA 和 Inf, NaN, NULL
 
 - Inf = 无穷大，比如 `pi / 0 %>% is.infinite()` 
 - NaN = 不是一个数（Not a Number）, 比如 `0 / 0  %>% is.nan() `, `sqrt(-1) %>% is.nan() `
 - NULL = 空值，比如 `c() %>% is.null()` 
-```
+
 
 
 ```{r tidyverse-NA-29, echo = F}

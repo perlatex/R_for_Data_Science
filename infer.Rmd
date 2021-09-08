@@ -53,7 +53,7 @@ d %>%
 ```{r infer-4}
 movies_genre_sample <- d %>%
   select(title, year, rating, Action, Romance) %>%
-  filter(!(Action == 1 & Romance == 1)) %>% # 既是爱情片又是动作片的，删去
+  filter(!(Action == 1 & Romance == 1)) %>% 
   mutate(genre = case_when(
     Action == 1 ~ "Action",
     Romance == 1 ~ "Romance",
@@ -62,7 +62,8 @@ movies_genre_sample <- d %>%
   filter(genre != "Neither") %>%
   select(-Action, -Romance) %>%
   group_by(genre) %>%
-  slice_sample(n = 34) %>% # 每种题材的电影只选取了34个
+  #slice_sample(n = 34) %>%  # sample size = 34
+  slice_head(n = 34) %>%  
   ungroup()
 
 movies_genre_sample
@@ -197,18 +198,17 @@ pvalue
 
 -   结论
 
-```{r, echo=FALSE}
-less_than_significance_text <- glue::glue(
-  "`p_value < 0.05`, 那我们有足够的证据证明，H0不成立，即爱情电影和动作电影的评分均值存在**显著差异**，具体来说，动作电影的平均评分要比爱情电影低些。"
-  )
 
-greater_then_significance_text <- glue::glue(
-    "`p_value > 0.05`，不能拒绝 H0，即我们没有足够的证据证明爱情电影和动作电影的评分均值存在**显著差异**。"
-  )
-```
+<!-- less_than_significance_text <- glue::glue( -->
+<!--   "`p_value < 0.05`, 那我们有足够的证据证明，H0不成立，即爱情电影和动作电影的评分均值存在**显著差异**，具体来说，动作电影的平均评分要比爱情电影低些。" -->
+<!--   ) -->
 
-在构建的虚拟($\Delta = 0$)的平行世界里，出现实际观察值（`r obs_diff$stat`）的概率为（`r pvalue$p_value`）。 如果以(p \< 0.05)为标准，我们看到`r ifelse(pvalue$p_value < 0.05,  less_than_significance_text, greater_then_significance_text)`
+<!-- greater_then_significance_text <- glue::glue( -->
+<!--     "`p_value > 0.05`，不能拒绝 H0，即我们没有足够的证据证明爱情电影和动作电影的评分均值存在**显著差异**。" -->
+<!--   ) -->
 
+
+在构建的虚拟($\Delta = 0$)的平行世界里，出现实际观察值（`r obs_diff$stat`）的概率为（`r pvalue$p_value`）。 如果以(p \< 0.05)为标准，我们看到`p_value < 0.05`, 那我们有足够的证据证明，H0不成立，即爱情电影和动作电影的评分均值存在**显著差异**，具体来说，动作电影的平均评分要比爱情电影低些。
 
 ## 案例2: 航天事业的预算有党派门户之见？
 
@@ -330,13 +330,13 @@ prop.test(table(td$Eth, td$Sex), correct = FALSE)
 
 ### 基于模拟的方法
 
+被解释变量 sex 中F的占比，解释变量中两组（A，N）
 ```{r infer-28}
-
 obs_diff <- td %>%
-  specify(Sex ~ Eth, success = "F") %>% # #被解释变量 sex中F的占比
+  specify(Sex ~ Eth, success = "F") %>% 
   calculate(
     stat = "diff in props",
-    order = c("A", "N") # 解释变量中两组A，N
+    order = c("A", "N")                  
   )
 
 obs_diff

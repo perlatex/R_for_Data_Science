@@ -114,11 +114,9 @@ penguins %>%
 ```
 
 
+这里`aes(y = after_stat(count))`  可以看作是`aes(y = stage(start = NULL, after_stat = count))`的简写
 
 ```{r}
-# aes(y = after_stat(count)) 
-# 可以看作是aes(y = stage(start = NULL, after_stat = count))的简写
-
 penguins %>% 
   ggplot(aes(x = species)) +
   layer(
@@ -495,7 +493,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   stat_boxplot(
     geom = "boxplot"
   )
@@ -504,7 +502,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   geom_boxplot()
 ```
 
@@ -514,7 +512,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   layer(
     stat = "boxplot",
     geom = "boxplot",
@@ -528,7 +526,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   layer(
     stat = "boxplot",
     geom = "point",
@@ -541,7 +539,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   layer(
     stat = "boxplot",
     geom = "point",
@@ -555,7 +553,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   layer(
     stat = "boxplot",
     geom = "point",
@@ -569,7 +567,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   stat_boxplot()
 ```
 
@@ -720,7 +718,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = bill_length_mm))+
+  ggplot(aes(x = bill_length_mm)) +
   geom_dotplot(
     binwidth = 1, 
     dotsize = 0.5)
@@ -729,7 +727,7 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_length_mm))+
+  ggplot(aes(x = species, y = bill_length_mm)) +
   geom_dotplot(
     binaxis = "y", 
     stackdir = "down", 
@@ -817,7 +815,7 @@ penguins %>%
   layer(
     geom = "smooth",
     stat = "smooth",
-    params = list(se = TRUE), # for geom_smooth
+    params = list(se = TRUE), 
     position = "identity"
   )
 ```
@@ -1941,7 +1939,7 @@ penguins %>%
     fun = mean,
     color = "red",
     geom = "bar",
-    orientation = 'x'     # bin在 x 上，summary mean on y
+    orientation = 'x'     # bin on x axis, summary mean on y
   )
 ```
 
@@ -1980,7 +1978,7 @@ penguins %>%
     fun = mean,
     color = "red",
     geom = "bar",
-    orientation = 'y'  # bin在 y 上，summary mean on x
+    orientation = 'y'  # bin on y axis, summary mean on x
   )
 
 ```
@@ -2136,7 +2134,6 @@ penguins %>%
 落在x和y(长方形)区域上, summary on z
 
 
-```{md}
 文档说`stat_summary_2d() is a 2d variation of stat_summary().` 个人觉得不完全准确
 
 
@@ -2146,7 +2143,7 @@ penguins %>%
 
 
 离散变量是正确的，但对应连续变量不准确。
-```
+
 
 
 

@@ -700,7 +700,7 @@ df %>%
 
 要求：中英文分开
 
-```{r stringr-72}
+```{r stringr-72, include=FALSE}
 tb <- tibble(x = c("I我", "love爱", "you你"))
 tb
 ```
@@ -723,7 +723,7 @@ tb %>%
 要求：提取起始数字
 
 ```{r stringr-74}
-df <- tibble(x = c("1-12周", "1-10周", "5-12周"))
+df <- tibble(x = c("1-12week", "1-10week", "5-12week"))
 df
 ```
 
@@ -767,11 +767,11 @@ df %>%
 
 ```{r stringr-78}
 x <- "Roman numerals: MDCCCLXXXVIII"
-str_match_all(x, "C?") # "?"的意思是匹配0次或者1次
+str_match_all(x, "C?") 
 str_match_all(x, "CC?")
 ```
  
-
+ "?"的意思是匹配0次或者1次
 
 ### 案例6
 

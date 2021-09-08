@@ -258,7 +258,7 @@ flights %>%
 
 
 ```{r echo=FALSE}
-# pdf文档模板
+# pdf document
 xfun::embed_file('./data/my_pdf_document.Rmd')
 ```
 

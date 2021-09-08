@@ -52,15 +52,24 @@ explanation %>%
 
 ## 变量选取
 
+我们选取下列变量：
+
+- lot_frontage,    建筑离街道的距离
+- lot_area,        占地面积
+- neighborhood,    建筑在城市的位置
+- gr_liv_area,     地上居住面积
+- bldg_type,       住宅类别(联排别墅、独栋别墅...)
+- year_built       房屋修建日期
+
 ```{r eda-ames-houseprice-4}
 d <- ames %>% 
   select(sale_price, 
-         lot_frontage,   # 建筑离街道的距离
-         lot_area,       # 占地面积
-         neighborhood,   # 建筑在城市的位置
-         gr_liv_area,    # 地上居住面积
-         bldg_type,      # 住宅类别(联排别墅、独栋别墅...)
-         year_built      # 房屋修建日期
+         lot_frontage,   
+         lot_area,      
+         neighborhood,   
+         gr_liv_area,   
+         bldg_type,      
+         year_built      
          )
 d
 ```

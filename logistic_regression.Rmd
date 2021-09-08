@@ -94,7 +94,7 @@ library(latex2exp)
 logit_log_odds %>% 
     ggplot(aes(x = gre, y = log_odds)) +
     geom_path(color = "#771C6D", size = 2) +
-    labs(title = "Log odds (β)", 
+    labs(title = "Log odds", 
         subtitle = "This is linear!",
         x = NULL,
         y = TeX("$log \\frac{p}{1 - p}$")) +
@@ -143,7 +143,7 @@ logit_odds <- broom::augment_columns(
 logit_odds %>% 
     ggplot(aes(x = gre, y = odds_ratio)) +
     geom_line(color = "#FB9E07", size = 2) +
-    labs(title = "Odds (exp(β))", 
+    labs(title = "Odds", 
         subtitle = "This is curvy, but it's a mathy transformation of a linear value",
         x = NULL,
         y = TeX("$\\frac{p}{1 - p}$")) +
@@ -207,13 +207,19 @@ logit_probs %>%
 -   GRE分数800分左右，录取概率接近0.5；
 
 
-```{block logistic-regression-13, type="danger"}
+
+::: {.rmdnote}
 提请注意的是，以上三种度量的方式中：
 
 - `log_odds scale`，预测因子与`log_odds()`的关系是一个固定值，具有可加性
 - `odds scale`， 预测因子与`odds()`的关系是一个固定值，具有乘法性
 - `probability`，预测因子与`probability`的关系不再是一个固定值了
-```
+
+:::
+
+
+
+
 
 
 

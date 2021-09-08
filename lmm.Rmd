@@ -392,16 +392,16 @@ un_pooling %>%
     aes(label = level)
   ) +
   scale_color_manual(
-    name = "信息池",
+    name = "information pool",
     values = c(
       "no_pool" = "black",
       "partial_pool" = "red" # ,
       # "complete_pool" = "#A65141"
     ),
     labels = c(
-      "no_pool" = "不共享",
-      "partial_pool" = "部分共享" # ,
-      # "complete_pool" = "完全共享"
+      "no_pool" = "no share",
+      "partial_pool" = "partial share" # ,
+      # "complete_pool" = "complete share"
     )
   ) #+
 # theme_classic()

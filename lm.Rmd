@@ -33,15 +33,14 @@ wages %>% colnames()
 
 
 ```{r lm-4}
-# 如何检查数据是否有缺失值？
 wages %>%
   summarise(
-    earn_na = sum(is.na(earn)),
+    earn_na   = sum(is.na(earn)),
     height_na = sum(is.na(height)),
-    sex_na = sum(is.na(sex)),
-    race_na = sum(is.na(race)),
-    ed_na = sum(is.na(ed)),
-    age_na = sum(is.na(age))
+    sex_na    = sum(is.na(sex)),
+    race_na   = sum(is.na(race)),
+    ed_na     = sum(is.na(ed)),
+    age_na    = sum(is.na(age))
   )
 ```
 
@@ -68,6 +67,7 @@ wages %>%
 ```{r lm-7}
 wages %>% count(sex)
 ```
+
 男女这两组的身高均值分别是多少？收入的均值分别是多少？
 ```{r lm-8}
 wages %>%
@@ -331,12 +331,15 @@ caret::varImp(fit)
 
 ### 截距项
 
+包含截距，以下两者是等价的
 ```{r lm-27, eval=FALSE}
-# 包含截距，以下两者是等价的
 lm(earn ~ 1 + height, data = wages)
 lm(earn ~ height, data = wages)
+```
 
-# 去掉截距，以下两者是等价的
+
+去掉截距，以下两者是等价的
+```{r lm-271, eval=FALSE}
 lm(earn ~ height - 1, data = wages)
 lm(earn ~ 0 + height, data = wages)
 ```

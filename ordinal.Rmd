@@ -147,10 +147,10 @@ df %>%
   geom_density_ridges() +
   scale_x_continuous(limits = c(0, 6), breaks = c(1:5)) +
   labs(
-    title = "家庭中母亲的教育程度对子女的影响",
-    subtitle = "数字越大，教育程度越高",
-    x = "子女的教育程度",
-    y = "母亲的教育程度"
+    title = "The influence of mother's education on children in the family",
+    subtitle = "The greater the number, the higher the level of education",
+    x = "Education level of children",
+    y = "Education level of Mother"
   )
 ```
 

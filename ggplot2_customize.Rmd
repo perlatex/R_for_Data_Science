@@ -277,9 +277,9 @@ gapdata %>%
   ) +
   theme(legend.position = "none") +
   labs(
-    title = "这是我的标题美美哒",
-    x = "这是我的x坐标",
-    y = "这是我的y坐标"
+    title = "This is my title",
+    x = "This is my x axis",
+    y = "This is my y axis"
   )
 
 # ggsave("myfirst.pdf", width = 8, height = 6)
@@ -548,9 +548,9 @@ nyc_squirrels %>%
 
 <!-- ## ggplot2 未了情 -->
 
-<!-- ### 中文字体 -->
+### 中文字体
 
-<!-- 有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包 -->
+有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包
 
 <!-- ```{r, eval=funs} -->
 <!-- library(ggplot2) -->
@@ -566,7 +566,7 @@ nyc_squirrels %>%
 
 
 
-```{r ggplot2-customize-35, message=FALSE, warning=FALSE}
+```{r ggplot2-customize-35, message=FALSE, warning=FALSE, include=FALSE}
 library(ggplot2)
 library(showtext)
 showtext_auto()
@@ -625,8 +625,7 @@ showtext_auto(FALSE)
 ```
 
 
-根据往年大家提交的作业，有同学用rmarkdown生成pdf，图片标题使用了中文字体，但中文字体无法显示
-。解决方案是R code chunks加上`fig.showtext=TRUE`
+根据往年大家提交的作业，有同学用rmarkdown生成pdf，图片标题使用了中文字体，但中文字体无法显示。解决方案是R code chunks加上`fig.showtext=TRUE`
 
 ````markdown
 `r ''````{r, fig.showtext=TRUE}
@@ -689,9 +688,9 @@ df %>%
 	geom_density() +
 	scale_y_continuous(expand = expansion(mult = c(0, NA))) +
 	scale_color_manual(
-		name = "分布",
+		name = "distribution",
 		values = c("high" = "tomato", "flat" = "dodgerblue"),
-		labels = c("high" = "分布1", "flat" = "分布2")
+		labels = c("high" = "distribution1", "flat" = "distribution2")
 		) +
 	theme_minimal() +
 	labs(x = "Days since the first case",

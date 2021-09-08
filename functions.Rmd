@@ -1,7 +1,7 @@
 # 函数 {#functions}
 
 R 语言的强大在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
-
+上一节课我们提到向量操作符，体会到了向量化操作的强大，事实上，向量操作符就是一种函数。
 
 ## 基础函数
 
@@ -45,6 +45,16 @@ max(x)
 length(x)
 ```
 
+对向量元素大小排序
+```{r}
+sort(x)
+```
+
+找出向量元素的唯一值
+```{r}
+unique(x)
+```
+
 判断是否为数值型/字符串型
 ```{r}
 is.numeric(x)
@@ -55,6 +65,28 @@ is.character(x)
 
 ```{r}
 ifelse(x > 5, TRUE, FALSE)
+```
+
+
+## 如何获取帮助
+
+
+- 记住和学习所有的函数几乎是不可能的
+- 打开函数的帮助页面(`Rstudio`右下面板的`Help`选项卡)
+
+```{r intro-R-51, eval = FALSE }
+?sqrt
+?gather
+?spread
+?ggplot2
+?scale
+?map_dfr
+```
+
+比如：
+
+```{r intro-R-52, out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/Rhelp.png")
 ```
 
 
@@ -79,7 +111,7 @@ myFunction <- function(x, y) {
 ```{r}
 add_one <- function(x) {
    y <- x + 1
-   return(y)  # 返回计算后的值
+   return(y)  
 }
 ```
 
@@ -216,7 +248,7 @@ if(condition) {
 
 ```{r}
 square_if <- function(num) {
-    if(is.numeric(num)) {
+    if (is.numeric(num)) {
       num^2
     } else {
      "Your input is not numeric."
@@ -284,7 +316,9 @@ mystat(w)
 
 
 
-## 作业
+## 使用宏包的函数
+
+## 习题
 
 - 对 `w` 进行**数据标准化**
 $$

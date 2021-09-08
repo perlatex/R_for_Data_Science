@@ -83,7 +83,7 @@ p + annotate("text",
 
 ## 什么是数据可视化
 
-### 图形属性
+### 图形属性(视觉元素)
 
 我们在图中画一个点，那么这个**点**就有（形状，大小，颜色，位置，透明度）等属性，
 这些属性就是**图形属性**（有时也称之为图形元素或者视觉元素），下图 \@ref(fig:common-aesthetics)列出了常用的图形属性。
@@ -92,7 +92,7 @@ p + annotate("text",
 knitr::include_graphics("./images/common-aesthetics.png")
 ```
 
-数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，即，数值到图形属性的转换（映射）过程。
+数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，即，数值到图形属性的转换（映射）过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
 
 
 ## 宏包ggplot2 
@@ -119,15 +119,33 @@ ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics�
 <!-- knitr::include_graphics("images/visualization-grammar-3.png") -->
 <!-- ``` -->
 
-```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE}
+```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
 knitr::include_graphics("images/mapping.png")
 ```
 
+## 绘图语法
+
+ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。Hadley Wickham将这套可视化语法诠释为:
+
+一张统计图形就是从**数据**到几何图形(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
+
+
+```{r ggplot2-aes2-6, out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/grammar-of-graphics.png")
+```
+
+
+
+通俗点说，我们画一张散点图，就要把 数据框的两个变量，分别与点的坐标一一对应起来，如果点需要画颜色，就需要用数据框的另一个变量与点的颜色对应起来。
+
+
+
+
 `ggplot()`函数包括9个部件：
 
-- **数据 (data)**      （ 数据框）
+- **数据 (data)**      （数据框）
 - **映射 (mapping)**
-- **几何对象 (geom)**
+- **几何图形 (geom)**
 - 统计变换 (stats)
 - 标度 (scale)
 - 坐标系 (coord)
@@ -135,15 +153,10 @@ knitr::include_graphics("images/mapping.png")
 - 主题 (theme)
 - 存储和输出 (output)
 
-其中前三个是必需的。
+其中前三个是必需的。语法模板
 
-
-Hadley Wickham将这套可视化语法诠释为:
-
-一张统计图形就是从**数据**到几何对象(geometric object，缩写geom)的**图形属性**(aesthetic attribute，缩写aes)的一个映射。
-
-```{r ggplot2-aes2-6, out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/grammar-of-graphics.png")
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics("images/ggplot_template.png")
 ```
 
 
@@ -151,36 +164,35 @@ knitr::include_graphics("images/grammar-of-graphics.png")
 system，缩写coord)中，而分面(facet)则可以用来生成数据不同子集的图形。
 
 
-### 语法模板
-
-```{r ggplot2-aes2-7, out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/ggplot_template.png")
-```
-
-
 
 
 
 先看一个简单的案例（1880-2014年温度变化和二氧化碳排放量）
 
-```{r ggplot2-aes2-8, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-d <- read_csv("./demo_data/temp_carbon.csv")
-d
+d <- read_csv(here::here("demo_data", "temp_carbon.csv"))
+d %>% head(5)
 ```
 
 
-```{r ggplot2-aes2-9}
+```{r, eval = FALSE}
 library(ggplot2)
+ggplot(data = ___, mapping = aes(x = ___, y = ____)) +
+  geom__****()
+```
+
+我们只需要在相应位置填入数据框，和数据框的变量，就可以画图
+
+```{r}
 ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
-  geom_line() +
+  geom_point() +
   xlab("Year") +
   ylab("Carbon emissions (metric tons)") +
   ggtitle("Annual global carbon emissions, 1880-2014")
 ```
 
 是不是很简单?
-
 
 
 ## 映射 
@@ -245,23 +257,26 @@ knitr::include_graphics("images/a-3new.png")
 
 - `ggplot()`表示调用该函数画图，`data = penguins` 表示使用penguins这个**数据框**来画图。
 
+- `+`表示添加图层。
+
+- `geom_point()`表示绘制散点图。
+
 - `aes()`表示数值和视觉属性之间的映射。
   
 `aes(x = bill_length_mm, y = bill_depth_mm)`，意思是变量bill_length_mm作为（映射为）**x轴方向的位置**，变量bill_depth_mm作为（映射为）**y轴方向的位置**。
 
 - `aes()`除了位置上映射，还可以实现色彩、形状或透明度等视觉属性的映射。
 
-- `geom_point()`表示绘制散点图。
 
-- `+`表示添加图层。
+
 
 
 运行脚本后生成图片：
 
 
 ```{r ggplot2-aes2-15, echo=FALSE}
-ggplot(penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point()
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm))
 ```
 
 
@@ -272,9 +287,8 @@ ggplot(penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 
 ```{r ggplot2-aes2-16}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
-  geom_point()
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species))
 ```
 
 此图绘制不同类型的企鹅，嘴峰长度与嘴峰深度散点图，并用颜色来实现了分组。
@@ -284,26 +298,30 @@ ggplot(penguins,
 
 大家试试下面代码呢，
 ```{r ggplot2-aes2-17, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm, size = species)) +
-  geom_point()
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, size = species))
 ```
 
 
 ```{r ggplot2-aes2-18, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm, shape = species)) +
-  geom_point()
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, shape = species))
 ```
 
 
 ```{r ggplot2-aes2-19, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm, alpha = species)) +
-  geom_point()
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, alpha = species))
 ```
 
+也可更多映射
 
+```{r}
+ggplot(penguins) +
+  geom_point(
+    aes(x = bill_length_mm, y = bill_depth_mm, color = species, alpha = sex)
+  )
+```
 
 为什么图中是这样的颜色呢？那是因为`ggplot()`内部有一套默认的设置
 
@@ -320,9 +338,8 @@ knitr::include_graphics("images/a-14.png")
 想把图中的点指定为某一种颜色，可以使用设置语句，比如
 
 ```{r ggplot2-aes2-21}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point(color = "blue")
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm), color = "blue")
 ```
 
 
@@ -330,23 +347,20 @@ ggplot(penguins,
 
 大家也可以试试下面
 ```{r ggplot2-aes2-22, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point(size = 5)
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm), size = 5)
 ```
 
 
 ```{r ggplot2-aes2-23, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point(shape = 2)
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm), shape = 2)
 ```
 
 
 ```{r ggplot2-aes2-24, eval = FALSE}
-ggplot(penguins, 
-       aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point(alpha = 0.5)
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm), alpha = 0.5)
 ```
 
 
@@ -375,40 +389,42 @@ ggplot(penguins) +
 
 
 
-## 几何对象
+## 几何图形
 
 `geom_point()` 可以画散点图，也可以使用`geom_smooth()`绘制平滑曲线，
 ```{r ggplot2-aes2-27}
-p1 <- 
-  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point()
-p1
+ggplot(penguins) +
+  geom_smooth(aes(x = bill_length_mm, y = bill_depth_mm))
 ```
 
 
 ```{r ggplot2-aes2-28}
-p2 <- 
-  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_smooth()
-p2
+ggplot(penguins) +
+  geom_smooth(
+    aes(x = bill_length_mm, y = bill_depth_mm),
+    method = "lm"
+   )
 ```
 
 
 ## 图层叠加
 
-```{r ggplot2-aes2-29}
-p3 <- 
-  ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+```{r}
+ggplot(penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_smooth(aes(x = bill_length_mm, y = bill_depth_mm))
+```
+
+很强大，但相同的代码让我写两遍，我不高兴。要在偷懒的路上追求简约
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point() +
   geom_smooth()
-p3
 ```
 
 
-```{r ggplot2-aes2-30}
-library(patchwork)
-(p1 / p2) | p3
-```
+以上两段代码出来的图是一样。但背后的含义却不同。简约不等于简单。
 
 
 
@@ -430,29 +446,15 @@ ggplot(penguins) +
 
 
 
+- 映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在`ggplot()`里, 为**全局声明**。那么，当`geom_point()`画图时，发现缺少所绘图所需要的映射关系（点的位置、点的大小、点的颜色等等），就会从`ggplot()`全局变量中继承映射关系。
 
-事实上，如果映射关系`aes()` 写在`ggplot()`里, 
-
-```{r ggplot2-aes2-33, eval=FALSE}
-ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
-  geom_point()
-```
-
-那么映射关系`x = bill_length_mm, y = bill_depth_mm, color = species` 为全局变量。因此，当`geom_point()`画图时，发现缺少所绘图所需要的映射关系（点的位置、点的大小、点的颜色等等），就会从`ggplot()`全局变量中继承映射关系。
+- 如果映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在几何对象`geom_point()`里, 那么此处的映射关系就为**局部声明**, 那么`geom_point()`绘图时，发现所需要的映射关系已经存在，就不会继承全局变量的映射关系。
 
 
 
-如果映射关系 `aes()` 写在几何对象`geom_point()`里, 那么此处的映射关系就为局部变量, 比如。
-
-```{r ggplot2-aes2-34, eval=FALSE}
-ggplot(penguins) +
-  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species))
-```
-
-此时`geom_point()`绘图所需要的映射关系`aes(x = bill_length_mm, y = bill_depth_mm, color = species)` 已经存在，就不会继承全局变量的映射关系。
 
 
-再看下面这个例子，
+看下面这个例子，
 ```{r ggplot2-aes2-35, eval=FALSE, warning=FALSE, message=FALSE}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(aes(color = species)) +
@@ -474,21 +476,77 @@ ggplot(penguins,aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
 `aes(color = )`已经存在，因此不会从全局变量中继承，沿用当前的映射关系。
 
 
+### 体会下代码之间的区别
 
-大家细细体会下，下面两段代码的区别
-```{r ggplot2-aes2-37}
+```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
-  geom_smooth(method = lm) +
   geom_point()
 ```
 
 
-```{r ggplot2-aes2-38}
+```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_smooth(method = lm) +
   geom_point(aes(color = species))
 ```
 
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+  geom_point(aes(color = species))
+```
+
+
+
+### 继承关系
+
+图层之间没有继承关系。再看下面这个例子
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  geom_smooth(method = "lm")
+```
+
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_smooth(method = "lm") +
+  geom_point(aes(color = species))
+```
+
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") 
+```
+
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(aes(color = sex)) +
+  geom_smooth(method = "lm") 
+```
+
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(color = sex)) 
+```
 
 
 
@@ -496,22 +554,42 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等
 
-```{r ggplot2-aes2-39, eval = FALSE}
-p <- penguins %>% 
+```{r, eval=FALSE}
+p1 <- penguins %>% 
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_smooth(method = lm) +
   geom_point(aes(color = species)) +
   ggtitle("This is my first plot")
 
-
 ggsave(
-  filename = "myfirst_plot.pdf",
-  plot = p,
+  plot = p1,
+  filename = "my_plot.pdf",
   width = 8,
   height = 6,
   dpi = 300
 )
 ```
+
+
+如果想保存当前图形，`ggsave()` 中的 `plot = p1` 可以省略，它会自动保存最近一次的绘图
+
+```{r, eval=FALSE}
+penguins %>% 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_smooth(method = lm) +
+  geom_point(aes(color = species)) +
+  ggtitle("This is my first plot")
+
+ggsave(
+  filename = "my_last_plot.pdf",
+  width = 8,
+  height = 6,
+  dpi = 300
+)
+```
+
+
+
 
 ## 课堂作业
 

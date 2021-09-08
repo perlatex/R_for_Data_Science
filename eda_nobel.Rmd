@@ -41,23 +41,25 @@ df <- read_csv("./demo_data/nobel_winners.csv")
 df
 ```
 
-
-```{r eda-nobel-4, eval = FALSE}
-# 如果是xlsx格式
+如果是xlsx格式
+```{r eda-nobel-410, eval = FALSE}
 readxl::read_excel("myfile.xlsx")
+```
 
-# 如果是csv格式
+如果是csv格式
+```{r eda-nobel-420, eval = FALSE}
 readr::read_csv("myfile.csv")
 ```
 
 
-```{block eda-nobel-5, type="danger"}
+::: {.rmdnote}
 这里有个小小的提示：
 
 - 路径（包括文件名）， 不要用中文和空格
 - 数据框中变量，也不要有中文和空格（可用下划线代替空格）
 
-```
+
+:::
 
 
 
@@ -110,7 +112,6 @@ df %>%
   ggplot(aes(x = category, y = n, fill = category)) +
   geom_col() +
   geom_text(aes(label = n), vjust = -0.25) +
-  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
   theme(legend.position = "none")
 ```
 
@@ -121,7 +122,7 @@ df %>%
   ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
   geom_col() +
   geom_text(aes(label = n), vjust = -0.25) +
-  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  labs(title = "Number of Nobel prizes in different disciplines") +
   theme(legend.position = "none")
 ```
 
@@ -136,7 +137,7 @@ df %>%
   count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n, fill = category)) +
   geom_col() +
-  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  labs(title = "Number of Nobel prizes in different disciplines") +
   theme(legend.position = "none")
 ```
 
@@ -155,7 +156,7 @@ df %>%
   count(category) %>%
   ggplot(aes(x = fct_reorder(category, n), y = n)) +
   geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")) +
-  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  labs(title = "Number of Nobel prizes in different disciplines") +
   theme(legend.position = "none")
 ```
 
@@ -170,7 +171,7 @@ df %>%
   ggplot(aes(x = category, y = n)) +
   geom_text(aes(label = n), vjust = -0.25) +
   geom_col(fill = c("#003f5c", "#444e86", "#955196", "#dd5182", "#ff6e54", "#ffa600")) +
-  labs(title = "不同学科诺贝奖获奖次数对比", x = "学科", y = "数量") +
+  labs(title = "Number of Nobel prizes in different disciplines") +
   theme(legend.position = "none") +
   transition_states(category) +
   shadow_mark(past = TRUE)
@@ -393,12 +394,11 @@ nobel_winners %>%
   theme_minimal() +
   theme(legend.position = "top") +
   labs(
-    title = "诺奖获得者性别不平衡",
-    subtitle = "1901年-2016年数据",
+    title = "Gender imbalance of Nobel laureates",
+    subtitle = "data frome 1901-2016",
     colour = "Gender",
     alpha = "Gender",
-    x = "学科",
-    y = "获奖年龄"
+    y = "age in prize"
   )
 ```
 
@@ -640,7 +640,7 @@ df4 %>%
   scale_size_continuous(range = c(2, 30)) +
   transition_reveal(prize_year) +
   labs(
-    title = "诺奖获得者最多的10个国家",
+    title = "Top 10 countries with Nobel Prize winners",
     subtitle = "Year: {frame_along}",
     y = "Category"
   ) +
@@ -690,7 +690,7 @@ nobel_winners %>%
   ) +
   coord_polar("y") +
   facet_grid(decade ~ year, switch = "both") +
-  labs(title = "每年诺贝尔奖分享情况") +
+  labs(title = "Annual Nobel Prize sharing") +
   theme_void() +
   theme(
     plot.title = element_text(face = "bold", vjust = 8),

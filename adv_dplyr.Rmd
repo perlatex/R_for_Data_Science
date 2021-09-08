@@ -311,12 +311,14 @@ iris %>%
 上面这个代码，数据框分割成list, 处理完后再合并成数据框，难道不觉得折腾么？ 为什么直接点？
 tidyverse不会让我们失望的，先看看`group_map()`
 ```{r adv-dplyr-34}
-## The result of .f should be a data frame(.f 必须返回数据框)
-## `group_map()` return a list of tibble(返回元素均为df的一个列表list(df1,df2,df3))
 iris %>%
   dplyr::group_by(Species) %>%
   dplyr::group_map(~ broom::tidy(lm(Petal.Length ~ Sepal.Length, data = .x)))
 ```
+
+- `group_map()`要求 The result of .f should be a data frame(.f 必须返回数据框)
+- `group_map()` return a list of tibble(返回元素均为df的一个列表list(df1,df2,df3))
+
 数据框进来，然后分组，依次处理成一个个数据框，最后以列表形式（a list of tibble）输出。
 
 

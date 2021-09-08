@@ -13,17 +13,17 @@ library(tidyverse)
 大家知道R常用的数据结构是向量、矩阵、列表和数据框，如下图
 
 ```{r purrr-2, out.width = '90%', echo = FALSE}
-knitr::include_graphics("images/data_struction1.png")
+knitr::include_graphics("images/data_structure1.png")
 ```
 
 
 他们构造起来，很多相似性。
 
 ```{r purrr-3, eval=FALSE}
-        list(a = 1, b = "a")   # 列表
-           c(a = 1, b = 2)     # 命名向量
-  data.frame(a = 1, b = 2)     # 数据框
-      tibble(a = 1, b = 2)     # 增强型数据框
+        list(a = 1, b = "a")   # list
+           c(a = 1, b = 2)     # named vector
+  data.frame(a = 1, b = 2)     # data frame
+      tibble(a = 1, b = 2)     # tibble
 ```
 
 ## 向量化运算
@@ -290,7 +290,7 @@ map(.x,
 function(.x) { 
   .x *2
 }
-# 程序员偷懒了
+# Equivalent
 ~ .x * 2
 ```
 
