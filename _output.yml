@@ -1,6 +1,9 @@
 bookdown::bs4_book:
   theme:
-    primary: "#035004"
+    bootswatch: "litera"
+    primary: "#982a31"
+    fg: "#2b2121"
+    bg: "#ffffff"
+  repo: https://github.com/perlatex/R_for_Data_Science
   split_by: chapter
   split_bib: no
-
