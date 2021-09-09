@@ -8,7 +8,7 @@ library(tidyverse)
 
 ## 从一个案例开始
 
-这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集。数据在课件首页提供了下载链接。
+这是一份1994年收集1379个对象关于收入、身高、教育水平等信息的数据集。数据可以在这里[下载](https://raw.githubusercontent.com/perlatex/R_for_Data_Science/master/demo_data/wages.csv)。
 
 首先，我们下载后导入数据
 ```{r lm-2, message = FALSE, warning = FALSE}

@@ -94,14 +94,16 @@ knitr::include_graphics("./images/common-aesthetics.png")
 
 数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，即，数值到图形属性的转换（映射）过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
 
+```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
+knitr::include_graphics("images/mapping.png")
+```
+
+
 
 ## 宏包ggplot2 
 
 ggplot2是RStudio首席科学家Hadley Wickham在2005年读博士期间的作品。很多人学习R语言，就是因为ggplot2宏包。目前，
-ggplot2已经发展成为最受欢迎的R宏包，没有之一。
-
-
-我们可以看看它2019年cran的下载量
+ggplot2已经发展成为最受欢迎的R宏包，没有之一。我们可以看看它2019年cran的下载量
 ```{r ggplot2-aes2-4}
 library(cranlogs)
 
@@ -112,18 +114,6 @@ sum(d$count)
 
 
 ## ggplot2 的图形语法
-
-ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。
-
-<!-- ```{r out.width = '100%', echo = FALSE} -->
-<!-- knitr::include_graphics("images/visualization-grammar-3.png") -->
-<!-- ``` -->
-
-```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
-knitr::include_graphics("images/mapping.png")
-```
-
-## 绘图语法
 
 ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。Hadley Wickham将这套可视化语法诠释为:
 
@@ -209,7 +199,7 @@ knitr::include_graphics("images/penguins.png")
 
 ```{r ggplot2-aes2-11, message = FALSE, warning = FALSE}
 library(tidyverse)
-penguins <- read_csv("./demo_data/penguins.csv") %>%
+penguins <- read_csv(here::here("demo_data", "penguins.csv")) %>%
   janitor::clean_names() %>% 
   drop_na()
 
@@ -230,15 +220,8 @@ penguins %>%
 |sex               |integer | 性别 |
 |year              |integer | 记录年份 |
 
-### 嘴巴越长，嘴巴也会越厚？
 
-这里提出一个问题，嘴巴越长，嘴巴也会越厚？
-
-```{r ggplot2-aes2-12, out.width = '86%', echo = FALSE}
-knitr::include_graphics("images/culmen_depth.png")
-```
-
-回答这个问题，我们用到penguins数据集其中的四个变量
+我们会用到penguins数据集其中的四个变量
 
 ```{r ggplot2-aes2-13, eval=FALSE}
 penguins %>%
@@ -247,6 +230,14 @@ penguins %>%
 ```
 
 
+### 嘴巴越长，嘴巴也会越厚？
+
+这里提出一个问题，嘴巴越长，嘴巴也会越厚？
+
+```{r ggplot2-aes2-12, out.width = '86%', echo = FALSE}
+knitr::include_graphics("images/culmen_depth.png")
+```
+
 
 为考察嘴峰长度(bill_length_mm)与嘴峰深度(bill_depth_mm)之间的关联，先绘制这两个变量的散点图，
 
@@ -254,8 +245,8 @@ penguins %>%
 knitr::include_graphics("images/a-3new.png")
 ```
 
-
-- `ggplot()`表示调用该函数画图，`data = penguins` 表示使用penguins这个**数据框**来画图。
+- `ggplot()` 初始化绘图，相当于打开了一张纸，准备画画。
+- `ggplot(data = penguins)` 表示使用penguins这个**数据框**来画图。
 
 - `+`表示添加图层。
 
@@ -266,8 +257,6 @@ knitr::include_graphics("images/a-3new.png")
 `aes(x = bill_length_mm, y = bill_depth_mm)`，意思是变量bill_length_mm作为（映射为）**x轴方向的位置**，变量bill_depth_mm作为（映射为）**y轴方向的位置**。
 
 - `aes()`除了位置上映射，还可以实现色彩、形状或透明度等视觉属性的映射。
-
-
 
 
 
@@ -424,7 +413,7 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 ```
 
 
-以上两段代码出来的图是一样。但背后的含义却不同。简约不等于简单。
+以上两段代码出来的图为什么是一样？背后的含义有什么不同？接着往下看
 
 
 
@@ -445,10 +434,9 @@ ggplot(penguins) +
 大家可以看到，以上两段代码出来的图是一样。但背后的含义却不同。
 
 
+- 映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在`ggplot()`里, 为**全局声明**。那么，当`geom_point()`画图时，发现缺少图形所需要的映射关系（点的位置、点的大小、点的颜色等等），就会从`ggplot()`全局变量中继承映射关系。
 
-- 映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在`ggplot()`里, 为**全局声明**。那么，当`geom_point()`画图时，发现缺少所绘图所需要的映射关系（点的位置、点的大小、点的颜色等等），就会从`ggplot()`全局变量中继承映射关系。
-
-- 如果映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在几何对象`geom_point()`里, 那么此处的映射关系就为**局部声明**, 那么`geom_point()`绘图时，发现所需要的映射关系已经存在，就不会继承全局变量的映射关系。
+- 如果映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在几何图形`geom_point()`里, 那么此处的映射关系就为**局部声明**, 那么`geom_point()`绘图时，发现所需要的映射关系已经存在，就不会继承全局变量的映射关系。
 
 
 

@@ -10,7 +10,7 @@ bibliography: [references.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: perlatex/R4DS-book
-url: "https://bookdown.org/wangminjie/R4DSBook/"
+url: "https://bookdown.org/wangminjie/R4DS/"
 #cover-image: images/cover.jpg
 description: "This book is an overview of how practitioners can acquire, wrangle, visualize, and model data with the R and Stan."
 ---
@@ -35,7 +35,7 @@ knitr::opts_chunk$set(
 ```
 
 # 前言 {.unnumbered}
-你好，这里是四川师范大学研究生公选课《数据科学中的R语言》的课程内容。考虑到大家来自不同的学院，有着不同的学科背景，因此讲授的内容不会太深奥（要有信心喔）。
+你好，这里是四川师范大学研究生公选课《数据科学中的R语言》的课程内容。R语言是统计编程的第一语言，近几年Tidyverse的推出大大降低了R语言的学习难度。Tidyverse是一系列R包的集合，包含了dplyr、ggplot2、tidyr、stringr等，从数据导入预处理，再到高级转化、可视化、建模和展示。因为其代码清晰可读的编程风格，得到越来越多人的喜爱。考虑到大家来自不同的学院，有着不同的学科背景，因此讲授的内容不会太深奥（要有信心喔）。
 
 比如在课程中以下内容就不会出现
 
@@ -53,7 +53,7 @@ summary_monthly_temp <- weather %>%
             std_dev = sd(temp))
 ```
 
-R语言是统计编程的第一语言，近几年Tidyverse的推出大大降低了R语言的学习难度。Tidyverse是一系列R包的集合，包含了dplyr、ggplot2、tidyr、stringr等，从数据导入预处理，再到高级转化、可视化、建模和展示。因为其代码清晰可读的编程风格，得到越来越多人的喜爱。文中大量使用形象化的比喻，从计算机科学的角度来讲，这些比喻是不严谨的，但是可以帮助大家理解其中概念，激励动手操作，提升信心。因为我们的目的，是让大家不害怕编程，而不是把大家培养成程序员。
+书中大量使用形象化的比喻，从计算机科学的角度来讲，这些比喻是不严谨的，但是可以帮助大家理解其中概念，激励动手操作，提升信心。因为我们的目的，是让大家不害怕编程，而不是把大家培养成程序员。
 
 
 在**跟进**本课程的同时， 我强烈推荐大家阅读Hadley Wickham的

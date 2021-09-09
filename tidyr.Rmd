@@ -1,7 +1,5 @@
 # 数据规整 {#tidyr}
 
-> 人的价值取决于社会的需求和不可替代性
-
 
 ```{r tidyr-1, message = FALSE, warning = FALSE}
 library(tidyverse)

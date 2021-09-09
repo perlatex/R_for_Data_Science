@@ -1,6 +1,6 @@
 # 函数 {#functions}
 
-R 语言的强大在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
+R 语言的强大还在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
 上一节课我们提到向量操作符，体会到了向量化操作的强大，事实上，向量操作符就是一种函数。
 
 ## 基础函数
@@ -67,27 +67,6 @@ is.character(x)
 ifelse(x > 5, TRUE, FALSE)
 ```
 
-
-## 如何获取帮助
-
-
-- 记住和学习所有的函数几乎是不可能的
-- 打开函数的帮助页面(`Rstudio`右下面板的`Help`选项卡)
-
-```{r intro-R-51, eval = FALSE }
-?sqrt
-?gather
-?spread
-?ggplot2
-?scale
-?map_dfr
-```
-
-比如：
-
-```{r intro-R-52, out.width = '90%', echo = FALSE}
-knitr::include_graphics("images/Rhelp.png")
-```
 
 
 
@@ -169,7 +148,7 @@ add2 <- function(x) {
 
 
 
-## 案例
+### 案例
 
 根据方差的数学表达式
 
@@ -317,6 +296,39 @@ mystat(w)
 
 
 ## 使用宏包的函数
+
+各种宏包也为我们准备了不同的函数，我们在使用前一般会先加载该宏包，比如后面章节我们会用的`dplyr`宏包中的`select()`函数，它用于选取数据框的某列
+```{r, eval=FALSE}
+library(dplyr)
+
+select(mtcars, mpg)
+```
+
+但是，其它宏包可能也有`select()`函数，比如`MASS`和`skimr`，如果同时加载了`dplyr`，`MASS`和`skimr`三个宏包，在程序中使用`select()`函数，就会造成混淆和报错。这个时候就需要给每个函数指定是来源哪个宏包，具体方法就是在宏包和函数之间添加`::`，比如`dplyr::select()`，`skimr::select()` 或者`MASS::select()`。
+
+
+
+## 如何获取帮助
+
+
+- 记住和学习所有的函数几乎是不可能的
+- 打开函数的帮助页面(`Rstudio`右下面板的`Help`选项卡)
+
+```{r intro-R-51, eval = FALSE }
+?sqrt
+?gather
+?spread
+?ggplot2
+?scale
+?map_dfr
+```
+
+比如：
+
+```{r intro-R-52, out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/Rhelp.png")
+```
+
 
 ## 习题
 

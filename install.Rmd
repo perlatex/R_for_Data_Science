@@ -28,7 +28,7 @@ knitr::include_graphics("images/Rinstall.png")
 
 为了更好的使用 R 软件，我推荐大家使用 [RStudio](https://www.rstudio.com/products/rstudio) IDE。因此，安装完 R 后，还需要安装 [RStudio](https://www.rstudio.com/products/rstudio)。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。但我更觉得 R 是有趣的灵魂，而 Rstudio 是好看的皮囊。
 
-```{r out.width = '45%', echo = FALSE}
+```{r out.width = '49%', echo = FALSE}
 knitr::include_graphics(c("images/engine.jpg", "images/dashboard.jpg"))
 ```
 
@@ -97,16 +97,16 @@ install.packages("tidyverse")
 
 - 安装多个包
 ```{r, eval = FALSE }
-install.packages(c("ggplot2", "devtools", "dplyr"))
+install.packages(c("palmerpenguins", "patchwork", "gapminder", "ggridges", "readxl"))
 ```
 
 
 ```{r, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-my_packages <- c("ggplot2", "dplyr", "tidyr", "stringr", "widyr", "ggRadar",
+my_packages <- c("tidyverse", "palmerpenguins", "readxl",
                  "ggraph", "tidygraph", "patchwork", "ggridges", "here", 
                  "brms", "sf", "rvest", "rmarkdown", "cowplot", "gapminder",
-                 "broom", "modelr", "knitr", "rlang", "tidytext", "wordcloud2", 
-                 "tibbletime",  "scales", "devtools")
+                 "broom", "modelr", "knitr", "rlang", "tidytext",  
+                 "scales", "devtools")
 
 install.packages(my_packages, repos = "http://cran.rstudio.com")
 ```

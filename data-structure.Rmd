@@ -22,14 +22,14 @@ knitr::include_graphics("images/vector_like2.jpg", dpi = 300)
 矩阵可以存储行(row)和列(column)二维的数据。
 
 
-```{r, out.width = '70%', echo = FALSE}
+```{r, out.width = '50%', echo = FALSE}
 knitr::include_graphics("images/matrix.jpg", dpi = 300)
 ```
 
-它实际上是向量的另一种表现形式。
+它实际上是向量的另一种表现形式，也就说它的本质还是向量，一维的向量用二维的方式呈现。
 
 
-矩阵可以用 `matrix()` 函数创建，第一位参数的是用于创建矩阵的向量。比如下面把向量`c(2, 4, 3, 1, 5, 7)` 转换成2行3列的矩阵
+矩阵可以用 `matrix()` 函数创建，第一个位置的参数是用于创建矩阵的向量。比如下面把向量`c(2, 4, 3, 1, 5, 7)` 转换成2行3列的矩阵
 
 ```{r, echo=TRUE, message=TRUE, warning=TRUE}
 m <- matrix(
@@ -85,19 +85,23 @@ dim(m)
 
 盒子里装一个向量，有点浪费，我们想往里面装更多的东西，可以使用`list()`函数创建列表
 
-```{r, out.width = '60%', echo = FALSE}
+```{r, out.width = '45%', echo = FALSE}
 knitr::include_graphics("images/list.jpg", dpi = 300)
 ```
 
+::: {.rmdnote}
 
 `list()` 函数创建列表 Vs. `c()` 函数创建向量：
 
 - **相同点**：元素之间用逗号分开。
 - **不同点**：
-  - 向量的元素是单个值；列表的元素可以是更复杂的结构，可以是向量、矩阵或者列表。
+  - 向量的元素是单个值；列表的元素可以是更复杂的结构，可以是单个值，也可以是向量、矩阵或者列表。
   - 向量要求每个元素的数据类型必须相同，要么都是数值型，要么都是字符型；而列表的元素允许不同的数据类型。
 
 <!-- 我在初学时，我把列表(list)想象成小火车，每节车厢可以装自己喜欢的东西 -->
+
+:::
+
 
 
 
@@ -200,3 +204,4 @@ knitr::include_graphics("images/data_structure1.png")
 ## 习题
 
 
+- 创建一个学生信息的data.frame，包含姓名、性别、年龄，成绩等变量

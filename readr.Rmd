@@ -24,6 +24,8 @@
 knitr::include_graphics("./images/Rproject.png")
 ```
 
+
+
 ## 读取文件
 
 事实上，R语言提供了很多读取数据的函数。下表列出了常见文件格式的读取方法
@@ -43,21 +45,64 @@ Internet                       |       `download.file()`
 
 
 
+## 文件路径
+
+在读取文件时，路径的写法有如下方式（以图像文件"a.jpg"为例）
+
+- 如果以当前项目文件为中心，图片在当前目录，它的路径
+"./a.jpg"
+
+- 如果以当前项目文件为中心，图片在下一层目录的images文件夹
+"./images/a.jpg"
+
+- 如果以当前项目文件为中心，图片在上一层目录下，它的路径
+"../a.jpg"
+
+- 如果以当前项目文件为中心，图片在上一层目录的images文件夹，它的路径
+"../images/a.jpg"
+
+- 从根目录出发，访问D盘的images文件"b.jpg"图片，它的路径
+"D:/images/b.jpg"
+
+
+## `here` 宏包
+
+推荐使用强大的`here`宏包，`here()`会告诉我们当前所在的目录
+```{r}
+here::here()
+```
+
+以及指向某个文件的路径信息
+```{r}
+here::here("demo_data", "kidiq.RDS")
+```
+这样就会很方便的读取文件
+```{r, eval=FALSE}
+readr::read_rds(here::here("demo_data", "kidiq.RDS"))
+```
+
+`here`宏包的好处还在于，在不同的电脑和文件结构下，代码都能运行，尤其当与合作者共同完成一个项目时，这个方法非常有用。
+
+
+
 ## 范例
 
 
 ```{r readr-2, eval=FALSE, warning=FALSE}
 d <- read.table(file= "./data/txt_file.txt", header = TRUE)
+d <- read.table(here::here("data", "txt_file.txt"), header = TRUE)
 ```
 
 
 ```{r readr-3, eval=FALSE, warning=FALSE}
 load(file = "./data/rda_file.rda")
+load(here::here("data", "rda_file.rda"))
 ```
 
 
 ```{r readr-4, eval=FALSE, warning=FALSE}
-d <- readRDS(file = "./data/rds_file.rds")
+d <- readRDS("./data/rds_file.rds")
+d <- readRDS(here::here("data", "rda_file.rds"))
 ```
 
 
@@ -65,6 +110,7 @@ d <- readRDS(file = "./data/rds_file.rds")
 ```{r readr-5, eval=FALSE, warning=FALSE}
 library(readr)
 d <- read_csv(file = "./data/csv_file.csv") 
+d <- read_csv(here::here("data", "csv_file.csv")) 
 ```
 
 
@@ -77,7 +123,8 @@ d <- read_csv(url)
 
 ```{r readr-7, eval=FALSE, warning=FALSE}
 library(readxl)
-d <- read_excel("./data/vowel_data.xlsx")
+d <- read_excel("./data/vowel_data.xlsx") 
+d <- read_excel(here::here("data", "vowel_data.xlsx")) 
 ```
 
 
@@ -85,6 +132,7 @@ d <- read_excel("./data/vowel_data.xlsx")
 ```{r readr-8, eval=FALSE, warning=FALSE}
 library(haven)
 d <- read_dta("./data/cfps2010.dta")
+d <- read_dta(here::here("data", "cfps2010.dta"))
 ```
 
 
@@ -103,7 +151,7 @@ d <- read_dta("./data/cfps2010.dta")
 读取demo_data文件夹下kidiq.RDS文件
 
 ```{r, include = FALSE, eval = FALSE}
-kidiq <- readr::read_rds("./demo_data/kidiq.RDS") 
+kidiq <- readr::read_rds(here::here("demo_data", "kidiq.RDS")) 
 kidiq
 ```
 
