@@ -238,14 +238,13 @@ wflow_fit %>%
 penguins_pred <- 
   predict(
     wflow_fit, 
-    new_data = testing_data %>% dplyr::select(-bill_length_mm),
+    new_data = testing_data %>% dplyr::select(-bill_length_mm), # note: testing_data not test_data
     type = "numeric"
   ) %>% 
   dplyr::bind_cols(testing_data %>% dplyr::select(bill_length_mm))
 
 penguins_pred
 ```
-
 
 ```{r tidymodels-17}
 penguins_pred %>% 
@@ -254,6 +253,22 @@ penguins_pred %>%
   geom_point(alpha = 0.5) + 
   labs(y = "Predicted ", x = "bill_length_mm") 
 ```
+
+
+
+
+`augment()`具有`predict()`一样的功能和特性，还更简练的多
+
+```{r}
+wflow_fit %>%
+  augment(new_data = testing_data) %>%       # note: testing_data not test_data
+  ggplot(aes(x = bill_length_mm, y = .pred)) + 
+  geom_abline(linetype = 2) + 
+  geom_point(alpha = 0.5) + 
+  labs(y = "Predicted ", x = "bill_length_mm") 
+```
+
+
 
 ### 模型评估
 
