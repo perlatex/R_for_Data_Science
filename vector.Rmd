@@ -209,7 +209,7 @@ four_seasons_factor <- factor(four_seasons)
 four_seasons_factor
 ```
 
-查看因子型向量的时候，也会输出了层级信息，默认的情况，它是按照字符串首字母的顺序排序，当然也可以指定顺序，比如按照我对四个季节的喜欢**排序**
+查看因子型向量的时候，也会输出了层级信息，默认的情况，它是按照字符串首字母的顺序排序，当然也可以指定顺序，这个时候，我们就需要指定层级信息，比如指定我对四个季节喜欢的顺序为c("summer", "winter", "spring", "autumn")
 
 ```{r}
 four_seasons <- c("spring", "summer", "autumn", "winter")

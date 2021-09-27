@@ -83,26 +83,12 @@ dim(m)
 
 ## 列表
 
-盒子里装一个向量，有点浪费，我们想往里面装更多的东西，可以使用`list()`函数创建列表
+如果我们想要装更多的东西，可以想象有一个小火车，小火车的每节车厢是独立的，因此每节车厢装的东西可以不一样。这种结构装载数据的能力很强大，称之为**列表**（list）。我们可以使用`list()`函数创建列表
 
-```{r, out.width = '45%', echo = FALSE}
-knitr::include_graphics("images/list.jpg", dpi = 300)
+
+```{r, out.width = '95%', echo = FALSE}
+knitr::include_graphics("images/list_trian.png")
 ```
-
-::: {.rmdnote}
-
-`list()` 函数创建列表 Vs. `c()` 函数创建向量：
-
-- **相同点**：元素之间用逗号分开。
-- **不同点**：
-  - 向量的元素是单个值；列表的元素可以是更复杂的结构，可以是单个值，也可以是向量、矩阵或者列表。
-  - 向量要求每个元素的数据类型必须相同，要么都是数值型，要么都是字符型；而列表的元素允许不同的数据类型。
-
-<!-- 我在初学时，我把列表(list)想象成小火车，每节车厢可以装自己喜欢的东西 -->
-
-:::
-
-
 
 
 ```{r, echo=TRUE, message=TRUE, warning=TRUE}
@@ -116,8 +102,23 @@ list1
 
 
 ```{r, out.width = '100%', echo = FALSE}
-knitr::include_graphics("images/create_list.jpg", dpi = 300)
+knitr::include_graphics("images/create_list.jpg")
 ```
+
+
+::: {.rmdnote}
+
+`list()` 函数创建列表 Vs. `c()` 函数创建向量：
+
+- **相同点**：元素之间用逗号分开。
+- **不同点**：
+  - 向量的元素是单个值；列表的元素可以是更复杂的结构，可以是单个值，也可以是向量、矩阵或者列表。
+  - 向量要求每个元素的数据类型必须相同，要么都是数值型，要么都是字符型；而列表的元素允许不同的数据类型。
+
+:::
+
+
+
 
 
 ### 列表的属性
@@ -137,8 +138,7 @@ length(list1)
 
 
 ## 数据框
-
-如果列表元素的长度都相等，那么就变成了**数据框** (data frame)
+前面说过，列表可以想象成一个小火车，如果每节车厢装的都是向量而且等长，那么这种特殊形式的列表就变成了**数据框** (data frame)
 
 ```{r, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/dataframe.jpg", dpi = 300)
@@ -146,7 +146,7 @@ knitr::include_graphics("images/dataframe.jpg", dpi = 300)
 
 
 
-换句话说，**数据框**是一种特殊的列表，我们可以使用 `data.frame()` 函数构建
+换句话说，**数据框**是一种特殊的列表，我们可以使用 `data.frame()` 函数构建数据框
 
 ```{r, echo=TRUE, message=TRUE, warning=TRUE}
 df <- data.frame(
@@ -159,11 +159,12 @@ df
 ```
 
 
+
 ```{r, echo=FALSE, out.width = '100%'}
-knitr::include_graphics("images/create_dataframe.png", dpi = 300)
+knitr::include_graphics("images/create_dataframe.png")
 ```
 
-数据框就是我们经常用的excel表格，所以在数据科学的统计建模和可视化中运用非常广泛。
+数据框类似于我们经常用的excel表格。由于数据框融合了向量、列表和矩阵的特性，所以在数据科学的统计建模和可视化中运用非常广泛。
 
 ### 数据框的属性
 
@@ -184,6 +185,13 @@ ncol(df)
 ## 小结
 
 R 对象的数据结构(向量、矩阵、列表和数据框)，总结如下
+
+- 向量  -- 糖葫芦
+- 矩阵  -- 糖葫芦，有多行多列
+- 列表  -- 小火车
+- 数据框 -- excel表格
+<!-- - array --- 土司面包一样 -->
+
 
 ```{r, out.width = '90%', include = FALSE}
 knitr::include_graphics("images/data_structure.jpg")

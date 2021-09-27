@@ -162,6 +162,13 @@ knitr::include_graphics("images/script2.png")
 - 鼠标选中多行代码，然后点击 `Run`或者`Ctrl + Enter`
 
 
+## 注释
+
+可以让阅读者更易理解代码，一般会在脚本中添加注释，R 语言注释符号为 `#`。 注释会被编译器忽略掉，不会影响代码的执行。
+
+```{r, eval=FALSE}
+1 + 3 # this is my comment
+```
 
 ## R 语言社区
 

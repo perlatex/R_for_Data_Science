@@ -419,6 +419,8 @@ knitr::include_graphics("images/script2.png")
   - 点击 `Source`，从头到尾运行全部代码
 
 
+
+
 ## 宏包
 
 R 语言的强大还在于各种宏包，一般在[The Comprehensive R Archive Network (CRAN)](https://cran.r-project.org)下载安装。宏包扩展了R语言本身的各种功能，也为解决问题提供了各种方案。截至撰写本书时止，CRAN上大约有1.4万个宏包可以使用。但由于各种包接口不统一，语法不一致，也带来一些困扰。为了解决这个问题，RStudio 公司的[Hadley Wickham](http://hadley.nz) 与其带领的团队推出了`tidyverse`宏包， [tidyverse](https://www.tidyverse.org)将常用的宏包整合在一起，并保持了语法的一致性。可以说，`tidyverse`宏包是R语言[入门](http://varianceexplained.org/r/teach-tidyverse/) 学习的首选。
@@ -534,7 +536,6 @@ knitr::include_graphics("images/dont-load-data.png")
 ```{r intro-R-52, out.width = '90%', echo = FALSE}
 knitr::include_graphics("images/Rhelp.png")
 ```
-
 
 
 

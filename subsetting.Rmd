@@ -51,6 +51,11 @@ x[c(-3, -4)]
 
 
 - 逻辑向量：将`TRUE`对应位置的元素提取出来
+
+```{r, out.width = '90%', echo = FALSE}
+knitr::include_graphics("images/vector-subset.png")
+```
+
 ```{r subsetting-7}
 x[c(TRUE, FALSE, TRUE, FALSE, TRUE)]
 ```

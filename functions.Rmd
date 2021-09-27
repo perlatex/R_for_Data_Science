@@ -150,35 +150,16 @@ add2 <- function(x) {
 
 ### 案例
 
-根据方差的数学表达式
-
+- 根据数据标准化的数学表达式，写出**数据标准化**的函数
 $$
-\mathrm{Var}(x) = \frac{1}{n - 1} \sum_{i=1}^n (x_i - \bar{x}) ^2 
+\mathrm{std}(x) = \frac{x_i - \bar{x}}{\mathrm{sd}(x)}  
 $$
-
-计算`w`的方差
-
-```{r}
-w <- c(2, 7, 8, 9, 3, 6, 8, 12, 6, 9)
-w
-```
-
-
-
-
-```{r}
-varfun <- function(x) {
-  res <- sum((x - mean(x))^2) / (length(x) - 1)
-  return(res)
-}
-
-
-varfun(w)
-```
 
 
 ```{r, eval=FALSE, echo = FALSE}
-var(w)
+std <- function(x) {
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
 ```
 
 
@@ -289,10 +270,6 @@ mystat <- function(x){
 }
 ```
 
-```{r}
-mystat(w)
-```
-
 
 
 ## 使用宏包的函数
@@ -332,15 +309,26 @@ knitr::include_graphics("images/Rhelp.png")
 
 ## 习题
 
-- 对 `w` 进行**数据标准化**
+
+- 根据方差的数学表达式，写出**方差**的计算函数
+
 $$
-\mathrm{std}(x) = \frac{x_i - \bar{x}}{\mathrm{sd}(x)}  
+\mathrm{Var}(x) = \frac{1}{n - 1} \sum_{i=1}^n (x_i - \bar{x}) ^2 
 $$
-```{r, eval=FALSE, echo = FALSE}
-std <- function(x) {
-  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+
+
+
+```{r}
+varfun <- function(x) {
+  res <- sum((x - mean(x))^2) / (length(x) - 1)
+  return(res)
 }
+
+
 ```
+
+
+
 
 
 

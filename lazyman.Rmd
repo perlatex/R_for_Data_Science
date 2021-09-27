@@ -30,13 +30,15 @@ fake_raw %>% janitor::clean_names()
 ## 比count()更懂我的心
 ```{r lazyman-3}
 mtcars %>%
-  dplyr::count(cyl)
+  dplyr::count(cyl, sort = TRUE) %>% 
+  mutate(percent = 100 * n / sum(n))
 ```
 
-```{r lazyman-4}
+```{r lazyman-4, eval=FALSE}
 mtcars %>%
   janitor::tabyl(cyl)
 ```
+
 
 
 ## 比distinct()更知我心
