@@ -50,7 +50,7 @@ df %>%
 
 那么，我们是否能得出结论，每组的数据长的差不多呢？然而，我们画图发现
 
-```{r ggplot2-geom-5, fig.asp=1.2}
+```{r ggplot2-geom-5, fig.asp=1.2, echo=FALSE}
 ggplot(df, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
   theme(legend.position = "none") +
@@ -105,9 +105,9 @@ knitr::include_graphics("images/how_to_plot.png")
     + `geom_text()`
     + `geom_sf()`
     
-    
-```{r ggplot2-geom-8, out.width = '70%', echo = FALSE}
-knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
+```{r, fig.align='default', out.width="12.5%", fig.cap='Source: <a href="https://ggplot2-book.org/individual-geoms.html">ggplot2 book</a>', fig.show='hold'}
+geoms <- list.files(path = "images/img", pattern = "geom-basic", full.names = T)
+knitr::include_graphics(geoms)
 ```
 
 
@@ -142,6 +142,9 @@ knitr::include_graphics("images/ggplot2_system.png")
 * 三个连续
 
 ```
+
+
+
 
 
 ### 导入数据
@@ -274,6 +277,7 @@ gapdata %>%
   geom_histogram(position = "identity")
 ```
 
+### 频次图
 
 ```{r ggplot2-geom-25}
 gapdata %>%
@@ -281,7 +285,7 @@ gapdata %>%
   geom_freqpoly()
 ```
 
-
+### 密度图
 ```{r ggplot2-geom-26}
 #' smooth histogram = density plot
 gapdata %>%
@@ -332,35 +336,16 @@ gapdata %>%
 ```
 
 
-```{r ggplot2-geom-32}
-gapdata %>%
-  ggplot(aes(x = lifeExp)) +
-  geom_density() +
-  # facet_wrap(vars(continent))
-  facet_grid(. ~ continent)
-```
-
-
-
-
-```{r ggplot2-geom-33}
-gapdata %>%
-  filter(continent != "Oceania") %>%
-  ggplot(aes(x = lifeExp, fill = continent)) +
-  geom_histogram() +
-  facet_grid(continent ~ .)
-```
 
 
 直方图和密度图画在一起。注意`y = stat(density) `表示y是由x新生成的变量，这是一种固定写法，类似的还有`stat(count)`, `stat(level)`
 
-```{r ggplot2-geom-34}
+```{r ggplot2-geom-340}
 gapdata %>%
   filter(continent != "Oceania") %>%
   ggplot(aes(x = lifeExp, y = stat(density))) +
   geom_histogram(aes(fill = continent)) +
-  geom_density() +
-  facet_grid(continent ~ .)
+  geom_density() 
 ```
 
 
@@ -591,12 +576,6 @@ gapdata %>%
 
 
 
-```{r ggplot2-geom-58}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point(show.legend = FALSE) +
-  facet_wrap(~continent)
-```
 
 
 ```{r ggplot2-geom-59}
@@ -696,6 +675,103 @@ gapdata %>%
     panel.grid.minor = element_blank()
   )
 ```
+
+
+
+### 分面
+
+如果想分别画出每个洲的寿命分布图，我们想到的是这样
+
+```{r, eval=FALSE}
+gapdata %>% 
+  filter(continent == "Africa") %>% 
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
+
+gapdata %>% 
+  filter(continent == "Americas") %>% 
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
+
+gapdata %>% 
+  filter(continent == "Asia") %>% 
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
+
+gapdata %>% 
+  filter(continent == "Europe") %>% 
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
+
+gapdata %>% 
+  filter(continent == "Oceania") %>% 
+  ggplot(aes(x = lifeExp)) +
+  geom_density()
+```
+
+
+事实上，ggplot2的分面，可以很快捷的完成。分面有两个
+- `facet_grid()`
+- `facet_wrap()`
+
+
+
+#### `facet_grid()`
+
+- create a grid of graphs, by rows and columns 
+- use `vars()` to call on the variables 
+- adjust scales with `scales = "free"`
+
+
+```{r ggplot2-geom-32}
+gapdata %>%
+  ggplot(aes(x = lifeExp)) +
+  geom_density() +
+  facet_grid(. ~ continent)
+```
+
+```{r ggplot2-geom-33}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  facet_grid(continent ~ .)
+```
+
+
+```{r ggplot2-geom-34}
+gapdata %>%
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x = lifeExp, y = stat(density))) +
+  geom_histogram(aes(fill = continent)) +
+  geom_density() +
+  facet_grid(continent ~ .)
+```
+
+
+
+#### `facet_wrap()`
+
+- create small multiples by "wrapping" a series of plots
+- use `vars()` to call on the variables 
+- `nrow` and `ncol` arguments for dictating shape of grid 
+
+
+
+
+```{r ggplot2-geom-58}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~continent)
+```
+
+
+
+
+
+
+
 
 ### 文本标注
 
@@ -843,121 +919,6 @@ gapdata %>%
   geom_text(aes(label = round(mean_lifeExp, 2)), size = 3, color = "black") +
   theme(legend.position = "none")
 ```
-
-## 主题风格
-
-
-```{r ggplot2-geom-77}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm")
-```
-
-
-```{r ggplot2-geom-78}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggtitle("Life expectancy over time by continent")
-```
-
-
-```{r ggplot2-geom-79}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  theme_grey() # the default
-```
-
-
-
-```{r ggplot2-geom-80}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  theme_bw()
-```
-
-
-
-```{r ggplot2-geom-81}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_calc() +
-  ggtitle("ggthemes::theme_calc()")
-```
-
-
-
-
-```{r ggplot2-geom-82}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_economist() +
-  ggtitle("ggthemes::theme_economist()")
-```
-
-```{r ggplot2-geom-83}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_economist_white() +
-  ggtitle("ggthemes::theme_economist_white()")
-```
-
-
-```{r ggplot2-geom-84}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_few() +
-  ggtitle("ggthemes::theme_few()")
-```
-
-
-
-```{r ggplot2-geom-85}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_gdocs() +
-  ggtitle("ggthemes::theme_gdocs()")
-```
-
-
-
-```{r ggplot2-geom-86}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_tufte() +
-  ggtitle("ggthemes::theme_tufte()")
-```
-
-
-```{r ggplot2-geom-87}
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
-  ggthemes::theme_wsj() +
-  ggtitle("ggthemes::theme_wsj()")
-```
-
-
-
 
 ## 课后思考题
 

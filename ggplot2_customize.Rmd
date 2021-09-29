@@ -239,51 +239,29 @@ knitr::include_graphics("images/patchwork.png")
 
 
 
-### 保存图片
+<!-- ### 保存图片 -->
 
-使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等， 还可以指定图片的高度和宽度，默认`units`是英寸，也可以使用"cm", or "mm".
+<!-- 使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等， 还可以指定图片的高度和宽度，默认`units`是英寸，也可以使用"cm", or "mm". -->
 
-```{r ggsave-example}
-pp <- gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  scale_x_log10() +
-  scale_color_manual(
-    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
-  ) +
-  theme(legend.position = "none") +
-  labs(
-    title = "My Plot Title",
-    x = "The X Variable",
-    y = "The Y Variable"
-  )
+<!-- ```{r ggsave-example} -->
+<!-- pp <- gapdata %>% -->
+<!--   ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) + -->
+<!--   geom_point() + -->
+<!--   scale_x_log10() + -->
+<!--   scale_color_manual( -->
+<!--     values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917") -->
+<!--   ) + -->
+<!--   theme(legend.position = "none") + -->
+<!--   labs( -->
+<!--     title = "My Plot Title", -->
+<!--     x = "The X Variable", -->
+<!--     y = "The Y Variable" -->
+<!--   ) -->
 
-# ggsave("demo_plot.pdf", plot = pp, width = 8, height = 6)
-```
+<!-- # ggsave("demo_plot.pdf", plot = pp, width = 8, height = 6) -->
+<!-- ``` -->
 
 
-
-## 中文字体
-```{r ggplot2-customize-17}
-library(showtext)
-showtext_auto()
-
-gapdata %>%
-  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
-  geom_point() +
-  scale_x_log10() +
-  scale_color_manual(
-    values = c("#195744", "#008148", "#C6C013", "#EF8A17", "#EF2917")
-  ) +
-  theme(legend.position = "none") +
-  labs(
-    title = "This is my title",
-    x = "This is my x axis",
-    y = "This is my y axis"
-  )
-
-# ggsave("myfirst.pdf", width = 8, height = 6)
-```
 
 
 
@@ -546,9 +524,36 @@ nyc_squirrels %>%
 ```
 
 
-<!-- ## ggplot2 未了情 -->
+## 字体
 
-### 中文字体
+如果想使用不同的字体，可以用`theme()` 的 `element_text()` 函数
+
+- `family`: font family 
+- `face` : bold, italic, bold.italic, plain 
+- `color`, `size`, `angle`, etc. 
+    
+其中，`family = `字体名，可以用 [`extrafont`](https://github.com/wch/extrafont) 导入`C:\Windows\Fonts\`的字体，然后选取
+
+```{r eval=FALSE, echo=TRUE}
+library(extrafont)
+font_import() # will take 2-3 minutes. Only need to run once
+loadfonts()
+fonts()
+fonttable()
+```
+
+
+```{r}
+mpg %>% 
+  ggplot() +
+  geom_jitter(aes(x = cty, y = hwy, color = class)) +
+  theme(text = element_text(family = "Peralta"))
+```
+
+
+
+
+## 中文字体
 
 有时我们需要保存图片，图片有中文字符，就需要加载`library(showtext)`宏包
 
@@ -636,7 +641,7 @@ showtext_auto(FALSE)
 
 
 
-### latex公式
+## latex公式
 
 ```{r ggplot2-customize-36, message=FALSE, warning=FALSE}
 library(ggplot2)

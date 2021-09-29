@@ -92,7 +92,7 @@ p + annotate("text",
 knitr::include_graphics("./images/common-aesthetics.png")
 ```
 
-数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，即，数值到图形属性的转换（映射）过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
+数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，数值小，点半径就小一点，数值大的，点就大一点，或者数值大颜色就深一点，数值小颜色就浅一点，即，数值到图形属性**映射**过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
 
 ```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
 knitr::include_graphics("images/mapping.png")
@@ -168,15 +168,17 @@ d %>% head(5)
 
 ```{r, eval = FALSE}
 library(ggplot2)
-ggplot(data = ___, mapping = aes(x = ___, y = ____)) +
-  geom__****()
+ggplot(___) + 
+  geom_point(
+    mapping = aes(x = ___, y = ___)
+  )
 ```
 
 我们只需要在相应位置填入数据框，和数据框的变量，就可以画图
 
 ```{r}
-ggplot(data = d, mapping = aes(x = year, y = carbon_emissions)) +
-  geom_point() +
+ggplot(data = d) +
+  geom_point(mapping = aes(x = year, y = carbon_emissions)) +
   xlab("Year") +
   ylab("Carbon emissions (metric tons)") +
   ggtitle("Annual global carbon emissions, 1880-2014")
@@ -540,7 +542,9 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
 
 ## 保存图片
 
-可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等
+可以使用`ggsave()`函数，将图片保存为所需要的格式，如".pdf", ".png"等，
+还可以指定图片的高度和宽度，默认`units`是英寸，也可以使用"cm", or "mm".
+
 
 ```{r, eval=FALSE}
 p1 <- penguins %>% 

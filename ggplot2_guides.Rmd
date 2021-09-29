@@ -28,6 +28,18 @@ knitr::include_graphics("images/ggplot2_guides.jpg")
 ```
 
 
+以下 `guides()` 函数族用于控制图例的外观
+
+- `guide_colorbar()`: continuous colors
+- `guide_legend()`: discrete values (shapes, colors)
+- `guide_axis()`: control axis text/spacing, add a secondary axis 
+- `guide_bins()`: creates "bins" of values in the legend
+- `guide_colorsteps()`: makes colorbar discrete 
+
+
+```{r out.width = "80%"}
+knitr::include_graphics("images/img/guides_examples.png")
+```
 
 ## 案例详解
 ```{r ggplot2-guides-3}
@@ -53,6 +65,8 @@ mpg %>%
          )
 ```
 
+
+
 ```{r ggplot2-guides-5}
 mpg %>%
   ggplot(aes(x = displ, y = hwy, color = factor(cyl))) +
@@ -66,6 +80,18 @@ mpg %>%
 ```
 
 
+
+```{r ggplot2-guides-51}
+mpg %>%
+  ggplot() + 
+  geom_jitter(aes(x = cty, y = hwy, color = class), key_glyph = draw_key_pointrange) + #<<
+  guides(color = guide_legend(nrow = 1)) +
+  theme(legend.position =  "top", 
+        axis.text = element_text(face = "italic", color = "navy"), 
+        plot.background = element_rect(fill = "#a0d1f2"), 
+        panel.background = element_blank(), 
+        panel.grid = element_line(linetype = "dotdash"))
+```
 
 
 ```{r ggplot2-guides-6}
@@ -109,6 +135,9 @@ mpg %>%
          size = FALSE                       # remove
          )
 ```
+
+
+
 
 
 ## 小结

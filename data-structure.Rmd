@@ -13,7 +13,7 @@ knitr::include_graphics("images/vector_like2.jpg", dpi = 300)
 - 列表
 - 数据框
 
-这些数据结构都可以看作由向量衍生出来的。
+这些数据结构都可以看作由向量衍生出来的^[数据结构还包括array，但因为它的使用频次不及向量、矩阵、列表和数据框多，所以暂时不介绍。]。
 
 
 
@@ -211,5 +211,5 @@ knitr::include_graphics("images/data_structure1.png")
 
 ## 习题
 
-
-- 创建一个学生信息的data.frame，包含姓名、性别、年龄，成绩等变量
+- 为什么说数据框融合了向量、矩阵和列表的特性？
+- 创建一个学生信息的data.frame，包含姓名、性别、年龄，成绩等变量。

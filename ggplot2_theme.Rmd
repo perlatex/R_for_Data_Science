@@ -308,6 +308,147 @@ penguins %>%
 knitr::include_graphics("images/ggplot2-themes.jpg")
 ```
 
+
+## 主题风格
+当然可以使用自带的主题风格
+
+```{r, fig.align='default', out.width="16.65%", fig.cap='Source: <a href="https://ggplot2-book.org/polishing.html">ggplot2 book</a>', fig.show='hold'}
+thms <- list.files(path = "images/img", pattern = "built-in",full.names = T)
+knitr::include_graphics(thms)
+```
+
+
+
+
+
+
+```{r ggplot2-geom2-24}
+penguins %>% 
+    ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point() +
+    theme_minimal()
+```
+
+
+
+```{r ggplot2-geom2-240}
+penguins %>% 
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+  geom_point() +
+  theme_bw() +
+  theme(text = element_text(family = "serif", size = 20),
+        panel.grid = element_blank()
+        )
+```
+
+
+
+当然，`ggthemes`宏包也提供了很多优秀的主题风格
+
+```{r ggplot2-geom2-25}
+library(ggthemes)
+penguins %>% 
+    ggplot(aes(x = bill_depth_mm, y = bill_length_mm)) +
+    geom_point() +
+    ggthemes::theme_economist()
+```
+
+
+
+```{r ggplot2-geom-79}
+gapdata <- read_csv("./demo_data/gapminder.csv")
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_grey() # the default
+```
+
+
+
+```{r ggplot2-geom-80}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  theme_bw()
+```
+
+
+
+```{r ggplot2-geom-81}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_calc() +
+  ggtitle("ggthemes::theme_calc()")
+```
+
+
+
+
+```{r ggplot2-geom-82}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist() +
+  ggtitle("ggthemes::theme_economist()")
+```
+
+```{r ggplot2-geom-83}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_economist_white() +
+  ggtitle("ggthemes::theme_economist_white()")
+```
+
+
+```{r ggplot2-geom-84}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_few() +
+  ggtitle("ggthemes::theme_few()")
+```
+
+
+
+```{r ggplot2-geom-85}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_gdocs() +
+  ggtitle("ggthemes::theme_gdocs()")
+```
+
+
+
+```{r ggplot2-geom-86}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_tufte() +
+  ggtitle("ggthemes::theme_tufte()")
+```
+
+
+```{r ggplot2-geom-87}
+gapdata %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth(lwd = 3, se = FALSE, method = "lm") +
+  ggthemes::theme_wsj() +
+  ggtitle("ggthemes::theme_wsj()")
+```
+
+
 ## 提问
 
 - ggplot2中 plot 与 panel 有区别？
