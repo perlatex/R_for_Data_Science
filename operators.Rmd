@@ -248,14 +248,14 @@ typeof(b)
 c(2, 3) %in% c(1, 2, 3, 4, 5)
 ```
 
-- `is.na()` 判断是否缺失值，R 里**缺失值**用`NA`表示，`NA`的意思就是 not available.
+- `is.na()` 判断是否为缺失值，R 里**缺失值**用`NA`表示，`NA`的意思就是 not available 或者 not applicable.
 
 ```{r}
-is.na(c(1, 2, NA, 4, NA))
+is.na(c(1, 2, NA, 4, NA, 6))
 ```
 
 ```{r}
-x <- c(1, 2, NA, 4, NA)
+x <- c(1, 2, NA, 4, NA, 6)
 !is.na(x)
 ```
 
@@ -280,6 +280,7 @@ ___ & ___
 ___ | ___
 
 ___ %in% ___
+is.na(___ )
 ```
 
 
