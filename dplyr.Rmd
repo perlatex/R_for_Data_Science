@@ -261,7 +261,7 @@ df %>% filter(score = 90)
 df %>% filter(score == 90)
 ```
 
-R提供了其他比较关系的算符: `<`, `>`, `<=`, `>=`, `==` (equal), and `!=` (not equal). 
+R提供了其他比较关系的算符: `<`, `>`, `<=`, `>=`, `==` (equal), `!=` (not equal), `%in%`, `is.na()` 和 `!is.na()` . 
 
 比如把**成绩大于等于80分的**同学筛选出来
 ```{r}
@@ -276,6 +276,21 @@ df %>% filter(type == "english", score >= 75)
 ```
 
 也就说，逗号分隔的两个条件都要满足。
+
+### 常见的错误
+`filter()`函数两个常见的错误:
+
+- 把 "=" 误认为 "=="
+```{r, eval=FALSE}
+df %>% filter(type = "english")   # error
+df %>% filter(type == "english")
+```
+
+- 忘记引号
+```{r, eval=FALSE}
+df %>% filter(type == english)   # error
+df %>% filter(type == "english")
+```
 
 
 ### 逻辑算符
@@ -480,13 +495,13 @@ df1 %>% full_join(df2, by = "name")
 1、总结 dplyr 系列函数的三个特征。
 
 2、用本章中的数据框`df`运行以下代码，然后理解代码含义。
+
 ```{r, eval=FALSE}
 df %>% 
   filter(score > mean(score))
 ```
 
 3、 统计每位同学成绩高于75分的科目数
-
 
 ```{r eval=FALSE, include=FALSE}
 df %>% 
@@ -523,6 +538,7 @@ d <-
 
 d
 ```
+
 
 ## 延伸阅读
 

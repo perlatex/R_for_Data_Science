@@ -1,6 +1,6 @@
 # 函数 {#functions}
 
-R 语言的强大还在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
+一切都是对象，不是数据就是函数。R 语言的强大还在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
 上一节课我们提到向量操作符，体会到了向量化操作的强大，事实上，向量操作符就是一种函数。
 
 ## 基础函数
@@ -50,7 +50,7 @@ length(x)
 sort(x)
 ```
 
-找出向量元素的唯一值
+找出向量元素的唯一值，就是**去重**的意思
 ```{r}
 unique(x)
 ```
@@ -64,10 +64,18 @@ is.character(x)
 判断向量元素是否大于5
 
 ```{r}
-ifelse(x > 5, TRUE, FALSE)
+ifelse(x > 5, "big", "small")
 ```
 
+## 向量的函数
 
+用在向量上的函数，可以分为向量化函数(vectorized function)和汇总类函数(summary function)，
+
+```{r, out.width = '100%', fig.align='center', echo = FALSE, fig.cap='这两类函数在 Tidyverse 框架中，应用非常广泛。'}
+knitr::include_graphics("images/vector-function.png")
+```
+
+当然，也会有例外，比如`unique()`函数，它返回的向量通常不会与输入的向量等长，既不属于向量化函数，也不属于汇总类函数。
 
 
 ## 自定义函数
@@ -310,7 +318,7 @@ knitr::include_graphics("images/Rhelp.png")
 ## 习题
 
 
-- 根据方差的数学表达式，写出**方差**的计算函数
+- 根据方差的数学表达式，写出**方差**的计算函数，并与基础函数`var()`的结果对比
 
 $$
 \mathrm{Var}(x) = \frac{1}{n - 1} \sum_{i=1}^n (x_i - \bar{x}) ^2 
@@ -318,7 +326,7 @@ $$
 
 
 
-```{r}
+```{r, include=FALSE}
 varfun <- function(x) {
   res <- sum((x - mean(x))^2) / (length(x) - 1)
   return(res)
