@@ -79,17 +79,17 @@ rmd_files: [
   "eda_penguins.Rmd",
   "eda_career_decision.Rmd",
   "eda_ames_houseprice.Rmd",
- # "rvest.Rmd",              #
+  "rvest.Rmd",              #
   "tidygraph.Rmd",
   "tidytext.Rmd",
   "slider.Rmd",
   "stars.Rmd",
   "rowwise.Rmd",
- # "ggplot2_academic.Rmd",   #
- # "ggplot2_gganimate.Rmd",  #
+  "ggplot2_academic.Rmd",   #
+  "ggplot2_gganimate.Rmd",  #
   "lazyman.Rmd",
  # "pandas.Rmd",            #
- # "practice.Rmd",          #
+  "practice.Rmd",          #
 
   "Appendix.Rmd",
   "references.Rmd"

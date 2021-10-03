@@ -34,7 +34,7 @@ mtcars %>%
   mutate(percent = 100 * n / sum(n))
 ```
 
-```{r lazyman-4, eval=FALSE}
+```{r lazyman-4}
 mtcars %>%
   janitor::tabyl(cyl)
 ```
@@ -119,7 +119,7 @@ report(model)
 
 
 ## 模型评估一步到位
-```{r lazyman-performance, eval=FALSE}
+```{r lazyman-performance}
 library(performance)
 
 model <- lm(mpg ~ wt * cyl + gear, data = mtcars)
@@ -129,7 +129,7 @@ performance::check_model(model)
 
 
 ## 统计表格不用愁
-```{r lazyman-gtsummary1, results="asis", eval=FALSE, include=TRUE}
+```{r lazyman-gtsummary1, results="asis"}
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
@@ -148,7 +148,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r lazyman-gtsummary2, results="asis", eval=FALSE, include=TRUE}
+```{r lazyman-gtsummary2, results="asis"}
 t1 <-
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -299,14 +299,17 @@ gganonomize(ggg)
 你听到了声音吗?
 
 ## 多张图摆放
-```{r lazyman-patchwork, eval=FALSE}
+```{r lazyman-patchwork}
 library(patchwork)
 p1 <- ggplot(mtcars) +
   geom_point(aes(mpg, disp))
+
 p2 <- ggplot(mtcars) +
   geom_boxplot(aes(gear, disp, group = gear))
+
 p3 <- ggplot(mtcars) +
   geom_smooth(aes(disp, qsec))
+
 p1 + p2 + p3
 ```
 
@@ -322,7 +325,7 @@ airquality %>%
 
 
 ## 看看数据什么情况
-```{r lazyman-24, eval=FALSE}
+```{r lazyman-24}
 library(visdat)
 
 vis_dat(airquality)
