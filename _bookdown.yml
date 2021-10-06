@@ -44,6 +44,7 @@ rmd_files: [
   "ggplot2_stat_layer.Rmd",
   "ggplot2_from_layer_to_geom.Rmd",
   "ggplot2_colors.Rmd",
+  "ggplot2_override_aes.Rmd",
   "tidyverse_workflow.Rmd",
   "tidyverse_tips.Rmd",
   "adv_dplyr.Rmd",

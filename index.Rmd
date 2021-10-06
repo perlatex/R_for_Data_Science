@@ -95,6 +95,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-stat-layer) 章ggplot2统计图层
    - 第 \@ref(ggplot2-from-layer-to-geom) 章ggplot2从图层到几何图形
    - 第 \@ref(ggplot2-colors) 章介绍数据可视化中的配色
+   - 第 \@ref(ggplot2-override-aes) 章介绍图例中的映射覆盖
    - 第 \@ref(workflow) 章回望tidyverse之旅
    - 第 \@ref(tips) 章介绍tidyverse常用技巧
    - 第 \@ref(advR) 章介绍tidyverse进阶技巧

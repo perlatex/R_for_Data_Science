@@ -5,6 +5,37 @@
 library(tidyverse)
 library(sf)
 library(stars)
+
+library("rnaturalearth")
+library("rnaturalearthdata")
+```
+
+
+```{r}
+world_map_data <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world_map_data) +
+    geom_sf()
+```
+
+
+```{r}
+ggplot(data = world_map_data) +
+    geom_sf() +
+    coord_sf(crs = st_crs(3035))
+```
+
+
+```{r}
+ggplot(data = world_map_data) + 
+    geom_sf(color = "black", fill = "lightgreen")
+```
+
+
+```{r}
+ggplot(data = world_map_data) +
+    geom_sf(aes(fill = pop_est)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 ```
 
 

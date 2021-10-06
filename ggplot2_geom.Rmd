@@ -65,10 +65,12 @@ ggplot(df, aes(x = x, y = y, colour = dataset)) +
 
 ### 图形语法
 
-```{r ggplot2-geom-6, out.width = '70%', echo = FALSE}
-knitr::include_graphics("images/ggplot_template.png")
+图形语法 “grammar of graphics” ("ggplot2" 中的`gg` 就来源于此) 使用图层(layer)去描述和构建图形，下图是ggplot2图层概念的示意图
+```{r ggplot2-geom-6, out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/making_a_ggplot.jpeg")
 ```
 
+这个过程类似我们画一幅水彩画
 
 ```{r ggplot2-geom-7, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/how_to_plot.png")
