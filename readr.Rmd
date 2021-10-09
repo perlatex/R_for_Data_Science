@@ -112,7 +112,7 @@ library(readr)
 d <- read_csv(file = "./data/csv_file.csv") 
 d <- read_csv(here::here("data", "csv_file.csv")) 
 ```
-
+csv = "comma-separated values"
 
 
 ```{r readr-6, eval=FALSE, warning=FALSE}

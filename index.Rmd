@@ -78,7 +78,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(subsetting) 章介绍R语言中的子集选取
 
 - tidyverse篇
-   - 第 \@ref(rmarkdown) 章介绍可重复性报告
+   - 第 \@ref(rmarkdown) 章介绍可重复性文档
    - 第 \@ref(readr) 章介绍数据读入
    - 第 \@ref(dplyr) 章介绍数据处理
    - 第 \@ref(ggplot2-aes) 章介绍数据可视化
@@ -94,17 +94,19 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-customize) 章ggplot2扩展内容
    - 第 \@ref(ggplot2-stat-layer) 章ggplot2统计图层
    - 第 \@ref(ggplot2-from-layer-to-geom) 章ggplot2从图层到几何图形
-   - 第 \@ref(ggplot2-colors) 章介绍数据可视化中的配色
-   - 第 \@ref(ggplot2-override-aes) 章介绍图例中的映射覆盖
-   - 第 \@ref(workflow) 章回望tidyverse之旅
-   - 第 \@ref(tips) 章介绍tidyverse常用技巧
-   - 第 \@ref(advR) 章介绍tidyverse进阶技巧
+   - 第 \@ref(ggplot2-colors) 章ggplot2数据可视化中的配色
+   - 第 \@ref(ggplot2-override-aes) 章ggplot2如何控制图例的外观
+   - 第 \@ref(ggplot2-aes-eval) 章介绍ggplot2中的延迟映射 
+   - 第 \@ref(workflow) 章回望Tidyverse之旅
+   - 第 \@ref(tips) 章介绍Tidyverse常用技巧
+   - 第 \@ref(advR) 章介绍Tidyverse进阶技巧
+   - 第 \@ref(tidyverse-styler) 章介绍Tidyverse代码书写规范 
    - 第 \@ref(colwise) 章介绍数据框的列方向和行方向
-   - 第 \@ref(beauty-of-across) 章介绍tidyverse中的across()之美
-   - 第 \@ref(beauty-of-across2) 章介绍tidyverse中的across()之美(续篇)
-   - 第 \@ref(beauty-of-across3) 章介绍tidyverse中的across()之美(再续)
-   - 第 \@ref(tidyverse-NA) 章介绍tidyverse中的NA
-   - 第 \@ref(dot) 章介绍tidyverse中的dot
+   - 第 \@ref(beauty-of-across) 章介绍Tidyverse中的across()之美
+   - 第 \@ref(beauty-of-across2) 章介绍Tidyverse中的across()之美(续篇)
+   - 第 \@ref(beauty-of-across3) 章介绍Tidyverse中的across()之美(再续)
+   - 第 \@ref(tidyverse-NA) 章介绍Tidyverse中的NA
+   - 第 \@ref(dot) 章介绍Tidyverse中的dot
    - 第 \@ref(tidyeval) 章介绍非标准性评估
 - 建模篇 
    - 第 \@ref(sampling) 章介绍模拟与抽样
@@ -117,7 +119,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(poisson-regression) 章介绍广义线性模型中的泊松回归
    - 第 \@ref(logistic-regression) 章介绍logistic回归模型
    - 第 \@ref(ordinal) 章介绍有序logistic回归模型
-   - 第 \@ref(tidymodels) 章介绍机器学习与tidymodels
+   - 第 \@ref(tidymodels) 章介绍机器学习与Tidymodels
    - 第 \@ref(bayesian-models) 章介绍贝叶斯模型和Stan
 - 应用篇
    - 第 \@ref(eda-nobel) 章介绍探索性数据分析-诺奖获得者  
@@ -129,15 +131,17 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-penguins) 章介绍探索性数据分析-企鹅的故事
    - 第 \@ref(eda-career-decision) 章介绍探索性数据分析-大学生职业决策
    - 第 \@ref(eda-ames-houseprice) 章介绍探索性数据分析-ames房屋价格
+   - 第 \@ref(eda-mammal-species) 章介绍探索性数据分析-哺乳动物脑量与体重的关系
    - 第 \@ref(rvest) 章介绍网页爬虫
    - 第 \@ref(tidygraph) 章介绍社会网络分析
    - 第 \@ref(tidytext) 章介绍文本挖掘
    - 第 \@ref(tibbletime) 章介绍时间序列分析
    - 第 \@ref(stars) 章介绍地理数据处理
-   - 第 \@ref(rowwise) 章介绍tidyverse中行方向的操作
+   - 第 \@ref(rowwise) 章介绍Tidyverse中行方向的操作
    - 第 \@ref(ggplot2-academic) 章介绍科研数据可视化中的统计分布图
    - 第 \@ref(ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(lazyman) 章介绍我收集的一些有用和有趣的宏包
+   - 第 \@ref(Pandas-vs-dplyr) 章谁是数据分析中最好用的宏包 
    - 第 \@ref(practice) 章一日一练，有些题目还是很有挑战性的喔
 
 

@@ -1,4 +1,4 @@
-# 数据可视化中的配色 {#ggplot2-colors}
+# ggplot2之数据可视化中的配色 {#ggplot2-colors}
 
 
 ```{r ggplot2-colors-1, message = FALSE, warning = FALSE}

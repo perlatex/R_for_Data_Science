@@ -34,7 +34,7 @@ mtcars %>%
   mutate(percent = 100 * n / sum(n))
 ```
 
-```{r lazyman-4}
+```{r lazyman-4, eval=FALSE}
 mtcars %>%
   janitor::tabyl(cyl)
 ```

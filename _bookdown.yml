@@ -45,9 +45,11 @@ rmd_files: [
   "ggplot2_from_layer_to_geom.Rmd",
   "ggplot2_colors.Rmd",
   "ggplot2_override_aes.Rmd",
+  "ggplot2_aes_eval.Rmd",
   "tidyverse_workflow.Rmd",
   "tidyverse_tips.Rmd",
   "adv_dplyr.Rmd",
+  "tidyverse_styler.Rmd",
   "colwise.Rmd",
   "beauty_of_across.Rmd",
   "beauty_of_across2.Rmd",
@@ -80,17 +82,18 @@ rmd_files: [
   "eda_penguins.Rmd",
   "eda_career_decision.Rmd",
   "eda_ames_houseprice.Rmd",
-  "rvest.Rmd",              #
+  "eda_body_vs_brain_weights.Rmd",
+  "rvest.Rmd",
   "tidygraph.Rmd",
   "tidytext.Rmd",
   "slider.Rmd",
   "stars.Rmd",
   "rowwise.Rmd",
-  "ggplot2_academic.Rmd",   #
-  "ggplot2_gganimate.Rmd",  #
+  "ggplot2_academic.Rmd",
+  "ggplot2_gganimate.Rmd",
   "lazyman.Rmd",
- # "pandas.Rmd",            #
-  "practice.Rmd",          #
+  "pandas.Rmd",
+  "practice.Rmd",
 
   "Appendix.Rmd",
   "references.Rmd"

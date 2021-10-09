@@ -10,7 +10,7 @@ library("rnaturalearth")
 library("rnaturalearthdata")
 ```
 
-
+获取世界地图数据
 ```{r}
 world_map_data <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -18,14 +18,14 @@ ggplot(data = world_map_data) +
     geom_sf()
 ```
 
-
+使用不同的坐标系统
 ```{r}
 ggplot(data = world_map_data) +
     geom_sf() +
     coord_sf(crs = st_crs(3035))
 ```
 
-
+上色
 ```{r}
 ggplot(data = world_map_data) + 
     geom_sf(color = "black", fill = "lightgreen")

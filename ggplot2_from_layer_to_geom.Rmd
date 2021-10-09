@@ -1,4 +1,4 @@
-# 从图层到几何图形 {#ggplot2-from-layer-to-geom}
+# ggplot2之从图层到几何图形 {#ggplot2-from-layer-to-geom}
 
 
 用ggplot2，大多是从几何图形出发，总有“只见树木不见森林”的感觉。我尝试从图层结构出发，去思考ggplot2绘图原理。欢迎大家批评指正。

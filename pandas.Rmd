@@ -3,7 +3,7 @@
 本章，我们用一些例子来比较数据科学领域Pandas vs. dplyr 两个宏包的用法
 
 
-```{r Pandas01, echo=FALSE}
+```{r Pandas01, echo=FALSE, eval=FALSE, include=FALSE}
 knitr::opts_chunk$set(
   engine.path = list(python = "G:\\Anaconda3\\python.exe")
   )
@@ -12,6 +12,9 @@ knitr::opts_chunk$set(
 首先，需要加载这个宏包
 ```{r Pandas02}
 library(reticulate)
+use_python("G:/Anaconda3/python.exe") 
+#use_condaenv("Anaconda3", required = TRUE)
+#py_config()
 ```
 
   

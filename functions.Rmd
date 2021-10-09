@@ -89,7 +89,7 @@ ifelse(x > 5, "big", "small")
 
 用在向量上的函数，可以分为向量化函数(vectorized function)和汇总类函数(summary function)，
 
-```{r, out.width = '85%', fig.align='center', echo = FALSE, fig.cap='这两类函数在 Tidyverse 框架中，应用非常广泛。'}
+```{r, out.width = '70%', fig.align='center', echo = FALSE, fig.cap='这两类函数在 Tidyverse 框架中，应用非常广泛。'}
 knitr::include_graphics("images/vector-function.png")
 ```
 

@@ -1,0 +1,216 @@
+# Tidyverse代码书写规范 {#tidyverse-styler}
+
+
+## 书写规范的重要性
+
+以下7段代码完成的任务是一样的
+```{r, eval=FALSE}
+mpg %>% 
+  filter(cty > 10, class == "compact")
+
+mpg %>% filter(cty > 10, class == "compact")
+
+mpg %>% 
+  filter(cty > 10, 
+         class == "compact")
+
+mpg %>% filter(cty>10, class=="compact")
+
+filter(mpg,cty>10,class=="compact")
+
+mpg %>% 
+filter(cty > 10, 
+                        class == "compact")
+
+filter ( mpg,cty>10,     class=="compact" )
+```
+
+但只有前三个代码具有可读性。
+
+
+## 空格
+
+### 赋值符号前后要有空格
+
+`<-` 前后要有空格，避免混淆。比如`x<-2`，有可能 `x <- 2` 也有可能是 `x < -2`
+第一个是赋值 2 给`x`，第二个是比较x是否小于 -2
+
+### 在逗号之后要有空格
+```{r, eval=FALSE}
+# Good
+filter(mpg, cty > 10)
+
+# Bad
+filter(mpg , cty > 10)
+filter(mpg ,cty > 10)
+filter(mpg,cty > 10)
+```
+
+
+### 在`+, -, >, =`等算符前后要有空格
+```{r, eval=FALSE}
+# Good
+filter(mpg, cty > 10)
+
+# Bad
+filter(mpg, cty>10)
+filter(mpg, cty> 10)
+filter(mpg, cty >10)
+```
+
+### 函数括号的前后不要有空格
+```{r, eval=FALSE}
+# Good
+filter(mpg, cty > 10)
+
+# Bad
+filter (mpg, cty > 10)
+filter ( mpg, cty > 10)
+filter( mpg, cty > 10 )
+```
+
+## 换行
+
+一段代码太长，也会影响阅读，一般不好超过80个字符宽度。当然，不需要我们一个个去数
+，在Rstudio里可以通过 `Tools > Global Options > Code > Display` 然后勾选 `Show margin`，就可以看到一条细的竖线， 它的位置就是80个字符宽度。这只是辅助工具，我们在实践过程中，要逐渐养成规范的习惯，比如逗号之后再换行，函数的参数尽可能的竖直方向对齐等等。看下例子吧。
+
+```{r, eval=FALSE}
+# Good
+filter(mpg, cty > 10, class == "compact")
+
+# Good
+filter(mpg, cty > 10, 
+       class == "compact")
+
+# Good
+filter(mpg,
+       cty > 10,
+       class == "compact")
+
+# Bad
+filter(mpg, cty > 10, class %in% c("compact", "pickup", "midsize", "subcompact", "suv", "2seater", "minivan"))
+
+# Good
+filter(mpg, 
+       cty > 10, 
+       class %in% c("compact", "pickup", "midsize", "subcompact", 
+                    "suv", "2seater", "minivan"))
+```
+
+
+## 管道符号( `%>%` )和ggplot图层叠加(`+`)
+
+ggplot2每个图层的语句要单独一行，缩进两个空格，`+` 位于一行的末尾
+
+```{r, eval=FALSE}
+# Good
+ggplot(mpg, aes(x = cty, y = hwy, color = class)) +
+  geom_point() +
+  geom_smooth() +
+  theme_bw()
+
+# Bad
+ggplot(mpg, aes(x = cty, y = hwy, color = class)) +
+  geom_point() + geom_smooth() +
+  theme_bw()
+
+# Super bad
+ggplot(mpg, aes(x = cty, y = hwy, color = class)) + geom_point() + geom_smooth() + theme_bw()
+
+# Super bad and won't even work
+ggplot(mpg, aes(x = cty, y = hwy, color = class))
+  + geom_point()
+  + geom_smooth() 
+  + theme_bw()
+```
+
+
+类似ggplot2图层语句，dplyr的每个函数要单独一行，缩进两个空格，管道符号 `%>%` 位于末尾
+
+
+```{r, eval=FALSE}
+# Good
+mpg %>% 
+  filter(cty > 10) %>% 
+  group_by(class) %>% 
+  summarize(avg_hwy = mean(hwy))
+
+# Bad
+mpg %>% filter(cty > 10) %>% group_by(class) %>% 
+  summarize(avg_hwy = mean(hwy))
+
+# Super bad
+mpg %>% filter(cty > 10) %>% group_by(class) %>% summarize(avg_hwy = mean(hwy))
+
+# Super bad and won't even work
+mpg %>% 
+  filter(cty > 10)
+  %>% group_by(class)
+  %>% summarize(avg_hwy = mean(hwy))
+```
+
+
+
+## 注释
+代码注释，`#`后面要有一个空格。
+```{r, eval=FALSE}
+# Good
+
+#Bad
+
+    #Bad
+```
+
+
+如果注释很短，加上代码也不会超过90个字符，可以把注释写在代码的后面，但和代码要间隔两个空格
+```{r, eval=FALSE}
+mpg %>% 
+  filter(cty > 10) %>%  # Only rows where cty is 10 +
+  group_by(class) %>%  # Divide into class groups
+  summarize(avg_hwy = mean(hwy))  # Find the average hwy in each group
+```
+
+但也可以让注释竖直方向对齐，增强代码的可读性
+```{r, eval=FALSE}
+mpg %>% 
+  filter(cty > 10) %>%            # Only rows where cty is 10 +
+  group_by(class) %>%             # Divide into class groups
+  summarize(avg_hwy = mean(hwy))  # Find the average hwy in each group
+```
+
+如果注释很长很长，有一大段，可以考虑多换几次行
+```{r, eval=FALSE}
+# Good
+# Happy families are all alike; every unhappy family is unhappy in its own way.
+# Everything was in confusion in the Oblonskys’ house. The wife had discovered
+# that the husband was carrying on an intrigue with a French girl, who had been
+# a governess in their family, and she had announced to her husband that she
+# could not go on living in the same house with him. This position of affairs
+# had now lasted three days, and not only the husband and wife themselves, but
+# all the members of their family and household, were painfully conscious of it.
+
+# Bad
+# Happy families are all alike; every unhappy family is unhappy in its own way. Everything was in confusion in the Oblonskys’ house. The wife had discovered that the husband was carrying on an intrigue with a French girl, who had been a governess in their family, and she had announced to her husband that she could not go on living in the same house with him. This position of affairs had now lasted three days, and not only the husband and wife themselves, but all the members of their family and household, were painfully conscious of it.
+```
+
+当然，真遇到这种大段的注释，用Rmarkdown吧。
+
+## 偷懒
+
+使用宏包插件`styler`
+```{r}
+## install.packages("styler")
+```
+
+
+```{r, out.width = '100%', echo = FALSE}
+knitr::include_graphics("images/styler.png")
+```
+
+安装后，然后这两个地方点两下，就发现你的代码整齐很多了。
+
+
+## 参考
+
+- <https://style.tidyverse.org/>
+- <https://evalf21.classes.andrewheiss.com/resource/style/>
