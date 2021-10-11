@@ -1,4 +1,4 @@
-# 谁是数据分析中最好用的宏包 {#Pandas-vs-dplyr}
+# Pandas vs. dplyr谁是数据分析中最好用的宏包 {#Pandas-vs-dplyr}
 
 本章，我们用一些例子来比较数据科学领域Pandas vs. dplyr 两个宏包的用法
 

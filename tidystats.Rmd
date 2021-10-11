@@ -143,6 +143,66 @@ mtcars %>%
 
 更多使用可参考第 \@ref(colwise) 章。
 
+## 使用rstatix包
+
+[rstatix](https://github.com/kassambara/rstatix/)包吸收了tidyverse的设计哲学，
+让熟悉dplyr语法的用户能更方便的完成t-test, Wilcoxon test, ANOVA, Kruskal-Wallis等基础统计检验，
+同时也增强了代码的可读性，在实际应用中还是挺受用户欢迎的，比如[这本书](https://epirhandbook.com/simple-statistical-tests.html)。下面，就`ToothGrowth`数据，列举rstatix包的一些用法。
+
+```{r}
+library(rstatix)
+
+my_data %>% 
+  group_by(dose) %>%
+  t_test(len ~ 1, mu = 0)
+```
+```{r}
+# T-test
+stat.test <- my_data %>% 
+  t_test(len ~ supp, paired = FALSE) 
+
+# Create a box plot
+p <- ggboxplot(
+  my_data, x = "supp", y = "len", 
+  color = "supp", palette = "jco", ylim = c(0,40)
+  )
+
+# Add the p-value manually
+p + 
+  stat_pvalue_manual(stat.test, label = "p", y.position = 35) +
+  stat_pvalue_manual(stat.test, label = "T-test, p = {p}", 
+                     y.position = 36)
+
+```
+
+```{r}
+# One-way ANOVA test
+
+my_data %>% 
+  anova_test(len ~ dose)
+```
+
+
+```{r}
+# Two-way ANOVA test
+
+my_data %>% 
+  anova_test(len ~ supp*dose)
+```
+
+
+
+```{r}
+# Two-way repeated measures ANOVA
+
+my_data %>% 
+  mutate(id = rep(1:10, 6) ) %>%  # Add individuals id
+  anova_test(dv = len, wid = id, within = c(supp, dose))
+```
+
+
+
+
 
 ```{r tidystats-12, echo = F}
 # remove the objects

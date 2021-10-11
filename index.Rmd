@@ -112,7 +112,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(sampling) 章介绍模拟与抽样
    - 第 \@ref(lm) 章介绍线性模型
    - 第 \@ref(broom) 章介绍模型输出结果的规整
-   - 第 \@ref(tidystats) 章介绍方差分析
+   - 第 \@ref(tidystats) 章介绍t检验、方差分析和重复测量的方差分析等基础统计检验方法
    - 第 \@ref(tests-as-linear) 章介绍统计检验与线性模型的等价性
    - 第 \@ref(infer) 章介绍统计推断
    - 第 \@ref(lmm) 章介绍多层线性模型
@@ -141,7 +141,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(ggplot2-academic) 章介绍科研数据可视化中的统计分布图
    - 第 \@ref(ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(lazyman) 章介绍我收集的一些有用和有趣的宏包
-   - 第 \@ref(Pandas-vs-dplyr) 章谁是数据分析中最好用的宏包 
+   - 第 \@ref(Pandas-vs-dplyr) 章Pandas vs. dplyr谁是数据分析中最好用的宏包 
    - 第 \@ref(practice) 章一日一练，有些题目还是很有挑战性的喔
 
 

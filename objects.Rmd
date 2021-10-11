@@ -19,7 +19,7 @@
 
 在R中存储的数据称为**对象**（object），R语言数据处理实际上就是不断的创建和操控这些对象。
 
-```{r, out.width = "95%", echo=FALSE}
+```{r, out.width = "65%", echo=FALSE}
 knitr::include_graphics("images/objects_box.png")
 ```
 
@@ -30,7 +30,7 @@ knitr::include_graphics("images/objects_box.png")
 
 创建一个R对象，首先确定一个名称，然后使用赋值操作符 `<-`，将数据赋值给它。
 
-```{r, out.width = "85%", echo=FALSE}
+```{r, out.width = "65%", echo=FALSE}
 knitr::include_graphics("images/rsyntax1.png")
 ```
 

@@ -61,9 +61,14 @@ length(x)
 sort(x)
 ```
 
-找出向量元素的唯一值，就是**去重**的意思
+找出向量元素的唯一值，就是找出**去重后的数据**
 ```{r}
 unique(x)
+```
+
+给出向量的分位数
+```{r}
+quantile(x)
 ```
 
 判断是否为数值型/字符串型
@@ -343,7 +348,6 @@ knitr::include_graphics("images/Rhelp.png")
 
 ## 习题
 
-
 - 根据方差的数学表达式，写出**方差**的计算函数，并与基础函数`var()`的结果对比
 
 $$
@@ -357,7 +361,6 @@ varfun <- function(x) {
   res <- sum((x - mean(x))^2) / (length(x) - 1)
   return(res)
 }
-
 
 ```
 
@@ -378,7 +381,13 @@ get_bmi <- function(height, weight) {
 get_bmi(175, 65)
 ```
 
-
+```{r, include=FALSE}
+get_bmi <- function(height, weight) {
+   height_m <- height / 100
+   return(weight/ height_m^2)
+}
+get_bmi(175, 65)
+```
 
 - 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
 
