@@ -1,4 +1,4 @@
-# tidyverse中的若干技巧 {#tips}
+# tidyverse中的若干技巧 {#tidyverse-tips}
 
 聊聊tidyverse中常用的一些小技巧
 

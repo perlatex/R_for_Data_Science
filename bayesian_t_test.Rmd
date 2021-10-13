@@ -1,0 +1,408 @@
+# 贝叶斯假设检验 {#bayesian-t-test}
+
+
+```{r}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(bayesplot::theme_default())
+```
+
+
+
+## 人们会给爱情片打高分？
+
+这是一个关于电影评分的数据。我们想看下爱情片与动作片的平均得分是否存在显著不同？
+
+```{r}
+movies <- read_rds(here::here("demo_data", "movies.rds"))
+movies
+```
+
+
+
+### 可视化探索
+
+看下两种题材电影评分的分布
+
+```{r}
+movies %>%
+  ggplot(aes(x = genre, y = rating, color = genre)) +
+  geom_boxplot() +
+  geom_jitter() +
+  scale_x_discrete(
+    expand = expansion(mult = c(0.5, 0.5))
+  ) +
+  theme(legend.position = "none") 
+```
+
+
+
+### 计算均值差
+
+统计两种题材电影评分的均值
+
+```{r}
+group_diffs <- movies %>% 
+  group_by(genre) %>% 
+  summarize(avg_rating = mean(rating, na.rm = TRUE)) %>% 
+  mutate(diff_means = avg_rating - lag(avg_rating))
+
+group_diffs
+```
+
+
+
+
+
+### t检验
+
+传统的t检验
+
+```{r}
+t.test(
+  rating ~ genre,
+  data = movies,
+  var.equal = FALSE
+) 
+```
+
+
+## stan 代码
+
+### normal分布
+先假定rating评分，服从正态分布，同时不同的电影题材分组考虑
+
+
+$$
+\begin{aligned}
+\textrm{rating} & \sim \textrm{normal}(\mu_{\textrm{genre}}, \, \sigma _{\textrm{genre}}) \\
+\mu  &\sim  \textrm{normal}(\textrm{mean_rating}, \, 2) \\
+\sigma &\sim  \textrm{cauchy}(0, \, 1) 
+\end{aligned} 
+$$
+
+
+
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- '
+data {
+  int<lower=1> N;                            
+  int<lower=2> n_groups;                     
+  vector[N] y;                               
+  int<lower=1, upper=n_groups> group_id[N];  
+}
+transformed data {
+  real mean_y;
+  mean_y = mean(y); 
+}
+parameters {
+  vector[2] mu;                    
+  vector<lower=0>[2] sigma;        
+}
+model {
+  mu ~ normal(mean_y, 2);
+  sigma ~ cauchy(0, 1);
+
+  for (n in 1:N){
+    y[n] ~ normal(mu[group_id[n]], sigma[group_id[n]]);
+  }
+}
+
+generated quantities {
+  real mu_diff;
+  mu_diff = mu[2] - mu[1];
+}
+
+'
+
+stan_data <- movies %>% 
+  select(genre, rating, genre_numeric) %>% 
+  tidybayes::compose_data(
+    N        = nrow(.), 
+    n_groups = n_distinct(genre), 
+    group_id = genre_numeric, 
+    y        = rating
+  )
+
+stan_best_normal <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+stan_best_normal
+```
+
+
+```{r, fig.width = 5, fig.height = 5}
+stan_best_normal %>% 
+  tidybayes::spread_draws(mu_diff) %>%
+  ggplot(aes(x = mu_diff)) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0)
+```
+
+
+
+
+
+```{r, fig.width = 5, fig.height = 3}
+stan_best_normal %>% 
+  tidybayes::spread_draws(mu_diff) %>%
+  
+	ggplot(aes(x = mu_diff)) +
+  stat_eye(side = "right", 
+           fill = "skyblue",
+  		     point_interval = mode_hdi, 
+  		     .width = c(0.5, 0.89),
+    	     interval_colour = "red", 
+    	     point_colour = "red",
+  		     width = 15.5, 
+  		     height = 0.1
+  		     ) +
+  geom_vline(xintercept = c(-0.1, 0.1), linetype = "dashed", size = 1) +
+
+  coord_cartesian(xlim = c(-1, 2)) +
+	labs(x = "mu_diff", y = NULL)
+```
+
+
+
+### 等效检验
+
+我们一般会采用实用等效区间 region of practical equivalence [ROPE](https://easystats.github.io/bayestestR/articles/region_of_practical_equivalence.html)。实用等效区间，就是我们感兴趣值附近的一个区间，比如这里的均值差。频率学中的零假设是看均值差是否为0，贝叶斯则是看均值差有多少落入0附近的区间。具体方法就是，先算出后验分布的高密度区间，然后看这个高密度区间落在[-0.1, 0.1]的比例.
+
+
+
+
+```{r}
+lower <- -0.1*sd(movies$rating)
+upper <-  0.1*sd(movies$rating)
+
+stan_best_normal %>% 
+  tidybayes::spread_draws(mu_diff) %>%
+  filter(
+    mu_diff > ggdist::mean_hdi(mu_diff, .width = c(0.89))$ymin,
+    mu_diff < ggdist::mean_hdi(mu_diff, .width = c(0.89))$ymax
+  ) %>%
+  summarise(
+    percentage_in_rope = mean(between(mu_diff, lower, upper))
+  )
+```
+
+在做假设检验的时候，我们内心是期望，后验概率的**高密度区间**落在**实际等效区间**的比例越小越小，如果小于2.5%，我们就可以拒绝零假设了；如果大于97.5%，我们就接受零假设。
+
+
+```{r}
+stan_best_normal %>% 
+  tidybayes::spread_draws(mu_diff) %>%
+  pull(mu_diff) %>% 
+  bayestestR::rope(x,
+    range = c(-0.1, 0.1)*sd(movies$rating),
+    ci = 0.89,
+    ci_method = "HDI"
+  )
+
+```
+
+
+
+
+### Student-t 分布
+
+> 标准正态分布是t分布的极限分布
+
+```{r}
+for (nu in 1:50) {
+ p <- tibble(x = seq(-5, 5, by=0.1)) %>% 
+    ggplot(aes(x)) + 
+    stat_function(fun = dnorm, color = 'gray') + 
+    stat_function(fun = dt, args = list(df = nu), color = 'blue') +
+    theme_classic() + 
+    ylab("Density") + 
+    xlab('Value') + 
+    ggtitle(paste("df =", nu))
+ 
+  print(p)
+}
+```
+
+
+
+
+假定rating评分服从student-t分布，
+
+$$
+\begin{aligned}
+\textrm{rating} & \sim \textrm{student_t}(\nu, \,\mu_{\textrm{genre}}, \, \sigma _{\textrm{genre}}) \\
+\mu  &\sim  \textrm{normal}(\textrm{mean_rating}, \, 2) \\
+\sigma &\sim  \textrm{cauchy}(0, \, 1) \\
+\nu  &\sim \textrm{exponential}(1.0/29)
+\end{aligned} 
+$$
+
+
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- '
+data {
+  int<lower=1> N;                            
+  int<lower=2> n_groups;                     
+  vector[N] y;                               
+  int<lower=1, upper=n_groups> group_id[N];  
+}
+transformed data {
+  real mean_y;
+  mean_y = mean(y); 
+}
+parameters {
+  vector[2] mu;                    
+  vector<lower=0>[2] sigma;        
+  real<lower=0, upper=100> nu;     
+}
+model {
+  mu ~ normal(mean_y, 2);
+  sigma ~ cauchy(0, 1);
+  nu ~ exponential(1.0/29);
+
+  for (n in 1:N){
+    y[n] ~ student_t(nu, mu[group_id[n]], sigma[group_id[n]]);
+  }
+}
+
+generated quantities {
+  real mu_diff;
+  mu_diff = mu[2] - mu[1];
+}
+
+'
+
+stan_data <- movies %>% 
+  select(genre, rating, genre_numeric) %>% 
+  tidybayes::compose_data(
+    N        = nrow(.), 
+    n_groups = n_distinct(genre), 
+    group_id = genre_numeric, 
+    y        = rating
+  )
+
+stan_best_student <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+stan_best_student
+```
+
+```{r, fig.width = 5, fig.height = 5}
+stan_best_student %>% 
+  tidybayes::spread_draws(mu_diff) %>%
+  ggplot(aes(x = mu_diff)) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0)
+```
+
+
+
+```{r}
+stan_best_student %>%
+  as.data.frame()
+```
+
+
+```{r}
+stan_best_student %>%
+  as.data.frame() %>%
+  ggplot(aes(x = `mu[1]`)) +
+  geom_density()
+
+```
+
+
+
+
+```{r}
+stan_best_student %>%
+  tidybayes::gather_draws(mu[i], sigma[i]) %>%
+  tidybayes::mean_hdi(.width = 0.89)
+```
+
+
+
+
+## 小结
+
+```{r, out.width = '80%', fig.align = 'center', echo = FALSE}
+knitr::include_graphics(here::here("images", "diagram_robust_Bayesian_estimation.png"))
+```
+
+## 作业
+
+- 将上一章线性模型的stan代码应用到电影评分数据中
+
+$$
+\begin{aligned}
+\textrm{rating} & \sim \textrm{Normal}(\mu, \, \sigma) \\
+\mu & = \alpha + \beta \, \textrm{genre} \\
+\alpha &\sim  \textrm{Normal}(0, \, 5) \\
+\beta  &\sim  \textrm{Normal}(0, \, 1) \\
+\sigma &\sim  \textrm{Exponential}(1) \\
+\end{aligned} 
+$$
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- '
+data {
+  int<lower=1> N;            
+  vector[N] y;        
+  vector[N] x;           
+}
+parameters {
+  real<lower=0> sigma;    
+  real alpha;                     
+  real beta;                     
+}
+
+model {
+  y ~ normal(alpha + beta * x, sigma);  
+  
+  alpha ~ normal(0, 5);
+  beta ~ normal(0, 1);
+  sigma ~ exponential(1);  
+}
+
+'
+
+stan_data <- list(
+    N   = nrow(movies), 
+    x   = as.numeric(movies$genre),  
+    y   = movies$rating
+  )
+
+stan_linear <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+stan_linear
+```
+
+```{r, fig.width = 5, fig.height = 5}
+stan_linear %>% 
+  tidybayes::spread_draws(beta) %>%
+  ggplot(aes(x = beta)) +
+  tidybayes::stat_halfeye() +
+  geom_vline(xintercept = 0)
+```
+
+
+
+```{r}
+stan_linear %>%
+  tidybayes::gather_draws(beta) %>%
+  tidybayes::mean_hdi(.width = 0.89)
+```

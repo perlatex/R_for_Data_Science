@@ -1,4 +1,4 @@
-# 回望tidyverse之旅 {#workflow}
+# 回望tidyverse之旅 {#tidyverse-workflow}
 
 ```{r tidyverse-workflow-1}
 library(tidyverse)
@@ -282,7 +282,7 @@ penguins %>%
 ## tidyr 宏包
 
 ```{r tidyverse-workflow-29, out.width='20%', fig.align='left', echo = FALSE}
-knitr::include_graphics("images/hex/stringr.png")
+knitr::include_graphics("images/hex/tidyr.png")
 ```
 
 想想什么叫tidy data？

@@ -1,0 +1,460 @@
+# 非标准性评估 {#tidyverse-tidyeval}
+
+Tidy Evaluation (Tidy Eval)，不是一个宏包，而是一个非标准评估的框架，也叫延迟评估。主要目的是更方便地与tidyverse里的函数配合使用，事实上，很多时候我们不一定需要用到它。我这里尽可能规避较专业的词汇，用通俗的语言介绍一些简单用法，表述可能不准确。如果想了解背后复杂的机制请阅读[advance R](https://adv-r.hadley.nz/quasiquotation.html)。
+
+## 编写函数
+```{r tidyeval-1, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(rlang)
+```
+
+写代码的过程中，我们会遇到对不同的数据框，执行相同的操作。比如
+```{r tidyeval-2, eval=FALSE}
+df1 %>% group_by(x1) %>% summarise(mean = mean(y1))
+df2 %>% group_by(x2) %>% summarise(mean = mean(y2))
+df3 %>% group_by(x3) %>% summarise(mean = mean(y3))
+df4 %>% group_by(x4) %>% summarise(mean = mean(y4))
+```
+
+
+为了减少代码的重复，我们考虑将共同的部分保留，变化的部分用参数名提取出来
+
+```{r tidyeval-3, eval=FALSE}
+data %>% group_by(group_var) %>% summarise(mean = mean(summary_var))
+```
+
+很自然地，我们想到写一个子函数的形式，比如
+
+```{r tidyeval-4}
+grouped_mean <- function(data, group_var, summary_var) {
+  data %>%
+    group_by(group_var) %>%
+    summarise(mean = mean(summary_var))
+}
+```
+
+当我们试图运行这段代码的时候，却发现报错了
+
+```{r tidyeval-5, error = TRUE}
+grouped_mean(mtcars, cyl, mpg)
+```
+
+
+
+Hadley Wickham告诉我们，正确的写法应该是，
+```{r tidyeval-6}
+grouped_mean <- function(data, group_var, summary_var) {
+  group_var <- enquo(group_var)
+  summary_var <- enquo(summary_var)
+
+  data %>%
+    group_by(!!group_var) %>%
+    summarise(mean = mean(!!summary_var))
+}
+```
+
+然后再运行
+```{r tidyeval-7}
+grouped_mean(mtcars, cyl, mpg)
+```
+
+
+或者更简便的
+
+```{r tidyeval-8}
+grouped_mean <- function(data, group_var, summary_var) {
+  data %>%
+    group_by({{group_var}}) %>%
+    summarise(mean = mean({{summary_var}}))
+}
+
+grouped_mean(mtcars, cyl, mpg)
+```
+
+
+dplyr1.0之后，可以这样写
+
+```{r tidyeval-9, eval=FALSE}
+sum_group_vars <- function(df, 
+                           group_vars, 
+                           sum_vars){
+  df %>% 
+    group_by(across({{ group_vars }})) %>% 
+    summarise(n = n(), 
+              across({{ sum_vars }}, 
+                     list(mean = mean, sd = sd))
+              )
+}
+
+sum_group_vars(mpg, c(model, year), c(hwy, cty))
+```
+
+
+下面我们讲讲为什么要这样写。
+
+
+## 看看发生了什么
+
+弄清楚之前，这里需要明白两个概念：
+
+
+- 环境变量(`env-variables`) ，一般你在Rstuido右上角的`Environment`中发现它。比如` n <- 10`这里的`n`
+
+- 数据变量(`data-variables`)，一般指数据框的某个变量。比如`data <- data.frame(x = 1, n = 2)`中的`data$n`
+
+
+
+那么，对于我们这里编写的函数中
+```{r tidyeval-10, eval=FALSE}
+grouped_mean(mtcars, cyl, mpg)
+```
+
+`cyl`和`mpg`是打算传递的参数，是环境变量，但我们期望他们在函数中当作mtcars中的数据变量，即当做mtcars的一个列的名字来使用， 那么要完成这个角色转换，就需要引用(quote)和解引用(unquote)两个工序：
+
+
+- 第一步，用 `enquo()`把用户传递过来的参数引用起来（**引用**可以理解为**冷冻**起来）
+
+- 第二步，用 `!!` 解开这个引用（**解引用**可以理解为**解冷**），然后使用参数的内容
+
+这个`quote-unquote`的过程让环境变量名变成了数据变量，也可以理解为在函数评估过程中，数据变量（data-variable）遮盖了环境变量（env-variable），即数据遮盖（data masking），看到cyl，正常情况下，本来应该是到环境变量里去找这个cyl对应的值，然而，数据遮盖机制，插队了，让代码去数据变量中去找cyl以及对应的值。
+
+我们通过`rlang::qq_show()`看看这个`quote-unquote`机制是怎么工作的
+
+
+先看看`qq_show()`
+```{r tidyeval-11}
+var <- quote(height)
+qq_show(!!var)
+```
+
+
+再看看`grouped_mean()`的代码
+
+```{r tidyeval-12}
+  group_var <-  quote(cyl)
+summary_var <-  quote(mpg)
+	
+rlang::qq_show( 
+	data %>%
+    group_by(!!group_var) %>%
+    summarise(mean = mean(!!summary_var))
+)
+```
+关于数据遮盖更多细节请看[Quote and unquote](https://tidyeval.tidyverse.org/sec-up-to-speed.html#quote-and-unquote)。
+
+
+
+
+## 处理多个参数
+
+前面讲了如何传递分组参数和统计参数到子函数。如果传递更多的参数，可以用`...`代替`group_var` ，然后传递到`group_by()`，比如
+
+```{r tidyeval-13}
+grouped_mean <- function(data, summary_var, ...) {
+  summary_var <- enquo(summary_var)
+    group_var <- enquos(...)
+ 
+  data %>%
+    group_by(!!!group_var) %>%
+    summarise(mean = mean(!!summary_var))
+}
+```
+
+
+指定统计参数`disp`，分组参数`(cyl am)`，然后运行代码,
+```{r tidyeval-14}
+grouped_mean(mtcars, disp, cyl, am)
+```
+
+或者指定统计参数`disp`，更多的分组参数`(cyl, am, vs)`
+
+```{r tidyeval-15}
+grouped_mean(mtcars, disp, cyl, am, vs)
+```
+
+注意到`...`代表的是多个参数，因此在引用的时候用的是`enquos()`，在解引用的时候
+用的是`group_by(!!!group_var)`. 事实上, `...`是一个特殊的符号，我们可以省略**引用后再解引用**的过程，直接传给给`group_by()`， 比如
+
+
+
+```{r tidyeval-16}
+grouped_mean <- function(data, summary_var, ...) {
+  summary_var <- enquo(summary_var)
+
+  data %>%
+    group_by(...) %>%
+    summarise(mean = mean(!!summary_var))
+}
+
+grouped_mean(mtcars, disp, cyl, am, vs)
+```
+
+
+
+
+## 调整输入的表达式
+
+### 修改引用参数的默认名
+
+我们希望输出的统计结果中，**统计参数名**加一个前缀 "avg_"， 可以分三步完成
+
+- 获取引用参数的默认名
+- 修改参数的默认名，比如加前缀或者后缀
+- `!!` 解引用并放在 `:=` 左边
+
+
+
+```{r tidyeval-17}
+grouped_mean2 <- function(.data, .summary_var, ...) {
+  summary_var <- enquo(.summary_var)
+  group_vars <- enquos(...)
+
+  # Get and modify the default name
+  summary_nm <- as_label(summary_var)
+  summary_nm <- paste0("avg_", summary_nm)
+
+  .data %>%
+    group_by(!!!group_vars) %>%
+    summarise(!!summary_nm := mean(!!summary_var))  # Unquote the name
+}
+
+grouped_mean2(mtcars, disp, cyl, am)
+```
+或者更简洁的办法
+```{r tidyeval-18, eval=FALSE}
+my_summarise <- function(data, group_var, summarise_var) {
+  data %>%
+    group_by(across({{ group_var }})) %>%
+    summarise(across({{ summarise_var }}, mean, .names = "mean_{col}"))
+}
+
+my_summarise(starwars, species, height)
+```
+
+
+
+如果想调整多个分组变量的默认名，比如加个前缀"groups_"，方法和上面的步骤类似
+
+
+- 引用传递过来的参数名，`.enquos(..., .named = TRUE)`, 增加了控制语句`.named = TRUE`
+- 修改在每个参数的默认名，比如加前缀或者后缀
+- `!!` 解引用并放在 `:=` 左边
+
+
+```{r tidyeval-19}
+grouped_mean3 <- function(.data, .summary_var, ...) {
+  summary_var <- enquo(.summary_var)
+
+  # Quote the dots with default names
+  group_vars <- enquos(..., .named = TRUE)
+
+  summary_nm <- as_label(summary_var)
+  summary_nm <- paste0("avg_", summary_nm)
+
+  # Modify the names of the list of quoted dots
+  names(group_vars) <- paste0("groups_", names(group_vars))
+
+  .data %>%
+    group_by(!!!group_vars) %>%  # Unquote-splice as usual
+    summarise(!!summary_nm := mean(!!summary_var))
+}
+
+grouped_mean3(mtcars, disp, cyl, am)
+
+```
+
+
+
+
+### 修改引用的表达式
+
+有时候，我们不想“按多个变量分组，对一个变量统计”。而是“按一个变量分组，对多个变量统计”。这种情况，我们就需要调整**引用的表达式**
+
+- `.group_var`放分组的变量`species`
+- `...` 放需要统计的多个变量`height, mass`，期望完成 `mean(height)`, `mean(mass)`
+-  需要用`purrr:map()`配合调整表达式， 如
+
+```{r tidyeval-20}
+vars <- list(quote(mass), quote(height))
+
+purrr::map(vars, function(var) expr(mean(!!var, na.rm = TRUE)))
+```
+
+
+完整代码可以这样写
+```{r tidyeval-21}
+grouped_mean4 <- function(.data, .group_var, ...) {
+  group_var <- enquo(.group_var)
+  summary_vars <- enquos(..., .named = TRUE)
+
+  # Wrap the summary variables with mean()
+  summary_vars <- purrr::map(summary_vars, function(var) {
+    expr(mean(!!var, na.rm = TRUE))
+  })
+
+  # Prefix the names with `avg_`
+  names(summary_vars) <- paste0("avg_", names(summary_vars))
+
+  .data %>%
+    group_by(!!group_var) %>%
+    summarise(!!!summary_vars)
+}
+```
+
+
+```{r tidyeval-22}
+grouped_mean4(starwars, species, height, mass)
+```
+
+
+
+
+
+
+
+## 案例
+
+
+### 统计并过滤
+```{r tidyeval-23}
+df <- tibble(index = sample(letters[1:4], size = 100, replace = TRUE) ) 
+df
+```
+
+
+```{r tidyeval-24}
+
+filter_which <- function(df, var, val) {
+	
+	which_var <- enquo(var)
+	which_val <- as_name(enquo(val))
+	
+	df %>% 
+		count(!!which_var) %>% 
+		filter(!!which_var ==  which_val) 
+	
+}
+
+
+df %>% 
+	filter_which(index, a)
+```
+
+
+
+
+
+
+
+
+### 自定义统计输出
+```{r tidyeval-25}
+my_summarise <- function(data, expr) {
+  data %>% summarise(
+    "mean_{{expr}}" := mean({{ expr }}),
+    "sum_{{expr}}" := sum({{ expr }}),
+    "n_{{expr}}" := n()
+  )
+}
+
+mtcars %>% my_summarise(mpg)
+```
+
+
+
+
+
+
+
+### 形成依次下滑的列
+
+```{r tidyeval-26}
+d <- tibble(x = seq_len(10))
+
+
+jetlag <- function(data, variable, n = 10){
+  variable <- enquo(variable)
+  
+  indices <- seq_len(n)
+  quosures <- purrr::map( indices, ~quo(lag(!!variable, !!.x)) ) %>%
+      purrr::set_names(nm = purrr::map_chr(indices, ~paste0("lag_", .x)))
+  
+  dplyr::mutate(data, !!!quosures)
+  
+}
+
+
+d %>% jetlag(x, 3)
+```
+
+
+## 可能会用到的函数
+
+`enquo()` vs `quo()` vs `expr()` vs `as_name()` vs `as_label()` vs `sym()`
+
+
+```{r tidyeval-27}
+a <- 1
+b <- 1
+var <- quote(a + b)
+# returns a single quoted expression for the delayed computation
+var
+```
+
+
+```{r tidyeval-28}
+qq_show(!!var)
+```
+
+
+```{r tidyeval-29}
+# quotes a new expression locally
+expr(mean(!!var, na.rm = TRUE))
+```
+
+
+```{r tidyeval-30}
+var <- quo(height)
+
+# transforms a quoted variable name into a string. 
+as_name(var)
+```
+
+
+```{r tidyeval-31}
+# also returns a single string but supports any kind of R object as input, including quoted function calls and vectors. Its purpose is to summarise that object into a single label. That label is often suitable as a default name.
+as_label(var)
+```
+
+
+
+
+```{r tidyeval-32}
+# creates a symbol from a string
+sym("height")
+```
+
+
+## Resources
+
+1. `tidyeval` book - https://tidyeval.tidyverse.org/ or `tidyeval` post - https://rpubs.com/lionel-/tidyeval-introduction
+1. `tidyeval` webinar - https://www.rstudio.com/resources/webinars/tidy-eval/
+1. "Tidy evaluation in 5 minutes" by Hadley Wickham - https://www.youtube.com/watch?v=nERXS3ssntw
+1.  Metaprogramming chapters in "Advanced R" - https://adv-r.hadley.nz/meta.html
+1. `tidyeval` cheatsheet - https://www.rstudio.com/resources/cheatsheets/
+1.  https://github.com/tidyverse/dplyr/blob/master/vignettes/programming.Rmd
+1.  https://github.com/romatik/touring_the_tidyverse
+1.  https://tidyeval.tidyverse.org/dplyr.html
+
+
+
+
+```{r tidyeval-33, echo = F}
+# remove the objects
+rm(a, b, d, df, filter_which, group_var, grouped_mean, grouped_mean2, grouped_mean3, grouped_mean4, jetlag, my_summarise, summary_var, var, vars)
+```
+
+```{r tidyeval-34, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+

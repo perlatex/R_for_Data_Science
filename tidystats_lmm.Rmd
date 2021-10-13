@@ -1,0 +1,440 @@
+# 多层线性模型 {#tidystats-lmm}
+
+
+
+## 分组数据
+
+在实验设计和数据分析中，我们可能经常会遇到分组的数据结构。所谓的分组，就是每一次观察，属于某个特定的组，比如考察学生的成绩，这些学生属于某个班级，班级又属于某个学校。有时候发现这种分组的数据，会给数据分析带来很多有意思的内容。
+
+
+
+## 案例
+
+我们从一个有意思的案例开始。
+
+> 不同院系教职员工的收入
+
+一般情况下，不同的院系，制定教师收入的依据和标准可能是不同的。我们假定有一份大学教职员的收入清单，这个学校包括信息学院、外国语学院、社会政治学、生物学院、统计学院共五个机构，我们通过数据建模，探索这个学校的**薪酬制定规则**。
+
+```{r lmm-1}
+create_data <- function() {
+  df <- tibble(
+    ids = 1:100,
+    department = rep(c("sociology", "biology", "english", "informatics", "statistics"), 20),
+    bases = rep(c(40000, 50000, 60000, 70000, 80000), 20) * runif(100, .9, 1.1),
+    experience = floor(runif(100, 0, 10)),
+    raises = rep(c(2000, 500, 500, 1700, 500), 20) * runif(100, .9, 1.1)
+  )
+
+
+  df <- df %>% mutate(
+    salary = bases + experience * raises
+  )
+  df
+}
+```
+
+
+
+```{r lmm-2}
+library(tidyverse)
+library(lme4)
+library(modelr)
+library(broom)
+library(broom.mixed)
+
+df <- create_data()
+df
+```
+
+
+
+## 线性模型
+
+**薪酬制定规则一**：假定教师收入主要取决于他从事工作的时间，也就说说工作时间越长收入越高。意味着，每个院系的起始薪酬（起薪）是一样的，并有相同的年度增长率。那么，这个收入问题就是一个简单线性模型：
+
+$$\hat{y} = \alpha + \beta_1x_1 + ... + \beta_nx_n$$
+
+具体到我们的案例中，薪酬模型可以写为
+$$
+\hat{salary_i} = \alpha + \beta * experience_i
+$$
+
+通过这个等式，可以计算出各个系数，即截距$\alpha$就是起薪，斜率$\beta$就是年度增长率。确定了斜率和截距，也就确定了每个教职员工的收入曲线。
+
+```{r lmm-3}
+# Model without respect to grouping
+m1 <- lm(salary ~ experience, data = df)
+m1
+```
+
+```{r lmm-4}
+broom::tidy(m1)
+```
+
+
+```{r lmm-5}
+df %>% modelr::add_predictions(m1)
+```
+
+```{r lmm-6}
+# Model without respect to grouping
+df %>%
+  add_predictions(m1) %>%
+  ggplot(aes(x = experience, y = salary)) +
+  geom_point() +
+  geom_line(aes(x = experience, y = pred)) +
+  labs(x = "Experience", y = "Predicted Salary") +
+  ggtitle("linear model Salary Prediction") +
+  scale_colour_discrete("Department")
+```
+
+
+> 注意到，对每个教师来说，不管来自哪个学院的，系数$\alpha$和$\beta$是一样的，是**固定**的，因此这种简单线性模型也称之为**固定效应**模型。 
+
+
+事实上，这种线性模型的方法太过于粗狂，构建的线性直线不能反映**收入随院系的变化**。
+
+
+
+
+## 变化的截距
+
+**薪酬制定规则二**，假定不同的院系起薪不同，但年度增长率是相同的。
+
+这种统计模型，相比于之前的固定效应模型（简单线性模型）而言，加入了**截距会随所在学院不同而变化**的思想，统计模型写为
+
+$$\hat{y_i} = \alpha_{j[i]} + \beta x_i$$
+
+这个等式中，斜率$\beta$代表着年度增长率，是一个固定值，也就前面说的固定效应项，而截距$\alpha$代表着起薪，随学院变化，是五个值，因为一个学院对应一个，称之为**变化效应项**（也叫随机效应项）。这里模型中既有固定效应项又有变化效应项，因此称之为**混合效应模型**。
+
+> 教师$i$，他所在的学院$j$，记为$j[i]$，那么教师$i$所在学院$j$对应的$\alpha$，很自然的记为$\alpha_{j[i]}$
+
+
+
+ 
+```{r lmm-7}
+# Model with varying intercept
+m2 <- lmer(salary ~ experience + (1 | department), data = df)
+m2
+```
+
+
+```{r lmm-8}
+broom.mixed::tidy(m2, effects = "fixed")
+broom.mixed::tidy(m2, effects = "ran_vals")
+```
+
+
+
+
+```{r lmm-9}
+df %>%
+  add_predictions(m2) %>%
+  ggplot(aes(
+    x = experience, y = salary, group = department,
+    colour = department
+  )) +
+  geom_point() +
+  geom_line(aes(x = experience, y = pred)) +
+  labs(x = "Experience", y = "Predicted Salary") +
+  ggtitle("Varying Intercept Salary Prediction") +
+  scale_colour_discrete("Department")
+```
+
+
+
+这种模型，我们就能看到院系不同  带来的员工收入的差别。
+
+
+
+## 变化的斜率
+
+**薪酬制定规则三**，不同的院系起始薪酬是相同的，但年度增长率不同。
+
+与薪酬模型规则二的统计模型比较，我们只需要把**变化的截距**变成**变化的斜率**，那么统计模型可写为
+
+$$\hat{y_i} = \alpha + \beta_{j[i]}x_i$$
+
+
+这里，截距($\alpha$)对所有教师而言是固定不变的，而斜率($\beta$)会随学院不同而变化，5个学院对应着5个斜率。
+
+
+```{r lmm-10}
+# Model with varying slope
+m3 <- lmer(salary ~ experience + (0 + experience | department), data = df)
+m3
+```
+
+```{r lmm-11}
+broom.mixed::tidy(m3, effects = "fixed")
+broom.mixed::tidy(m3, effects = "ran_vals")
+```
+
+
+
+
+
+```{r lmm-12}
+df %>%
+  add_predictions(m3) %>%
+  ggplot(aes(
+    x = experience, y = salary, group = department,
+    colour = department
+  )) +
+  geom_point() +
+  geom_line(aes(x = experience, y = pred)) +
+  labs(x = "Experience", y = "Predicted Salary") +
+  ggtitle("Varying slope Salary Prediction") +
+  scale_colour_discrete("Department")
+```
+
+
+
+
+
+
+
+
+
+## 变化的斜率 + 变化的截距
+
+
+**薪酬制定规则四**，不同的学院起始薪酬和年度增长率也不同。
+
+这可能是最现实的一种情形了，它实际上是规则二和规则三的一种组合，要求截距和斜率都会随学院的不同变化，数学上记为
+
+
+$$\hat{y_i} = \alpha_{j[i]} + \beta_{j[i]}x_i$$
+具体来说，教师$i$，所在的学院$j$, 他的入职的起始收入表示为 ($\alpha_{j[i]}$)，年度增长率表示为($\beta_{j[i]}$).
+            
+
+
+            
+```{r lmm-13}
+# Model with varying slope and intercept
+m4 <- lmer(salary ~ experience + (1 + experience | department), data = df)
+m4
+```
+
+```{r lmm-14}
+broom.mixed::tidy(m4, effects = "fixed")
+broom.mixed::tidy(m4, effects = "ran_vals")
+```
+
+
+
+
+
+
+```{r lmm-15}
+df %>%
+  add_predictions(m4) %>%
+  ggplot(aes(
+    x = experience, y = salary, group = department,
+    colour = department
+  )) +
+  geom_point() +
+  geom_line(aes(x = experience, y = pred)) +
+  labs(x = "Experience", y = "Predicted Salary") +
+  ggtitle("Varying Intercept and Slopes Salary Prediction") +
+  scale_colour_discrete("Department")
+```
+
+
+
+
+## 信息池
+
+### 提问
+问题：**薪酬制定规则四**中，不同的院系起薪不同，年度增长率也不同，我们得出了5组不同的截距和斜率，那么是不是可以等价为，**先按照院系分5组，然后各算各的截距和斜率**? 比如
+
+```{r lmm-16}
+df %>%
+  group_by(department) %>%
+  group_modify(
+    ~ broom::tidy(lm(salary ~ 1 + experience, data = .))
+  )
+```
+
+
+> 分组各自回归，与这里的（变化的截距+变化的斜率）模型，不是一回事。
+
+
+### 信息共享
+
+- 完全共享
+ 
+```{r lmm-17}
+broom::tidy(m1)
+```
+
+
+```{r lmm-18}
+complete_pooling <-
+  broom::tidy(m1) %>%
+  dplyr::select(term, estimate) %>%
+  tidyr::pivot_wider(
+    names_from = term,
+    values_from = estimate
+  ) %>%
+  dplyr::rename(Intercept = `(Intercept)`, slope = experience) %>%
+  dplyr::mutate(pooled = "complete_pool") %>%
+  dplyr::select(pooled, Intercept, slope)
+
+complete_pooling
+```
+ 
+
+- 部分共享
+
+```{r lmm-19, eval=FALSE}
+fix_effect <- broom.mixed::tidy(m4, effects = "fixed")
+fix_effect
+fix_effect$estimate[1]
+fix_effect$estimate[2]
+```
+
+
+```{r lmm-20, eval=FALSE}
+var_effect <- broom.mixed::tidy(m4, effects = "ran_vals")
+var_effect
+```
+
+
+
+```{r lmm-21, eval=FALSE}
+# random effects plus fixed effect parameters
+partial_pooling <- var_effect %>%
+  dplyr::select(level, term, estimate) %>%
+  tidyr::pivot_wider(
+    names_from = term,
+    values_from = estimate
+  ) %>%
+  dplyr::rename(Intercept = `(Intercept)`, estimate = experience) %>%
+  dplyr::mutate(
+    Intercept = Intercept + fix_effect$estimate[1],
+    estimate = estimate + fix_effect$estimate[2]
+  ) %>%
+  dplyr::mutate(pool = "partial_pool") %>%
+  dplyr::select(pool, level, Intercept, estimate)
+
+partial_pooling
+```
+
+```{r lmm-22}
+partial_pooling <-
+  coef(m4)$department %>%
+  tibble::rownames_to_column() %>%
+  dplyr::rename(level = rowname, Intercept = `(Intercept)`, slope = experience) %>%
+  dplyr::mutate(pooled = "partial_pool") %>%
+  dplyr::select(pooled, level, Intercept, slope)
+
+partial_pooling
+```
+
+
+
+
+- 不共享
+
+```{r lmm-23}
+no_pool <- df %>%
+  dplyr::group_by(department) %>%
+  dplyr::group_modify(
+    ~ broom::tidy(lm(salary ~ 1 + experience, data = .))
+  )
+no_pool
+```
+
+
+```{r lmm-24}
+un_pooling <- no_pool %>%
+  dplyr::select(department, term, estimate) %>%
+  tidyr::pivot_wider(
+    names_from = term,
+    values_from = estimate
+  ) %>%
+  dplyr::rename(Intercept = `(Intercept)`, slope = experience) %>%
+  dplyr::mutate(pooled = "no_pool") %>%
+  dplyr::select(pooled, level = department, Intercept, slope)
+
+un_pooling
+```
+
+
+
+
+
+### 可视化 
+
+```{r lmm-25}
+library(ggrepel)
+
+un_pooling %>%
+  dplyr::bind_rows(partial_pooling) %>%
+  ggplot(aes(x = Intercept, y = slope)) +
+  purrr::map(
+    c(seq(from = 0.1, to = 0.9, by = 0.1)),
+    .f = function(level) {
+      stat_ellipse(
+        geom = "polygon", type = "norm",
+        size = 0, alpha = 1 / 10, fill = "gray10",
+        level = level
+      )
+    }
+  ) +
+  geom_point(aes(group = pooled, color = pooled)) +
+  geom_line(aes(group = level), size = 1 / 4) +
+  # geom_point(data = complete_pooling, size = 4, color = "red") +
+  geom_text_repel(
+    data = . %>% filter(pooled == "no_pool"),
+    aes(label = level)
+  ) +
+  scale_color_manual(
+    name = "information pool",
+    values = c(
+      "no_pool" = "black",
+      "partial_pool" = "red" # ,
+      # "complete_pool" = "#A65141"
+    ),
+    labels = c(
+      "no_pool" = "no share",
+      "partial_pool" = "partial share" # ,
+      # "complete_pool" = "complete share"
+    )
+  ) #+
+# theme_classic()
+```
+
+
+## 更多
+
+- 解释模型的含义
+```{r lmm-26, eval=FALSE}
+lmer(salary ~ 1 + (0 + experience | department), data = df)
+# vs
+lmer(salary ~ 1 + experience + (0 + experience | department), data = df)
+```
+
+
+```{r lmm-27}
+lmer(salary ~ 1 + (1 + experience | department), data = df)
+# vs
+lmer(salary ~ 1 + (1 | department) + (0 + experience | department), data = df)
+```
+
+- 课后阅读[文献](https://peerj.com/articles/4794/)，读完后大家一起分享
+- 课后阅读 [Understanding mixed effects models through data simulation](https://osf.io/3cz2e/)，
+
+
+
+```{r lmm-28, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(complete_pooling, create_data, df, m1, m2, m3, m4, no_pool, partial_pooling, un_pooling)
+```
+
+```{r lmm-29, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

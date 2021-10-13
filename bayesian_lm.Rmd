@@ -1,0 +1,329 @@
+# 贝叶斯线性回归 {#bayesian-lm}
+
+
+
+## 加载宏包
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+
+
+## 案例
+
+数据是不同天气温度冰淇淋销量，估计气温与销量之间的关系。
+
+```{r}
+icecream <- data.frame(
+  temp = c( 11.9, 14.2, 15.2, 16.4, 17.2, 18.1, 
+         18.5, 19.4, 22.1, 22.6, 23.4, 25.1),
+  units = c( 185L, 215L, 332L, 325L, 408L, 421L, 
+          406L, 412L, 522L, 445L, 544L, 614L)
+  )
+icecream
+```
+
+
+
+```{r}
+icecream %>% 
+  ggplot(aes(temp, units)) + 
+  geom_point()
+```
+
+
+
+```{r}
+icecream %>% 
+  ggplot(aes(units)) + 
+  geom_density()
+```
+
+
+
+### lm()
+
+```{r}
+fit_lm <- lm(units ~ 1 + temp, data = icecream)
+
+summary(fit_lm)
+```
+
+
+
+
+```{r}
+confint(fit_lm, level = 0.95)
+```
+
+
+
+
+```{r}
+# Confidence Intervals
+# coefficient +- qt(1-alpha/2, degrees_of_freedom) * standard errors
+
+coef <- summary(fit_lm)$coefficients[2, 1] 
+err  <- summary(fit_lm)$coefficients[2, 2]
+
+coef + c(-1,1)*err*qt(0.975,  nrow(icecream) - 2) 
+```
+
+
+
+
+### 线性模型
+
+线性回归需要满足四个前提假设：
+
+1. **Linearity **
+    - 因变量和每个自变量都是线性关系
+
+2. **Indpendence **
+    - 对于所有的观测值，它们的误差项相互之间是独立的
+
+3. **Normality **
+    - 误差项服从正态分布
+
+4. **Equal-variance **  
+    - 所有的误差项具有同样方差
+
+这四个假设的首字母，合起来就是**LINE**，这样很好记
+
+
+把这**四个前提**画在一张图中
+
+```{r, out.width = '80%', fig.align='center', echo = FALSE}
+knitr::include_graphics(here::here("images", "LINE.png"))
+```
+
+
+
+
+
+
+
+### 数学表达式
+
+$$
+y_n = \alpha + \beta x_n + \epsilon_n \quad \text{where}\quad
+\epsilon_n \sim \operatorname{normal}(0,\sigma).
+$$
+
+等价于
+
+$$
+y_n - (\alpha + \beta X_n) \sim \operatorname{normal}(0,\sigma),
+$$
+
+进一步等价
+
+$$
+y_n \sim \operatorname{normal}(\alpha + \beta X_n, \, \sigma).
+$$
+
+
+
+因此，我们**推荐**这样写线性模型的数学表达式
+$$
+\begin{align}
+y_n &\sim \operatorname{normal}(\mu_n, \,\, \sigma)\\
+\mu_n &= \alpha + \beta x_n 
+\end{align}
+$$
+
+## stan 代码
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] y;
+  vector[N] x;
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  y ~ normal(alpha + beta * x, sigma);
+  
+  alpha  ~ normal(0, 10);
+  beta   ~ normal(0, 10);
+  sigma  ~ exponential(1);
+}
+
+"
+
+```
+
+
+
+
+```{r, warning=FALSE, message=FALSE}
+stan_data <- list(
+   N = nrow(icecream),
+   x = icecream$temp, 
+   y = icecream$units
+  )
+
+fit_normal <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+
+- 检查 Traceplot
+
+```{r}
+traceplot(fit_normal)
+```
+
+
+- 检查结果
+
+```{r}
+fit_normal
+```
+
+
+
+## 理解后验概率
+
+提取后验概率的方法很多
+
+
+- `rstan::extract()`函数提取样本
+
+```{r}
+post_samples <- rstan::extract(fit_normal)
+```
+
+`post_samples`是一个列表，每个元素对应一个系数，每个元素都有4000个样本，我们可以用ggplot画出每个系数的后验分布
+
+```{r}
+tibble(x = post_samples[["beta"]] ) %>% 
+  ggplot(aes(x)) +
+  geom_density()
+```
+
+
+- 用`bayesplot`宏包可视化
+```{r}
+posterior <- as.matrix(fit_normal)
+
+bayesplot::mcmc_areas(posterior, 
+                      pars = c("alpha", "beta", "sigma"),
+                      prob = 0.89) 
+```
+
+
+
+- 用`tidybayes`宏包提取样本并可视化，我喜欢用这个，因为它符合`tidyverse`的习惯
+
+```{r}
+fit_normal %>% 
+  tidybayes::spread_draws(alpha, beta, sigma) %>% 
+  
+  ggplot(aes(x = beta)) +
+  tidybayes::stat_halfeye(.width = c(0.66, 0.95)) + 
+  theme_bw() 
+```
+
+
+
+
+```{r}
+fit_normal %>% 
+  tidybayes::spread_draws(alpha, beta, sigma) %>% 
+  
+  ggplot(aes(beta, color = "posterior")) + 
+  geom_density(size = 1) + 
+  
+  stat_function(fun = dnorm, 
+        args = list(mean = 0, 
+                    sd = 10), 
+        aes(colour = 'prior'), size = 1) +
+  xlim(-30, 30) +
+  scale_color_manual(name = "", 
+                     values = c("prior" = "red", "posterior" = "black")
+                     ) + 
+  ggtitle("系数beta的先验和后验概率分布") + 
+  xlab("beta")
+  
+```
+
+
+
+# #小结
+
+```{r, out.width = '80%', fig.align = 'center', echo = FALSE}
+knitr::include_graphics(here::here("images", "from_model_to_code.jpg"))
+```
+
+## 作业与思考
+
+- 去掉stan代码中的先验信息，然后重新运行，然后与`lm()`结果对比。
+
+- 调整stan代码中的先验信息，然后重新运行，检查后验概率有何变化。
+
+```{md}
+alpha  ~ normal(100, 5);
+beta   ~ normal(20, 5);
+```
+
+- 修改stan代码，尝试推断上一章的身高分布
+```{r}
+d <- readr::read_rds(here::here('data', "height_weight.rds")) 
+```
+
+
+```{r}
+stan_program <- "
+data {
+  int N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+
+model {
+  mu ~ normal(168, 20);
+  sigma ~ uniform(0, 50);
+  
+  y ~ normal(mu, sigma);
+}
+
+"
+
+stan_data <- list(
+  N = nrow(d),
+  y = d$height
+)
+
+fit <- stan(model_code = stan_program, data = stan_data,
+            iter = 31000, 
+            warmup = 30000, 
+            chains = 4, 
+            cores = 4
+            )
+```
+
+
+
+```{r}
+traceplot(fit)
+```
+
+
+```{r}
+fit
+```

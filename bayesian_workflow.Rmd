@@ -1,0 +1,413 @@
+# 贝叶斯工作流程 {#bayesian-workflow}
+
+
+## 贝叶斯工作流程
+
+1. 数据探索和准备
+2. 全概率模型
+3. 先验预测检查，利用先验模拟响应变量
+4. 模型应用到模拟数据，看参数恢复情况
+5. 模型应用到真实数据
+6. 检查抽样效率和模型收敛情况
+7. 模型评估和后验预测检查
+8. 信息准则与交叉验证，以及模型选择
+
+
+## 案例
+
+我们用[ames房屋价格](https://bookdown.org/wangminjie/R4DS/eda-ames-houseprice.html#eda-ames-houseprice)，演示贝叶斯数据分析的工作流程
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+
+### 1) 数据探索和准备
+
+```{r}
+rawdf <- readr::read_rds("./demo_data/ames_houseprice.rds") 
+rawdf
+```
+
+
+为了简化，我们只关注房屋价格(sale_price)与房屋占地面积(lot_area)和所在地理位置(neighborhood)的关系，这里需要点准备工作
+
+- 房屋价格与房屋占地面积这两个变量**对数化处理** (why ?)
+- 地理位置变量转换**因子类型**                   (why ?)
+- 房屋价格与房屋占地面积这两个变量**标准化处理** (why ?)
+
+```{r}
+df <- rawdf %>%
+  select(sale_price, lot_area, neighborhood) %>%
+  drop_na() %>%
+  mutate(
+    across(c(sale_price, lot_area), log),
+    across(neighborhood, as.factor)
+  ) %>%
+  mutate(
+    across(c(sale_price, lot_area), ~ (.x - mean(.x)) /sd(.x) ),
+  )
+
+head(df)
+```
+
+
+
+
+```{r}
+df %>%
+  ggplot(aes(x = lot_area, y = sale_price)) +
+  geom_point(colour = "blue") +
+  geom_smooth(method = lm, se = FALSE, formula = "y ~ x")
+```
+
+
+
+
+```{r}
+df %>%
+  ggplot(aes(x = lot_area, y = sale_price)) +
+  geom_point(colour = "blue") +
+  geom_smooth(method = lm, se = FALSE, formula = "y ~ x", fullrange = TRUE) +
+  facet_wrap(vars(neighborhood))
+```
+
+
+### 2) 数据模型
+
+$$
+\begin{align}
+y_i &\sim \operatorname{Normal}(\mu_i, \sigma) \\
+\mu_i &= \alpha_{j} + \beta * x_i \\
+\alpha_j & \sim \operatorname{Normal}(0, 10)\\
+\beta & \sim \operatorname{Normal}(0, 10) \\
+\sigma &\sim \exp(1)
+\end{align}
+$$
+
+如果建立了这样的数学模型，可以马上写出stan代码
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=1> n;           
+  int<lower=1> n_neighbour;      
+  int<lower=1> neighbour[n];     
+  vector[n] lot;  
+  vector[n] price;  
+  
+  real alpha_sd;
+  real beta_sd;
+  int<lower = 0, upper = 1> run_estimation;
+}
+parameters {
+  vector[n_neighbour] alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  vector[n] mu;  
+  
+  for (i in 1:n) {
+    mu[i] = alpha[neighbour[i]] + beta * lot[i];
+  }
+  
+  alpha ~ normal(0, alpha_sd);
+  beta ~ normal(0, beta_sd);
+  sigma ~ exponential(1);
+  
+  if(run_estimation == 1) {
+     target += normal_lpdf(price | mu, sigma);
+  }
+    
+}
+generated quantities {
+   vector[n] log_lik; 
+   vector[n] y_hat;
+   
+   for (j in 1:n) {
+     log_lik[j] = normal_lpdf(price | alpha[neighbour[j]] + beta * lot[j], sigma);
+     y_hat[j]   = normal_rng(alpha[neighbour[j]] + beta * lot[j], sigma);
+   }
+}
+"
+```
+
+
+
+
+
+### 3) 先验预测检查，利用先验模拟响应变量
+
+有个问题，我们这个先验概率怎么来的呢？猜的，因为没有人知道它究竟是什么分布(如果您是这个领域的专家，就不是猜，而叫**合理假设**)。那到底合不合理，我们需要检验下。这里用到的技术是**先验预测检验**。怎么做？
+
+- 首先，模拟先验概率分布
+- 然后，通过先验和模型假定的线性关系，模拟相应的响应变量$y_i$（注意，不是真实的数据）
+
+
+```{r}
+stan_data <- df %>%
+  tidybayes::compose_data(
+    n_neighbour    = n_distinct(neighborhood),
+    neighbour      = neighborhood,
+    price          = sale_price,
+    lot            = lot_area,
+    alpha_sd       = 10, 
+    beta_sd        = 10, 
+    run_estimation = 0
+  )
+
+
+
+model_only_prior_sd_10 <- stan(model_code = stan_program, data = stan_data, 
+                       chains = 1, iter = 2100, warmup = 2000)
+
+
+
+dt_wide <- model_only_prior_sd_10 %>% 
+  as.data.frame() %>% 
+  select(`alpha[5]`, beta) %>% 
+  rowwise() %>%
+  mutate(
+    set = list(tibble(
+      x = seq(from = -3, to = 3, length.out = 200),
+      y = `alpha[5]` + beta * x
+    ))
+  )
+
+
+ggplot() +
+  map(
+    dt_wide$set,
+    ~ geom_line(data = ., aes(x = x, y = y), alpha = 0.2)
+  )
+```
+
+
+
+
+
+```{r}
+stan_data <- df %>%
+  tidybayes::compose_data(
+    n_neighbour    = n_distinct(neighborhood),
+    neighbour      = neighborhood,
+    price          = sale_price,
+    lot            = lot_area,
+    alpha_sd       = 1, 
+    beta_sd        = 1, 
+    run_estimation = 0
+  )
+
+
+
+model_only_prior_sd_1 <- stan(model_code = stan_program, data = stan_data, 
+                       chains = 1, iter = 2100, warmup = 2000)
+
+
+
+dt_narrow <- model_only_prior_sd_1 %>% 
+  as.data.frame() %>% 
+  select(`alpha[5]`, beta) %>% 
+  rowwise() %>%
+  mutate(
+    set = list(tibble(
+      x = seq(from = -3, to = 3, length.out = 200),
+      y = `alpha[5]` + beta * x
+    ))
+  )
+
+
+ggplot() +
+  map(
+    dt_narrow$set,
+    ~ geom_line(data = ., aes(x = x, y = y), alpha = 0.2)
+  )
+```
+
+
+
+
+### 4) 模型应用到模拟数据，看参数恢复情况
+
+
+```{r}
+df_random_draw <- mod_only_prior %>% 
+  tidybayes::gather_draws(alpha[i], beta, sigma, y_hat[i], n = 1)
+
+true_parameters <- df_random_draw %>% 
+  filter(.variable %in% c("alpha", "beta", "sigma")) %>%
+  mutate(parameters = if_else(is.na(i), .variable, str_c(.variable, "_", i)))
+
+
+y_sim <- df_random_draw %>% 
+  filter(.variable == "y_hat") %>% 
+  pull(.value)
+```
+
+
+
+
+模拟的数据`y_sim`，导入模型作为响应变量，
+```{r, warning=FALSE, message=FALSE}
+stan_data <- df %>%
+  tidybayes::compose_data(
+    n_neighbour    = n_distinct(neighborhood),
+    neighbour      = neighborhood,
+    price          = y_sim,      ##  这里是模拟数据
+    lot            = lot_area,
+    alpha_sd       = 1, 
+    beta_sd        = 1, 
+    run_estimation = 1
+  )
+
+model_on_fake_dat <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+看参数恢复的如何
+
+```{r}
+model_on_fake_dat %>% 
+  tidybayes::gather_draws(alpha[i], beta, sigma) %>% 
+  ungroup() %>% 
+  mutate(parameters = if_else(is.na(i), .variable, str_c(.variable, "_", i))) %>% 
+
+  ggplot(aes(x = .value)) +
+  geom_density() +
+  geom_vline(
+    data = true_parameters,
+    aes(xintercept = .value),
+    color = "red"
+    ) +
+  facet_wrap(vars(parameters), ncol = 5, scales = "free")
+```
+
+
+
+
+如果觉得上面的过程很麻烦，可以直接用`bayesplot::mcmc_recover_hist()`
+```{r, message=FALSE, results=FALSE}
+posterior_alpha_beta <- 
+  as.matrix(model_on_fake_dat, pars = c('alpha', 'beta', 'sigma'))
+
+bayesplot::mcmc_recover_hist(posterior_alpha_beta, true = true_parameters$.value)
+```
+
+
+
+
+### 5) 模型应用到真实数据
+
+应用到真实数据
+
+```{r, warning=FALSE, message=FALSE}
+stan_data <- df %>%
+  tidybayes::compose_data(
+    n_neighbour    = n_distinct(neighborhood),
+    neighbour      = neighborhood,
+    price          = sale_price,      ##  这里是真实数据
+    lot            = lot_area,
+    alpha_sd       = 1, 
+    beta_sd        = 1, 
+    run_estimation = 1
+  )
+
+model <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+
+
+### 6) 检查抽样效率和模型收敛情况
+
+
+- 检查traceplot
+```{r}
+rstan::traceplot(model)
+```
+
+
+
+- 检查neff 和 Rhat
+```{r}
+print(model,
+  pars = c("alpha", "beta", "sigma"),
+  probs = c(0.025, 0.50, 0.975),
+  digits_summary = 3
+)
+
+```
+
+
+
+
+- 检查posterior sample
+
+```{r}
+model %>% 
+  tidybayes::gather_draws(alpha[i], beta, sigma) %>% 
+  ungroup() %>% 
+  mutate(parameters = if_else(is.na(i), .variable, str_c(.variable, "_", i))) %>%
+  
+  ggplot(aes(x = .value, y = parameters)) +
+  ggdist::stat_halfeye()
+```
+
+
+
+事实上，`bayesplot`宏包很强大也很好用
+```{r}
+bayesplot::mcmc_combo(
+  as.array(model),
+  combo = c("dens_overlay", "trace"),
+  pars = c('alpha[1]', 'beta', 'sigma')
+ ) 
+```
+
+
+
+
+### 7) 模型评估和后验预测检查
+
+```{r}
+yrep <- extract(model)[["y_hat"]]
+
+samples <- sample(nrow(yrep), 300)
+bayesplot::ppc_dens_overlay(as.vector(df$sale_price), yrep[samples, ])
+```
+
+
+
+
+
+
+
+## Conclusion
+
+
+
+
+
+
+
+## 作业
+
+- 前面的模型只有变化的截距（即不同的商圈有不同的截距）斜率是固定的，要求：增加一个变化的斜率
+
+$$
+\begin{align}
+y_i &\sim \operatorname{Normal}(\mu_i, \sigma) \\
+\mu_i &= \alpha_{j} + \beta_{j} * x_i \\
+\alpha_j & \sim \operatorname{Normal}(0, 1)\\
+\beta_j & \sim \operatorname{Normal}(0, 1) \\
+\sigma &\sim \exp(1)
+\end{align}
+$$
+

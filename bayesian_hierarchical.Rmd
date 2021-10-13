@@ -1,0 +1,714 @@
+# 贝叶斯层级模型 {#bayesian-hierarchical}
+
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+
+
+## 明尼苏达州房屋中氡的存在
+
+```{r}
+radon <- readr::read_rds(here::here('demo_data', "radon.rds")) 
+```
+
+
+
+数据来源美国明尼苏达州85个县中房屋氡含量测量
+
+- `log_radon`   房屋氡含量 (log scale)
+- `log_uranium` 这个县放射性化学元素铀的等级 (log scale)
+- `floor`       房屋楼层 (0 = basement, 1 = first floor)
+- `county`      所在县 (factor)
+
+
+
+## 任务
+
+估计房屋中的氡含量。
+
+
+
+
+### 可视化探索
+
+```{r}
+df_n_county <- radon %>% 
+  group_by(county) %>%
+  summarise(
+    n = n()
+  ) 
+
+df_n_county 
+```
+
+
+
+统计每个县，样本量、氡含量均值、标准差、铀等级的均值、标准误
+```{r}
+radon_county <- radon %>%
+  group_by(county) %>%
+  summarise(
+    log_radon_mean = mean(log_radon),
+    log_radon_sd   = sd(log_radon),
+    log_uranium    = mean(log_uranium),
+    n              = length(county)
+  ) %>%
+  mutate(log_radon_se = log_radon_sd / sqrt(n))
+
+radon_county
+```
+
+
+
+```{r fig.asp=2}
+ggplot() +
+  geom_boxplot(data = radon,
+               mapping = aes(y = log_radon,
+                             x = fct_reorder(county, log_radon, mean)),
+               colour = "gray") +
+  geom_point(data = radon,
+             mapping = aes(y = log_radon,
+                           x = fct_reorder(county, log_radon, mean)),
+             colour = "gray") +
+  geom_point(data = radon_county,
+             mapping = aes(x = fct_reorder(county, log_radon_mean),
+                           y = log_radon_mean),
+             colour = "red") +
+  coord_flip() +
+  labs(y = "log(radon)", x = "")
+```
+
+
+
+### pooling model
+
+这是最简单的模型，该模型假定所有的房屋的氡含量来自同一个分布， 估计整体的均值和方差
+
+$$
+\begin{aligned}[t]
+y_i &\sim \operatorname{normal}(\mu, \sigma) \\
+\mu &\sim \operatorname{normal}(0, 10) \\
+\sigma &\sim \operatorname{exp}(1)
+\end{aligned}
+$$
+这里我们指定 $\mu$ 和 $\sigma$ 较弱的先验信息.
+
+
+
+```{r}
+stan_program <- "
+data {
+  int N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+model {
+  mu ~ normal(0, 10);
+  sigma ~ exponential(1);
+  
+  y ~ normal(mu, sigma);
+}
+"
+
+stan_data <- list(
+  N = nrow(radon),
+  y = radon$log_radon
+)
+
+fit_pooling <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+模型估计了均值和方差两个参数。
+
+```{r}
+summary(fit_pooling)$summary
+```
+
+
+
+### no-pooling model
+
+每个县都有**独立**的均值和方差，又叫 *individual model*
+
+
+$$
+\begin{aligned}[t]
+y_i &\sim \operatorname{normal}(\mu_{j[i]}, \sigma)  \\
+\mu_j &\sim \operatorname{normal}(0, 10) \\
+\sigma &\sim \operatorname{exp}(1)
+\end{aligned}
+$$
+其中， $j[i]$ 表示观测$i$对应的所在县。
+
+
+
+```{r}
+stan_program <- "
+data {
+  int<lower=1> N;                            
+  int<lower=2> J;                     
+  int<lower=1, upper=J> county[N]; 
+  vector[N] y; 
+}
+parameters {
+  vector[J] mu;
+  real<lower=0> sigma;
+}
+model {
+  mu ~ normal(0, 10);
+  sigma ~ exponential(1);
+  
+  for(i in 1:N) {
+    y[i] ~ normal(mu[county[i]], sigma);
+  }
+}
+"
+
+stan_data <- list(
+  N      = nrow(radon),
+  J      = length(unique(radon$county)),
+  county = as.numeric(radon$county),
+  y      = radon$log_radon
+)
+
+fit_no_pooling <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+summary(fit_no_pooling)$summary
+```
+
+
+有多少县，就有多少个模型，每个模型有一个 $\mu$，参数$\sigma$是共同的。需要注意的是，每组之间彼此独立的，没有共享信息。
+
+
+
+
+
+### partially pooled model
+
+和 "no-pooling model" 模型一样，每个县都有自己的均值，但是，这些县彼此会分享信息，一个县获取的信息可以帮助我们估计其它县的均值。
+
+- 模型同时考虑各个类别数据中的信息以及整个群体中的信息
+- 怎么叫共享信息？参数来自同一个分布
+- 怎么做到的呢？通过先验
+
+
+
+$$
+\begin{aligned}[t]
+y_i &\sim \operatorname{normal}(\mu_{j[i]}, \sigma) \\
+\mu_j &\sim \operatorname{normal}(\gamma, \tau) \\
+\gamma &\sim \operatorname{normal}(0, 5) \\
+\tau &\sim \operatorname{exp}(1)
+\end{aligned}
+$$
+
+每个县的氡含量均值$\mu_j$都服从均值为 $\gamma$、标准差为 $\tau$ 的正态分布。但先验分布中的参数
+$\gamma$ 和 $\tau$ 都各自有自己的先验分布，即**参数的参数**， 通常称之为**超参数**，这就是多层模型中"层"的来历，$\mu_j$ 是第一层参数，$\gamma$ 是第二层参数。
+
+- $\gamma$ 和 $\tau$ 的先验称为 **超先验分布**。
+- **超参数**是多层模型的标志。
+
+
+```{r}
+stan_program <- "
+data {
+  int<lower=1> N;                            
+  int<lower=2> J;                     
+  int<lower=1, upper=J> county[N]; 
+  vector[N] y; 
+}
+parameters {
+  vector[J] mu;
+  real mu_a;
+  real<lower=0> sigma_y;
+  real<lower=0> sigma_a;
+}
+model {
+  mu_a ~ normal(0, 5);
+  sigma_a ~ exponential(1);
+  sigma_y ~ exponential(1);
+  
+  mu ~ normal(mu_a, sigma_a);
+  
+  for(i in 1:N) {
+    y[i] ~ normal(mu[county[i]], sigma_y);
+  }
+}
+"
+
+stan_data <- list(
+  N      = nrow(radon),
+  J      = length(unique(radon$county)),
+  county = as.numeric(radon$county),
+  y      = radon$log_radon
+)
+
+fit_partial_pooling <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+summary(fit_partial_pooling)$summary
+```
+
+
+
+### 对比三个模型
+
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images", "hirerachical.jpg"))
+```
+
+
+对比三个模型的结果
+
+```{r}
+overall_mean <- broom.mixed::tidyMCMC(fit_pooling) %>% 
+  filter(term == "mu") %>% 
+  pull(estimate)
+
+
+
+df_no_pooling <- fit_no_pooling %>% 
+  tidybayes::gather_draws(mu[i]) %>%
+  tidybayes::mean_hdi() %>% 
+  ungroup() %>% 
+  mutate(
+    type = "no_pooling"
+  ) %>% 
+  select(type, .value) %>% 
+  bind_cols(df_n_county)
+
+
+
+df_partial_pooling <- fit_partial_pooling %>% 
+  tidybayes::gather_draws(mu[i]) %>%
+  tidybayes::mean_hdi() %>% 
+  ungroup() %>% 
+  mutate(
+    type = "partial_pooling"
+  ) %>% 
+  select(type, .value) %>% 
+  bind_cols(df_n_county)
+
+
+bind_rows(df_no_pooling, df_partial_pooling) %>% 
+  ggplot(
+    aes(x = n, y = .value, color = type)
+  ) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = overall_mean) +
+  scale_x_log10()
+```
+
+
+- 层级模型可以实现不同分组之间的信息交换
+- 分组的均值向整体的均值靠拢（收缩）
+- 分组的样本量越小，收缩效应越明显
+
+
+用我们**四川火锅**记住他们。
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images", "pooling.jpg"))
+```
+
+
+
+## 增加预测变量
+
+### 增加楼层floor作为预测变量
+
+
+$$
+\begin{aligned}
+y_i &\sim  N(\mu_i, \sigma^2) \\
+\mu_i &= \alpha_{j[i]} + \beta~\mathtt{floor}_i  \\
+\alpha_j &\sim \operatorname{normal}(\gamma, \tau)  \\
+\beta &\sim \operatorname{normal}(0, 2.5)\\
+\gamma &\sim \operatorname{normal}(0, 10) \\
+\tau &\sim \operatorname{exp}(1) \\
+\end{aligned}
+$$
+不同的县有不同的截距，但有共同的$\beta$，因此被称为**变化的截距**。
+
+
+
+
+
+```{r}
+stan_program <- "
+data {
+  int<lower=1> N;                            
+  int<lower=2> J;                     
+  int<lower=1, upper=J> county[N]; 
+  vector[N] x; 
+  vector[N] y; 
+}
+parameters {
+  vector[J] alpha;
+  real beta;
+  real gamma;
+  real<lower=0> sigma_y;
+  real<lower=0> sigma_a;
+}
+model {
+  vector[N] mu;
+  for(i in 1:N) {
+    mu[i] = alpha[county[i]] + beta * x[i];
+  }
+  
+  for(i in 1:N) {
+    y[i] ~ normal(mu[i], sigma_y);
+  }
+  
+  alpha ~ normal(gamma, sigma_a);
+  gamma ~ normal(0, 10);
+  beta ~ normal(0, 2.5);
+  sigma_a ~ exponential(1);
+  sigma_y ~ exponential(1);
+
+}
+"
+
+stan_data <- list(
+  N      = nrow(radon),
+  J      = length(unique(radon$county)),
+  county = as.numeric(radon$county),
+  x      = radon$floor,
+  y      = radon$log_radon
+)
+
+fit_intercept_partial <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+```{r}
+summary(fit_intercept_partial)$summary
+```
+
+
+
+### 截距中增加预测因子
+
+相当于在第二层参数中增加预测因子
+
+$$
+\begin{aligned}
+y_i &\sim  N(\mu_i, ~\sigma) \\
+\mu_i &= \alpha_{j[i]} + \beta~\mathtt{floor}_i  \\
+\alpha_j &\sim \operatorname{normal}(\gamma_0 + \gamma_1~u_j, ~\tau)  \\
+\beta &\sim \operatorname{normal}(0, 1)\\
+\gamma_0 &\sim  \operatorname{normal}(0, 2.5)\\
+\gamma_1 &\sim  \operatorname{normal}(0, 2.5)\\
+\tau &\sim \operatorname{exp}(1) \\
+\end{aligned}
+$$
+
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] y;             
+  int<lower=0, upper=1> x[N];             
+  int<lower=2> J;                     
+  int<lower=1, upper=J> county[N]; 
+  vector[J] u; 
+}
+parameters {
+  vector[J] alpha;
+  real beta;
+  real gamma0;
+  real gamma1;
+  real<lower=0> sigma_a;
+  real<lower=0> sigma_y;
+}
+model {
+  vector[N] mu;
+
+  for(i in 1:N) {
+    mu[i] = alpha[county[i]] + x[i] * beta;
+  }
+  
+  for(j in 1:J) {
+    alpha[j] ~ normal(gamma0 + gamma1 * u[j], sigma_a);
+  }
+  
+  y ~ normal(mu, sigma_y);
+
+  beta ~ normal(0, 1);
+  gamma0 ~ normal(0, 2.5);
+  gamma1 ~ normal(0, 2.5);
+  sigma_a ~ exponential(1);
+  sigma_y ~ exponential(1);
+
+}
+
+
+"
+
+stan_data <- list(
+  N      = nrow(radon),
+  J      = length(unique(radon$county)),
+  county = as.numeric(radon$county),
+  x      = radon$floor,
+  y      = radon$log_radon,
+  u      = unique(radon$log_uranium)
+)
+
+
+
+fit_intercept_partial_2 <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+
+```{r}
+summary(fit_intercept_partial_2, c("beta", "gamma0", "gamma1", "sigma_y", "sigma_a"))$summary
+```
+
+
+beta怎么解释?
+- 负号，说明楼上比楼下氡含量低
+
+
+
+
+### 变化的截距和斜率
+
+之前模型假定，不管哪个县，所有的房屋一楼和二楼的氡含量的差别是一样的（beta系数是不变的），现在，我们将模型进一步扩展，假定一楼和二楼的氡含量的差别**不是固定不变的，而是随县变化的**，也就说不同县的房屋，一二楼氡含量差别是不同的。
+
+
+写出变化的截距和斜率模型的数学表达式
+
+$$
+\begin{aligned}[t]
+y_i &\sim \operatorname{Normal}(\mu_i, \sigma_y) \\
+\mu_i &= \alpha_{j[i]} + \beta_{j[i]}~\mathtt{floor}_i  \\
+  \begin{bmatrix}
+  \alpha_j \\
+  \beta_j
+  \end{bmatrix}
+& \sim
+\operatorname{MVNormal}
+\left(
+  \begin{bmatrix}
+  \gamma_0^{\alpha} + \gamma_1^{\alpha} ~ u_j \\
+  \gamma_0^{\beta} + \gamma_1^{\beta} ~ u_j \\
+  \end{bmatrix}, ~\mathbf S 
+\right) \\
+\mathbf S     & = \begin{bmatrix} \sigma_\alpha & 0 \\ 0 & \sigma_\beta \end{bmatrix} \mathbf R \begin{bmatrix} \sigma_\alpha & 0 \\ 0 & \sigma_\beta \end{bmatrix} \\
+& = \begin{bmatrix} \sigma_\alpha & 0 \\ 0 & \sigma_\beta \end{bmatrix} \begin{bmatrix} 1 & \rho \\ \rho & 1 \end{bmatrix} \begin{bmatrix} \sigma_\alpha & 0 \\ 0 & \sigma_\beta \end{bmatrix} \\
+\gamma_a      & \sim \operatorname{Normal}(0, 4) \\
+\gamma_b     & \sim \operatorname{Normal}(0, 4) \\
+\sigma        & \sim \operatorname{Exponential}(1) \\
+\sigma_\alpha & \sim \operatorname{Exponential}(1) \\
+\sigma_\beta  & \sim \operatorname{Exponential}(1) \\
+\mathbf R     & \sim \operatorname{LKJcorr}(2)
+\end{aligned} 
+$$
+
+
+
+
+
+- 模型表达式中 $\alpha_j$ 和 $\beta_j$ 不是直接给先验，而是给的层级先验。
+
+- $\alpha_j$ 和 $\beta_j$ 也可能存在关联，常见的有，多元正态分布（Multivariate Gaussian Distribution）
+
+
+$$
+\begin{aligned}[t]
+\begin{bmatrix}
+\alpha_j \\
+\beta_j
+\end{bmatrix} &\sim
+\operatorname{MVNormal}\left(\begin{bmatrix}\gamma_{\alpha} \\ \gamma_{\beta} \end{bmatrix}, \mathbf S\right) \\
+\end{aligned}
+$$
+
+### 协方差矩阵(covariance matrix) 
+
+`MASS::mvrnorm(n, mu, Sigma)`产生多元高斯分布的随机数，每组随机变量高度相关。
+比如，人的身高服从正态分布，人的体重也服从正态分布，同时身高和体重又存在强烈的关联。
+
+
+- `n`: 随机样本的大小
+- `mu`: 多元高斯分布的均值向量
+- `Sigma`: 协方差矩阵，主要这里是大写的S (Sigma)，提醒我们它是一个矩阵，不是一个数值
+
+```{r}
+a       <- 3.5
+b       <- -1
+sigma_a <- 1
+sigma_b <- 0.5
+rho     <- -0.7
+mu      <- c(a, b)
+cov_ab  <- sigma_a * sigma_b * rho 
+sigma   <- matrix(c(sigma_a^2, cov_ab, 
+                    cov_ab, sigma_b^2), ncol = 2)
+sigma
+```
+
+
+
+
+
+```{r}
+d <- MASS::mvrnorm(1000, mu = mu, Sigma = sigma) %>%
+  data.frame() %>%
+  set_names("group_a", "group_b")
+head(d)
+```
+
+
+
+
+```{r}
+d %>%
+  ggplot(aes(x = group_a)) +
+  geom_density(
+    color = "transparent",
+    fill = "dodgerblue3",
+    alpha = 1 / 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = 3.5, sd = 1),
+    linetype = 2
+  )
+```
+
+
+```{r}
+d %>%
+  ggplot(aes(x = group_b)) +
+  geom_density(
+    color = "transparent",
+    fill = "dodgerblue3",
+    alpha = 1 / 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = -1, sd = 0.5),
+    linetype = 2
+  )
+```
+
+
+```{r}
+d %>%
+  ggplot(aes(x = group_a, y = group_b)) +
+  geom_point() +
+  stat_ellipse(type = "norm", level = 0.95)
+```
+
+
+
+### 回到模型
+
+在stan中要给协方差矩阵指定一个先验，[Priors for Covariances](https://mc-stan.org/docs/2_26/stan-users-guide/multivariate-hierarchical-priors-section.html)
+
+
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] y;             
+  int<lower=0, upper=1> x[N];             
+  int<lower=2> J;                     
+  int<lower=1, upper=J> county[N]; 
+  vector[J] u; 
+}
+parameters {
+  vector[J] alpha;
+  vector[J] beta;
+  vector[2] gamma_a;
+  vector[2] gamma_b;
+  
+  real<lower=0> sigma;
+  vector<lower=0>[2] tau;
+  corr_matrix[2] Rho;
+}
+transformed parameters {
+  vector[2] YY[J];
+
+  for (j in 1:J) {
+    YY[j] = [alpha[j], beta[j]]';
+  }
+}
+model {
+  vector[N] mu;
+  vector[2] MU[J];
+  
+  sigma ~ exponential(1);
+  tau ~ exponential(1);
+  Rho ~ lkj_corr(2);
+  gamma_a ~ normal(0, 2);
+  gamma_b ~ normal(0, 2);
+  
+  for(i in 1:N) {
+    mu[i] = alpha[county[i]] + beta[county[i]] * x[i];  
+  }
+  
+  for(j in 1:J) {
+    MU[j, 1] = gamma_a[1] + gamma_a[2] * u[j];
+    MU[j, 2] = gamma_b[1] + gamma_b[2] * u[j];
+  }
+ 
+
+  target += multi_normal_lpdf(YY | MU, quad_form_diag(Rho, tau));
+  
+  y ~ normal(mu, sigma); 
+}
+"
+
+
+stan_data <- list(
+  N      = nrow(radon),
+  J      = length(unique(radon$county)),
+  county = as.numeric(radon$county),
+  x      = radon$floor,
+  y      = radon$log_radon,
+  u      = unique(radon$log_uranium)
+)
+
+
+fit_slope_partial <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+summary(fit_slope_partial, c("alpha"))$summary
+summary(fit_slope_partial, c("beta"))$summary
+summary(fit_slope_partial, c("sigma"))$summary
+summary(fit_slope_partial, c("gamma_a", "gamma_b"))$summary
+```
+
+
+
+
+```{r}
+rstan::traceplot(fit_slope_partial, pars = c("sigma"))
+```
+

@@ -1,0 +1,34 @@
+# Stan入门 {#bayesian-intro-stan}
+
+
+
+相比于传统的方法来说，[Stan](https://mc-stan.org/)建模具有更好的可操作性、透明性和可解释性。本周开始，我们将开始学习贝叶斯数据分析，希望通过一些案例，让大家了解Stan的强大和价值。根据我有限的学习经验，采用code first 教学。
+
+
+
+# 配置环境
+
+- 安装 [Rtools4.0](https://cran.r-project.org/bin/windows/Rtools/)到`C`盘
+   
+- 添加系统路径(电脑 - 属性 - 高级系统设置 - 环境变量 - 系统变量 - Path) 
+  - `C:\rtools40`
+  - `C:\rtools40\mingw64\bin`
+  - `C:\rtools40\usr\bin`
+  
+- 配置
+```{r, eval=FALSE}
+writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
+```
+
+- 安装rstan宏包
+
+```{r}
+install.packages(c("StanHeaders", "rstan"), type = "source")
+install.packages(c("tidybayes", "bayesplot"))
+```
+
+- 遇到问题，请参考
+ 
+<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+
+

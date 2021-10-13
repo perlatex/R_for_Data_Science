@@ -1,0 +1,241 @@
+# tidyverse中行方向的操作 {#eda-rowwise}
+
+dplyr 1.0 推出之后，数据框**行方向**的操作得到完美解决，因此本章的内容已经过时，大家可以跳出本章，直接阅读第\@ref(colwise) 章。（留着本章，主要是让自己时常回顾下之前的探索。让自己最难忘的，或许就是曾经的痛点吧）
+
+
+```{r rowwise-1, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+tidyverse 喜欢数据框，因为一列就是一个向量，一列一列的处理起来很方便。然而我们有时候也要，完成行方向的操作，所以有必要介绍tidyverse中行方向的处理机制。
+
+## 问题
+
+```{r rowwise-2, eval=FALSE}
+df <- tibble(x = 1:3, y = 4:6)
+df
+```
+对每行的求和、求均值、最小值或者最大值？
+
+
+## rowwise函数
+
+dplyr提供了rowwise函数，但大神说不推荐
+```{r rowwise-3, eval=FALSE}
+df %>%
+  rowwise() %>%
+  mutate(i = sum(x, y))
+```
+
+
+```{r rowwise-4, eval=FALSE}
+df %>%
+  rowwise() %>%
+  mutate(i = mean(c(x, y)))
+```
+
+```{r rowwise-5, eval=FALSE}
+df %>%
+  rowwise() %>%
+  mutate(
+    min = min(x, y),
+    max = max(x, y)
+  )
+```
+
+
+```{r rowwise-6, eval=FALSE}
+df %>%
+  rowwise() %>%
+  do(i = mean(c(.$x, .$y))) %>%
+  unnest(i)
+```
+
+## Row-wise Summaries
+```{r rowwise-7, eval=FALSE}
+df %>% mutate(row_sum = rowSums(.[1:2]))
+```
+
+
+```{r rowwise-8, eval=FALSE}
+df %>% mutate(row_mean = rowMeans(.[1:2]))
+```
+
+```{r rowwise-9, eval=FALSE}
+df %>% mutate(t_sum = rowSums(select_if(., is.numeric)))
+```
+
+固然可解决问题， 然而，却不是一个很好的办法，比如除了求和与计算均值，可能还要计算每行的中位数、方差等等， 因为，不是每种计算都对应的row_函数？ 既然是tidyverse ，还是用tidyverse 的方法解决
+
+
+## purrr::map方案
+
+按照Jenny Bryan的方案
+
+```{r rowwise-10, eval=FALSE}
+df %>% mutate(t_sum = pmap_dbl(list(x, y), sum))
+```
+
+
+```{r rowwise-11, eval=FALSE}
+df %>%
+  mutate(t_sum = pmap_dbl(select_if(., is.numeric), sum))
+```
+
+计算均值的时候， 然而报错了
+```{r rowwise-12, eval=FALSE}
+df %>% mutate(t_sum = pmap_dbl(select_if(., is.numeric), mean))
+```
+
+tidyverse 总会想出办法来解决，把`mean()` 变成 `lift_vd(mean)`
+
+```{r rowwise-13, eval=FALSE}
+df %>%
+  mutate(data = pmap_dbl(select_if(., is.numeric), lift_vd(mean)))
+```
+
+
+同理
+```{r rowwise-14, eval=FALSE}
+df %>% mutate(t_median = pmap_dbl(select_if(., is.numeric), lift_vd(median)))
+```
+
+
+```{r rowwise-15, eval=FALSE}
+df %>% mutate(t_sd = pmap_dbl(select_if(., is.numeric), lift_vd(sd)))
+```
+
+
+
+
+
+## tidy 的方案
+
+我个人推荐的方法(Gather, group, summarize, left_join)
+
+```{r rowwise-16, eval=FALSE}
+new_df <- df %>%
+  mutate(id = row_number())
+
+s <- new_df %>%
+  gather("time", "val", -id) %>%
+  group_by(id) %>%
+  summarize(
+    t_avg = mean(val),
+    t_sum = sum(val)
+  )
+
+s
+```
+
+```{r rowwise-17, eval=FALSE}
+new_df %>%
+  left_join(s)
+```
+
+有点繁琐，但思路清晰
+
+```{r rowwise-18, eval=FALSE}
+ss <- new_df %>%
+  group_by(id) %>%
+  summarise(t_avg = mean(c(x, y)))
+
+ss
+```
+
+
+```{r rowwise-19, eval=FALSE}
+new_df %>%
+  left_join(ss)
+```
+
+
+之所以有这么多的搞法，是因为没有一个很好的搞法
+
+
+
+
+## 用slide方案
+
+[slide](https://github.com/DavisVaughan/slide)很强大，可以滚动喔
+
+
+- 如果第一个参数是数据框，`slide`把数据框看作a vector of rows， 然后行方向的滚动，事实上， .x是一个个的小数据框（如下）
+- 与`purrr::map`不同，因为map把数据框看作列方向的向量， 然后迭代
+- 如果第一个参数是原子型向量的话，还是依次迭代逗号分隔的元素，只不过这里是slide比map更强大的是，还可以是滚动
+
+```{r rowwise-20, eval=FALSE}
+library(slider)
+
+df <- tibble(a = 1:3, b = 4:6)
+
+slide(
+  select_if(df, is.numeric),
+  ~.x,
+  .before = 1
+)
+```
+
+
+
+```{r rowwise-21, eval=FALSE}
+df %>%
+  mutate(
+    r_mean = slide_dbl(
+      select_if(df, is.numeric),
+      ~ mean(unlist(.x)),
+      .before = 1
+    )
+  )
+```
+
+
+##  rowwise() + c_across()
+
+```{r rowwise-22, eval=FALSE}
+df <- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+df
+
+df %>%
+  rowwise(id) %>%
+  summarise(mean = mean(c(w, x, y, z)))
+
+df %>%
+  rowwise(id) %>%
+  mutate(mean = mean(c(w, x, y, z)))
+
+df %>%
+  rowwise(id) %>%
+  mutate(total = mean(c_across(w:z)))
+
+df %>%
+  rowwise(id) %>%
+  mutate(mean = mean(c_across(is.numeric)))
+
+# across()
+df %>% mutate(mean = rowMeans(across(is.numeric & -id)))
+```
+
+
+## 用lay方案
+[lay包](https://github.com/romainfrancois/lay)解决方案
+```{r rowwise-23, eval = FALSE}
+library(lay)
+library(dplyr, warn.conflicts = FALSE)
+
+iris <- as_tibble(iris)
+
+# apply mean to each "row"
+iris %>%
+  mutate(sepal = lay(across(starts_with("Sepal")), mean))
+```
+
+
+```{r rowwise-24, echo = F}
+# remove the objects
+# rm(df, new_df, s, ss)
+```
+
+```{r rowwise-25, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

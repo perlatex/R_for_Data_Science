@@ -1,0 +1,44 @@
+# 地理数据处理 {#eda-stars}
+
+
+```{r stars-1, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(sf)
+library(stars)
+
+library("rnaturalearth")
+library("rnaturalearthdata")
+```
+
+获取世界地图数据
+```{r}
+world_map_data <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot(data = world_map_data) +
+    geom_sf()
+```
+
+使用不同的坐标系统
+```{r}
+ggplot(data = world_map_data) +
+    geom_sf() +
+    coord_sf(crs = st_crs(3035))
+```
+
+上色
+```{r}
+ggplot(data = world_map_data) + 
+    geom_sf(color = "black", fill = "lightgreen")
+```
+
+
+```{r}
+ggplot(data = world_map_data) +
+    geom_sf(aes(fill = pop_est)) +
+    scale_fill_viridis_c(option = "plasma", trans = "sqrt")
+```
+
+
+```{r stars-2, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

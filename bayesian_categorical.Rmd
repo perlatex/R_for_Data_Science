@@ -1,0 +1,151 @@
+# 贝叶斯分类模型 {#bayesian-categorical}
+
+
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+## 数据
+
+这里，我们模拟了500个人他的家庭收入和职业选择 (`career = 1, 2, 3`)
+
+```{r}
+df <- readr::read_rds(here::here("demo_data", "career.rds")) 
+df
+```
+
+
+
+
+
+以 `career = 3`为基线(baseline)，我们要估计下面公式中的**四个**参数，
+
+> 回想下logit回归的数学表达式
+
+
+$$
+\begin{align*}
+log\left(\frac{P(\text{career}=1)}{P(\text{career}=3)}\right) &= \alpha_{1} + \beta_{1} \text{income} \\
+
+log\left(\frac{P(\text{career}=2)}{P(\text{career}=3)}\right) &= \alpha_{2} + \beta_{2} \text{income} \\
+\end{align*}
+$$
+
+
+多项Logistic回归模型，R语言可以使用 `nnet::multinom()` 函数
+
+```{r}
+df %>% 
+  dplyr::mutate(career = fct_rev(as_factor(career))) %>% 
+  nnet::multinom(career ~ family_income, data = .)
+```
+
+
+
+
+
+## stan for multi-logit Regression
+
+
+### stan 1
+
+```{r, warning=FALSE, message=FALSE, results=FALSE}
+stan_program <- "
+data{
+    int N;              // number of observations
+    int K;              // number of outcome values
+    int career[N];      // outcome
+    real family_income[N];
+}
+parameters{
+    vector[K-1] a;      // intercepts
+    vector[K-1] b;      // coefficients on family income
+}
+model{
+    vector[K] p;
+    vector[K] s;
+    a ~ normal(0, 5);
+    b ~ normal(0, 5);
+    for ( i in 1:N ) {
+        for ( j in 1:(K-1) ) s[j] = a[j] + b[j]*family_income[i];
+        s[K] = 0;        
+        p = softmax( s );
+        career[i] ~ categorical( p );
+    }
+}
+"
+
+
+stan_data <- list(
+    N             = nrow(df),
+    K             = 3,         
+    career        = df$career,
+    family_income = df$family_income
+  )
+
+
+m1 <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+m1
+```
+
+
+### stan 2
+
+
+```{r, warning=FALSE, message=FALSE, results=FALSE}
+stan_program <- "
+data {
+  int<lower = 2> K;
+  int<lower = 0> N;
+  int<lower = 1> D;
+  int<lower = 1, upper = K> y[N];
+  matrix[N, D] x;
+}
+transformed data {
+  vector[D] zeros = rep_vector(0, D);
+}
+parameters {
+  matrix[D, K - 1] beta_raw;
+}
+transformed parameters {
+  matrix[D, K] beta;
+  beta = append_col(beta_raw, zeros);
+}
+model {
+  matrix[N, K] x_beta = x * beta;
+
+  to_vector(beta_raw) ~ normal(0, 5);  
+
+  for (n in 1:N)
+    y[n] ~ categorical_logit(to_vector(x_beta[n]));
+}
+"
+
+stan_data <- list(
+    N = nrow(df),
+    K = 3,         
+    D = 2,         
+    y = df$career,
+    x = model.matrix( ~1 + family_income, data = df)
+  )
+
+m2 <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+
+
+```{r}
+m2
+```
+

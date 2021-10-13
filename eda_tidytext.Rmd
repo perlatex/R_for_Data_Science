@@ -1,0 +1,13 @@
+# 文本挖掘 {#eda-tidytext}
+
+
+```{r tidytext-1, message = FALSE, warning = FALSE, eval = FALSE}
+library(tidyverse)
+library(tidytext)
+```
+
+
+
+```{r tidytext-2, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

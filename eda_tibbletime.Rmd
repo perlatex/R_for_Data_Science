@@ -1,0 +1,15 @@
+# 时间序列分析 {#eda-tibbletime}
+
+
+```{r slider-1, message = FALSE, warning = FALSE, eval = FALSE}
+library(tidyverse)
+library(tibbletime)
+library(slider)
+library(clock)
+```
+
+
+
+```{r slider-2, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
