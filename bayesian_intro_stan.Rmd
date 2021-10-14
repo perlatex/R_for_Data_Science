@@ -22,7 +22,7 @@ writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
 
 - 安装rstan宏包
 
-```{r}
+```{r, eval=FALSE}
 install.packages(c("StanHeaders", "rstan"), type = "source")
 install.packages(c("tidybayes", "bayesplot"))
 ```

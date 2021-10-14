@@ -236,7 +236,7 @@ ggplot() +
 
 
 ```{r}
-df_random_draw <- mod_only_prior %>% 
+df_random_draw <- model_only_prior_sd_1 %>% 
   tidybayes::gather_draws(alpha[i], beta, sigma, y_hat[i], n = 1)
 
 true_parameters <- df_random_draw %>% 

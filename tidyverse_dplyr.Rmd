@@ -489,6 +489,32 @@ Carol同学的信息没有显示？ Dave 同学显示了但没有考试成绩？
 df1 %>% full_join(df2, by = "name")
 ```
 
+## 筛选联结
+
+筛选联结，有两个`semi_join(x, y)`和`anti_join(x, y)`，函数不改变数据框`x`的变量的数量，主要影响的是`x`的观测，也就说会剔除一些行，其功能类似`filter()`
+
+- 半联结`semi_join(x, y)`，保留name与df2的name相一致的所有行
+```{r}
+df1 %>% semi_join(df2, by = "name")
+```
+可以看作对`df1`做筛选
+```{r}
+df1 %>% filter(
+  name %in% df2$name
+)
+```
+
+- 反联结`anti_join(x, y)`，丢弃name与df2的name相一致的所有行
+```{r}
+df1 %>% anti_join(df2, by = "name")
+```
+
+仍然可以看作对`df1`做筛选
+```{r}
+df1 %>% filter(
+ ! name %in% df2$name
+)
+```
 
 ## 习题
 

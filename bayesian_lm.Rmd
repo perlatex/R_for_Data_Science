@@ -280,7 +280,7 @@ beta   ~ normal(20, 5);
 
 - 修改stan代码，尝试推断上一章的身高分布
 ```{r}
-d <- readr::read_rds(here::here('data', "height_weight.rds")) 
+d <- readr::read_rds(here::here('demo_data', "height_weight.rds")) 
 ```
 
 

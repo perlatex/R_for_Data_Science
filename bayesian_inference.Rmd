@@ -46,7 +46,7 @@ $$
 
 ```{r}
 library(tidyverse)
-d <- readr::read_rds(here::here('data', "height_weight.rds")) 
+d <- readr::read_rds(here::here('demo_data', "height_weight.rds")) 
 d
 ```
 

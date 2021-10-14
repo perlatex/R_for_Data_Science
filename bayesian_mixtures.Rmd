@@ -220,7 +220,7 @@ inv_logit(-1.25875323)
 
 ```{r, fig.width = 5, fig.asp = 0.618}
 fit %>%
-  tidybayes::gather_draws(lambda) %>%
+  tidybayes::gather_draws(ap) %>%
   tidybayes::mean_qi(.width = .89) %>% 
   ungroup()
 ```
