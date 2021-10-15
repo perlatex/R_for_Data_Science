@@ -1,4 +1,4 @@
-# 科研数据可视化 {#tidyverse-ggplot2-academic}
+# ggplot2之科研数据可视化 {#tidyverse-ggplot2-academic}
 
 
 ```{r ggplot2-academic-1, echo = FALSE, message = FALSE}

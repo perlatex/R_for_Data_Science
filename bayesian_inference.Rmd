@@ -47,7 +47,7 @@ $$
 ```{r}
 library(tidyverse)
 d <- readr::read_rds(here::here('demo_data', "height_weight.rds")) 
-d
+head(d)
 ```
 
 
@@ -297,3 +297,7 @@ d_grid_samples %>%
 - 《Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan》  (2nd Edition) John Kruschke, 2014
 - 《Bayesian Models for Astrophysical Data: Using R, JAGS, Python, and Stan》， Joseph M. Hilbe, Cambridge University Press, 2017
 
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

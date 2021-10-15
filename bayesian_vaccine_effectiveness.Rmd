@@ -1,4 +1,4 @@
-# 新冠疫苗有效率的计算 {#bayesian-vaccine-effectiveness}
+# 贝叶斯分析案例-新冠疫苗有效率的计算 {#bayesian-vaccine-effectiveness}
 
 
 ## 引言
@@ -74,7 +74,7 @@ $$
 
 具体Stan代码如下
 
-```{r eda-vaccine-effectiveness-4, cache=TRUE, results=FALSE, eval=FALSE}
+```{r eda-vaccine-effectiveness-4}
 stan_program <- "
 data {
   int<lower=1> event_c;        // num events, control
@@ -111,10 +111,10 @@ mod_vaccine <- stan(model_code = stan_program, data = stan_data)
 ```
 
 
-```{r include=FALSE}
+```{r, eval=FALSE, include=FALSE}
 # 运行stan代码，导致渲染bookdown报错，不知道为什么，先用这边笨办法凑合吧
 # mod_vaccine %>% saveRDS(here::here("stan","mod_vaccine.rds"))
-mod_vaccine <- readRDS(here::here("stan","mod_vaccine.rds"))
+# mod_vaccine <- readRDS(here::here("stan","mod_vaccine.rds"))
 
 ```
 

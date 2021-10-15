@@ -261,7 +261,7 @@ fit_normal %>%
 
 
 
-# #小结
+## 小结
 
 ```{r, out.width = '80%', fig.align = 'center', echo = FALSE}
 knitr::include_graphics(here::here("images", "from_model_to_code.jpg"))
@@ -279,12 +279,12 @@ beta   ~ normal(20, 5);
 ```
 
 - 修改stan代码，尝试推断上一章的身高分布
-```{r}
+```{r, eval=FALSE}
 d <- readr::read_rds(here::here('demo_data', "height_weight.rds")) 
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 stan_program <- "
 data {
   int N;
@@ -319,11 +319,6 @@ fit <- stan(model_code = stan_program, data = stan_data,
 
 
 
-```{r}
-traceplot(fit)
-```
-
-
-```{r}
-fit
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

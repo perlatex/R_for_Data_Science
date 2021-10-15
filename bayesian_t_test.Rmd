@@ -217,7 +217,7 @@ stan_best_normal %>%
 > 标准正态分布是t分布的极限分布
 
 ```{r}
-for (nu in 1:50) {
+for (nu in c(1, seq(5, 50, by = 10))) {
  p <- tibble(x = seq(-5, 5, by=0.1)) %>% 
     ggplot(aes(x)) + 
     stat_function(fun = dnorm, color = 'gray') + 
@@ -310,7 +310,8 @@ stan_best_student %>%
 
 ```{r}
 stan_best_student %>%
-  as.data.frame()
+  as.data.frame() %>% 
+  head()
 ```
 
 
@@ -405,4 +406,10 @@ stan_linear %>%
 stan_linear %>%
   tidybayes::gather_draws(beta) %>%
   tidybayes::mean_hdi(.width = 0.89)
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```

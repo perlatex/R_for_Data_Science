@@ -630,7 +630,7 @@ df4
 
 
 
-```{r eda-nobel-49, fig.width= 12, fig.height= 6}
+```{r eda-nobel-49, fig.width= 6, fig.height= 3}
 library(gganimate)
 df4 %>%
   mutate(prize_year = as.integer(prize_year)) %>%

@@ -388,3 +388,7 @@ dagify(D ~ G,
   scale_y_continuous(NULL, breaks = NULL)
 ```
 
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

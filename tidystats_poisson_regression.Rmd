@@ -633,6 +633,7 @@ dx %>%
 ```
 
 ### 更复杂的模型
+
 以后再说
 ```{r poisson-regression-33, eval=FALSE}
 glm(number_of_fish ~ 1 + (1 | pollution_level),
@@ -645,11 +646,11 @@ glm(number_of_fish ~ 1 + (1 | pollution_level),
 
 ## 小结
 
-```{r poisson-regression-34}
+```{r poisson-regression-34, out.width = '100%', echo = FALSE}
 knitr::include_graphics(path = "images/One_Picture.png")
 ```
 
-第 \@ref(logistic-regression) 章接着讲广义线性模型中的logistic回归模型。
+第 \@ref(tidystats-logistic-regression) 章接着讲广义线性模型中的logistic回归模型。
 
 
 <!-- ## 贝叶斯泊松回归 -->

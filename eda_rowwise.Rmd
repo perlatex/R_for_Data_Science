@@ -1,6 +1,6 @@
 # tidyverse中行方向的操作 {#eda-rowwise}
 
-dplyr 1.0 推出之后，数据框**行方向**的操作得到完美解决，因此本章的内容已经过时，大家可以跳出本章，直接阅读第\@ref(colwise) 章。（留着本章，主要是让自己时常回顾下之前的探索。让自己最难忘的，或许就是曾经的痛点吧）
+dplyr 1.0 推出之后，数据框**行方向**的操作得到完美解决，因此本章的内容已经过时，大家可以跳出本章，直接阅读第\@ref(tidyverse-colwise) 章。（留着本章，主要是让自己时常回顾下之前的探索。让自己最难忘的，或许就是曾经的痛点吧）
 
 
 ```{r rowwise-1, message = FALSE, warning = FALSE}
@@ -20,7 +20,7 @@ df
 
 ## rowwise函数
 
-dplyr提供了rowwise函数，但大神说不推荐
+dplyr提供了rowwise()函数
 ```{r rowwise-3, eval=FALSE}
 df %>%
   rowwise() %>%
@@ -218,6 +218,7 @@ df %>% mutate(mean = rowMeans(across(is.numeric & -id)))
 
 
 ## 用lay方案
+
 [lay包](https://github.com/romainfrancois/lay)解决方案
 ```{r rowwise-23, eval = FALSE}
 library(lay)

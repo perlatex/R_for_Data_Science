@@ -16,6 +16,7 @@ options(mc.cores = parallel::detectCores())
 
 ```{r}
 radon <- readr::read_rds(here::here('demo_data', "radon.rds")) 
+head(radon)
 ```
 
 
@@ -712,3 +713,8 @@ summary(fit_slope_partial, c("gamma_a", "gamma_b"))$summary
 rstan::traceplot(fit_slope_partial, pars = c("sigma"))
 ```
 
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

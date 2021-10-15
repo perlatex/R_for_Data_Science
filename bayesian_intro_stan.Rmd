@@ -6,7 +6,7 @@
 
 
 
-# 配置环境
+## 配置环境
 
 - 安装 [Rtools4.0](https://cran.r-project.org/bin/windows/Rtools/)到`C`盘
    
@@ -32,3 +32,7 @@ install.packages(c("tidybayes", "bayesplot"))
 <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
 
 
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
