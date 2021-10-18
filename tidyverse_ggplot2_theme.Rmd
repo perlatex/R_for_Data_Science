@@ -31,7 +31,7 @@ element_blank()
 library(tidyverse)
 ```
 
-还是用让人生厌的`ggplot2::mpg`数据包吧，具体介绍请见\@ref(visual) 章。
+还是用让人生厌的`ggplot2::mpg`数据包吧，具体介绍请见\@ref(tidyverse-ggplot2-aes) 章。
 
 ```{r ggplot2-theme-4}
 glimpse(mpg)
@@ -45,6 +45,7 @@ df <- mpg %>%
   filter(class != "2seater", manufacturer %in% c("toyota", "volkswagen"))
 df
 ```
+
 我相信这种图你们已经会画了吧
 ```{r ggplot2-theme-6}
 df %>%

@@ -92,11 +92,14 @@ p + annotate("text",
 knitr::include_graphics("./images/common-aesthetics.png")
 ```
 
-数据可视化的过程，就是我们的数据通过**这些视觉上的元素**表示出来，数值小，点半径就小一点，数值大的，点就大一点，或者数值大颜色就深一点，数值小颜色就浅一点，即，数值到图形属性**映射**过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
 
-```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
-knitr::include_graphics("images/mapping.png")
-```
+点和线常用的图形属性
+
+|  geom | x | y | size | color | shape | linetype | alpha | fill | group |
+|:-----:|:-:|:-:|:----:|:-----:|:-----:|:--------:|:-----:|:----:|:-----:|
+| point | √ | √ |   √  |   √   |   √   |     √    |   √   |   √  |   √   |
+|  line | √ | √ |   √  |   √   |       |     √    |   √   |      |   √   |
+
 
 
 
@@ -113,23 +116,29 @@ sum(d$count)
 ```
 
 
-## ggplot2 的图形语法
+### ggplot2 的图形语法
 
-ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。Hadley Wickham将这套可视化语法诠释为:
+ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。
+Hadley Wickham将这套可视化语法诠释为:
 
-一张统计图形就是从**数据**到几何图形(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
+> 一张统计图形就是从**数据**到几何图形(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
 
 
-```{r ggplot2-aes2-6, out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/grammar-of-graphics.png")
+通俗解释：就是我们的**数据**通过图形的**视觉元素**表示出来。比如**点**图，如果坐标x值越大，水平方向离原点的位置就越远，数值越小，水平方向离原点的位置就越近。
+**数值的大小变成了视觉能感知的东西**。
+
+```{r ggplot2-aes2-5, out.width = '100%', echo = FALSE, fig.cap = "数值到图形属性的映射过程"}
+knitr::include_graphics("images/mapping.png")
 ```
 
 
 
-通俗点说，我们画一张散点图，就要把 数据框的两个变量，分别与点的坐标一一对应起来，如果点需要画颜色，就需要用数据框的另一个变量与点的颜色对应起来。
+同理，我们希望用**点的大小**代表这个位置上的某个变量（比如，降雨量，产品销量等等），那么变量的数值越小，点的半径就小一点，数值越大，点就可以大一点；或者变量的数值大，点的颜色就深一点，数值小，点的颜色就浅一点。即，数值到图形属性的**映射**过程。映射是一个数学词汇，这里您可以理解为**一一对应**。
 
 
 
+
+### 怎么写代码
 
 `ggplot()`函数包括9个部件：
 
@@ -145,8 +154,9 @@ knitr::include_graphics("images/grammar-of-graphics.png")
 
 其中前三个是必需的。语法模板
 
-```{r, out.width = '85%', echo = FALSE}
-knitr::include_graphics("images/ggplot_template.png")
+```{r, eval = FALSE}
+ggplot(data = <DATA>) + 
+   <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
 ```
 
 
@@ -156,8 +166,7 @@ system，缩写coord)中，而分面(facet)则可以用来生成数据不同子�
 
 
 
-
-先看一个简单的案例（1880-2014年温度变化和二氧化碳排放量）
+先来点小菜。先看一个简单的案例（1880-2014年温度变化和二氧化碳排放量）
 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
@@ -466,7 +475,9 @@ ggplot(penguins,aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
 `aes(color = )`已经存在，因此不会从全局变量中继承，沿用当前的映射关系。
 
 
-### 体会下代码之间的区别
+### 图层从全局声明中继承
+
+体会下代码之间的区别
 
 ```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
@@ -488,9 +499,9 @@ ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
 
 
 
-### 继承关系
+### 图层之间没有继承关系
 
-图层之间没有继承关系。再看下面这个例子
+再看下面这个例子
 
 ```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
@@ -563,7 +574,8 @@ ggsave(
 ```
 
 
-如果想保存当前图形，`ggsave()` 中的 `plot = p1` 可以省略，它会自动保存最近一次的绘图
+如果想保存当前图形，`ggplot()` 也可以不用赋值，同时省略`ggsave()`中的 `plot = p1`，`ggsave()`会自动保存最近一次的绘图
+
 
 ```{r, eval=FALSE}
 penguins %>% 
@@ -572,12 +584,7 @@ penguins %>%
   geom_point(aes(color = species)) +
   ggtitle("This is my first plot")
 
-ggsave(
-  filename = "my_last_plot.pdf",
-  width = 8,
-  height = 6,
-  dpi = 300
-)
+ggsave("my_last_plot.pdf", width = 8, height = 6, dpi = 300)
 ```
 
 
@@ -605,6 +612,10 @@ ggplot(penguins, aes(x = ___, y = ___)) +
 
 在第 \@ref(tidyverse-ggplot2-geom) 章到第 \@ref(tidyverse-ggplot2-customize) 章会再讲ggplot2
 
+一个点，有位置、颜色、大小、形状外，还有哪些属性？如果画线条，应该有哪些视觉属性？
+
+  - 打开 <https://ggplot2tor.com/aesthetics>
+  - 输入 geom_point 或者 geom_line 试试
 
 
 

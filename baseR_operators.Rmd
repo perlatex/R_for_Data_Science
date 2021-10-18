@@ -234,7 +234,7 @@ a
 typeof(a)
 ```
 
-我们在第 \@ref(vectors) 章向量部分，提到`seq()`函数，也能产生序列
+我们在第 \@ref(baseR-vectors) 章向量部分，提到`seq()`函数，也能产生序列
 ```{r}
 b <- seq(from = 1, to = 10, by = 1)
 b

@@ -130,7 +130,7 @@ df %>% mutate(extra = reward)
 是不是很赞。
 
 
-```{r out.width = '65%', echo = FALSE}
+```{r out.width = '50%', echo = FALSE}
 knitr::include_graphics("images/mutate-function.png")
 ```
 
@@ -153,7 +153,7 @@ df %>%
 
 在`mutate()`中引用数据框的某一**列名**，实际上是引用了列名对应的**整个向量**, 所以，这里我们传递`score`到`calc_square()`，就是把整个`score`向量传递给`calc_square()`.
 
-```{r out.width = '85%', echo = FALSE}
+```{r out.width = '70%', echo = FALSE}
 knitr::include_graphics("images/mutate-calc-square1.png")
 ```
 
@@ -165,7 +165,7 @@ knitr::include_graphics("images/mutate-calc-square2.png")
 
 `mutate()` 拿到这个新的向量后，就在原有数据框中添加新的一列`new_col`
 
-```{r out.width = '65%', echo = FALSE}
+```{r out.width = '50%', echo = FALSE}
 knitr::include_graphics("images/mutate-calc-square3.png")
 ```
 
@@ -176,15 +176,21 @@ knitr::include_graphics("images/mutate-calc-square3.png")
 
 
 好，现在我们把添加奖励分、计算总成绩和保存结果这三个步骤一气呵成的完成
-```{r}
-df <- df %>% 
+```{r how-to-save-new-df, include=FALSE, eval=FALSE}
+df = df %>% 
   mutate(extra = reward) %>% 
   mutate(total = score + extra)
-df
+```
+
+```{r, echo=FALSE}
+flair::decorate("how-to-save-new-df") %>% 
+  flair::flair_rx("df %>%[\\s\\S]*", background = "pink")
 ```
 
 
-
+```{r}
+df
+```
 
 
 

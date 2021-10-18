@@ -1,4 +1,4 @@
-# 列方向和行方向 {#tidyverse-colwise}
+# tidyverse中的列方向和行方向 {#tidyverse-colwise}
 
 dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley  Wickham大神说将会在5月15日发布dplyr 1.0版本，欢呼。
 

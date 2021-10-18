@@ -35,8 +35,8 @@ rmd_files: [
   "tidyverse_purrr.Rmd",
   "tidyverse_tibble.Rmd",
   "tidyverse_ggplot2_geom.Rmd",
-  "tidyverse_ggplot2_theme.Rmd",
   "tidyverse_ggplot2_scales.Rmd",
+  "tidyverse_ggplot2_theme.Rmd",
   "tidyverse_ggplot2_guides.Rmd",
   "tidyverse_ggplot2_customize.Rmd",
   "tidyverse_ggplot2_stat_layer.Rmd",
@@ -80,12 +80,12 @@ rmd_files: [
   "bayesian_lm.Rmd",
   "bayesian_t_test.Rmd",
   "bayesian_glm.Rmd",
-  "bayesian_vaccine_effectiveness.Rmd",
   "bayesian_hierarchical.Rmd",
   "bayesian_mixtures.Rmd",
   "bayesian_categorical.Rmd",
   "bayesian_workflow.Rmd",
-
+  "bayesian_vaccine_effectiveness.Rmd",
+  "bayesian_tokyo-olympics-100m.Rmd",
 
  # 应用篇
   "eda_nobel.Rmd",

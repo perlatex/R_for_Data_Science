@@ -88,15 +88,15 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-purrr) 章介绍函数式编程
    - 第 \@ref(tidyverse-tibble) 章介绍简单数据框
    - 第 \@ref(tidyverse-ggplot2-geom) 章ggplot2几何图形
-   - 第 \@ref(tidyverse-ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(tidyverse-ggplot2-scales) 章ggplot2的标度
+   - 第 \@ref(tidyverse-ggplot2-theme) 章ggplot2的主题
    - 第 \@ref(tidyverse-ggplot2-guides) 章ggplot2的图例
    - 第 \@ref(tidyverse-ggplot2-customize) 章ggplot2扩展内容
    - 第 \@ref(tidyverse-ggplot2-stat-layer) 章ggplot2统计图层
    - 第 \@ref(tidyverse-ggplot2-from-layer-to-geom) 章ggplot2从图层到几何图形
    - 第 \@ref(tidyverse-ggplot2-colors) 章ggplot2数据可视化中的配色
    - 第 \@ref(tidyverse-ggplot2-override-aes) 章ggplot2如何控制图例的外观
-   - 第 \@ref(tidyverse-ggplot2-aes-eval) 章介绍ggplot2中的延迟映射 
+   - 第 \@ref(tidyverse-ggplot2-aes-eval) 章ggplot2中的延迟映射 
    - 第 \@ref(tidyverse-ggplot2-academic) 章介绍科研数据可视化中的统计分布图
    - 第 \@ref(tidyverse-ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(tidyverse-workflow) 章回望Tidyverse之旅
@@ -132,12 +132,13 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(bayesian-lm) 章介绍贝叶斯线性模型
    - 第 \@ref(bayesian-t-test) 章介绍贝叶斯之假设检验
    - 第 \@ref(bayesian-glm) 章介绍贝叶斯广义线性模型
-   - 第 \@ref(bayesian-vaccine-effectiveness) 章介绍贝叶斯案例-新冠疫苗有效率的计算
    - 第 \@ref(bayesian-hierarchical) 章介绍贝叶斯层级模型
    - 第 \@ref(bayesian-mixtures) 章介绍贝叶斯混合模型
    - 第 \@ref(bayesian-categorical) 章介绍贝叶斯分类模型
    - 第 \@ref(bayesian-workflow) 章介绍贝叶斯工作流程
-   
+   - 第 \@ref(bayesian-vaccine-effectiveness) 章贝叶斯案例-新冠疫苗有效率的计算  
+   - 第 \@ref(bayesian-tokyo-olympics-100m) 章贝叶斯案例-预测奥运会男子100米短跑成绩  
+  
 - 应用篇
    - 第 \@ref(eda-nobel) 章介绍探索性数据分析-诺奖获得者  
    - 第 \@ref(eda-olympics) 章介绍探索性数据分析-奥林匹克  

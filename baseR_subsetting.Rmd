@@ -52,7 +52,7 @@ x[c(-3, -4)]
 
 - 逻辑向量：将`TRUE`对应位置的元素提取出来
 
-```{r, out.width = '90%', echo = FALSE}
+```{r, out.width = '80%', echo = FALSE}
 knitr::include_graphics("images/vector-subset.png")
 ```
 
@@ -231,7 +231,7 @@ df[, "x"]
 ```{r subsetting-30}
 df[, "x", drop = FALSE]
 ```
-这样输出的还是矩阵形式, 但程序员总是偷懒的，有时候我们也容易忘记写`drop = FALSE`，
+这样输出的还是矩阵形式，但程序员总是偷懒的，有时候我们也容易忘记写`drop = FALSE`，
 所以我比较喜欢下面的`tibble`.
 
 
