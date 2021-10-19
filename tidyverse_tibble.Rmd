@@ -31,6 +31,10 @@ library(tibble)
 
 ## 人性化的tibble
 
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/tibble.png")
+```
+
 - tibble是用来替换data.frame类型的扩展的数据框
 - tibble继承了data.frame，是弱类型的。换句话说，tibble是data.frame的子类型
 - tibble与data.frame有相同的语法，使用起来更方便
@@ -71,6 +75,9 @@ data.frame(
   stringsAsFactors = FALSE
 )
 ```
+
+
+
 ```{block tibble-4, type="danger"}
 Note：
 - 在R 4.0 后，`data.frame()` 不会将**字符串型**变量自动转换成**因子型**
@@ -332,12 +339,14 @@ row.names(tb) <- LETTERS[1:3]
 ```
 
 
-```{block tibble-29, type="danger"}
+::: {.rmdnote}
 需要注意的：
 
 - 有时候遇到含有行名的data.frame，转换成tibble后，行名会被丢弃
 - 如果想保留行名，就需要把行名转换成单独的一列
-```
+
+:::
+
 
 举个例子
 ```{r tibble-30}
@@ -429,10 +438,11 @@ tibble(`year 1` = 1, `year 2` = 2, .name_repair = fix_names)
 ```
 
 
-```{block tibble-42, type="danger"}
+::: {.rmdnote}
 - 感觉越说越复杂了，事实上，我们写数据框的时候，完全可以避免上述问题，只要做到规范列名。
 - 如果真正遇到比较乱的列名，推荐使用`janitor::clean_names()`一步到位。
-```
+
+:::
 
 
 ```{r tibble-43}
@@ -445,18 +455,169 @@ tibble(`year 1` = 1, `year 2` = 2) %>%
 
 
 
-## nested tibble
+## `List-columns` (列表列) 
 
-`nested tibble` 和 `List-columns` (列表列) 会在后面的章节详细介绍。
+tibble 本质上是向量构成的列表。如下图所示
 
-```{r tibble-44}
-iris %>%
-  group_by(Species) %>%
-  nest()
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/tibble.png")
+```
+
+大多情况下，我们接触到的向量是原子型向量(atomic vectors)，所谓原子型向量就是向量元素为单个值，比如 `"a"` 或者 `1`
+
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/tibble-atomic.png")
 ```
 
 
 
+tibble还有可以允许某一列为列表(list)，那么列表构成的列，称之为列表列（list columns）
+
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/tibble-list-col.png")
+```
+
+这样一来，**列表列**非常灵活，因为列表元素可以是原子型向量、列表、矩阵或者小的tibble
+
+
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/tibble-list-col-vectors.png")
+```
+
+
+
+
+## nested tibble
+
+tibble的列表列装载数据的能力很强大，也很灵活。下面，我们将介绍如何创建和操控有列表列的tibble。
+
+### creating 
+假定我们这里有一个tibble， 我们有三种方法可以创建列表列
+
+* `nest()`
+* `summarize()` and `list()`
+* `mutate()` and `map()`
+
+
+#### tidyr::nest()
+使用tidyr::nest()函数，创建有列表列的tibble。 
+
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/tibble-list-col-tibbles.png")
+```
+
+```{r tibble-44}
+library(tidyverse)
+library(palmerpenguins)
+df <- penguins %>% 
+  drop_na() %>% 
+  select(species, bill_length_mm, bill_depth_mm, body_mass_g)
+df
+```
+
+
+```{r}
+tb <- df %>% 
+  nest(data = c(bill_length_mm, bill_depth_mm, body_mass_g))
+
+tb
+```
+
+`nest()` 为每种species创建了一个小的tibble， 每个小的tibble对应一个species
+```{r}
+tb$data[[1]]
+```
+
+可以看到，`tb`的整个`data`列是一个list
+```{r}
+tb$data %>% typeof()
+```
+如果想偷懒，也可以用`select()`的语法
+```{r}
+df %>% 
+  nest(data = !species)
+
+```
+ 
+可以同时创建多个列表列
+
+```{r}
+df %>% 
+  nest(data1 = c(bill_length_mm, bill_depth_mm), data2 = body_mass_g)
+```
+
+
+#### tidyr::summarise()
+第 \@ref(tidyverse-dplyr) 章介绍数据处理， `group_by()` 和 `summarize()`组合可以将向量分组后分别压缩成单个值，事实上，`summarize()`还可以创建列表列。
+
+```{r}
+df_collapsed <- df %>% 
+  group_by(species) %>% 
+  summarise(
+    data = list(bill_length_mm)
+  )
+
+df_collapsed
+```
+data就是构建的列表列，它的每个元素都是一个向量，对应一个species。这种方法和`nest()`方法很相似，不同在于，`summarise() + list()` 构建的列表列其元素是原子型向量，而`nest()`构建的是tibble.
+```{r}
+df_collapsed$data[[1]] %>% typeof()
+```
+
+`summarise() + list()`的方法还可以在创建列表列之前，对数据简单处理，比如排序
+```{r}
+df %>% 
+  group_by(species) %>% 
+  summarise(
+    data = list(sort(bill_length_mm))
+  )
+```
+或者做筛选
+```{r}
+df %>% 
+  group_by(species) %>% 
+  summarise(
+    data = list(bill_length_mm[bill_length_mm > 45 ])
+  )
+```
+
+
+#### dplyr::mutate()
+第三种方法是用`rowwise() + mutate()`，比如，下面为每个岛屿(island) 创建一个企鹅数量相等的随机数向量，简单点说，这个岛屿上企鹅有多少只，那么随机数的个数就有多少个。
+```{r}
+df %>% 
+  select(island) %>% 
+  rowwise() %>% 
+  mutate(random = list(rnorm(n = str_length(island)))) %>% 
+  ungroup()
+```
+
+### Unnesting
+
+用unnest()函数可以把**列表列**转换成**常规列**的形式，比如上节中的tb
+
+```{r}
+tb
+```
+这里把想要打开的列`data`，作为参数提供给`unnest(cols = )` 
+```{r}
+tb %>% 
+  unnest(cols = data)
+```
+### Manipulating
+
+操控列表列是一件有趣的事情，我们常常会借助于行方向的操作(rowwise ), 请看第 \@ref(tidyverse-colwise) 章。比如找出每个岛屿企鹅的数量，我们需要对data列表列的元素依次迭代，
+```{r}
+tb %>% 
+  rowwise() %>% 
+  mutate(num_species = nrow(data))
+```
+再比如，求每组下企鹅嘴峰长度与嘴峰厚度的相关系数
+```{r}
+tb %>% 
+  rowwise() %>% 
+  mutate(corr_coef = cor(data$bill_length_mm, data$bill_depth_mm))
+```
 
 
 ## 延伸阅读
@@ -469,6 +630,7 @@ iris %>%
 3、创建**列表列**的方法，可以参考[nested tibble](https://tidyr.tidyverse.org/reference/nest.html)和
 [list-columns](https://r4ds.had.co.nz/many-models.html)
 
+4、本章借鉴了[https://dcl-prog.stanford.edu/](https://dcl-prog.stanford.edu/)的图片，特此感谢。
 
 
 ```{r tibble-45, echo = F}

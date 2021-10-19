@@ -85,8 +85,8 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-tidyr) 章介绍数据规整
    - 第 \@ref(tidyverse-stringr) 章介绍字符串处理
    - 第 \@ref(tidyverse-forcats) 章介绍因子类型数据
-   - 第 \@ref(tidyverse-purrr) 章介绍函数式编程
    - 第 \@ref(tidyverse-tibble) 章介绍简单数据框
+   - 第 \@ref(tidyverse-purrr) 章介绍函数式编程
    - 第 \@ref(tidyverse-ggplot2-geom) 章ggplot2几何图形
    - 第 \@ref(tidyverse-ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(tidyverse-ggplot2-theme) 章ggplot2的主题

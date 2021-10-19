@@ -183,7 +183,32 @@ list(
 ```{r purrr-24}
 exams %>% map(mean)
 ```
-哇，短短几句话，得出了相同的结果。如果希望返回的是数值型的**向量**，可以这样写
+哇，短短几句话，得出了相同的结果。
+
+### map函数
+
+map()函数的第一个参数是list或者vector， 第二个参数是函数
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/map-step-1.png")
+```
+函数f 应用到list/vector 的每个元素
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/map-step-2.png")
+```
+于是输入的 list/vector 中的每个元素，都对应一个输出
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/map.png")
+```
+最后，所有的输出元素，聚合成一个新的list
+```{r, out.width = '75%', echo = FALSE}
+knitr::include_graphics("images/dcl/map-output.png")
+```
+
+整个过程，可以想象 list/vector 是生产线上的盒子，依次将里面的元素，送入加工机器。
+函数决定了机器该如何处理每个元素，机器依次处理完毕后，结果打包成list，送出机器。
+
+
+如果希望返回的是数值型的**向量**，可以这样写
 ```{r purrr-25}
 exams %>% map_dbl(mean)
 ```
