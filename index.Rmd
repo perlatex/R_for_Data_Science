@@ -86,7 +86,8 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-stringr) 章介绍字符串处理
    - 第 \@ref(tidyverse-forcats) 章介绍因子类型数据
    - 第 \@ref(tidyverse-tibble) 章介绍简单数据框
-   - 第 \@ref(tidyverse-purrr) 章介绍函数式编程
+   - 第 \@ref(tidyverse-purrr) 章介绍函数式编程1
+   - 第 \@ref(tidyverse-purrr-adv) 章介绍函数式编程2
    - 第 \@ref(tidyverse-ggplot2-geom) 章ggplot2几何图形
    - 第 \@ref(tidyverse-ggplot2-scales) 章ggplot2的标度
    - 第 \@ref(tidyverse-ggplot2-theme) 章ggplot2的主题
@@ -101,7 +102,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-ggplot2-gganimate) 章让你的数据骚动起来
    - 第 \@ref(tidyverse-workflow) 章回望Tidyverse之旅
    - 第 \@ref(tidyverse-tips) 章介绍Tidyverse常用技巧
-   - 第 \@ref(tidyverse-advR) 章介绍Tidyverse进阶技巧
+   - 第 \@ref(tidyverse-dplyr-adv) 章介绍Tidyverse进阶技巧
    - 第 \@ref(tidyverse-styler) 章介绍Tidyverse代码书写规范 
    - 第 \@ref(tidyverse-colwise) 章介绍数据框的列方向和行方向
    - 第 \@ref(tidyverse-beauty-of-across1) 章介绍Tidyverse中的across()之美
