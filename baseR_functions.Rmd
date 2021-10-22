@@ -117,65 +117,81 @@ myFunction <- function(x, y) {
 - 函数主体，一般情况下，在`function(...)`后跟随一对大括号`{ }`，在大括号里声明具体函数功能，在代码最后一行，可以用return返回计算后的值，当然，这个return不是必需的。
 - 函数名，`function() { }` 赋值给新对象，比如这里的`myFunction`
 
-用一个简单的案例说明。这里我们想让输入的向量每个元素增加1，可以这样写函数
+
+
+用一个简单的案例说明。这里我们对输入的向量每个元素计算平方，可以这样写函数
 ```{r}
-add_one <- function(x) {
-   y <- x + 1
+mysquare <- function(x) {
+   y <- x^2
    return(y)  
 }
 ```
 
+::: {.rmdnote}
+函数相当于一个机器，这个机器有个功能，对输入进来的参数（这里的参数是一个向量）计算平方值，然后报告结果。
+:::
+
+
+
 
 ## 函数调用
+
+现在这台机器有个名字`mysquare`，需要用这个机器的时候，就调用它的名字`mysquare()`。
+
+现在让这个机器处理向量 `c(2, 5, 7)`
+
+
 ```{r}
-add_one(x = 10)
-add_one(x = 1:6)
+mysquare(c(2, 5, 7))
 ```
+
+或者
+```{r}
+input <- c(2, 5, 7)
+mysquare(input)
+```
+
+
 
 
 ## 灵活的语法
 
-R语言里面，完成一件事情往往有很多中方法，定义函数也不例外。比如我们定义简单的函数`add2`(对输入的数加2)，可以好几种写法
+R语言里面，完成一件事情往往有很多中方法，定义函数也不例外。比如`mysquare`可以好几种写法
 
 
 方法1：
 ```{r}
-add2 <- function(x) {
-    return(x + 2)
+mysquare <- function(x) {
+    return(x^2)
 }
 ```
 
 
-
 方法2：
 ```{r}
-add2 <- function(x) { return(x + 2) }
+mysquare <- function(x) { return(x^2) }
 ```
-
 
 
 
 方法3：
 ```{r}
-add2 <- function(x) return(x + 2)
+mysquare <- function(x) return(x^2)
 ```
-
 
 
 方法4：
 ```{r}
-add2 <- function(x) x + 2
+mysquare <- function(x) {
+    x^2
+}
 ```
-
 
 
 方法5：
 ```{r}
-add2 <- function(x) {
-    x + 2
-}
+mysquare <- function(x) x^2
 ```
-
 
 
 
@@ -384,7 +400,7 @@ get_bmi(175, 65)
 ```{r, include=FALSE}
 get_bmi <- function(height, weight) {
    height_m <- height / 100
-   return(weight/ height_m^2)
+   return(weight / height_m^2)
 }
 get_bmi(175, 65)
 ```

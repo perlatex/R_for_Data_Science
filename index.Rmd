@@ -81,6 +81,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-rmarkdown) 章介绍可重复性文档
    - 第 \@ref(tidyverse-readr) 章介绍数据读入
    - 第 \@ref(tidyverse-dplyr) 章介绍数据处理
+   - 第 \@ref(tidyverse-dplyr-apply) 章介绍dplyr的应用
    - 第 \@ref(tidyverse-ggplot2-aes) 章介绍数据可视化
    - 第 \@ref(tidyverse-tidyr) 章介绍数据规整
    - 第 \@ref(tidyverse-stringr) 章介绍字符串处理

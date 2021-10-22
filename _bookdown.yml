@@ -28,6 +28,7 @@ rmd_files: [
   "tidyverse_rmarkdown.Rmd",
   "tidyverse_readr.Rmd",
   "tidyverse_dplyr.Rmd",
+  "tidyverse_dplyr_apply.Rmd",
   "tidyverse_ggplot2_aes2.Rmd",
   "tidyverse_tidyr.Rmd",
   "tidyverse_stringr.Rmd",
