@@ -15,21 +15,23 @@
   - `C:\rtools40\mingw64\bin`
   - `C:\rtools40\usr\bin`
   
-- 配置
+- [配置](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows)
 ```{r, eval=FALSE}
 writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"', con = "~/.Renviron")
 ```
 
-- 安装rstan宏包
+- [安装rstan宏包](https://mc-stan.org/r-packages/)
 
 ```{r, eval=FALSE}
-install.packages(c("StanHeaders", "rstan"), type = "source")
+remove.packages(c("rstan", "StanHeaders"))
+install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages(c("tidybayes", "bayesplot"))
 ```
 
 - 遇到问题，请参考
- 
-<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+
+  - <https://mc-stan.org/r-packages/>
+  - <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
 
 
 
