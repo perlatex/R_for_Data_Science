@@ -78,7 +78,7 @@ melted <- gather(plant_height, variable, value, -Day)
 
 
 
-```{r tidyr-8, out.width = '100%', fig.align='left', echo = FALSE}
+```{r tidyr-8, out.width = '75%', fig.align='left', echo = FALSE}
 knitr::include_graphics("images/tidyr-fig.png")
 ```
 

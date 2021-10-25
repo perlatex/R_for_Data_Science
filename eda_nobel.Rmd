@@ -362,7 +362,7 @@ nobel_winners %>%
 ```
 
 各年代性别比例
-```{r eda-nobel-33, fig.width= 9, fig.height= 6}
+```{r eda-nobel-33}
 nobel_winners %>%
   dplyr::filter(laureate_type == "individual") %>%
   # mutate(decade = glue::glue("{round(prize_year - 1, -1)}s")) %>%
@@ -425,7 +425,7 @@ nobel_winners %>%
 
 
 ## 这些大神都是哪个年代出生的人？
-```{r eda-nobel-36, fig.width= 9, fig.height= 6}
+```{r eda-nobel-36}
 nobel_winners %>%
   select(category, birth_date) %>%
   mutate(year = floor(year(birth_date) / 10) * 10) %>%
@@ -630,7 +630,7 @@ df4
 
 
 
-```{r eda-nobel-49, fig.width= 6, fig.height= 3}
+```{r eda-nobel-49}
 library(gganimate)
 df4 %>%
   mutate(prize_year = as.integer(prize_year)) %>%

@@ -100,7 +100,7 @@ knitr::include_graphics("images/dcl/pmap_jennybc.png")
 ```
 
 
-```{r, out.width = '75%', echo = FALSE, fig.cap='图片来源于charlotte wickham的报告[《solving iteration problems with purrr》](http://bit.ly/purrr-slides)'}
+```{r, out.width = '100%', echo = FALSE, fig.cap='图片来源于charlotte wickham的报告[《solving iteration problems with purrr》](http://bit.ly/purrr-slides)'}
 knitr::include_graphics("images/dcl/pmap_cwickham.png")
 ```
 
@@ -163,7 +163,7 @@ knitr::include_graphics("images/dcl/map_df.png")
 
 - 竖着堆积，`map_dfr()` (r for rows) 
 
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '55%', echo = FALSE}
 knitr::include_graphics("images/dcl/map_dfr.png")
 ```
 
@@ -200,9 +200,10 @@ plots %>%
 `map()`函数是一定要返回列表的，但`walk()`看上去函数没有返回值，实际上它返回的就是它的**输入**，只是用户不可见而已。
 
 
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '45%', echo = FALSE}
 knitr::include_graphics("images/dcl/walk.png")
 ```
+
 这样的设计很有用，尤其在管道操作中，我们可以统计中，用walk()保存中间计算的结果或者生成图片，然后**若无其事地**继续管道（因为walk()返回值，就是输入walk的值），保持计算的连贯。
 
 

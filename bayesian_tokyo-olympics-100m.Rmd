@@ -1,4 +1,4 @@
-# 预测奥运会男子100米短跑成绩 {#bayesian-tokyo-olympics-100m}
+# 贝叶斯分析案例-预测奥运会男子100米短跑成绩 {#bayesian-tokyo-olympics-100m}
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)

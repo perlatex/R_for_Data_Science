@@ -172,7 +172,7 @@ tidy_d_summary
 
 ## 建模
 
-具体参考第 \@ref(colwise) 章整理的四种方法
+具体参考第 \@ref(tidyverse-colwise) 章整理的四种方法
 
 
 ```{r eda-anscombe-15, eval=FALSE}

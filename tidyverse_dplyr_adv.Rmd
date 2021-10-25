@@ -10,7 +10,7 @@ library(tidyverse)
 
 ## scoped 函数
 
-在第 \@ref(dplyr) 章介绍了dplyr的一些函数（`mutate()`, `select()`等等），事实上，这些函数加上后缀
+在第 \@ref(tidyverse-dplyr) 章介绍了dplyr的一些函数（`mutate()`, `select()`等等），事实上，这些函数加上后缀
 `_all, _at, _if`，形成三组变体函数，可以方便对**特定的子集**进行操作。比如
 
 - 对数据框所有列操作，可以用`_all`

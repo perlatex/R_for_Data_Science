@@ -134,6 +134,7 @@ penguins %>%
   geom_density(aes(fill = sex)) +
   facet_wrap(vars(species), scales = "free")
 ```
+
 男宝宝的嘴巴要长些，哈哈。
 
 

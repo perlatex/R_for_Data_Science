@@ -1,4 +1,4 @@
-# 函数式编程 {#tidyverse-purrr}
+# 函数式编程1 {#tidyverse-purrr}
 
 
 很多教材都是讲函数和循环，都是从`for, while, ifelse`讲起
@@ -183,24 +183,31 @@ list(
 ```{r purrr-24}
 map(exams, mean)
 ```
+
 哇，短短一句话，得出了相同的结果。
 
 ### map函数
 
 `map()`函数的第一个参数是list或者vector， 第二个参数是函数
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '30%', echo = FALSE, fig.align = 'center'}
 knitr::include_graphics("images/dcl/map-step-1.png")
 ```
+
 函数 `f` 应用到list/vector 的每个元素
-```{r, out.width = '75%', echo = FALSE}
+
+```{r, out.width = '55%', fig.align = 'center', echo = FALSE}
 knitr::include_graphics("images/dcl/map-step-2.png")
 ```
+
 于是输入的 list/vector 中的每个元素，都对应一个输出
-```{r, out.width = '75%', echo = FALSE}
+
+```{r, out.width = '55%', echo = FALSE}
 knitr::include_graphics("images/dcl/map.png")
 ```
+
 最后，所有的输出元素，聚合成一个新的list
-```{r, out.width = '75%', echo = FALSE}
+
+```{r, out.width = '55%', echo = FALSE}
 knitr::include_graphics("images/dcl/map-output.png")
 ```
 
@@ -209,9 +216,10 @@ knitr::include_graphics("images/dcl/map-output.png")
 
 
 在我们这个例子，`mean()` 作用到每个学生的成绩向量，
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/dcl/map-mean.png")
 ```
+
 调用一次`mean()`, 返回一个数值，所以最终的结果是五个数值的列表。
 
 ```{r}
@@ -239,7 +247,7 @@ knitr::include_graphics("images/dcl/map-dbl.png")
 
 如果每个元素是数值型，`map_dbl()`会聚合所有元素构成一个原子型向量
 
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '55%', echo = FALSE}
 knitr::include_graphics("images/dcl/map-dbl-output.png")
 ```
 
@@ -251,7 +259,9 @@ exams %>% map_df(mean)
 是不是很酷？是不是很灵活
 
 
+
 ### 小结
+
 事实上，`map`函数
 
 ```{r purrr-27, out.width = '80%', echo = FALSE}
@@ -260,7 +270,7 @@ knitr::include_graphics("images/map_function1.png")
 
 - 第一个参数是向量或列表（数据框是列表的一种特殊形式，因此数据框也是可以的）
 
-```{r purrr-28, out.width = '70%', echo = FALSE}
+```{r purrr-28, out.width = '65%', echo = FALSE}
 knitr::include_graphics("images/map_fun.png")
 ```
 
@@ -357,9 +367,10 @@ exams %>% map(~ . - mean(.))
 `~` 告诉 `map()` 后面跟随的是一个匿名函数，`.` 对应函数的参数，可以认为是一个占位符，等待传送带的student1、student2到student5 依次传递到函数机器。
 
 
-```{r, out.width = '75%', echo = FALSE}
+```{r, out.width = '85%', echo = FALSE}
 knitr::include_graphics("images/dcl/map-anonymous.png")
 ```
+
 如果熟悉匿名函数的写法，会增强代码的可读性。比如下面这段代码，找出每位同学有多少门考试成绩是高于80分的
 
 ```{r purrr-33}
@@ -433,7 +444,10 @@ map_dbl(tb, median)
 palmerpenguins::penguins %>% 
   map_int(~ sum(is.na(.)))
 ```
+
+
 ### 在col-column中
+
 如果想显示列表中每个元素的长度，可以这样写
 ```{r purrr-39}
 tibble(
@@ -450,6 +464,7 @@ tibble(
 ) %>% 
  mutate(r = purrr::map(x, ~rnorm(.x, mean = 0, sd = 1)))
 ```
+
 用于建模
 ```{r purrr-41}
 mtcars %>%

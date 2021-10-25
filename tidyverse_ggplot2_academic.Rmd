@@ -340,7 +340,7 @@ ggdraw(lincoln_final)
 
 ## 简单回顾
 
-```{r ggplot2-academic-50, echo = F}
+```{r ggplot2-academic-50, out.width = '85%', echo = F}
 knitr::include_graphics("images/ggplot2-academic-summary.jpg")
 ```
 

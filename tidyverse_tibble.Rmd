@@ -214,7 +214,7 @@ df
 把tibble再转为list? `as.list(df)`
 
 
-#### 把matrix转型为tibble。
+#### 把matrix转型为tibble
 
 ```{r tibble-15}
 m <- matrix(rnorm(15), ncol = 5)
@@ -532,11 +532,11 @@ tb$data[[1]]
 ```{r}
 tb$data %>% typeof()
 ```
+
 如果想偷懒，也可以用`select()`的语法
 ```{r}
 df %>% 
   nest(data = !species)
-
 ```
  
 可以同时创建多个列表列
@@ -559,7 +559,9 @@ df_collapsed <- df %>%
 
 df_collapsed
 ```
+
 data就是构建的列表列，它的每个元素都是一个向量，对应一个species。这种方法和`nest()`方法很相似，不同在于，`summarise() + list()` 构建的列表列其元素是原子型向量，而`nest()`构建的是tibble.
+
 ```{r}
 df_collapsed$data[[1]] %>% typeof()
 ```
@@ -572,46 +574,56 @@ df %>%
     data = list(sort(bill_length_mm))
   )
 ```
+
 或者做筛选
 ```{r}
 df %>% 
   group_by(species) %>% 
   summarise(
-    data = list(bill_length_mm[bill_length_mm > 45 ])
+    data = list(bill_length_mm[bill_length_mm > 45])
   )
 ```
 
 
 #### dplyr::mutate()
-第三种方法是用`rowwise() + mutate()`，比如，下面为每个岛屿(island) 创建一个企鹅数量相等的随机数向量，简单点说，这个岛屿上企鹅有多少只，那么随机数的个数就有多少个。
+
+第三种方法是用`rowwise() + mutate()`，比如，下面为每个岛屿(island) 创建一个与该岛企鹅数量等长的随机数向量，简单点说，这个岛屿上企鹅有多少只，那么随机数的个数就有多少个。
 ```{r}
-df %>% 
-  select(island) %>% 
+penguins %>% 
+  drop_na() %>% 
+  group_by(island) %>% 
+  summarise(
+    n_num = n()
+  ) %>% 
+  
   rowwise() %>% 
-  mutate(random = list(rnorm(n = str_length(island)))) %>% 
+  mutate(random = list(rnorm(n = n_num))) %>% 
   ungroup()
 ```
 
 ### Unnesting
 
-用unnest()函数可以把**列表列**转换成**常规列**的形式，比如上节中的tb
+用`unnest()`函数可以把**列表列**转换成**常规列**的形式，比如上节中的tb
 
 ```{r}
 tb
 ```
+
 这里把想要打开的列`data`，作为参数提供给`unnest(cols = )` 
 ```{r}
 tb %>% 
   unnest(cols = data)
 ```
+
 ### Manipulating
 
-操控列表列是一件有趣的事情，我们常常会借助于行方向的操作(rowwise ), 请看第 \@ref(tidyverse-colwise) 章。比如找出每个岛屿企鹅的数量，我们需要对data列表列的元素依次迭代，
+操控列表列是一件有趣的事情，我们常常会借助于行方向的操作(rowwise), 请看第 \@ref(tidyverse-colwise) 章。比如找出每个岛屿企鹅的数量，我们需要对data列表列的元素依次迭代，
 ```{r}
 tb %>% 
   rowwise() %>% 
   mutate(num_species = nrow(data))
 ```
+
 再比如，求每组下企鹅嘴峰长度与嘴峰厚度的相关系数
 ```{r}
 tb %>% 

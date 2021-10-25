@@ -1,9 +1,13 @@
 # dplyr进阶 {#tidyverse-dplyr-apply}
 
 
-今天讲一个关于企鹅的数据故事。
+本章主要关注dplyr的一些应用。
+
+
 
 ## 导入数据
+
+今天讲一个关于企鹅的数据故事。
 
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
@@ -84,6 +88,30 @@ penguins %>% select(species, starts_with("bill_"))
 ```
 
 
+### 返回向量还是数据框
+
+对应数据框`my_tibble`， 注意返回向量还是数据框的区别
+
+- 返回向量
+```{r, eval = FALSE}
+my_tibble[["x"]] 
+
+my_tibble$x 
+
+my_tibble %>% 
+  pull(x)
+```
+
+
+- 返回数据框
+```{r, eval = FALSE}
+my_tibble["x"]
+
+my_tibble %>% 
+  select(x)
+```
+
+
 
 ### 寻找男企鹅
 
@@ -150,10 +178,19 @@ penguins %>%
 
 ### 有关NA的计算
 
-`NA`很讨厌，凡是它参与的四则运算，结果都是`NA`，所以需要事先把它删除，增加参数说明
-`na.rm = TRUE`
+`NA`很讨厌，凡是它参与的四则运算，结果都是`NA`，
+
 ```{r}
-sum(c(1, 2, NA, 4), na.rm = FALSE)
+sum(c(1, 2, NA, 4))
+```
+
+所以需要事先把它删除，增加参数说明 `na.rm = TRUE`
+```{r}
+sum(c(1, 2, NA, 4), na.rm = TRUE)
+```
+
+```{r}
+mean(c(1, 2, NA, 4), na.rm = TRUE)
 ```
 
 
@@ -262,7 +299,7 @@ penguins %>% count(sex, sort = TRUE)
 penguins %>% count(longer_bill = bill_length_mm > 40)
 ```
 
-解析思路：`bill_length_mm > 40`比较算符 返回逻辑型向量，向量里面只有TRUR和FALSE两种值，因此上面的代码相当于统计TRUE有多少个，FALSE有多少个？
+解析思路：`bill_length_mm > 40` 比较算符 返回逻辑型向量，向量里面只有TRUR和FALSE两种值，因此上面的代码相当于统计TRUE有多少个，FALSE有多少个？
 
 
 
@@ -294,7 +331,7 @@ penguins %>%
 ```
 
 
-```{r}
+```{r, eval=FALSE, echo=FALSE}
 penguins %>% 
   mutate(is_bigger40 = bill_length_mm > 40) %>% 
   summarise(
@@ -325,7 +362,7 @@ penguins %>%
 长度和厚度惊人的相等。我是不是发现新大陆了？
 
 
-
+### across()函数
 更安全、更简练的写法，王老师的最爱
 
 ```{r}
@@ -354,6 +391,8 @@ penguins %>%
 ```
 
 
+::: {.rmdnote}
+
 `across()`函数用法
 
 ```{r, eval = FALSE}
@@ -363,6 +402,7 @@ across(.cols = everything(), .fns = NULL, ..., .names = NULL)
 - 用在 `mutate()` 和`summarise()` 函数里面
 - `across()` 对**多列**执行**相同**的函数操作，返回**数据框**
 
+::: 
 
 
 
@@ -442,3 +482,4 @@ penguins %>%
 
 
 
+在第 \@ref(tidyverse-beauty-of-across1) 章到第 \@ref(tidyverse-beauty-of-across3) 章会继续讲王老师的最爱`across()`函数
