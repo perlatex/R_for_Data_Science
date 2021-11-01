@@ -283,10 +283,12 @@ penguins %>%
 
 ```{r}
 penguins %>% 
-  ggplot(aes(x = species, y = bill_depth_mm)) +
-  geom_boxplot() +
+  count(species) %>% 
+  mutate(species = paste0("this is long long long ", species)) %>% 
+  ggplot(aes(x = species, y = n)) +
+  geom_col(width = 0.6) +
   scale_x_discrete(
-    labels = function(x) stringr::str_wrap(x, width = 6)
+    labels = function(x) stringr::str_wrap(x, width = 10)
   )
 ```
 
@@ -511,6 +513,124 @@ d %>%
   scale_x_continuous(expand = c(0, 0)) +
   labs(x = NULL, y = NULL)
 ```
+
+```{r}
+d %>% 
+  ggplot(aes(x = value, y = fct_reorder(name, value)) ) +
+  geom_col(width = 0.6, fill = "darkorange") +
+  geom_text(
+     aes(
+      label = if_else(value < 1, "<1%", paste0(round(value, digits = 1), "%")),
+      hjust = if_else(value > 50, 1, -.1)
+      )) +
+  theme_classic() +
+  scale_x_continuous(expand = c(0, 1)) +
+  labs(x = NULL, y = NULL)
+```
+
+
+
+## stat_summary()中的fun和fun.data
+
+```{r}
+penguins %>% 
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_point() +
+  stat_summary(fun = mean,
+               geom = "point", colour = "red", size = 5 )
+```
+
+
+```{r}
+penguins %>% 
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_point() +
+  stat_summary(fun = function(x) max(x) - min(x),
+               geom = "point", colour = "red", size = 5 )
+
+```
+
+
+```{r}
+myfun <- function(x) {
+  tibble(
+    y = sum(x > mean(x))
+   )
+}
+
+penguins %>% 
+  ggplot(aes(species, body_mass_g)) +
+  stat_summary(
+    fun.data = myfun, 
+    geom = "bar",
+  )
+```
+
+```{r}
+calc_median_and_color <- function(x, threshold = 40) {
+  tibble(y = median(x)) %>% 
+    mutate(fill = ifelse(y < threshold, "pink", "grey35"))
+}
+
+penguins %>% 
+  ggplot(aes(species, bill_length_mm)) +
+  stat_summary(
+    fun.data = calc_median_and_color,
+    geom = "bar"
+  )
+```
+
+```{r}
+n_fun <- function(x) {
+  data.frame(y = 62,
+            label = length(x),
+            color = ifelse(length(x) > 100, "red", "blue")
+            )
+}
+
+
+penguins %>% 
+  ggplot(aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  geom_jitter() +
+  stat_summary(
+    fun.data = n_fun,
+    geom = "text"
+  )
+```
+
+
+
+## theme()中element_text()
+
+```{r}
+penguins_df <- penguins %>% 
+  group_by(species) %>% 
+  summarize(mean = mean(bill_length_mm)) 
+
+penguins_df %>% 
+  ggplot(aes(x = mean, y = species)) +
+  geom_col(width = 0.5) +
+  theme(
+    axis.text.y = element_text(
+      color = c("black", "red", "black"), 
+      face = c("plain", "bold", "plain"), 
+      size = 20
+      )
+  )
+
+penguins_df %>% 
+  ggplot(aes(x = mean, y = species)) +
+  geom_col(width = 0.5) +
+  theme(
+    axis.text.y = element_text(
+      color = if_else(penguins_df$mean > 48, "red", "black"), 
+      face = if_else(penguins_df$mean  > 48, "bold", "plain"), 
+      size = 20
+    )
+  )
+```
+
 
 
 
@@ -746,6 +866,27 @@ penguins %>%
 
 ```
 
+
+## stat_function
+
+```{r}
+df <- data.frame(x = 1:10, y = (1:10)^2)
+ggplot(df, aes(x, y)) + 
+  geom_point() +
+  stat_function(fun = ~ .x^2)
+```
+
+
+```{r}
+logisic <- function(x) {
+  exp(1)^x / (1 + exp(1) ^ x)
+}
+
+ggplot() +
+  xlim(-5, 5) +
+  geom_function(fun = logisic, color = "orange") +
+  theme_minimal()
+```
 
 ## 未完待续
 
