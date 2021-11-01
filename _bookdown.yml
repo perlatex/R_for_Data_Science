@@ -48,6 +48,7 @@ rmd_files: [
   "tidyverse_ggplot2_aes_eval.Rmd",
   "tidyverse_ggplot2_academic.Rmd",
   "tidyverse_ggplot2_gganimate.Rmd",
+  "tidyverse_ggplot2_pass_function_to_parameters.Rmd",
   "tidyverse_workflow.Rmd",
   "tidyverse_tips.Rmd",
   "tidyverse_dplyr_adv.Rmd",

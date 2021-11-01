@@ -101,6 +101,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-ggplot2-aes-eval) 章ggplot2中的延迟映射 
    - 第 \@ref(tidyverse-ggplot2-academic) 章介绍科研数据可视化中的统计分布图
    - 第 \@ref(tidyverse-ggplot2-gganimate) 章让你的数据骚动起来
+   - 第 \@ref(tidyverse-ggplot2-pass-function-as-parameters) 章ggplot2中传递函数作为参数值
    - 第 \@ref(tidyverse-workflow) 章回望Tidyverse之旅
    - 第 \@ref(tidyverse-tips) 章介绍Tidyverse常用技巧
    - 第 \@ref(tidyverse-dplyr-adv) 章介绍Tidyverse进阶技巧

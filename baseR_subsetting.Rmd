@@ -310,11 +310,22 @@ sum(x)
 ```
 
 
+- 找出x向量中的偶数
+```{r}
+x <- 1:10
+x
+```
+
+
+```{r, include=FALSE}
+x[x %% 2 == 0]
+```
 
 
 
 
-```{r subsetting-37, include=FALSE}
+
+```{r, include=FALSE}
 # remove the objects
 rm(a, df, l, tb, x, y)
 ```
