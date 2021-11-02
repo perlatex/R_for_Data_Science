@@ -217,7 +217,7 @@ gapminder %>%
 - <https://appsilon.com/pandas-vs-dplyr/>
 - <https://github.com/rstudio/reticulate/issues/863>
 - <https://rstudio.github.io/reticulate/articles/python_packages.html>
-
+- <https://github.com/IyarLin/R-advantages-over-python>
 
 
 
