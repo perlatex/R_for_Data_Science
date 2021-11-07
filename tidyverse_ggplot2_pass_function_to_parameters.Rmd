@@ -888,6 +888,42 @@ ggplot() +
   theme_minimal()
 ```
 
+
+## stat layer
+
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  purrr::map(
+    .x = seq(0.1, 0.9, by  = 0.1),
+    .f = function(level) {
+      stat_ellipse(
+        geom = "polygon", type = "norm",
+        size = 0, alpha = 0.1, fill = "gray10",
+        level = level
+      )
+    }
+  )
+
+```
+
+
+```{r}
+layers <- penguins %>%
+  group_split(species) %>%
+  map(function(df) {
+    geom_point(
+      aes(x = bill_length_mm, y = bill_depth_mm),
+      alpha = 0.5,
+      data = df
+    )
+  })
+
+ggplot() +
+  layers
+```
+
 ## 未完待续
 
 
