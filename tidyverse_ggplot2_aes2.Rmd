@@ -121,7 +121,7 @@ sum(d$count)
 ggplot2有一套优雅的绘图语法，包名中“gg”是grammar of graphics的简称。
 Hadley Wickham将这套可视化语法诠释为:
 
-> 一张统计图形就是从**数据**到几何图形(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
+> 一张统计图形就是从**数据**到几何形状(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
 
 
 通俗解释：就是我们的**数据**通过图形的**视觉元素**表示出来。比如**点**图，如果坐标x值越大，水平方向离原点的位置就越远，数值越小，水平方向离原点的位置就越近。
@@ -144,7 +144,7 @@ knitr::include_graphics("images/mapping.png")
 
 - **数据 (data)**      （数据框）
 - **映射 (mapping)**
-- **几何图形 (geom)**
+- **几何形状 (geom)**
 - 统计变换 (stats)
 - 标度 (scale)
 - 坐标系 (coord)
@@ -388,7 +388,7 @@ ggplot(penguins) +
 
 
 
-## 几何图形
+## 几何形状
 
 `geom_point()` 可以画散点图，也可以使用`geom_smooth()`绘制平滑曲线，
 ```{r ggplot2-aes2-27}
@@ -446,7 +446,7 @@ ggplot(penguins) +
 
 - 映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在`ggplot()`里, 为**全局声明**。那么，当`geom_point()`画图时，发现缺少图形所需要的映射关系（点的位置、点的大小、点的颜色等等），就会从`ggplot()`全局变量中继承映射关系。
 
-- 如果映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在几何图形`geom_point()`里, 那么此处的映射关系就为**局部声明**, 那么`geom_point()`绘图时，发现所需要的映射关系已经存在，就不会继承全局变量的映射关系。
+- 如果映射关系`aes(x = bill_length_mm, y = bill_depth_mm)` 写在几何形状`geom_point()`里, 那么此处的映射关系就为**局部声明**, 那么`geom_point()`绘图时，发现所需要的映射关系已经存在，就不会继承全局变量的映射关系。
 
 
 

@@ -1,4 +1,4 @@
-# ggplot2之几何图形 {#tidyverse-ggplot2-geom}
+# ggplot2之几何形状 {#tidyverse-ggplot2-geom}
 
 > 采菊东篱下，悠然见南山。
 >
@@ -78,7 +78,7 @@ knitr::include_graphics("images/how_to_plot.png")
 
 ### 图形部件
 
-一张统计图形就是从**数据**到几何图形(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
+一张统计图形就是从**数据**到几何形状(geometric object，缩写geom)所包含的**图形属性**(aesthetic attribute，缩写aes)的一种映射。
 
 
 1. `data`: 数据框data.frame (注意，不支持向量vector和列表list类型）
@@ -91,7 +91,7 @@ knitr::include_graphics("images/how_to_plot.png")
     + shape（点或者线等元素的形状）
     + alpha（点或者线等元素的透明度）
     
-3. `geoms`: 几何图形，确定我们想画什么样的图，一个`geom_***`确定一种图形。更多几何图形推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
+3. `geoms`: 几何形状，确定我们想画什么样的图，一个`geom_***`确定一种形状。更多几何形状推荐阅读[这里](https://ggplot2.tidyverse.org/reference/)
 
     + `geom_bar()`
     + `geom_density()`

@@ -1,7 +1,7 @@
-# ggplot2之从图层到几何图形 {#tidyverse-ggplot2-from-layer-to-geom}
+# ggplot2之从图层到几何形状 {#tidyverse-ggplot2-from-layer-to-geom}
 
 
-用ggplot2，大多是从几何图形出发，总有“只见树木不见森林”的感觉。我尝试从图层结构出发，去思考ggplot2绘图原理。欢迎大家批评指正。
+用ggplot2，大多是从几何形状出发，总有“只见树木不见森林”的感觉。我尝试从图层结构出发，去思考ggplot2绘图原理。欢迎大家批评指正。
 
 
 
@@ -11,11 +11,11 @@ ggplot2中每个**图层**都要有的五大元素：
 
 1. 数据data 
 2. 美学映射mapping  
-3. 几何图形geom 
+3. 几何形状geom 
 4. 统计变换stat 
 5. 位置调整position
 
-数据映射后，需要指定一种数据统计变换的方式，统计计算数据（不进行统计变换可以理解为是等值变换），最后通过某种几何图形geom来对其进行可视化的展现。
+数据映射后，需要指定一种数据统计变换的方式，统计计算数据（不进行统计变换可以理解为是等值变换），最后通过某种几何形状geom来对其进行可视化的展现。
 
 我们现在按照`layer() -> stat_*() -> geom_*() `这个思路来，理解各种图形。
 
@@ -79,12 +79,12 @@ penguins %>%
 - prop: groupwise proportion
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_bar()
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_point() / geom_bar()
 
@@ -187,7 +187,7 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_bar()
 
@@ -195,7 +195,7 @@ penguins %>%
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_bar() / geom_histogram() / geom_freqpoly
 
@@ -383,13 +383,13 @@ kernel = c("gaussian", "epanechnikov", "rectangular",
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_area()
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_area()/ geom_line()/ geom_point()/ geom_density()
 
@@ -466,14 +466,14 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_boxplot() 
 
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_boxplot() / geom_point()
 
@@ -508,7 +508,7 @@ penguins %>%
 
 
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
 
 ```{r}
 penguins %>% 
@@ -618,12 +618,12 @@ penguins %>%
 - width: width of violin bounding box
 
 
-`默认几何图形`
+`默认几何形状`
 
 -  geom_violin() 
 
 
-`适用几何图形`
+`适用几何形状`
 
 -  geom_violin() / geom_point() 
 
@@ -675,12 +675,12 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_dotplot()
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_dotplot()
 
@@ -749,12 +749,12 @@ penguins %>%
 - prop : percent of points in that panel at that position
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_point()
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_point() / geom_count()  / geom_bar()
 
@@ -797,13 +797,13 @@ penguins %>%
 - se: standard error
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_smooth()
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_smooth() / geom_line() / geom_point()
 
@@ -845,7 +845,7 @@ penguins %>%
 ```
 
 
-统计转换后，可以根据 `Computed variables` 画出更多的几何图形
+统计转换后，可以根据 `Computed variables` 画出更多的几何形状
 ```{r}
 penguins %>% 
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
@@ -944,13 +944,13 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_tile() 
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_tile() / geom_point()/ geom_bin2d()
 
@@ -1001,7 +1001,7 @@ penguins %>%
 
 
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
 
 
 ```{r}
@@ -1047,13 +1047,13 @@ stat_bin2d()的六边形版本
 - ndensity: density, scaled to maximum of 1
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_hex() 
  
  
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_hex()
 
@@ -1090,7 +1090,7 @@ penguins %>%
 ```
 
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
  
 ```{r}
 penguins %>% 
@@ -1126,7 +1126,7 @@ penguins %>%
   - Contours line types by contour_var = (`density`, `ndensity`, and `count`)
 
 
-`适用几何图形`
+`适用几何形状`
 
 -  geom_density_2d() / geom_raster() / goem_tile() / geom_path() / geom_point() / geom_polygon()
 
@@ -1178,7 +1178,7 @@ penguins %>%
   )
 ```
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
 
 ```{r}
 penguins %>%
@@ -1260,7 +1260,7 @@ penguins %>%
 ```
 
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
 
 
 ```{r}
@@ -1290,12 +1290,12 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_path()
 
 
-`适用几何图形`
+`适用几何形状`
 
 -  geom_path() /geom_polygon()
 
@@ -1342,7 +1342,7 @@ penguins %>%
 
 
 
-可以根据 `Computed variables` 画出更多的几何图形
+可以根据 `Computed variables` 画出更多的几何形状
 
 
 ```{r}
@@ -1392,7 +1392,7 @@ max summary function (should take numeric vector and return single number)
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_errorbar() / geom_pointrange() /geom_linerange() / geom_crossbar() /geom_point()
 
@@ -1998,12 +1998,12 @@ penguins %>%
 
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_line()
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_line() / geom_point() /geom_function() 
 
@@ -2090,12 +2090,12 @@ quantreg::rq(bill_depth_mm ~ bill_length_mm,
 - quantile: quantile of distribution
 
 
-`默认几何图形`
+`默认几何形状`
 
 -  geom_quantile() 
 
 
-`适用几何图形`
+`适用几何形状`
 
 - geom_line() / geom_point() / geom_quantile() 
 
@@ -2162,7 +2162,7 @@ penguins %>%
 - `value` : Value of summary statistic.  
 
 
-`默认几何图形`
+`默认几何形状`
 
 - `geom_tile()` for stat_summary_2d()    
 - `geom_hex()`  for stat_summary_hex()
@@ -2312,14 +2312,14 @@ penguins %>%
 - piece: Contour piece (an integer).
 
 
-`默认几何图形`
+`默认几何形状`
 
 - geom_contour()  / geom_contour_filled()
 
 
 
 
-`适用几何图形`
+`适用几何形状`
 
 -  geom_contour() / geom_contour_filled() 
 

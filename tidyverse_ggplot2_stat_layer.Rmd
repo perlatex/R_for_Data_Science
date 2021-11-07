@@ -3,9 +3,9 @@
 
 ## 导言
 
-**美学映射**是图形语法中非常重要的一个概念，**变量**映射到**视觉元素**，然后通过几何对象`GEOM`画出图形。（下图是每个几何对象所对应的视觉元素）
+**美学映射**是图形语法中非常重要的一个概念，**变量**映射到**视觉元素**，然后通过几何形状`GEOM`画出图形。（下图是每个几何形状所对应的视觉元素）
 
-```{r ggplot-aesthetics-cheatsheet, out.width = '100%', echo = FALSE, fig.cap = 'ggplot2中的几何对象与美学映射'}
+```{r ggplot-aesthetics-cheatsheet, out.width = '100%', echo = FALSE, fig.cap = 'ggplot2中的几何形状与美学映射'}
 knitr::include_graphics("images/ggplot_aesthetics_cheatsheet.png")
 ```
 
@@ -177,7 +177,7 @@ ggplot() +
 ```
 
 
-OMG, 为了画一个简单的图，我们需要写这么长的一段代码。究其原因就是，**我们认为，一定要准备好一个tidy的数据，并且把想画的几何对象所需要的美学映射，都整理到这个tidy的数据框中**
+OMG, 为了画一个简单的图，我们需要写这么长的一段代码。究其原因就是，**我们认为，一定要准备好一个tidy的数据，并且把想画的几何形状所需要的美学映射，都整理到这个tidy的数据框中**
 
 
 事实上，理论上讲，`simple_data_bar` 和 `simple_data_errorbar` 并不是真正的`tidy`格式。因为按照Hadley Wickham的对tidy的定义是，**一行代表一次观察**。
@@ -185,13 +185,13 @@ OMG, 为了画一个简单的图，我们需要写这么长的一段代码。究
 
 
 ```{block ggplot2-stat-layer-10, type="danger"}
-所以我们的观点是，辛辛苦苦创建一个（包含每个几何对象所需的美学映射）的数据框，太低效了，而且这种方法也不支持tidy原则。
+所以我们的观点是，辛辛苦苦创建一个（包含每个几何形状所需的美学映射）的数据框，太低效了，而且这种方法也不支持tidy原则。
 
 ```
 
 
 
-既然 `simple_data_bar` 和 `simple_data_errorbar`都来源于`simple_data`，那为何不直接传递`simple_data`给`ggplot()`，让数据在内部转换，得到每个几何对象所需的美学映射呢？
+既然 `simple_data_bar` 和 `simple_data_errorbar`都来源于`simple_data`，那为何不直接传递`simple_data`给`ggplot()`，让数据在内部转换，得到每个几何形状所需的美学映射呢？
 
 或许，你想要的是这样？
 
@@ -242,7 +242,7 @@ height_df %>%
   stat_summary()
 ```
 
-看到了一个点和经过这个点的一条线，实际上，它也是一个几何对象pointrange.
+看到了一个点和经过这个点的一条线，实际上，它也是一个几何形状pointrange.
 那么`geom_pointrange()` 是怎么数据转换的呢？回答这个问题，我们需要了解下`geom_pointrange()`需要哪些美学映射（参见图 \@ref(fig:ggplot-aesthetics-cheatsheet)）：
 
 - x or y
@@ -450,12 +450,12 @@ my_penguins %>%
 ### 主要结论
 - 尽管数据是tidy的，但它未必能代表你想展示的值
 
-- 解决办法不是去规整数据以符合几何对象的要求，而是将原初tidy数据传递给`ggplot()`,
+- 解决办法不是去规整数据以符合几何形状的要求，而是将原初tidy数据传递给`ggplot()`,
 让`stat_*()`函数在内部实现变型
 
 - 可以`stat_*()`函数可以定制geom以及相应的变形函数。当然，定制自己的函数，需要核对`stat_*()`所需要的变量和数据类型
 
-- 如果想用不同的geom，确保变换函数能计算出(几何对象所需要的)美学映射
+- 如果想用不同的geom，确保变换函数能计算出(几何形状所需要的)美学映射
 
 
 ### STAT vs. GEOM or STAT and GEOM?
