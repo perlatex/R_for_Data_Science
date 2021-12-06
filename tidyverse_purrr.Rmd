@@ -439,7 +439,7 @@ tb <-
 map_dbl(tb, median)
 ```
 
-在比如，找出企鹅数据中每列缺省值`NA`的数量
+在比如，找出企鹅数据中每列缺失值`NA`的数量
 ```{r}
 palmerpenguins::penguins %>% 
   map_int(~ sum(is.na(.)))

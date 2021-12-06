@@ -1,11 +1,16 @@
 # tidyverse中的across()之美3 {#tidyverse-beauty-of-across3}
 
+本章`mutate()`中的`across()`与`map_df()`、`map2_df()`系列的纠缠。
+
+涉及迭代、泛函、返回数据框等概念。
+
+
 ```{r beauty-of-across3-1}
 library(tidyverse)
 ```
 
 
-## 问题
+## 从一个问题开始
 
 计算每天水分和食物的所占比例， 比如第一天water和food都是10.0，那么各自比例都是50%.
 ```{r beauty-of-across3-2}
@@ -44,7 +49,7 @@ d %>%
 
 ## across的方法
 
-传统的方法，用到基本的dplyr函数，思路很清晰，但有点周折。下面，我列出几个比较新颖的方法，当然这些方法都来源于强大across()函数
+传统的方法，用到基本的dplyr函数，思路很清晰，但有点周折。下面，我列出几个比较新颖的方法，当然这些方法都来源于强大`across()`函数
 
 ### 方法1
 ```{r beauty-of-across3-4}
@@ -67,6 +72,30 @@ d %>%
 
 
 ### 方法3
+
+```{r, eval=FALSE}
+d %>% 
+  rowwise() %>% 
+  mutate(
+    across(everything(), ~ .x / sum(c_across()) )
+  )
+
+
+df %>% 
+  rowwise() %>% 
+  mutate(
+    across(everything(), .names = "prop_{.col}", ~ .x / sum(c_across())  )
+  )
+
+
+df %>% 
+  rowwise() %>% 
+  mutate(
+    across(.names = "prop_{.col}", .fns =  ~ .x / sum(c_across())  )
+  )
+```
+
+
 ```{r beauty-of-across3-6}
 d %>%
   rowwise() %>%
@@ -99,6 +128,202 @@ d %>%
   mutate(100 * proportions(across(.names = "%{.col}")))
 ```
 
+我个人比较喜欢`方法3`的思维方式。下面讲讲各中缘由。
+
+
+## 纠缠不清的迭代
+
+迭代方向：
+
+- `rowwise()` 一行一行的处理
+- `across()`  一列一列的处理
+- `rowwise() + across()` 这种组合，双重迭代，(一行一行 + 一列一列)就变成了一个一个的处理
+- `across() + purrr::map_dbl()`， 在`mutate()`中，把`across()`整体当作**数据框**用，因此这里只有`purrr::map_*()`一次迭代
+
+
+
+
+```{r}
+# rowwise() + across()
+# rowwise() 行方向后，接着across() 就行方向上的元素一个一个的执行.fns
+# 循环模型：第一层，一行一行的，第二层在每一行里，一个元素到一个元素
+
+
+penguins %>% 
+  group_by(species, year) %>% 
+  summarise(flipper_length_mm = list(flipper_length_mm)) %>% 
+  pivot_wider(
+    names_from = year,
+    values_from = flipper_length_mm
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    across(where(is.list), .fns = max)
+  )
+```
+
+
+```{r}
+# across() + purrr::map_dbl()
+# 不用rowwise()行方向, 直接用across就是一列一列的处理，
+# 此时的一列是vector or list，可以嵌套purrr::map()，对这一列的每个元素，执行.f
+# 然后across()到下一列
+# 循环模型：第一层，一列一列，第二层在每一列里，一个元素到一个元素
+
+penguins %>% 
+  group_by(species, year) %>% 
+  summarise(flipper_length_mm = list(flipper_length_mm)) %>% 
+  pivot_wider(
+    names_from = year,
+    values_from = flipper_length_mm
+  ) %>% 
+  mutate(
+    across(where(is.list), ~ purrr::map_dbl(.x, max))
+  )
+```
+
+
+
+```{r}
+# 原理同上
+
+penguins %>% 
+  group_by(species, year) %>% 
+  summarise(
+    across(c(bill_length_mm, bill_depth_mm), list) 
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    purrr::map2_dbl(
+      across(bill_length_mm), across(bill_depth_mm), .f = cor)
+  )
+```
+
+
+
+
+### 案例1
+
+希望两两`coalesce`，用`across()`写
+
+```{r}
+# https://github.com/tidyverse/dplyr/issues/6109
+# https://github.com/tidyverse/dplyr/issues/5703
+
+df <- tibble(
+  id = 1:10,
+  sex = c("m", "m", "m", "f", "f", "f", "m", "f", "f", "m"),
+  lds1.x = c(NA, 1, 0, 1, NA, 0, 0, NA, 0, 1),
+  lds1.y = c(1, NA, 1, 1, 0, NA, 0, 3, NA, 1),
+  lds2.x = c(2, 1, NA, 0, 0, NA, 1, NA, NA, 1),
+  lds2.y = c(0, 2, 2, NA, NA, 0, 0, 3, 0, NA)
+)
+df
+```
+
+比如
+
+```{r}
+df %>%
+  mutate(
+    lds1 = coalesce(lds1.x, lds1.y),
+    lds2 = coalesce(lds2.x, lds2.y)
+  )
+```
+
+
+`across()`能在`mutate()`内部使用，是因为`across()`会返回数据框。换句话说，在`mutate()`中，就把`across()`整体当作**数据框**用
+```{r}
+df %>%
+  mutate(
+    across(ends_with(".x"))
+  )
+```
+
+```{r}
+df %>%
+  mutate(
+    across(ends_with(".x"), .names = '{sub(".x","",.col)}')
+  )
+```
+
+既然`across()`会返回数据框，那么可以先在`map_dfc()`函数中使用，`map_dfc()`将其转换成一个新的数据框，这个新的数据框最后再返回给`mutate()` 
+```{r}
+df %>%
+  mutate(
+    map_dfc(
+      .x = across(ends_with(".x"), .names = '{sub(".x","", .col)}'),
+      .f = ~is.na(.x)
+    )
+  )
+```
+
+
+两个数据框，可以用在`map2_dfc()`函数中
+```{r}
+df %>%
+  mutate(
+    map2_dfc(
+      .x = across(ends_with(".x"), .names = '{sub(".x","",.col)}'),
+      .y = across(ends_with(".y")),
+      .f = coalesce #  Vectors coalesce
+    )
+  )
+```
+
+这样写，更清晰和优雅。
+
+```{r}
+df %>%
+  mutate({
+    data1 <- across(ends_with(".x"), .names = '{sub(".x","",.col)}')
+    data2 <- across(ends_with(".y"))
+    out <- purrr::map2_dfc(data1, data2, ~ coalesce(.x, .y))
+    out
+  })
+
+```
+
+数据框data1的第一列 和 数据框data2的第一列，coalesce，然后数据框data1的第二列 和 数据框data2的第二列，coalesce.
+
+
+
+### 案例2
+
+如果符合某个条件，就让指定的列反号。比如，如果x小于4，x和y列就反号。事实上，方法很多，我们只是演示`across()`的某些特征。
+
+```{r}
+d <- tibble( x = 1:4, y = 1:4)
+
+# using data frame returns
+d %>% 
+  mutate({
+    test <- x < 4
+    x[test] <- -x[test]
+    y[test] <- -y[test]
+    data.frame(x = x, y = y)
+  })
+
+
+# using across()
+d %>% 
+  mutate({
+    test <- x < 4
+    across(c(x, y), ~ {.x[test] <- -.x[test]; .x })
+  })
+
+
+
+# further abstract
+negate_if <- function(condition, cols) {
+  across({{ cols }}, ~ {
+    .x[condition] <- -.x[condition]
+    .x
+  })
+}
+d %>% 
+  mutate(negate_if(x < 4, c(x, y)))
+```
 
 
 

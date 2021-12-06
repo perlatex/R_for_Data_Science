@@ -435,6 +435,7 @@ df.samples.of.30 %>%
     title = "Distribution of mean heights for 2500 samples of size 30"
   )
 ```
+
 注意到，这不是男生身高的分布，而是**每次抽样计算的均值**构成的分布.
 
 为了更清楚的说明，我们把**整体的分布(灰色曲线)、样本a（蓝色直方图）、抽样的均值分布（红色直方图）**三者画在一起。

@@ -275,7 +275,8 @@ knitr::include_graphics("images/meme.png")
 
 ## 推荐阅读
 
--   [为什么R语言是当今最值得学习的数据科学语言](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)
--   [R for Data Science](https://r4ds.had.co.nz/)
--   <https://www.tidyverse.org/>
--  <https://www.business-science.io/business/2020/12/17/six-reasons-to-use-R-for-business-2021.html>
+- [为什么R语言是当今最值得学习的数据科学语言](https://www.sharpsightlabs.com/blog/r-recommend-data-science/)
+- [R for Data Science](https://r4ds.had.co.nz/)
+- <https://www.tidyverse.org/>
+- <https://www.business-science.io/business/2020/12/17/six-reasons-to-use-R-for-business-2021.html>
+- Matt Dancho, 2021, [R is for Research, Python is for Production](https://www.business-science.io/business/2021/02/18/R-is-for-research.html)

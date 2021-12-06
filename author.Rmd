@@ -1,3 +1,3 @@
 # 作者简介 {#author .unnumbered}
 
-王敏杰，爱好数据科学，喜欢用R, tidyverse, tidymodels和Stan统计编程，联系方式 38552109@qq.com
+王敏杰，爱好数据科学，喜欢用R, tidyverse, tidymodels和Stan统计编程，联系方式 wangmj@sicnu.edu.cn

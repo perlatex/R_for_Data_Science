@@ -71,6 +71,11 @@ penguins %>%
   filter(if_any(everything(), is.na))
 ```
 
+或者更简单
+```{r}
+penguins %>% 
+  filter(if_any(.fns = is.na))
+```
 
 
 - 筛选全部是缺失值的行
