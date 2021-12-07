@@ -452,11 +452,11 @@ df %>% mutate(
 )
 ```
 
-### 再来一个案例
+- 来一个案例
 
 ```{r}
-# x1_intercept + x1_value * x1_slope  --> x1_yhat
-# x2_intercept + x2_value * x2_slope  --> x2_yhat
+# 要求 x1_intercept + x1_value * x1_slope  --> x1_yhat
+# 要求 x2_intercept + x2_value * x2_slope  --> x2_yhat
 
 library(stringr)
 
@@ -478,6 +478,28 @@ df %>%
   ) %>%
   rename_with( ~ str_remove(., "_intercept"), ends_with("_yhat"))
 
+```
+
+
+- 再来一个案例
+
+```{r}
+df <- tibble(
+  var_A_baseline = c(1, 2, 3, 4, 5),
+  var_B_baseline = c(4, 1, 2, 3, 5),
+  var_A_followup = c(3, 5, 4, 1, 2),
+  var_B_followup = c(2, 5, 1, 3, 4)
+)
+
+# 需求 var_*_followup -  var_*_baseline
+
+df %>%
+  mutate(
+    across(
+      ends_with("_followup"),
+      ~ . - get(sub("_followup", "_baseline", cur_column()))
+    )
+  )
 ```
 
 ### 用在group_by()中
