@@ -504,7 +504,7 @@ df %>%
 
 ### 用在group_by()中
 
-```{r}
+```{r, eval=FALSE}
 d <- tibble(
   x = c("a", "a", "b", "b"),
   t = c("a", "b", "c", "d"),
@@ -528,8 +528,17 @@ d %>%
 
 
 
+```{r, eval=FALSE}
+penguins %>% 
+  group_by(across(where(is.factor))) %>% 
+  summarise(
+    mean = mean(bill_length_mm)
+  )
+```
 
-```{r}
+
+
+```{r, eval=FALSE}
 sum_group_vars <- function(df, group_vars, sum_vars) {
   df %>% 
     group_by(across({{ group_vars }})) %>% 
@@ -547,10 +556,13 @@ penguins %>%
 
 
 ### 用在 count()函数中
-```{r}
+```{r, eval=FALSE}
 penguins %>% 
   count(across(sex))
 
+
+penguins %>% 
+  count(across(where(is.factor)))
 
 
 count_multiple <- function(df, ...) {
@@ -564,6 +576,28 @@ penguins %>%
    count_multiple(where(is.factor))
 ```
 
+### 用在 arrange()函数中
+
+```{r, eval=FALSE}
+penguins %>% 
+  arrange(across(bill_length_mm))
+
+
+penguins %>% 
+  arrange(across(ends_with("_mm")))
+```
+
+
+
+```{r, eval=FALSE}
+f <- function(.data, order_by) {
+  .data %>%
+    arrange(across({{order_by}}))
+}
+
+penguins %>% 
+  f(sex)
+```
 
 ### .names里也可用函数
 ```{r}
