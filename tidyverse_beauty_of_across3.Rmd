@@ -1,18 +1,20 @@
 # tidyverse中的across()之美3 {#tidyverse-beauty-of-across3}
 
-本章`mutate()`中的`across()`与`map_df()`、`map2_df()`系列的纠缠。
+本章讲讲`mutate()`中的`across()`与`c_acorss()`、`map_df()`、`map2_dfc()`系列的纠缠。
 
-涉及迭代、泛函、返回数据框等概念。
+内容涉及迭代、泛函、返回数据框、数据框并入等概念。
 
 
-```{r beauty-of-across3-1}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
+
+penguins <- palmerpenguins::penguins %>% drop_na()
 ```
 
 
 ## 从一个问题开始
 
-计算每天水分和食物的所占比例， 比如第一天water和food都是10.0，那么各自比例都是50%.
+计算每天水分和食物的所占比例，比如第一天water和food都是10.0，那么各自比例都是50%.
 ```{r beauty-of-across3-2}
 d <- tibble::tribble(
   ~water, ~food,
@@ -47,7 +49,7 @@ d %>%
   )
 ```
 
-## across的方法
+## across()的方法
 
 传统的方法，用到基本的dplyr函数，思路很清晰，但有点周折。下面，我列出几个比较新颖的方法，当然这些方法都来源于强大`across()`函数
 
@@ -128,88 +130,210 @@ d %>%
   mutate(100 * proportions(across(.names = "%{.col}")))
 ```
 
-我个人比较喜欢`方法3`的思维方式。下面讲讲各中缘由。
+上面的方法虽然很多，但基本思路是一样的。
 
 
 ## 纠缠不清的迭代
 
-迭代方向：
+我们先弄清楚迭代方向：
 
 - `rowwise()` 一行一行的处理
 - `across()`  一列一列的处理
-- `rowwise() + across()` 这种组合，双重迭代，(一行一行 + 一列一列)就变成了一个一个的处理
-- `across() + purrr::map_dbl()`， 在`mutate()`中，把`across()`整体当作**数据框**用，因此这里只有`purrr::map_*()`一次迭代
+- `rowwise() + across()` 这种组合，双重迭代，(一行一行 `+` 一列一列)就变成了一个一个的处理
+- `across() + purrr::map_dbl()`这种组合分两种情形： 
+    - `purrr::map_dbl()` 作为`across( .fns = )` 中的函数，即`across(.cols = , .fns = map_dbl() )`。`across()`一列一列的迭代，每一列又传入`purrr::map_dbl()`再次迭代，因此这里是双重迭代
+    - `across()`作为`purrr::map_df(.x = )`的数据，即`purrr::map_df(.x = across(), .f =  )`。因为在`mutate()`中`across()`返回数据框，因此可以把`across()`整体视为**数据框**，然后这个数据框传入`purrr::map_df(.x = )`进行迭代，因此这种情形可以认为只有`purrr::map_*()`一次迭代。
+
+
 
 
 
 
 ```{r}
 # rowwise() + across()
-# rowwise() 行方向后，接着across() 就行方向上的元素一个一个的执行.fns
-# 循环模型：第一层，一行一行的，第二层在每一行里，一个元素到一个元素
+# rowwise() 设定行方向后，接着across() 就行方向上的元素一个一个的执行.fns
+# 循环模式：第一层，一行一行的，第二层在每一行里，一个元素到一个元素
 
 
 penguins %>% 
   group_by(species, year) %>% 
   summarise(flipper_length_mm = list(flipper_length_mm)) %>% 
+  ungroup() %>% 
   pivot_wider(
     names_from = year,
     values_from = flipper_length_mm
   ) %>% 
   rowwise() %>% 
   mutate(
-    across(where(is.list), .fns = max)
+    across(where(is.list), .fns = length)
   )
 ```
 
 
 ```{r}
-# across() + purrr::map_dbl()
-# 不用rowwise()行方向, 直接用across就是一列一列的处理，
-# 此时的一列是vector or list，可以嵌套purrr::map()，对这一列的每个元素，执行.f
+# across(.cols = ,     .fns = purrr::map_dbl()  )
+# 用across()就是一列一列的处理，
+# 此时的一列是vector or list，又可以进入purrr::map_dbl()再次迭代，对这一列的每个元素，执行.f
 # 然后across()到下一列
-# 循环模型：第一层，一列一列，第二层在每一列里，一个元素到一个元素
+# 循环模式：第一层，一列一列，第二层在每一列里，一个元素到一个元素
 
 penguins %>% 
   group_by(species, year) %>% 
   summarise(flipper_length_mm = list(flipper_length_mm)) %>% 
+  ungroup() %>% 
   pivot_wider(
     names_from = year,
     values_from = flipper_length_mm
   ) %>% 
   mutate(
-    across(where(is.list), ~ purrr::map_dbl(.x, max))
+    across(where(is.list), ~ purrr::map_dbl(.x, length))
+  )
+```
+
+```{r}
+# `purrr::map_df(.x = across(),  .f = )`
+# mutate()中的`across()`整体被视为**数据框**，传入purrr::map_df(.x = across(),    .f = )，然后迭代，返回数据框最后并入最初的df
+
+
+penguins %>%
+  select(species, starts_with("bill_")) %>% 
+  head(5) %>% 
+  
+  mutate(
+    map_dfc(
+      .x = across(ends_with("_mm"), .names = '{sub("_mm", "", .col)}'),
+      .f = ~.x^2
+    )
   )
 ```
 
 
+写成分步的形式，可能更好理解
+```{r}
+penguins %>%
+  select(species, starts_with("bill_")) %>% 
+  head(5) %>% 
+  
+  mutate({
+    data <- across(ends_with("_mm"), .names = '{sub("_mm", "", .col)}')
+    out <- map_dfc(data, .f = ~.x^2)
+    out
+  })
+```
+
+再回头看`across()`的常规用法，是否对它有了新的认识？
+```{r}
+penguins %>%
+  select(species, starts_with("bill_")) %>% 
+  head(5) %>% 
+  
+  mutate(
+    across(ends_with("_mm"), .fns = ~.x^2, .names = '{sub("_mm", "", .col)}')
+  )
+```
+
+
+### 案例1
+觉得不过瘾，我们看下面复杂点的例子
 
 ```{r}
-# 原理同上
-
-penguins %>% 
+tt <- penguins %>% 
   group_by(species, year) %>% 
   summarise(
     across(c(bill_length_mm, bill_depth_mm), list) 
   ) %>% 
-  rowwise() %>% 
+  ungroup() 
+tt
+```
+
+```{r}
+tt %>%
   mutate(
-    purrr::map2_dbl(
-      across(bill_length_mm), across(bill_depth_mm), .f = cor)
+    map_dfc(
+      .x = across(ends_with("_mm"), .names = '{sub("_mm", "", .col)}'),
+      .f = ~ map_dbl(.x, length)
+    )
   )
 ```
 
 
-
-
-### 案例1
-
-希望两两`coalesce`，用`across()`写
+分步写法
 
 ```{r}
-# https://github.com/tidyverse/dplyr/issues/6109
-# https://github.com/tidyverse/dplyr/issues/5703
+tt %>%
+  mutate({
+    data <- across(ends_with("_mm"), .names = '{sub("_mm", "", .col)}')
+    out <- map_dfc(data, .f = ~ map_dbl(.x, length))
+    out
+  })
+```
 
+回到常规写法
+```{r}
+tt %>%
+  mutate(
+    across(ends_with("_mm"), .fns = ~ map_dbl(.x, length), .names = '{sub("_mm", "", .col)}')
+  )
+```
+
+### 案例2
+
+更变态的案例
+
+```{r}
+tt %>%
+  mutate(
+    purrr::map2_dfr(
+      .x = across(bill_length_mm, .names = "cor"),
+      .y = across(bill_depth_mm),
+      .f = ~ map2_dbl(.x, .y, cor)
+    )
+  )
+```
+
+
+```{r}
+tt %>%
+  mutate(
+    purrr::map2_dfr(
+      .x = across(bill_length_mm, .names = "cor"),
+      .y = across(bill_depth_mm),
+      .f = ~ map2_dbl(.x, .y, cor)
+    )
+  )
+```
+
+分步写法
+```{r}
+tt %>%
+  mutate({
+    data1 <- across(bill_length_mm, .names = "cor")
+    data2 <- across(bill_depth_mm)
+    out <- purrr::map2_dfc(data1, data2, .f = ~ map2_dbl(.x, .y, cor))
+    out
+  })
+
+```
+
+
+常规方法
+```{r}
+tt %>% 
+  rowwise() %>% 
+  mutate(
+    cor = cor(bill_length_mm, bill_depth_mm)
+  )
+```
+我们这样折腾只是为了展示各种迭代.
+
+
+
+## 习题
+
+### 习题1
+
+对于[数据](https://github.com/tidyverse/dplyr/issues/6109)
+```{r}
 df <- tibble(
   id = 1:10,
   sex = c("m", "m", "m", "f", "f", "f", "m", "f", "f", "m"),
@@ -221,9 +345,9 @@ df <- tibble(
 df
 ```
 
-比如
+希望两两`coalesce`，比如，
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   mutate(
     lds1 = coalesce(lds1.x, lds1.y),
@@ -231,24 +355,28 @@ df %>%
   )
 ```
 
+但要求是用`across()`写。
 
-`across()`能在`mutate()`内部使用，是因为`across()`会返回数据框。换句话说，在`mutate()`中，就把`across()`整体当作**数据框**用
-```{r}
+
+
+解题思路：
+
+- 在`mutate()`中，把`across()`整体当作**数据框**用，比如
+```{r, eval=FALSE}
 df %>%
   mutate(
     across(ends_with(".x"))
   )
-```
 
-```{r}
+
 df %>%
   mutate(
     across(ends_with(".x"), .names = '{sub(".x","",.col)}')
   )
 ```
 
-既然`across()`会返回数据框，那么可以先在`map_dfc()`函数中使用，`map_dfc()`将其转换成一个新的数据框，这个新的数据框最后再返回给`mutate()` 
-```{r}
+- 在`mutate()`中`across()`视为数据框，传递给`map_dfc()`后，`map_dfc()`将其转换成一个新的数据框，这个新的数据框最后并入`df` 
+```{r, eval=FALSE}
 df %>%
   mutate(
     map_dfc(
@@ -259,42 +387,48 @@ df %>%
 ```
 
 
-两个数据框，可以用在`map2_dfc()`函数中
+- 两个`across()`对应两个**数据框**，传递给`map2_dfc()`函数
 ```{r}
 df %>%
   mutate(
-    map2_dfc(
+    map2_dfr(
       .x = across(ends_with(".x"), .names = '{sub(".x","",.col)}'),
       .y = across(ends_with(".y")),
-      .f = coalesce #  Vectors coalesce
+      .f = coalesce               # Vectors coalesce
     )
   )
 ```
 
-这样写，更清晰和优雅。
+- 分步写，更清晰和优雅。迭代过程：数据框df1的第一列和数据框data2的第一列coalesce，然后数据框df1的第二列和数据框df2的第二列coalesce.
 
 ```{r}
 df %>%
   mutate({
-    data1 <- across(ends_with(".x"), .names = '{sub(".x","",.col)}')
-    data2 <- across(ends_with(".y"))
-    out <- purrr::map2_dfc(data1, data2, ~ coalesce(.x, .y))
+    df1 <- across(ends_with(".x"), .names = '{sub(".x","",.col)}')
+    df2 <- across(ends_with(".y"))
+    out <- purrr::map2_dfc(df1, df2, ~ coalesce(.x, .y)) 
     out
   })
 
 ```
 
-数据框data1的第一列 和 数据框data2的第一列，coalesce，然后数据框data1的第二列 和 数据框data2的第二列，coalesce.
 
 
 
-### 案例2
 
-如果符合某个条件，就让指定的列反号。比如，如果x小于4，x和y列就反号。事实上，方法很多，我们只是演示`across()`的某些特征。
+### 习题2
+
+题目：如果符合某个条件，就让指定的列反号。比如，如果x小于4，x和y两列就反号。
+
+事实上，完成这个任务的方法很多，我们只是演示`across()`的某些特征。
 
 ```{r}
 d <- tibble( x = 1:4, y = 1:4)
+d
+```
 
+
+```{r}
 # using data frame returns
 d %>% 
   mutate({
@@ -303,17 +437,20 @@ d %>%
     y[test] <- -y[test]
     data.frame(x = x, y = y)
   })
+```
 
 
+```{r}
 # using across()
 d %>% 
   mutate({
     test <- x < 4
     across(c(x, y), ~ {.x[test] <- -.x[test]; .x })
   })
+```
 
 
-
+```{r}
 # further abstract
 negate_if <- function(condition, cols) {
   across({{ cols }}, ~ {
@@ -332,7 +469,7 @@ d %>%
 # remove the objects
 # ls() %>% stringr::str_flatten(collapse = ", ")
 
-rm(d, scale, rowPercent)
+rm(d, scale, rowPercent, penguins, negate_if, df, tt)
 ```
 
 
