@@ -1,6 +1,6 @@
 # (PART) 建模篇 {-}
 
-# 模拟与抽样 {#tidystats-sampling}
+# 模拟与抽样1 {#tidystats-sampling}
 
 
 ```{r sampling-1, message = FALSE, warning = FALSE}

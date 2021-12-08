@@ -63,8 +63,11 @@ rmd_files: [
 
  # 建模篇
   "tidystats_sampling.Rmd",
+  "tidystats_sampling_permute.Rmd",
+  "tidystats_sampling_bootstrap.Rmd",
   "tidystats_lm.Rmd",
   "tidystats_broom.Rmd",
+  "tidystats_t_test.Rmd",
   "tidystats_aov.Rmd",
   "tidystats_tests_as_linear.Rmd",
   "tidystats_infer.Rmd",
@@ -101,6 +104,7 @@ rmd_files: [
   "eda_career_decision.Rmd",
   "eda_ames_houseprice.Rmd",
   "eda_mammal_species.Rmd",
+  "eda_migration.Rmd",
   "eda_rvest.Rmd",
   "eda_tidygraph.Rmd",
   "eda_tidytext.Rmd",

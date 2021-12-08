@@ -72,9 +72,12 @@ aov(earn ~ sex, data = wages) %>%
 
 
 ```{r tidystats-5, message=FALSE, warning=FALSE}
-library("ggpubr")
+library(ggpubr)
+
 my_data <- ToothGrowth %>%
-  mutate_at(vars(supp, dose), ~ as_factor(.))
+  mutate(
+    across(c(supp, dose), ~ as_factor(.x))
+  )
 
 my_data %>% head()
 ```
@@ -156,6 +159,8 @@ my_data %>%
   group_by(dose) %>%
   t_test(len ~ 1, mu = 0)
 ```
+
+
 ```{r}
 # T-test
 stat.test <- my_data %>% 

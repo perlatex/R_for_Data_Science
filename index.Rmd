@@ -115,9 +115,12 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-tidyeval) 章介绍非标准性评估
    
 - 建模篇 
-   - 第 \@ref(tidystats-sampling) 章介绍模拟与抽样
+   - 第 \@ref(tidystats-sampling) 章介绍模拟与抽样1
+   - 第 \@ref(tidystats-sampling-permute) 章介绍模拟与抽样2
+   - 第 \@ref(tidystats-sampling-bootstrap) 章介绍模拟与抽样3
    - 第 \@ref(tidystats-lm) 章介绍线性模型
    - 第 \@ref(tidystats-broom) 章介绍模型输出结果的规整
+   - 第 \@ref(tidystats-t-test) 章介绍双样本t检验
    - 第 \@ref(tidystats-aov) 章介绍t检验、方差分析和重复测量的方差分析等基础统计检验方法
    - 第 \@ref(tidystats-tests-as-linear) 章介绍统计检验与线性模型的等价性
    - 第 \@ref(tidystats-infer) 章介绍统计推断
@@ -153,6 +156,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-career-decision) 章介绍探索性数据分析-大学生职业决策
    - 第 \@ref(eda-ames-houseprice) 章介绍探索性数据分析-ames房屋价格
    - 第 \@ref(eda-mammal-species) 章介绍探索性数据分析-哺乳动物脑量与体重的关系
+   - 第 \@ref(eda-migration) 章介绍探索性数据分析-移民缺口
    - 第 \@ref(eda-rvest) 章介绍网页爬虫
    - 第 \@ref(eda-tidygraph) 章介绍社会网络分析
    - 第 \@ref(eda-tidytext) 章介绍文本挖掘

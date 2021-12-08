@@ -1,0 +1,227 @@
+# 探索性数据分析-移民缺口 {#eda-migration}
+
+
+## 引言
+
+今天看到一张图，觉得很不错，简单清晰。
+
+```{r, out.width = '90%', echo = FALSE}
+knitr::include_graphics(path = "images/migration.png")
+```
+
+
+数据是公开的，因此不难找到，我是在[这里](https://www.cato.org/blog/where-did-24-million-48-million-missing-immigrants-go)图中获取。
+
+**先观察这张图想表达的意思：**
+
+- 蓝色的是历年移民人口真实数据
+
+- 依据前6个点（2011年到2016年）建立线性模型，并依此预测后5个点（2016到2021年）的情况，从而得到黄色的直线
+
+- 预测情况与实际情况的差，得到缺口总数210万
+
+
+
+## 开始
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(modelr)
+
+df <- tibble::tribble(
+  ~year,   ~num,
+  2011,  795300,
+  2012,  858740,
+  2013,  849730,
+  2014,  945640,
+  2015, 1060000,
+  2016, 1065000,
+  2017,  948390,
+  2018,  719870,
+  2019,  568540,
+  2020,  477030
+) %>%
+  mutate(num = num / 1000000)
+
+df
+```
+
+
+
+### 线性回归模型
+
+依据2011到2016年的数据，建立线性模型
+
+```{r, message=FALSE, warning=FALSE}
+mod <- df %>%
+  filter(year <= 2016) %>%
+  lm(num ~ 1 + year, data = .)
+```
+
+
+### 预测
+
+根据线性模型预测2016年到2020的情况
+
+```{r, message=FALSE, warning=FALSE}
+pred_df <- tibble(
+  year = seq(2016, 2020, by = 1)
+) %>%
+  modelr::add_predictions(model = mod)
+
+pred_df
+```
+
+合并成新的数据框
+```{r}
+combine_df <- df %>%
+  left_join(pred_df, by = "year")
+combine_df
+```
+
+
+
+```{r, eval=FALSE}
+# 一个等价的方法
+df %>%
+  modelr::add_predictions(model = mod) %>%
+  mutate(pred = if_else(year < 2016, NA_real_, pred))
+```
+
+
+### 可视化
+
+- 基本绘图，画折线图和散点图
+```{r}
+combine_df %>%
+  ggplot(aes(x = year, y = num)) +
+  geom_point() +
+  geom_line() +
+  geom_line(aes(y = pred)) +
+  geom_point(aes(y = pred))
+```
+
+
+
+- 调整坐标和配色
+
+```{r}
+mycolor <- c("#3D81E0", "#f4a261")
+
+scales::show_col(mycolor)
+```
+
+
+
+```{r}
+combine_df %>%
+  ggplot(aes(x = year, y = num)) +
+  geom_point(size = 4, fill = "#3D81E0", color = "#3D81E0", shape = 23) +
+  geom_line(size = 2, color = "#3D81E0") +
+  geom_line(aes(y = pred), size = 2, color = "#f4a261") +
+  geom_point(aes(y = pred), size = 4, fill = "#f4a261", color = "#f4a261", shape = 23) +
+  labs(
+    title = "Figure2: Contribution of international migration to population growth",
+    subtitle = "millions per year",
+    caption = "Source: Census Bureau, J.P. Morgan",
+    x = NULL,
+    y = NULL
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1.5),
+    breaks = seq(0, 1.5, by = 0.25),
+    expand = c(0, 0)
+  ) +
+  scale_x_continuous(
+    limits = c(2011, 2021),
+    breaks = seq(2011, 2021, by = 1),
+    expand = c(0.1, 0)
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title.position = 'plot',
+    plot.caption = element_text(hjust = 0)
+  )
+```
+
+
+
+- 添加标注
+
+```{r}
+arrows <- tibble::tribble(
+  ~x1, ~y1, ~x2, ~y2, ~color,
+  2016, 0.54, 2017.5, 0.75, "a",
+  2017, 1.42, 2018.0, 1.25, "b"
+)
+
+
+
+combine_df %>%
+  ggplot(aes(x = year, y = num)) +
+  geom_point(size = 4, fill = "#3D81E0", color = "#3D81E0", shape = 23) +
+  geom_line(size = 2, color = "#3D81E0") +
+  geom_line(aes(y = pred), size = 2, color = "#f4a261") +
+  geom_point(aes(y = pred), size = 4, fill = "#f4a261", color = "#f4a261", shape = 23) +
+  geom_ribbon(
+    aes(ymin = num, ymax = pred),
+    fill = "orange",
+    alpha = 0.2
+  ) +
+  geom_segment(
+    data = arrows,
+    aes(x = x1, y = y1, xend = x2, yend = y2, color = color),
+    arrow = arrow(length = unit(0.15, "inch")), size = 1.5
+  ) +
+  annotate("text",
+    x = c(2017, 2016, 2021), y = c(1.47, 0.5, 0.9),
+    size = 6, face = "bold",
+    label = c("Pre-2017 trend", "Actual", "Shortfall:\n 2.1 million")
+  ) +
+  labs(
+    title = "Figure2: Contribution of international migration to population growth",
+    subtitle = "millions per year",
+    caption = "Source: Census Bureau, J.P. Morgan",
+    x = NULL,
+    y = NULL
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1.5),
+    breaks = seq(0, 1.5, by = 0.25),
+    expand = c(0, 0)
+  ) +
+  scale_x_continuous(
+    limits = c(2011, 2021),
+    breaks = seq(2011, 2021, by = 1),
+    expand = c(0.1, 0)
+  ) +
+  scale_color_manual(
+    values = c(a = "#3D81E0", b = "#f4a261")
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title.position = 'plot',
+    plot.caption = element_text(hjust = 0)
+  )
+```
+
+
+- 保存
+```{r, eval = FALSE}
+ggsave("migration.pdf", width = 8, height = 5)
+```
+
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(arrows, combine_df, mycolor, df, pred_df, mod)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
