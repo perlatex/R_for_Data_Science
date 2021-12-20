@@ -317,6 +317,9 @@ fit <- stan(model_code = stan_program, data = stan_data,
             )
 ```
 
+## 参考
+
+- <https://www.tylervigen.com/spurious-correlations>
 
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
