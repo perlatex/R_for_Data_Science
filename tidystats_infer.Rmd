@@ -294,6 +294,19 @@ null_dist %>%
 knitr::include_graphics("images/fail_to_reject_you.png")
 ```
 
+### using `ggstatsplot::ggbarstats()` 
+```{r}
+library(ggstatsplot)
+
+gss %>% 
+  ggbarstats(
+    x = party,
+    y = NASA
+)
+```
+
+
+
 ## 案例3:原住民中的女学生多？
 
 案例 `quine` 数据集有 146 行 5 列，包含学生的生源、文化、性别和学习成效，具体说明如下

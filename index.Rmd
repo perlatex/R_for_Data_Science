@@ -240,6 +240,7 @@ remotes::install_github("romainfrancois/lay")
 remotes::install_github("kjhealy/covdata")
 devtools::install_github("kbodwin/flair")
 devtools::install_github("seasmith/AlignAssign")
+devtools::install_github("sharlagelfand/ggkeyboard", ref = "main")
 ```
 
 

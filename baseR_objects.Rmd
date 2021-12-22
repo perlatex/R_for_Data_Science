@@ -48,6 +48,13 @@ x <- 5
 - `option` 和 `-`（苹果系统）
 :::
 
+```{r, echo=FALSE}
+library(magrittr)
+library(ggkeyboard)
+
+ggkeyboard(tkl) %>%
+  highlight_keys(c("Alt Left", "_-"))
+```
 
 当键入 `x` 然后回车，就打印出 `x` 的值。当然也可以使用命令`print(x)`，结果一样。
 ```{r}
