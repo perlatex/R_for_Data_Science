@@ -218,7 +218,7 @@ gapminder %>%
 - <https://github.com/rstudio/reticulate/issues/863>
 - <https://rstudio.github.io/reticulate/articles/python_packages.html>
 - <https://github.com/IyarLin/R-advantages-over-python>
-
+- <https://github.com/matloff/R-vs.-Python-for-Data-Science>
 
 
 ```{r Pandas99, echo = F}
