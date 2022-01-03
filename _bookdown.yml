@@ -57,6 +57,7 @@ rmd_files: [
   "tidyverse_beauty_of_across1.Rmd",
   "tidyverse_beauty_of_across2.Rmd",
   "tidyverse_beauty_of_across3.Rmd",
+  "tidyverse_beauty_of_across4.Rmd",
   "tidyverse_NA.Rmd",
   "tidyverse_dot.Rmd",
   "tidyverse_tidyeval.Rmd",

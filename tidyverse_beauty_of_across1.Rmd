@@ -502,104 +502,16 @@ df %>%
   )
 ```
 
-### 用在group_by()中
-
-```{r, eval=FALSE}
-d <- tibble(
-  x = c("a", "a", "b", "b"),
-  t = c("a", "b", "c", "d"),
-  y = c(1, 3, 5, 8)
-)
-d
-
-d %>% 
-  group_by(across(x)) %>% 
-  summarise(
-    meany = mean(y)
-  )
-
-# 等价于下面
-d %>% 
-  group_by(select(d, x)) %>% 
-  summarise(
-    meany = mean(y)
-  )
-```
 
 
 
-```{r, eval=FALSE}
-penguins %>% 
-  group_by(across(where(is.factor))) %>% 
-  summarise(
-    mean = mean(bill_length_mm)
-  )
-```
 
 
 
-```{r, eval=FALSE}
-sum_group_vars <- function(df, group_vars, sum_vars) {
-  df %>% 
-    group_by(across({{ group_vars }})) %>% 
-    summarise(n = n(), 
-              across({{ sum_vars }}, 
-                     list(mean = mean, sd = sd))
-              )
-}
-
-penguins %>% 
-  sum_group_vars(
-    c(species, year), c(bill_length_mm, bill_depth_mm)
-  )
-```
-
-
-### 用在 count()函数中
-```{r, eval=FALSE}
-penguins %>% 
-  count(across(sex))
-
-
-penguins %>% 
-  count(across(where(is.factor)))
-
-
-count_multiple <- function(df, ...) {
-  df %>% 
-    select(...) %>% 
-    names() %>% 
-    map( ~ count(df, across(all_of(.x)), sort = TRUE))
-}
-
-penguins %>% 
-   count_multiple(where(is.factor))
-```
-
-### 用在 arrange()函数中
-
-```{r, eval=FALSE}
-penguins %>% 
-  arrange(across(bill_length_mm))
-
-
-penguins %>% 
-  arrange(across(ends_with("_mm")))
-```
 
 
 
-```{r, eval=FALSE}
-f <- function(.data, order_by) {
-  .data %>%
-    arrange(across({{order_by}}))
-}
-
-penguins %>% 
-  f(sex)
-```
-
-### .names里也可用函数
+### .names参数也可用函数
 ```{r}
 penguins %>% 
   summarise(
@@ -634,7 +546,7 @@ df %>%
   mutate(across(x:z, ~ . / total))
 ```
 
-更神奇的方法，请看第 \@ref(tidyverse-beauty-of-across3) 章。
+更神奇的方法，请看第 \@ref(tidyverse-beauty-of-across4) 章。
 
 
 ### 案例：替换一行中最大的值

@@ -107,9 +107,10 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-dplyr-adv) 章介绍Tidyverse进阶技巧
    - 第 \@ref(tidyverse-styler) 章介绍Tidyverse代码书写规范 
    - 第 \@ref(tidyverse-colwise) 章介绍数据框的列方向和行方向
-   - 第 \@ref(tidyverse-beauty-of-across1) 章介绍Tidyverse中的across()之美
-   - 第 \@ref(tidyverse-beauty-of-across2) 章介绍Tidyverse中的across()之美(续篇)
-   - 第 \@ref(tidyverse-beauty-of-across3) 章介绍Tidyverse中的across()之美(再续)
+   - 第 \@ref(tidyverse-beauty-of-across1) 章介绍Tidyverse中的across()之美1
+   - 第 \@ref(tidyverse-beauty-of-across2) 章介绍Tidyverse中的across()之美2
+   - 第 \@ref(tidyverse-beauty-of-across3) 章介绍Tidyverse中的across()之美3
+   - 第 \@ref(tidyverse-beauty-of-across4) 章介绍Tidyverse中的across()之美4
    - 第 \@ref(tidyverse-NA) 章介绍Tidyverse中的NA
    - 第 \@ref(tidyverse-dot) 章介绍Tidyverse中的dot
    - 第 \@ref(tidyverse-tidyeval) 章介绍非标准性评估
