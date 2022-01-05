@@ -9,7 +9,7 @@ library(palmerpenguins)
 ## 曾经的痛点
 
 dplyr 1.0.0 引入了`across()`函数，让我们再次感受到了dplyr的强大和人性化。
-`across()`函数与`summarise()`和`mutate()`函数配合起来使用，非常方便（参考第 \@ref(beauty-of-across) 章），
+`across()`函数与`summarise()`和`mutate()`函数配合起来使用，非常方便（参考第 \@ref(tidyverse-beauty-of-across1) 章），
 但与`filter()`函数不是很理想，比如我们想**筛选数据框有缺失值的行**
 
 ```{r beauty-of-across2-2}
