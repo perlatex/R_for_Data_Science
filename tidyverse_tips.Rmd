@@ -352,7 +352,7 @@ gapminder %>%
 ```
 
 
-以下两种方法，同样完成上面的工作，具体方法会在第 \@ref(advR) 章介绍
+以下两种方法，同样完成上面的工作，具体方法会在第 \@ref(tidyverse-dplyr-adv) 章介绍
 ```{r tidyverse-tips-34, eval=FALSE}
 gapminder %>%
   group_nest(continent) %>%
@@ -650,7 +650,7 @@ dfb %>% tidyr::separate(school_class,
 
 ## extract()
 
-有时候分隔符搞不定的，可以用正则表达式，讲捕获的每组弄成一列
+有时候分隔符搞不定的，可以用正则表达式，将捕获的每组弄成一列
 ```{r tidyverse-tips-54}
 dfc <- tibble(x = c("1-12week", "1-10wk", "5-12w", "01-05weeks"))
 dfc
@@ -761,7 +761,7 @@ sim_rep %>%
   )
 ```
 
-数值模拟我们会在第 \@ref(sampling) 章专门介绍。
+数值模拟我们会在第 \@ref(tidystats-sampling) 章专门介绍。
 
 
 ## 作业

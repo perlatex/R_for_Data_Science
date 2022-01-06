@@ -87,6 +87,7 @@ rmd_files: [
   "bayesian_lm.Rmd",
   "bayesian_t_test.Rmd",
   "bayesian_glm.Rmd",
+  "bayesian_glm_logistic-binomial.Rmd",
   "bayesian_hierarchical.Rmd",
   "bayesian_mixtures.Rmd",
   "bayesian_categorical.Rmd",

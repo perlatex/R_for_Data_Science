@@ -1,0 +1,97 @@
+# 贝叶斯logistic-binomial模型 {#bayesian-glm-logistic-binomial}
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(rstan)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(bayesplot::theme_default())
+
+```
+
+## 数据模拟
+我们模拟100个选手每人投篮20次，假定命中概率是身高的线性函数，案例来源`chap15.3` of [Regression and Other Stories] (page270). 
+
+```{r}
+n <- 100
+
+data <-
+  tibble(size   = 20,
+         height = rnorm(n, mean = 72, sd = 3)) %>% 
+  mutate(y = rbinom(n, size = size, p = 0.4 + 0.1 * (height - 72) / 3))
+
+head(data)
+```
+
+
+
+## 常规做法
+```{r}
+fit_glm <- glm(
+  cbind(y, 20-y) ~ height, family = binomial(link = "logit"),
+  data = data
+)
+fit_glm
+```
+
+
+## stan 代码
+$$
+\begin{align*}
+y_i & = \text{Binomial}(n_i, p_i) \\
+p_i & =\text{logit}^{-1}(X_i \beta) 
+\end{align*}
+$$
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=0> N;
+  int<lower=0> K;
+  matrix[N, K] X;
+  int<lower=0> y[N];
+  int trials[N];
+}
+parameters {
+  vector[K] beta;
+}
+model {
+  
+  for(i in 1:N) {
+    target += binomial_logit_lpmf(y[i] | trials[i], X[i] * beta);
+  }
+  
+}
+"
+
+
+stan_data <- data %>%
+  tidybayes::compose_data(
+    N      = n,
+    K      = 2,
+    y      = y,
+    trials = size,
+    X      = model.matrix(~ 1 + height)
+  )
+
+fit <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+fit
+```
+
+
+
+```{r, echo = F}
+# remove the objects
+# rm(list=ls())
+rm(data, fit_glm, fit, n)
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
