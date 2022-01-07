@@ -180,7 +180,7 @@ penguins %>%
 ```{r}
 df %>% 
   mutate(
-    pmap_dfr(across(a:c), ~lst(min = min(c(...)), 
+    pmap_dfr(across(b:d), ~lst(min = min(c(...)), 
                                max = max(c(...)), 
                                ratio = min/max
                                )

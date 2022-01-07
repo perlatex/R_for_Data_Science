@@ -167,12 +167,3 @@ kidiq
 请说出数据框中每一列的变量类型
 
 
-```{r readr-10, echo = F}
-# remove the objects
-# rm(list=ls())
-#rm(ar, df, die, dt, fac, list1, m, n, vec, x, y)
-```
-
-```{r readr-11, echo = F, message = F, warning = F, results = "hide"}
-pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
-```
