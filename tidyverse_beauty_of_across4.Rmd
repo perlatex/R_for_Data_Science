@@ -5,11 +5,80 @@
 内容涉及迭代、泛函、返回数据框、**数据框并入**等概念。
 
 
+
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 
 penguins <- palmerpenguins::penguins %>% drop_na()
 ```
+
+
+
+## `mutate()` 数据框并入
+
+在以往的学习中，我们了解到`mutate()`的功能是新增一列，
+
+```{r}
+d <- tibble(
+  x = 3:5
+)
+
+d %>% 
+  mutate(x1 = x*2)
+```
+
+
+
+有时候我在想同时新增多列呢？
+
+
+```{r}
+d %>% 
+  mutate(
+    x1 = x*2,
+    x2 = x^2
+  )
+```
+
+从形式上看，相当于在原来d的基础上**并入**了一个新的数据框。或许`mutate()`和我们认识的不一样， 于是我试试
+```{r}
+t <- tibble(
+  y = 4:6
+)
+
+d %>% 
+  mutate(t)
+```
+
+奥利给。我们再看看，让数据框是以函数的形式返回
+
+
+```{r}
+my_fun <- function(x) {
+  tibble(
+    x1 = x * 2, 
+    x2 = x^2)
+}
+
+d %>%
+  mutate(
+    my_fun(x)
+  )
+```
+
+
+是不是很惊喜。 我们再看看`across()`函数，在`mutate()` 中 `across()` 返回的就是数据框，正好并入原来d，道理是一样的。
+
+```{r}
+d %>%
+  mutate(
+    across(x, list(f1 = ~ .x * 2, f2 = ~ .x^2))
+  )
+```
+
+
+事实上，`across()`的**返回数据框**的特性，结合`mutate()`的**并入数据框**功能，让数据处理如鱼得水、如虎添翼。
+
 
 
 ## 从一个问题开始
