@@ -76,6 +76,7 @@ rmd_files: [
   "tidystats_poisson_regression.Rmd",
   "tidystats_logistic_regression.Rmd",
   "tidystats_ordinal.Rmd",
+  "tidystats_marginaleffects.Rmd",
 
 # tidymodels 篇
   "tidymodels_intro.Rmd",

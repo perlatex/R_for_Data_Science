@@ -41,7 +41,7 @@ knitr::include_graphics("images/github_COVID-19_files.png")
 
 ## 读取数据
 
-假定你已经下载了数据，比如`time_series_covid19_confirmed_global.csv`， 那么我们可以用`readr::read_csv()`函数直接读取, 关于在R语言里文件读取的方法可以参考第 \@ref(readr) 章。
+假定你已经下载了数据，比如`time_series_covid19_confirmed_global.csv`， 那么我们可以用`readr::read_csv()`函数直接读取, 关于在R语言里文件读取的方法可以参考第 \@ref(tidyverse-readr) 章。
 
 
 
@@ -781,3 +781,16 @@ ggplot() +
 
 - 参考 (https://www.ft.com/coronavirus-latest)
 - (https://covid19datahub.io/)
+
+
+```{r, echo = F}
+# remove the objects
+rm(
+  cgroup_cols, d, d_newest, d1,
+  d2, d2_most, d2a, d3,
+  d3_gray, d3_highlight, gray, highlight,
+  highlight_country, longer, p1, p2,
+  p3, tb, world
+)
+```
+
