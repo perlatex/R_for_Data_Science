@@ -482,4 +482,4 @@ penguins %>%
 
 
 
-在第 \@ref(tidyverse-beauty-of-across1) 章到第 \@ref(tidyverse-beauty-of-across3) 章会继续讲王老师的最爱`across()`函数
+在第 \@ref(tidyverse-beauty-of-across1) 章到第 \@ref(tidyverse-beauty-of-across4) 章会继续讲王老师的最爱`across()`函数。

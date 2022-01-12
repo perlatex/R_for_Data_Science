@@ -151,7 +151,7 @@ mtcars data set: R 的内置数据集，记录了32种不同品牌的轿车的�
 
 1、we create a correlation matrix network graph
 
-```{r tidygraph-10}
+```{r tidygraph-10, eval=FALSE}
 library(corrr)
 res.cor <- datasets::mtcars[, c(1, 3:6)] %>% # (1)
   t() %>%
@@ -166,7 +166,7 @@ res.cor
 
 2、Create the correlation network graph:
 
-```{r tidygraph-11}
+```{r tidygraph-11, eval=FALSE}
 set.seed(1)
 cor.graph <- as_tbl_graph(res.cor, directed = FALSE)
 ```
@@ -174,7 +174,7 @@ cor.graph <- as_tbl_graph(res.cor, directed = FALSE)
 
 
 
-```{r tidygraph-12, out.width = '50%', fig.align='center'}
+```{r tidygraph-12, out.width = '50%', fig.align='center', eval=FALSE}
 ggraph(cor.graph) +
   geom_edge_link() +
   geom_node_point() +
@@ -190,7 +190,7 @@ ggraph(cor.graph) +
 
 ### Print out a network object
 
-```{r tidygraph-13}
+```{r tidygraph-13, eval=FALSE}
 cor.graph
 ```
 
@@ -203,7 +203,7 @@ cor.graph
 
 
 
-```{r tidygraph-14}
+```{r tidygraph-14, eval=FALSE}
 cor.graph %>%
   activate(edges) %>%
   arrange(desc(r))
@@ -220,7 +220,7 @@ Note that, to extract the current active data as a tibble, you can use the funct
 
 ###  Car groups info (Number of cylinders)
 
-```{r tidygraph-15}
+```{r tidygraph-15, eval=FALSE}
 # Car groups info
 cars.group <- tibble(
   name = rownames(datasets::mtcars),
@@ -235,7 +235,7 @@ cars.group
 
 ###  Modify the nodes data:
 
-```{r tidygraph-16}
+```{r tidygraph-16, eval=FALSE}
 # Modify the nodes data
 cor.graph <- cor.graph %>%
   activate(nodes) %>%
@@ -248,7 +248,7 @@ cor.graph
 
 
 ###  Modify the edge data.
-```{r tidygraph-17}
+```{r tidygraph-17, eval=FALSE}
 # Modify the edge data.
 cor.graph <- cor.graph %>%
   activate(edges) %>%
@@ -260,7 +260,7 @@ cor.graph
 
 
 ###  Display the final modified graphs object:
-```{r tidygraph-18}
+```{r tidygraph-18, eval=FALSE}
 cor.graph
 ```
 
@@ -269,7 +269,7 @@ cor.graph
 
 
 ###  Visualize the correlation network
-```{r tidygraph-19, message=FALSE, warning=FALSE, out.width='50%'}
+```{r tidygraph-19, message=FALSE, warning=FALSE, out.width='50%', eval=FALSE}
 set.seed(1)
 ggraph(cor.graph) +
   geom_edge_link(aes(width = weight), alpha = 0.2) +
@@ -317,7 +317,7 @@ example:
 - compute nodes centrality
 
 
-```{r tidygraph-21}
+```{r tidygraph-21, eval=FALSE}
 set.seed(123)
 phone.net %>%
   activate(nodes) %>%
@@ -326,7 +326,7 @@ phone.net %>%
 
 
 
-```{r tidygraph-22, message=FALSE, warning=FALSE, out.width='90%'}
+```{r tidygraph-22, message=FALSE, warning=FALSE, out.width='90%', eval=FALSE}
 set.seed(123)
 phone.net %>%
   activate(nodes) %>%
@@ -359,7 +359,7 @@ example:
 - use the correlation network graphs (记录了32种不同品牌的轿车的的11个属性)
 - detect clusters or communities
 
-```{r tidygraph-23}
+```{r tidygraph-23, eval=FALSE}
 set.seed(123)
 cluster_mtcars <- cor.graph %>%
   activate(nodes) %>%
@@ -370,7 +370,7 @@ cluster_mtcars
 
 
 
-```{r tidygraph-24, message=FALSE, warning=FALSE, out.width='90%'}
+```{r tidygraph-24, message=FALSE, warning=FALSE, out.width='90%', eval=FALSE}
 cluster_mtcars %>%
   ggraph(layout = "graphopt") +
   geom_edge_link(width = 1, colour = "lightgray") +
@@ -425,7 +425,7 @@ knitr::include_graphics("images/tbl_graph04.png")
  
 ggraph 沿袭了ggplot2的语法规则，
 
-```{r tidygraph-28, message=FALSE, warning=FALSE}
+```{r tidygraph-28, message=FALSE, warning=FALSE, eval=FALSE}
 cluster_mtcars %>%
   # Layout
   ggraph(layout = "graphopt") +
@@ -467,7 +467,7 @@ cluster_mtcars %>%
 ```{r tidygraph-29, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(cars.group, cluster_mtcars, cor.graph, edge_list, node_list, phone.call2, phone.net, res.cor)
+#rm(cars.group, cluster_mtcars, cor.graph, edge_list, node_list, phone.call2, phone.net, res.cor)
 ```
 
 ```{r tidygraph-30, echo = F, message = F, warning = F, results = "hide"}

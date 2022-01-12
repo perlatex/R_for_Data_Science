@@ -17,7 +17,7 @@ $$
 $$
 \frac{\partial y}{\partial x} = -2x
 $$
-```{r, out.width = '35%', echo = FALSE}
+```{r, out.width = '95%', echo = FALSE}
 knitr::include_graphics("images/partial_derivative.png")
 ```
 
@@ -63,7 +63,7 @@ mod
    
 ```{r}
 mfx <- marginaleffects(mod, type = "response") 
-mfx
+head(mfx)
 ```
 
 `marginaleffects()` 函数对数据框dat的每一行观测给出了边际效应估计，最后输出一个数据框

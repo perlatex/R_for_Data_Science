@@ -129,7 +129,7 @@ performance::check_model(model)
 
 
 ## 统计表格不用愁
-```{r lazyman-gtsummary1, results="asis"}
+```{r lazyman-gtsummary1, results="asis", eval=FALSE}
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
@@ -148,7 +148,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r lazyman-gtsummary2, results="asis"}
+```{r lazyman-gtsummary2, results="asis", eval=FALSE}
 t1 <-
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -355,7 +355,7 @@ vis_dat(airquality)
 ```{r lazyman-27, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(df, fake_raw, ggg, mod1, model, p1, p2, p3, s, scale_color_continuous, scale_color_discrete, scale_color_gradient)
+rm(df, fake_raw, ggg, mod1, model, p1, p2, p3, s)
 ```
 
 ```{r lazyman-28, echo = F, message = F, warning = F, results = "hide"}
