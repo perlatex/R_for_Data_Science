@@ -154,7 +154,7 @@ haha，通过这个等价的线性模型，我们似乎可以窥探到`配对样
 
 ```{r tests-as-linear-14}
 # run paired t-test testing depression from g1 against g2
-model_2_t2 <- t.test(edata$depress1- edata$depress3)
+model_2_t2 <- t.test(edata$depress1 - edata$depress3)
 model_2_t2_tidy <- tidy(model_2_t2) %>% mutate(model = "t.test(x - y")
 model_2_t2
 ```

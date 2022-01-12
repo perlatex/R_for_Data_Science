@@ -309,7 +309,7 @@ x
 temperatures <- c("warm", "hot", "cold")
 ```
 
-要求转换成因子类型向量，并按照温度有高到低排序
+要求转换成因子类型向量，并按照温度从高到低排序
 
 ```{r, eval=FALSE, include=FALSE}
 temp_factors <- factor(temperatures, ordered = TRUE, levels = c("cold", "warm", "hot"))

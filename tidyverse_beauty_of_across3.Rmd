@@ -177,7 +177,63 @@ penguins %>%
 
 ## 用在`purrr::map()`中
 
+我们想求行方向的均值，根据第 \@ref(tidyverse-colwise) 章介绍的技术
+```{r, eval=FALSE}
+tibble(
+  x = 1:3,
+  y = 2:4
+) %>% 
+  rowwise() %>% 
+  mutate(
+    min = mean(c_across())
+  )
+```
+
+根据第 \@ref(tidyverse-purrr-adv) 章介绍函数式编程
+```{r, eval=FALSE}
+tibble(
+  x = 1:3,
+  y = 2:4
+) %>% 
+  pmap_dfr(
+    ~list(z = mean(c(...)))
+  )
+```
+
+事实上，我们还可以这样写，
 ```{r}
+tibble(
+  x = 1:3,
+  y = 2:4
+) %>% 
+  mutate(
+    z = pmap_dbl(across(), lift_vd(mean))
+  )
+```
+
+或者利用`mutate()`数据框并入
+```{r}
+tibble(
+  x = 1:3,
+  y = 2:4
+) %>% 
+  mutate(
+    pmap_dfr(across(), ~list(z = mean(c(...))))
+  ) 
+
+```
+
+
+
+再举一个例，我想求出数据框每一行的多个统计值，也可以用到数据框并入
+```{r}
+df <- tibble(
+  a = letters[1:5],
+  b = 1:5,
+  c = 6:10,
+  d = 11:15
+)
+
 df %>% 
   mutate(
     pmap_dfr(across(b:d), ~lst(min = min(c(...)), 
@@ -190,7 +246,7 @@ df %>%
 
 
 
-再比如，一行中，将最大值出现后的所有数值替换成0
+再比如例子，一行中，将最大值出现后的所有数值替换成0
 
 ```{r}
 df <- tibble(
@@ -223,7 +279,7 @@ df %>% mutate(
 )
 ```
 
-更多案例请看第 \@ref(tidyverse-beauty-of-across4) 章
+更多案例请看第 \@ref(tidyverse-beauty-of-across4) 章。
 
 
 

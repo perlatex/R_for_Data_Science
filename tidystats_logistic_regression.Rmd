@@ -286,7 +286,7 @@ newdata
 
 
 前面讲到`predict()`中`type`参数有若干选项`type = c("link", "response", "terms")`,
-
+可参考第 \@ref(tidystats-marginaleffects) 章
 
 
 - `type = "link"`，预测的是log_odds，实际上就是`coef(model_logit)[1] + gre * coef(model_logit)[2]`

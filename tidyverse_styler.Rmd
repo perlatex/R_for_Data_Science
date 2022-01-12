@@ -251,3 +251,9 @@ knitr::include_graphics("images/styler.png")
 
 - <https://style.tidyverse.org/>
 - <https://evalf21.classes.andrewheiss.com/resource/style/>
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+

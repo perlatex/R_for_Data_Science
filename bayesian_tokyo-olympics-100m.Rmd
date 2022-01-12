@@ -345,3 +345,8 @@ fit2 %>%
 
 - <https://magesblog.com/post/2021-07-29-prediction-for-the-100m-tokyo-olympics/>
 - <https://olympics.com/tokyo-2020/zh/news/marcell-jacobs-crowned-men-s-olympic-100m-champion>
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

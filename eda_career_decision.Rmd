@@ -35,7 +35,7 @@ example %>%
   )
 ```
 
-我们发现，这种写法比较笨，而且容易出错，比如`na_in_psy = sum(is.na(math))` 就写错了。那么有没有`既偷懒又安全`的方法呢？有的。但代价是需要学会`across()`函数，大家可以在Console中输入`?dplyr::across`查看帮助文档，或者看第 \@ref(colwise) 章。
+我们发现，这种写法比较笨，而且容易出错，比如`na_in_psy = sum(is.na(math))` 就写错了。那么有没有`既偷懒又安全`的方法呢？有的。但代价是需要学会`across()`函数，大家可以在Console中输入`?dplyr::across`查看帮助文档，或者看第 \@ref(tidyverse-colwise) 章。
 
 ```{r eda-career-decision-3}
 example %>% 
@@ -266,7 +266,7 @@ t_test_uneq
 
 
 
-当然，也可以用第 \@ref(infer) 章介绍的统计推断的方法
+当然，也可以用第 \@ref(tidystats-infer) 章介绍的统计推断的方法
 
 
 ```{r eda-career-decision-19}
@@ -381,7 +381,7 @@ d %>%
 
 ### 职业探索和决策之间有关联？
 
-可以用第 \@ref(lm) 章线性模型来探索
+可以用第 \@ref(tidystats-lm) 章线性模型来探索
 
 ```{r eda-career-decision-28}
 lm(career_decision_making  ~ career_exploration, data = d)

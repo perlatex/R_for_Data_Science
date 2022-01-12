@@ -3,7 +3,7 @@
 
 ## 案例
 
-还是用第 \@ref(ggplot2-geom) 章的`gapminder`案例
+还是用第 \@ref(tidyverse-ggplot2-geom) 章的`gapminder`案例
 
 ```{r broom-1}
 library(tidyverse)

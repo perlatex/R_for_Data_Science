@@ -294,6 +294,7 @@ function (x, mult = 1)
 ```{r ggplot2-stat-layer-18}
 mean_se(height_df$height)
 ```
+
 数据看上去和我们前面 `stat_summary()` 画的点线图一样。当然为了保险起见，我们还是核对下，这里用到`ggplot2`包中的一个神奇的函数`layer_data()`, 它可以拉取**在图层中使用的数据**，第二个参数是指定拉取哪个图层的数据，这里只有唯一的一个图层，因此指定为1。
 
 ```{r ggplot2-stat-layer-19}

@@ -794,3 +794,7 @@ rm(
 )
 ```
 
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```

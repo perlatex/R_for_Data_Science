@@ -408,7 +408,7 @@ broom::tidy(mod3)
 ```{block lm-34, type="danger"}
 分类变量的线性回归本质上就是方差分析
 ```
-第 \@ref(tidystats) 章专题讨论方差分析
+第 \@ref(tidystats-aov)章专题讨论方差分析
 
 
 ### 因子变量
@@ -647,7 +647,7 @@ $$
 - predict()， 模型建立后，可以用新的数据进行预测，`predict()`要求数据框包含新的预测变量，如果没有提供，那么就使用建模时的预测变量进行预测，这种情况下，得出的结果和`fitted()`就时一回事了。
 
 
-`predict()`函数和`fitted()`函数不同的地方，还在于`predict()`函数往往带有返回何种类型的选项，可以是具体数值，也可以是分类变量。具体会在第 \@ref(tidymodels) 章介绍。
+`predict()`函数和`fitted()`函数不同的地方，还在于`predict()`函数往往带有返回何种类型的选项，可以是具体数值，也可以是分类变量。具体会在第 \@ref(tidymodels-intro) 章介绍。
 
 <!-- <https://stackoverflow.com/questions/12201439/is-there-a-difference-between-the-r-functions-fitted-and-predict> -->
 

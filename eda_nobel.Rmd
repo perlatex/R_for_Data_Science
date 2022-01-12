@@ -338,7 +338,7 @@ nobel_winners %>%
 ```
 
 
-也可以用强大的`group_by() + group_map()`组合，我们会在第 \@ref(advR) 章讲到
+也可以用强大的`group_by() + group_map()`组合，我们会在第 \@ref(tidyverse-dplyr-adv) 章讲到
 ```{r eda-nobel-31, eval=FALSE}
 nobel_winners %>%
   group_by(category) %>%

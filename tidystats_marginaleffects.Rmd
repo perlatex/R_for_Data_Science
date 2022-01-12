@@ -88,3 +88,9 @@ summary(mfx)
 ## 参考
 
 - <https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html>
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
