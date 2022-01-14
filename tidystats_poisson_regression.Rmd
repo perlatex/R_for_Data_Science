@@ -223,6 +223,7 @@ $$
 什么叫最大相似性估计？通俗点讲，给定y的分布以及独立变量(x)的值，那么最有可能的$\beta$系数多是多少？
 
 - step 1  $y$ 服从泊松分布
+
 $$
 \operatorname{Pr}\left(y_{i} | \lambda\right)=\frac{\lambda^{y_{i}} e^{-\lambda}}{y_{i} !}, \quad y=0,1,2, \ldots \quad ; \quad \lambda>0
 $$
