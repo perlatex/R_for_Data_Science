@@ -375,6 +375,31 @@ mtcars %>%
   )
 ```
 
+## 弯曲文本
+弯曲文本，使其匹配多种图形的轨迹。
+```{r}
+library(geomtextpath) # remotes::install_github("AllanCameron/geomtextpath")
+```
+
+```{r}
+iris %>% 
+  ggplot(aes(x = Sepal.Length, colour = Species, label = Species)) +
+  geom_textdensity(size = 6, fontface = 2, hjust = 0.2, vjust = 0.3) +
+  theme(legend.position = "none")
+```
+
+```{r}
+library(palmerpenguins)
+penguins %>% 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(alpha = 0.3) +
+  geom_labelsmooth(aes(label = species), method = "loess", size = 5, linewidth = 1) +
+  scale_colour_manual(values = c("forestgreen", "deepskyblue4", "tomato4")) +
+  theme(legend.position = "none")
+```
+
+更多风格可参见[https://github.com/AllanCameron/geomtextpath](https://github.com/AllanCameron/geomtextpath)
+
 
 ## 函数图
 

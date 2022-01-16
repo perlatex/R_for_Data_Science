@@ -134,6 +134,30 @@ diamonds %>%
 
 - `transition_time(time = )`, 这里的time一般认为是**连续**的值，相比于`transition_states`，没有了`transtion_length`这个选项，是因为`transtion_length`默认为time. 事实上，`transition_time`是`transition_states`的一种特例，但其实也有分组的要求
 
+```{r, out.width = "95%"}
+library(ggplot2)
+library(gganimate)
+library(gapminder)
+
+plot <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, color = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = gapminder::country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(vars(continent)) +
+  labs(title = "Year: {frame_time}", x = "GDP Per capita", y = "life expectancy") +
+  transition_time(year) +
+  ease_aes("linear")
+plot
+# save as a GIF
+# animate(plot, fps = 30, width = 750, height = 750)
+# anim_save("gapminder.gif")
+```
+
+
+
+
+
 ```{r ggplot2-gganimate-10, eval=FALSE}
 p <- gapminder::gapminder %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, size = pop, colour = country)) +
@@ -153,6 +177,8 @@ anim <- p +
   labs(title = "year: {frame_time}")
 anim
 ```
+
+
 
 ### transition_reveal
 - `transition_reveal(along =  )`,  along 这个词可以看出，它是按照某个变量**依次**显示的意思，比如顺着x轴显示

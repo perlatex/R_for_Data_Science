@@ -258,8 +258,9 @@ $$
 ### 插入图片
 
 
-````markdown
-`r ''````{r, out.width='35%', fig.align='left', fig.cap='this is caption'}
+````{verbatim}
+
+```{r out.width = '35%', fig.align='left', fig.cap='this is caption', echo = F}
 knitr::include_graphics("images/R_logo.png")
 ```
 ````
@@ -280,14 +281,12 @@ summary(cars)
 
 ### 表格
 
-<!-- ```{r tables-mtcars,  echo = TRUE} -->
-<!-- knitr::kable(iris[1:5, ], caption = "A caption") -->
-<!-- ``` -->
+````{verbatim}
 
-````md
-```{r tables-mtcars}`r ''`
+```{r tables-mtcars,  echo = F}
 knitr::kable(iris[1:5, ], caption = "A caption")
 ```
+
 ````
 
 
@@ -299,21 +298,27 @@ knitr::kable(iris[1:5, ], caption = "A caption")
 
 
 ### 生成图片
-````md
-```{r}`r ''`
+````{verbatim}
+
+```{r}
 plot(pressure)
 ```
+
 ````
+
 
 
 ```{r out.width = '85%', echo=FALSE}
 plot(pressure)
 ```
 
+
 或者
 
-````md
-```{r, out.width = '85%', fig.showtext = TRUE}`r ''`
+
+````{verbatim}
+
+```{r, out.width = '85%', fig.showtext = TRUE}
 library(tidyverse)
 library(nycflights13)
 library(showtext)
@@ -332,6 +337,7 @@ flights %>%
   geom_smooth(se = FALSE) +
   ggtitle("这是我的标题")
 ```
+
 ````
 
 
@@ -359,6 +365,13 @@ flights %>%
 
 
 
+### 文本内计算
+
+````{verbatim}
+The content can contain inline code like `r pi * 5^2`, too.
+````
+
+The content can contain inline code like `r pi * 5^2`, too.
 
 
 
