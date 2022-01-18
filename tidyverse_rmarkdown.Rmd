@@ -374,7 +374,7 @@ The content can contain inline code like `r pi * 5^2`, too.
 The content can contain inline code like `r pi * 5^2`, too.
 
 
-
+## 案例代码
 ```{r echo=FALSE}
 # pdf document
 xfun::embed_file('./data/my_pdf_document.Rmd')

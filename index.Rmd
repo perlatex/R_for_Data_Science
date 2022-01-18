@@ -75,6 +75,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(baseR-data-structure) 章介绍R语言数据结构
    - 第 \@ref(baseR-operators) 章介绍运算符及向量运算
    - 第 \@ref(baseR-functions) 章介绍R语言中的函数
+   - 第 \@ref(baseR-functions-adv) 章介绍函数的应用
    - 第 \@ref(baseR-subsetting) 章介绍R语言中的子集选取
 
 - tidyverse篇

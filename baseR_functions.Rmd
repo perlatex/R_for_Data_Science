@@ -1,7 +1,6 @@
 # 函数 {#baseR-functions}
 
-R一切都是对象，不是数据就是函数。R 语言的强大还在于丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
-上一节课我们提到向量操作符，体会到了向量化操作的强大，事实上，向量操作符就是一种函数。
+上一节课我们认识了向量操作符，体会到了向量化操作的强大，事实上，向量操作符是一种函数。R 语言的强大就在于它拥有丰富的函数，这里的函数和我们高中数学中的函数 `y = f(x)` 没什么区别。
 
 ## 基础函数
 
@@ -61,9 +60,10 @@ length(x)
 sort(x)
 ```
 
-找出向量元素的唯一值，就是找出**去重后的数据**
+找出向量元素的唯一值，就是给出**去重后**的数据
 ```{r}
-unique(x)
+a <- c("a", "b", "b", "c", "d", "a", "g", "c", "d")
+unique(a)
 ```
 
 给出向量的分位数
@@ -85,6 +85,10 @@ as.character(x)
 ```
 
 判断向量元素是否大于5
+```{r}
+x <- c(2, 7, 8, 9, 3)
+x > 5
+```
 
 ```{r}
 ifelse(x > 5, "big", "small")
@@ -94,227 +98,113 @@ ifelse(x > 5, "big", "small")
 
 用在向量上的函数，可以分为向量化函数(vectorized function)和汇总类函数(summary function)，
 
-```{r, out.width = '70%', fig.align='center', echo = FALSE, fig.cap='这两类函数在 Tidyverse 框架中，应用非常广泛。'}
+```{r, out.width = '65%', fig.align='center', echo = FALSE, fig.cap='这两类函数在 Tidyverse 框架中，应用非常广泛。'}
 knitr::include_graphics("images/vector-function.png")
 ```
 
 当然，也会有例外，比如`unique()`函数，它返回的向量通常不会与输入的向量等长，既不属于向量化函数，也不属于汇总类函数。
 
 
+## 课堂练习
+
+- 向量`x <- c(2, 7, 8, 9, 3)`的平方，加上5
+```{r}
+x <- c(2, 7, 8, 9, 3)
+x^2 + 5
+```
+
+- 向量的元素减去其均值
+```{r}
+x <- c(2, 7, 8, 9, 3)
+x - mean(x)
+```
+
+
+- 向量标准化（向量减去其均值之后，除以标准差）
+```{r}
+x <- c(2, 7, 8, 9, 3)
+(x - mean(x)) / sd(x)
+```
+
+
+- 如果想对更多的向量，也做标准化处理呢？
+
+```{r}
+y <- c(1, 5, 7, 8, 9, 3)
+(y - mean(y)) / sd(y)
+```
+
+
+```{r}
+z <- c(4, 7, 7, 8, 9, 3, 9, 6)
+(z - mean(z)) / sd(z)
+```
+
+
+简单重复比较累，有没有一劳永逸的方法？
+
+
 ## 自定义函数
 
-自己定义函数，需要四个关键部件：
+```{r}
+my_std <- function(x) {
+   (x - mean(x)) / sd(x)
+ }
+```
+
+```{r}
+my_std(x)
+my_std(y)
+my_std(z)
+```
+
+::: {.rmdnote}
+现在`my_std` 是一个糖葫芦**瘦身机器**了，放进一个胖瘦不匀称的糖葫芦，出来一个身材匀称的糖葫芦。
+:::
+
+
 
 ```{r, eval=FALSE}
-myFunction <- function(x, y) {
+my_std <- function(x) {
    ...
 }
 ```
 
 
 - 创建，由`function(...)`创建一个函数
-- 参数，由`(...)` 里指定参数，比如`function(x, y)`中的参数为 `x` 和 `y`
-- 函数主体，一般情况下，在`function(...)`后跟随一对大括号`{ }`，在大括号里声明具体函数功能，在代码最后一行，可以用return返回计算后的值，当然，这个return不是必需的。
-- 函数名，`function() { }` 赋值给新对象，比如这里的`myFunction`
+- 参数，由`(...)` 里指定参数，比如`function(x)`中的参数为 `x` 
+- 函数主体，一般情况下，在`function(...)`后跟随一对大括号`{ }`，在大括号里声明具体函数功能，在代码最后一行，可以用`return`返回计算后的值。当然，如果函数的目的只是返回最后一行代码计算的值，这个`return`可以省略。
+- 函数名，`function() { }` 赋值给新对象，比如这里的`my_std`，相当于给函数取一名字，方便以后使用。
+- 函数调用，现在这个函数名字叫`my_std`，需要用这个函数的时候，就调用它的名字`my_std()`。
 
+```{r, eval=FALSE}
+my_std(x = c(1, 5, 7, 8, 9, 3)) # 或者
+my_std(c(1, 5, 7, 8, 9, 3))     # 或者
 
-
-用一个简单的案例说明。这里我们对输入的向量每个元素计算平方，可以这样写函数
-```{r}
-mysquare <- function(x) {
-   y <- x^2
-   return(y)  
-}
-```
-
-::: {.rmdnote}
-函数相当于一个机器，这个机器有个功能，对输入进来的参数（这里的参数是一个向量）计算平方值，然后报告结果。
-:::
-
-
-
-
-## 函数调用
-
-现在这台机器有个名字`mysquare`，需要用这个机器的时候，就调用它的名字`mysquare()`。
-
-现在让这个机器处理向量 `c(2, 5, 7)`
-
-
-```{r}
-mysquare(c(2, 5, 7))
-```
-
-或者
-```{r}
-input <- c(2, 5, 7)
-mysquare(input)
+input <- c(1, 5, 7, 8, 9, 3)
+my_std(input)
 ```
 
 
 
 
-## 灵活的语法
+### 课堂练习
 
-R语言里面，完成一件事情往往有很多中方法，定义函数也不例外。比如`mysquare`可以好几种写法
+- 根据下面的数学表达式，写出函数
 
-
-方法1：
-```{r}
-mysquare <- function(x) {
-    return(x^2)
-}
-```
-
-
-方法2：
-```{r}
-mysquare <- function(x) { return(x^2) }
-```
-
-
-
-方法3：
-```{r}
-mysquare <- function(x) return(x^2)
-```
-
-
-方法4：
-```{r}
-mysquare <- function(x) {
-    x^2
-}
-```
-
-
-方法5：
-```{r}
-mysquare <- function(x) x^2
-```
-
-
-
-### 案例
-
-- 根据数据标准化的数学表达式，写出**数据标准化**的函数
 $$
-\mathrm{std}(x) = \frac{x_i - \bar{x}}{\mathrm{sd}(x)}  
+\mathrm{rescale}(x) = \frac{x_i- min(x)}{max(x) - min(x)} 
 $$
 
 
-```{r, eval=FALSE, echo = FALSE}
-std <- function(x) {
-  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
-}
-```
-
-
-
- 
-
-## 多个参数
-
-```{r}
-sum_two <- function(num1, num2) {
-  sum  <- num1 + num2
-  return(sum)
+```{r, include=FALSE}
+my_scale <- function(x){
+  (x - min(x)) / (max(x) - min(x))
 }
 
+y <- c(2, 7, 8, 9, 3, 6, 8, 12, 6, 9)
 
-sum_two(num1 = 1, num2 = 2)
-sum_two(12, 9)
-```
-
-
-练习：说说这个函数的意思
-```{r}
-norm_by_y <- function(num1, num2) {
-   result  <- (num1 - num2)/num2
-   return(result)
-}
-```
-
-
-
-## 条件语句
-
-使用 `if-else` 语句
-```{r, eval=FALSE}
-if(condition) {
-   Do something
-} else {
-   Alternative something
-}
-```
-
-
-
-比如，先判断是否为数值，如果是返回它的平方，如果不是数值，就返回提示语句
-
-
-```{r}
-square_if <- function(num) {
-    if (is.numeric(num)) {
-      num^2
-    } else {
-     "Your input is not numeric."
-    }
-}
-
-
-square_if("a")
-square_if(3)
-```
-
-
-
-
-练习：将上面`sum_two()`函数增加数据类型判断语句，让函数更安全。
-```{r, eval=FALSE}
-sum_two("a", "b")
-```
-
-
-多个条件的，就需要`if-else if-else`语句，比如这里判断一个数是正数、负数还是0
-```{r}
-check_number <- function(x) {
-  if (x < 0) {
-    print("Negative number")
-  } else if (x > 0) {
-    print("Positive number")
-  } else {
-    print("Zero")
-  }
-}
-
-
-x <- 0
-check_number(x)
-```
-
-
-## 返回多个结果
-
-如果要返回多个统计结果，可以把结果先放在list或者data.frame中，然后再返回。
-```{r}
-mystat <- function(x){
-   meanval <- mean(x) 
-   sdval <- sd(x)
-   
-   list(sd = sdval, mean = meanval)
-}
-```
-
-或者
-```{r}
-mystat <- function(x){
-   meanval <- mean(x) 
-   sdval <- sd(x)
-   
-   data.frame(  sd = sdval, 
-              mean = meanval)
-}
+my_scale(y)
 ```
 
 
@@ -338,6 +228,12 @@ select(mtcars, mpg)
 
 但是，其它宏包可能也有`select()`函数，比如`MASS`和`skimr`，如果同时加载了`dplyr`，`MASS`和`skimr`三个宏包，在程序中使用`select()`函数，就会造成混淆和报错。这个时候就需要给每个函数指定是来源哪个宏包，具体方法就是在宏包和函数之间添加`::`，比如`dplyr::select()`，`skimr::select()` 或者`MASS::select()`。
 
+
+至此，我们接触到了三类函数
+
+- **内置的函数**
+- **自定义的函数**
+- **宏包的函数**
 
 
 ## 如何获取帮助
@@ -364,7 +260,7 @@ knitr::include_graphics("images/Rhelp.png")
 
 ## 习题
 
-- 根据方差的数学表达式，写出**方差**的计算函数，并与基础函数`var()`的结果对比
+1. 根据方差的数学表达式，写出**方差**的计算函数，并与基础函数`var()`的结果对比
 
 $$
 \mathrm{Var}(x) = \frac{1}{n - 1} \sum_{i=1}^n (x_i - \bar{x}) ^2 
@@ -377,7 +273,6 @@ varfun <- function(x) {
   res <- sum((x - mean(x))^2) / (length(x) - 1)
   return(res)
 }
-
 ```
 
 
@@ -385,7 +280,7 @@ varfun <- function(x) {
 
 
 
-- 自定义函数，它的作用是将输入的身高height(cm)与体重weight(kg)计算之后的BMI结果返回，BMI的计算公式为：
+2. 自定义函数，它的作用是将输入的身高height(cm)与体重weight(kg)计算之后的BMI结果返回，BMI的计算公式为：
 
 $$
 \mathrm{BMI} = \frac{weight(kg)}{height(m)^2}  
@@ -405,7 +300,7 @@ get_bmi <- function(height, weight) {
 get_bmi(175, 65)
 ```
 
-- 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
+3. 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
 
 ```{r, eval=FALSE}
 mean_above_threshod <- function(vector, threshold) {
