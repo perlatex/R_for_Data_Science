@@ -112,6 +112,49 @@ my_tibble %>%
 ```
 
 
+### 选择全部为0的列
+```{r}
+tb <- tibble(
+  x = 1:5,
+  y = 0,
+  z = 5:1,
+  w = 0
+)
+tb
+
+
+
+myfun <- function(x) sum(x) == 0
+tb %>%
+  select(where(myfun))
+
+
+
+# or
+tb %>%
+  select(where(~sum(.x) == 0))
+```
+
+**课堂练习**：剔除全部为NA的列
+```{r}
+df <- tibble(
+  x = c(NA, NA, NA),
+  y = c(2, 3, NA),
+  z = c(NA, 5, NA)
+)
+
+
+df %>%
+  select(where(~ !all(is.na(.x))))
+
+# or
+df %>%
+  filter(
+    if_any(everything(), ~ !is.na(.x))
+  )
+```
+
+
 
 ### 寻找男企鹅
 
@@ -175,6 +218,35 @@ penguins %>%
 penguins %>% 
   slice_max(bill_length_mm)
 ```
+
+
+### separate
+```{r}
+tb <- tibble::tribble(
+  ~day, ~price,
+  1,   "30-45",
+  2,   "40-95",
+  3,   "89-65",
+  4,   "45-63",
+  5,   "52-42"
+)
+
+```
+
+```{r}
+tb1 <- tb %>% 
+  separate(price, into = c("low", "high"), sep = "-")
+tb1
+```
+
+### unite
+```{r}
+tb1 %>% 
+  unite(col = "price", c(low, high), sep = ":")
+```
+
+
+
 
 ### 有关NA的计算
 
@@ -274,7 +346,7 @@ penguins %>%
 penguins %>%
   group_by(species) %>%
   summarise(
-    n = n(),
+    n = n()
   )
 ```
 
