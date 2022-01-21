@@ -40,6 +40,11 @@ knitr::include_graphics("images/culmen_depth.png")
 ## 简单回顾 
 ### 选择"bill_"开始的列
 
+```{r, eval=FALSE}
+penguins %>% select(bill_length_mm, bill_depth_mm)
+```
+
+
 ```{r}
 penguins %>% select(starts_with("bill_"))
 ```
@@ -48,6 +53,11 @@ penguins %>% select(starts_with("bill_"))
 
 ### 选择"_mm"结尾的列
 
+```{r, eval=FALSE}
+penguins %>% select(bill_length_mm, bill_depth_mm, flipper_length_mm)
+```
+
+
 ```{r}
 penguins %>% select(ends_with("_mm"))
 ```
@@ -55,6 +65,11 @@ penguins %>% select(ends_with("_mm"))
 
 
 ### 选择含有"length"的列
+```{r, eval=FALSE}
+penguins %>% select(bill_length_mm, flipper_length_mm)
+```
+
+
 ```{r}
 penguins %>% select(contains("length"))
 ```
@@ -187,8 +202,19 @@ penguins %>% filter(species %in% c("Adelie", "Gentoo"))
 
 ```{r}
 penguins %>%
-  filter(species == "Adelie" &  bill_length_mm > 40 )
+  filter(species == "Adelie" &  bill_length_mm > 40)
+
+penguins %>%
+  filter(species == "Adelie", bill_length_mm > 40)
 ```
+
+
+**课堂练习**，说出以下代码的含义
+```{r, eval=FALSE}
+penguins %>%
+  filter(species == "Adelie", bill_length_mm == max(bill_length_mm) )
+```
+
 
 
 ## 更多应用
@@ -197,6 +223,15 @@ penguins %>%
 
 
 ### 弱水三千，只取一瓢
+```{r}
+penguins %>% 
+  head()
+
+penguins %>% 
+  tail()
+```
+
+
 ```{r}
 penguins %>% 
   slice(1)
@@ -210,11 +245,24 @@ penguins %>%
 ```
 
 
+### 嘴峰长度最大那一行
+
+三种方法
+
+```{r}
+penguins %>%
+  filter(bill_length_mm == max(bill_length_mm) )
+```
+
+
 ```{r}
 penguins %>% 
-  arrange(-bill_length_mm) %>% 
+  arrange(desc(bill_length_mm)) %>% 
   slice(1)
+```
 
+
+```{r}
 penguins %>% 
   slice_max(bill_length_mm)
 ```
@@ -242,7 +290,7 @@ tb1
 ### unite
 ```{r}
 tb1 %>% 
-  unite(col = "price", c(low, high), sep = ":")
+  unite(col = "price", c(low, high), sep = ":", remove = FALSE)
 ```
 
 
@@ -363,10 +411,25 @@ penguins %>% count(species)
 penguins %>% count(sex, sort = TRUE)
 ```
 
+可以统计不同组合出现的次数
+```{r}
+penguins %>% count(island, species)
+```
+
 
 可以在`count()`里构建新变量，并利用这个新变量完成统计。
 比如，统计嘴巴长度大于40的企鹅个数
 
+- 常规做法
+```{r}
+penguins %>%
+  filter(bill_length_mm > 40) %>% 
+  summarise(
+    n = n()
+  )
+```
+
+- `count()`做法
 ```{r}
 penguins %>% count(longer_bill = bill_length_mm > 40)
 ```
@@ -393,7 +456,9 @@ c("foo", 1, TRUE)
 c(1, TRUE, FALSE)
 ```
 
-
+```{r}
+c(TRUE, TRUE, FALSE) %>% sum()
+```
 
 **随堂练习**：补全下面代码，求嘴峰长度大于40mm的占比？
 
@@ -458,7 +523,7 @@ penguins %>%
 ```{r}
 penguins %>%
   summarize(
-     across(ends_with("_mm"), mean)
+    across(ends_with("_mm"), mean)
  )
 ```
 
