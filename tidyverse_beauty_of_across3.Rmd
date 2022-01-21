@@ -115,6 +115,14 @@ df %>%
   )
 ```
 
+## 用在`distinct()`中
+
+```{r}
+penguins %>% 
+  distinct(
+    across(c(island, species))
+  )
+```
 
 
 

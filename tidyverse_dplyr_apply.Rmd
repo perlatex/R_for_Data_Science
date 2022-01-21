@@ -294,6 +294,81 @@ tb1 %>%
 ```
 
 
+### distinct
+
+`distinct()`处理的对象是data.frame；功能是**筛选不重复的row**；返回data.frame
+
+```{r}
+df <- tibble::tribble(
+  ~x, ~y, ~z,
+  1, 1, 1,
+  1, 1, 2,
+  1, 1, 1,
+  2, 1, 2,
+  2, 2, 3,
+  3, 3, 1
+)
+df
+```
+
+
+```{r}
+df %>%
+  distinct()
+```
+
+
+```{r}
+df %>%
+  distinct(x)
+
+
+df %>%
+  distinct(x, y)
+```
+
+
+```{r}
+df %>%
+  distinct(x, y, .keep_all = TRUE) # 只保留最先出现的row
+```
+
+
+```{r, eval=FALSE}
+df %>%
+  distinct(
+    across(c(x, y)),
+    .keep_all = TRUE
+  )
+```
+
+
+```{r}
+df %>%
+  group_by(x) %>%
+  distinct(y, .keep_all = TRUE)
+```
+
+
+`n_distinct()`处理的对象是vector；功能是**统计不同的元素有多少个**；返回一个数值
+
+```{r}
+c(1, 1, 1, 2, 2, 1, 3, 3) %>% n_distinct()
+```
+
+
+```{r}
+df$z %>% n_distinct()
+```
+
+
+```{r}
+df %>%
+  group_by(x) %>%
+  summarise(
+    n = n_distinct(z)
+  )
+```
 
 
 ### 有关NA的计算
