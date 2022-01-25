@@ -408,7 +408,7 @@ df %>% summarise(
 )
 ```
 
-
+`summarise()` 与 `mutate()` 一样是构建数据框，仍然遵循**等号左边是新的列名，等号右边是基于原变量的统计**，
 注意，`mutate()`, `select()`， `rename()` 和 `filter()`是在原数据框的基础上增减, 而`summarise()`返回的是一个新的数据框。
 
 

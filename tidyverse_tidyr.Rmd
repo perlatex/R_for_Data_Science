@@ -109,13 +109,13 @@ flair::decorate("how-to-pivot") %>%
 
 这里`pivot_longer()`函数有三个主要的参数：
 
-- 参数`cols`，表示**哪些列**需要转换
+- 参数`cols`，表示**哪些列**需要转换.
 - 参数`names_to`，表示`cols`选取的这些列的**名字**，构成了新的一列，这里需要取一个名字.
 - 参数`values_to`， 表示`cols`选取的这些列的**值**，构成了新的一列，这里也需要取一个名字.
+- 数据框总的信息量不会丢失
 
 
-
-当然，参数`cols` 的写法可以多种形式的，具体见第 \@ref(colwise) 章`select()`函数.
+当然，参数`cols` 的写法可以多种形式的，具体见第 \@ref(tidyverse-colwise) 章`select()`函数.
 ```{r tidyr-11, eval=FALSE}
 plant_height %>% 
   pivot_longer(

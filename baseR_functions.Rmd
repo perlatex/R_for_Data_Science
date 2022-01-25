@@ -213,6 +213,8 @@ my_scale(y)
 
 ### 安装宏包与使用宏包
 
+安装宏包 `install.packages("dplyr")` 相当于你买了一台电视机，安装一次就够了; 加载 `library("dplyr")`相当于你每次要看电视，就需要插上电、打开电视的动作，运行`library("dplyr")`才能用里面的函数。
+
 ```{r out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/loading_packages.png")
 ```
