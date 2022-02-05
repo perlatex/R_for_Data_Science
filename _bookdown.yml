@@ -32,6 +32,7 @@ rmd_files: [
   "tidyverse_dplyr_apply.Rmd",
   "tidyverse_ggplot2_aes2.Rmd",
   "tidyverse_tidyr.Rmd",
+  "tidyverse_tidyr2.Rmd",
   "tidyverse_stringr.Rmd",
   "tidyverse_forcats.Rmd",
   "tidyverse_tibble.Rmd",
@@ -96,6 +97,7 @@ rmd_files: [
   "bayesian_workflow.Rmd",
   "bayesian_vaccine_effectiveness.Rmd",
   "bayesian_tokyo-olympics-100m.Rmd",
+  "bayesian_GLMM.Rmd",
 
  # 应用篇
   "eda_nobel.Rmd",
