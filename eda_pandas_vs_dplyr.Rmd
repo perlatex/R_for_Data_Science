@@ -5,19 +5,19 @@
 
 ```{r Pandas01, echo=FALSE, eval=FALSE, include=FALSE}
 knitr::opts_chunk$set(
-  engine.path = list(python = "G:\\Anaconda3\\python.exe")
+  engine.path = list(python = "E:\\Anaconda3\\python.exe")
   )
 ```
 
 首先，需要加载这个宏包
 ```{r Pandas02}
 library(reticulate)
-use_python("G:/Anaconda3/python.exe") 
+use_python("E:/Anaconda3/python.exe") 
 #use_condaenv("Anaconda3", required = TRUE)
 #py_config()
 ```
 
-  
+
 ## 加载数据
 
 这是用 Pandas 方法，

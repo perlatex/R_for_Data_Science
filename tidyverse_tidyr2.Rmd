@@ -13,26 +13,27 @@ library(tidyverse)
 ```{r}
 sales <- tibble::tribble(
   ~quarter, ~year, ~sales,
-  "Q1", 2000, 66013,
-  "Q2", NA, 69182,
-  "Q3", NA, 53175,
-  "Q4", NA, 21001,
-  "Q1", 2001, 46036,
-  "Q2", NA, 58842,
-  "Q3", NA, 44568,
-  "Q4", NA, 50197,
-  "Q1", 2002, 39113,
-  "Q2", NA, 41668,
-  "Q3", NA, 30144,
-  "Q4", NA, 52897
-)
+      "Q1",  2000,  66013,
+      "Q2",    NA,  69182,
+      "Q3",    NA,  53175,
+      "Q4",    NA,  21001,
+      "Q1",  2001,  46036,
+      "Q2",    NA,  58842,
+      "Q3",    NA,  44568,
+      "Q4",    NA,  50197,
+      "Q1",  2002,  39113,
+      "Q2",    NA,  41668,
+      "Q3",    NA,  30144,
+      "Q4",    NA,  52897
+  )
+sales
 ```
 
 
 ```{r}
 sales %>% fill(year)
 ```
-
+也可以控制填充的方向
 ```{r}
 sales %>% fill(year, .direction = "up")
 ```
@@ -129,12 +130,12 @@ crossing(df = data.frame(x = 1:2, y = c(2, 1)), z = 1:3)
 `crossing()`可以看作是`expand_grid() + distinct()`， 即`crossing()`在完成交叉组合之后会自动去重，比如
 
 ```{r}
-expand_grid(x = c(1, 1), y = c(1:2))
+expand_grid(x = c(1, 1), y = c(1:2))  # 不考虑去重
 ```
 
 
 ```{r}
-crossing(x = c(1, 1), y = c(1:2))
+crossing(x = c(1, 1), y = c(1:2))    # 考虑去重 
 ```
 
 

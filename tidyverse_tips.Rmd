@@ -829,11 +829,12 @@ df %>%
   mutate(
     new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map(., ~.x[1:4]) # return list-column: a list of vectors
   ) %>%
-  unnest_wider(col = new, 1:4) 
+  unnest_wider(col = new) %>%
+  set_names(c("x", "y", "e1", "e2", "e3", "e4"))
 
 ```
 
-上面`unnest_wider()`利用原来的列名"new"和指定的1:4，构成新列名new11, new22, new33, new44
+<!-- 上面`unnest_wider()`利用原来的列名"new"和指定的1:4，构成新列名new11, new22, new33, new44 -->
  
  
 

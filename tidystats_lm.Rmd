@@ -456,7 +456,7 @@ p1 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict(mod5))) +
-  scale_y_continuous(limits = c(0, 100000))
+  coord_cartesian(ylim = c(0, 100000))
 p1
 ```
 
@@ -472,7 +472,7 @@ lm(earn ~ height + sex + race + ed, data = wages)
 lm(earn ~ . - age, data = wages)
 ```
 
-R 语言很多时候都出现了`.`，不同的场景，含义是不一样的。我会在后面第 \@ref(dot) 章专门讨论这个问题， 这是一个非常重要的问题
+R 语言很多时候都出现了`.`，不同的场景，含义是不一样的。我会在后面第 \@ref(tidyverse-dot) 章专门讨论这个问题， 这是一个非常重要的问题
 
 
 ### 交互项
@@ -506,7 +506,7 @@ p2 <- wages %>%
   ggplot(aes(x = height, y = earn, color = sex)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict(mod6))) +
-  scale_y_continuous(limits = c(0, 100000))
+  coord_cartesian(ylim = c(0, 100000))
 p2
 ```
 

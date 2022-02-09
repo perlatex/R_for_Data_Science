@@ -84,7 +84,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-dplyr) 章介绍数据处理
    - 第 \@ref(tidyverse-dplyr-apply) 章介绍dplyr的应用
    - 第 \@ref(tidyverse-ggplot2-aes) 章介绍数据可视化
-   - 第 \@ref(tidyverse-tidyr) 章介绍数据规整
+   - 第 \@ref(tidyverse-tidyr) 章介绍数据规整1
    - 第 \@ref(tidyverse-tidyr2) 章介绍数据规整2
    - 第 \@ref(tidyverse-stringr) 章介绍字符串处理
    - 第 \@ref(tidyverse-forcats) 章介绍因子类型数据
@@ -149,7 +149,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(bayesian-workflow) 章介绍贝叶斯工作流程
    - 第 \@ref(bayesian-vaccine-effectiveness) 章贝叶斯案例-新冠疫苗有效率的计算  
    - 第 \@ref(bayesian-tokyo-olympics-100m) 章贝叶斯案例-预测奥运会男子100米短跑成绩  
-   - 第 \@ref(bayesian-glmm) 章Logistic multilevel growth model  
+   - 第 \@ref(bayesian-glmm) 章贝叶斯案例Logistic multilevel growth model  
   
 - 应用篇
    - 第 \@ref(eda-nobel) 章介绍探索性数据分析-诺奖获得者  

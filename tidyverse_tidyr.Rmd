@@ -1,4 +1,4 @@
-# 数据规整 {#tidyverse-tidyr}
+# 数据规整1 {#tidyverse-tidyr}
 
 
 ```{r tidyr-1, message = FALSE, warning = FALSE}
