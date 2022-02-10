@@ -122,5 +122,6 @@ rmd_files: [
   "eda_practice.Rmd",
 
   "Appendix.Rmd",
-  "references.Rmd"
+  "reference_answer.Rmd",
+  "reference_books.Rmd"
 ]

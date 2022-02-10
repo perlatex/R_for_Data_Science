@@ -91,9 +91,9 @@ knitr::include_graphics("images/datapaste1.png")
 
 推荐一个[方法](https://github.com/MilesMcBain/datapasta)
 
-1、安装`install.packages("datapasta")`
-2、鼠标选中并复制网页中的表格
-3、在 Rstudio 中的`Addins`找到`datapasta`，并点击`paste as tribble`
+- 安装`install.packages("datapasta")`
+- 鼠标选中并复制网页中的表格
+- 在 Rstudio 中的`Addins`找到`datapasta`，并点击`paste as tribble`
 
 ```{r, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/datapaste2.png")
@@ -326,9 +326,54 @@ p2 <- ggplot(mtcars) +
 
 p3 <- ggplot(mtcars) +
   geom_smooth(aes(disp, qsec))
+```
 
+
+```{r}
+# Side by side
 p1 + p2 + p3
 ```
+
+
+```{r}
+# On top of each other
+p1 / p2 / p3
+```
+
+
+```{r}
+# Grid
+p1 / (p2 + p3)
+```
+
+
+```{r}
+# plot_layout()
+
+p1 + p2 + p3 +
+  plot_layout(
+    nrow = 2,
+    ncol = 2
+  )
+```
+
+
+```{r}
+# layout
+
+layout <- "
+AAAA
+BCCC
+"
+
+p1 + p2 + p3 +
+  plot_layout(
+    design = layout
+  )
+```
+
+
+
 
 ## 缺失值处理
 ```{r lazyman-naniar}

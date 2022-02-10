@@ -1,0 +1,463 @@
+# 参考答案 {#answers}
+
+对于一个任务，R语言有很多种解决办法，因此这里给出的只是参考答案，欢迎大家提供更好的方案。
+
+## 对象
+```{r, eval=FALSE}
+example    <- c(1, 2, 3)  
+example1   <- c(1, 2, 3)  
+example.1  <- c(1, 2, 3)  
+example_1  <- c(1, 2, 3)  
+example-1  <- c(1, 2, 3)  # 无效
+example+1  <- c(1, 2, 3)  # 无效
+.example   <- c(1, 2, 3)  
+.2example  <- c(1, 2, 3)  # 无效
+2example   <- c(1, 2, 3)  # 无效
+_example   <- c(1, 2, 3)  
+```
+
+
+## 向量
+
+- 请说出fun3的结果
+```{r, eval=FALSE}
+c("Have", "fun", "programming", "in", "R")
+```
+
+- 数据类型必须一致是构建向量的基本要求，如果数值型、字符串型和逻辑型写在一起，用`c()`函数构成向量，猜猜会发生什么？
+```{r, eval=FALSE}
+c("1", "USA", "TRUE")
+```
+
+-  形容温度的文字， 要求转换成因子类型向量，并按照温度从高到低排序
+```{r, eval=FALSE}
+temp_factors <- factor(temperatures, ordered = TRUE, levels = c("cold", "warm", "hot"))
+temp_factors
+```
+
+## 数据结构
+
+- 为什么说数据框融合了向量、矩阵和列表的特性？
+
+- 创建一个学生信息的data.frame，包含姓名、性别、年龄，成绩等变量
+
+```{r, eval=FALSE}
+df <- data.frame(
+  name   = c("Alice", "Bob", "Carl", "Dave"),
+  age    = c(23, 34, 23, 25),
+  score  = c(80, 86, 79, 97),
+  sex    = c("male", "female", "female", "male")
+)
+```
+
+
+
+## 运算符与向量化运算
+- 说出向量 a 和 b 的差异在什么地方？
+```{r, eval=FALSE}
+a <- 1:10
+b <- seq(from = 1, to = 10, by = 1)
+identical(a, b)
+```
+
+a 是整数型， b是双精度数值型
+
+```{r, eval=FALSE}
+is.integer(a)
+is.integer(b)
+```
+
+## 函数
+1. 根据方差的数学表达式，写出**方差**的计算函数，并与基础函数`var()`的结果对比
+
+```{r, eval=FALSE}
+varfun <- function(x) {
+  res <- sum((x - mean(x))^2) / (length(x) - 1)
+  return(res)
+}
+```
+
+
+
+2. 自定义函数，它的作用是将输入的身高height(cm)与体重weight(kg)计算之后的BMI结果返回，BMI的计算公式为：
+
+
+```{r, eval=FALSE}
+get_bmi <- function(height, weight) {
+   height_m <- height / 100
+   return(weight / height_m^2)
+}
+
+get_bmi(175, 65)
+```
+
+3. 对于给定的向量 `vector`和阈值`threshold`，求出`vector`中所有大于该阈值的元素的均值
+
+可以参考
+
+```{r, eval=FALSE}
+x <- 1:10
+x[x > 5]
+mean(x[x > 5])
+```
+
+
+```{r, eval=FALSE}
+mean_above_threshod <- function(vector, threshold) {
+  
+  x <- vector[vector > threshold]
+  
+  mean(x, na.rm = TRUE)
+  
+}
+
+mean_above_threshod(c(1:10), threshold = 5)
+```
+
+
+
+## 子集选取
+
+1. 如何获取`matrix(1:9, nrow = 3)`上对角元? 对角元？
+
+```{r, eval=FALSE}
+m <- matrix(1:9, nrow = 3)
+m
+```
+
+
+```{r, eval=FALSE}
+diag(m)
+upper.tri(m, diag = FALSE)
+
+m[upper.tri(m, diag = FALSE)]
+```
+
+2. 对数据框，思考`df["x"]`， `df[["x"]]`， `df$x`三者的区别?
+
+`df["x"]` 返回数据框；`df[["x"]]` 和`df$x`返回向量
+
+
+3. 如果`x`是一个矩阵，请问 `x[] <- 0` 和`x <- 0` 有什么区别？
+
+`x[] <- 0` 让矩阵的矩阵元都0；而`x <- 0` 让x这个对象变成向量，不再是矩阵了
+
+
+4. 不添加参数`na.rm = TRUE`的前提下，用`sum()`计算向量`x`的元素之和
+
+
+```{r, eval=FALSE}
+x <- c(3, 5, NA, 2, NA)
+x_missing <- is.na(x)
+x_missing
+x[x_missing] <- 0
+x
+sum(x)
+```
+
+
+5. 找出`x`向量中的偶数
+```{r, eval=FALSE}
+x <- 1:10
+x[x %% 2 == 0]
+```
+
+## 读取数据
+
+- 说出数据框中每一列的变量类型
+
+```{r, eval=FALSE}
+library(dplyr)
+kidiq <- readr::read_rds("./data/kidiq.RDS")
+kidiq
+
+kidiq %>% 
+  glimpse()
+```
+
+
+## 数据处理
+
+1、总结 dplyr 系列函数的三个特征。
+
+- 函数第一个参数接受数据框
+- 数据框进数据框出
+- 创建新变量的“新旧原则”，等号左边是新的列名，等号右边是基于原变量的统计
+
+
+2、用本章中的数据框`df`运行以下代码，然后理解代码含义。
+
+```{r, eval=FALSE}
+df %>% 
+  filter(score > mean(score))
+```
+
+筛选出成绩高于均值的所有记录
+
+
+3、 统计每位同学成绩高于75分的科目数
+
+```{r eval=FALSE}
+df %>% 
+  group_by(name) %>% 
+  mutate(num_of_bigger_than_75 = sum(score >75))
+```
+
+
+4、运行以下代码，比较差异在什么地方。
+```{r, eval=FALSE}
+df %>%
+  group_by(name) %>%
+  summarise(mean_score = mean(score))
+```
+
+汇总成新的数据框
+
+```{r, eval=FALSE}
+df %>%
+  group_by(name) %>%
+  mutate(mean_score = mean(score))
+```
+
+在原数据框的基础上增加新的一列
+
+5、排序，要求按照score从大往小排，但希望all是最下面一行。
+```{r, eval=FALSE}
+d <-
+  tibble::tribble(
+    ~name, ~score,
+    "a1", 2,
+    "a2", 5,
+    "a3", 3,
+    "a4", 7,
+    "a5", 6,
+    "all", 23
+  )
+
+d %>% 
+  arrange(desc(score)) %>%
+  arrange(name %in% c("all"))
+```
+
+
+## 因子型变量
+
+- 画出的2007年美洲人口寿命的柱状图，要求从高到低排序
+
+```{r eval= FALSE}
+library(gapminder)
+
+gapminder %>%
+  filter( year == 2007, continent == "Americas") %>%
+  mutate( country = fct_reorder(country, lifeExp)) %>%
+  ggplot(aes(lifeExp, country)) +
+  geom_point()
+```
+
+- 这是四个国家人口寿命的变化图
+```{r eval= FALSE}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+- 要求给四个分面排序，按每个国家寿命的中位数
+```{r eval= FALSE}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  mutate(country = fct_reorder(country, lifeExp)) %>% # default: order by median
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+
+
+- 要求给四个分面排序，按每个国家寿命差（最大值减去最小值）
+
+```{r eval= FALSE}
+gapminder %>%
+  filter(country %in% c("Norway", "Portugal", "Spain", "Austria")) %>%
+  mutate(country = fct_reorder(country, lifeExp, function(x) { max(x) - min(x) })) %>%
+  ggplot(aes(year, lifeExp)) + geom_line() +
+  facet_wrap(vars(country), nrow = 1)
+```
+
+
+## 标度
+
+用 ggplot2 重复这张lego图
+
+```{reval=FALSE}
+df <- tibble(
+  color = c("green", "white", "pink", "yellow", "blue", "light green", "orange"),
+  count = c(6, 5, 4, 3, 2, 2, 1)
+)
+df %>%
+  mutate(
+    across(color, as_factor) 
+    ) %>% 
+  ggplot(aes(x = color, y = count, fill =color)) +
+  geom_col() +
+  scale_fill_manual(
+    values = c("#70961c", "white", "#ee5e4f", "#d5c47c", "#008db3", "#a5d395", "#d35800")
+  ) +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(
+      fill = "#d7d3c9",
+      colour = "#d7d3c9",
+      size = 0.5,
+      linetype = "solid"
+    )
+  ) +
+  labs(x = NULL, y = NULL)
+```
+
+
+## 主题风格
+
+让老板满意
+```{r, eval=FALSE}
+library(tidyverse)
+set.seed(12)
+d1 <- data.frame(x = rnorm(50, 10, 2), type = "Island #1")
+d2 <- data.frame(x = rnorm(50, 18, 1.2), type = "Island #2")
+dd <- bind_rows(d1, d2) %>%
+  set_names(c("Height", "Location"))
+head(dd)
+```
+
+
+```{r, eval=FALSE}
+ggplot(data = dd, aes(x = Height, fill = Location)) +
+  geom_histogram(binwidth = 1, color = "white") +
+  scale_fill_manual(values = c("green3", "turquoise3")) +
+  theme_light() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Teacup Giraffe heights", y = "Frequency", fill = NULL) +
+  theme(panel.border = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        legend.position = "top", 
+        legend.justification='left',
+        legend.background = element_rect(color = "white")
+  )
+```
+
+
+## ggplot2之扩展内容
+- 重复这张压平曲线（flatten curve）图
+
+方法1
+```{r, eval=FALSE}
+library(tidyverse)
+high <- rnorm(1e5, mean = 12, sd = 4)
+flat <- rnorm(1e5, mean = 35, sd = 12)
+df <- tibble(
+  dist = c(rep("high", 1e5), rep("flat", 1e5)),
+     x = c(high, flat)
+)
+df %>% 
+	ggplot(aes(x = x, color = dist)) +
+	geom_density() +
+	scale_y_continuous(expand = expansion(mult = c(0, NA))) +
+	scale_color_manual(
+		name = "distribution",
+		values = c("high" = "tomato", "flat" = "dodgerblue"),
+		labels = c("high" = "distribution1", "flat" = "distribution2")
+		) +
+	theme_minimal() +
+	labs(x = "Days since the first case",
+		 title = "Slow Down the Spread of COVID-19",
+		 subtitle = "Practicing Social distancing can slow the spread of disease, which can prevent the overcrowding of hospitals")
+```
+
+方法2
+```{r, eval=FALSE}
+ggplot() +
+  stat_function(fun = dnorm, 
+                args = list(mean = 12, sd = 4), 
+                color = "red"
+                ) +
+  
+  stat_function(fun = dnorm, 
+                args = list(mean = 35, sd = 12),
+                color = "dodgerblue"
+                ) +
+  xlim(-5, 90)
+```
+
+
+## tidyverse中的若干技巧
+
+- 新建一列ratio，当sign为"positive"时，ratio等于 A除以B，当sign为"negative"时，ratio等于 B除以A
+```{r, eval=FALSE}
+tb <- tibble::tribble(
+  ~A, ~B, ~sign,
+  100L, 50L, "positive",
+  50L, 100L, "negative",
+  100L, 50L, "positive",
+  50L, 100L, "negative"
+)
+
+tb %>%
+  mutate(
+    ratio = if_else(sign == "positive",  A / B, B / A)
+  )
+```
+
+
+```{r, eval=FALSE}
+# or
+tb %>%
+  mutate(
+    ratio = case_when(
+      sign == "positive" ~ A / B,
+      TRUE ~ B / A
+    )
+  )
+```
+
+
+- 用`:`分隔y列，并且只要前4个，构成新的数据框
+```{r, eval=FALSE}
+df <- tibble( 
+  x = 1:2,
+  y = c("A1:A2:A3:A4:A5:A6",  "B1:B2:B3:B4:B5:B6")
+  )
+
+df %>% 
+  separate(y, sep = ":", into = c("e1", "e2", "e3", "e4", "e5", "e6"), remove = FALSE) %>%
+  select(1:6)
+```
+
+
+## 模型输出结果的规整
+
+
+```{r,eval=FALSE}
+df <- tibble(
+  x = runif(30, 2, 10),
+  y = -2*x + rnorm(30, 0, 5)
+  )
+
+fitted_lm <- lm(y ~ x, data = df)
+
+
+fitted_lm %>% 
+  broom::augment() %>% 
+  select(x, y, predicted = .fitted, residuals = .resid) %>% 
+  ggplot(aes(x = x, y = y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "gray50") +
+  geom_segment(aes(xend= x, yend = predicted), alpha = 0.2) +
+  geom_point(aes(size = abs(residuals), color = abs(residuals))) +
+  scale_color_continuous(low = "grey", high = "#FFB612", aesthetics = c("fill", "color")) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(color = "gray"),
+        panel.background = element_rect(fill = "#f0f0f0", color = NA),
+        plot.background = element_rect(fill = "#f0f0f0", color = NA),
+        axis.ticks = element_blank(),
+        legend.position = "none"
+        )
+```
+

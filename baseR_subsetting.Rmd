@@ -258,12 +258,12 @@ tb["x"]
 ```{r subsetting-33}
 tb[, "x"]
 ```
-除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)，我们会在第 \@ref(tibble) 章专门讲
+除此以外，`tibble`还有很多优良的[特性](https://tibble.tidyverse.org/)，我们会在第 \@ref(tidyverse-tibble) 章专门讲
 
 
 
 
-## 延伸阅读
+## 作业
 
 1. 如何获取`matrix(1:9, nrow = 3)`上对角元? 对角元？
 

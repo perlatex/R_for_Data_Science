@@ -1,8 +1,68 @@
 # 探索性数据分析-身高体重 {#eda-height}
 
 
-```{r eda-height-1, message = FALSE, warning = FALSE}
+```{r, eval=FALSE, include=FALSE}
+# 数据模拟代码
+
 library(tidyverse)
+
+boy_mu_height       <- 168   
+boy_mu_weight       <- 118    
+sigma_a <-  5     # std dev in intercepts
+sigma_b <-  3     # std dev in slopes
+rho     <-  0.8   # correlation between intercepts and slopes
+
+mu     <- c(boy_mu_height, boy_mu_weight)
+
+sigmas <- c(sigma_a, sigma_b)          # standard deviations
+rho    <- matrix(c(1, rho,             # correlation matrix
+				   rho, 1), nrow = 2)
+
+# now matrix multiply to get covariance matrix
+sigma <- diag(sigmas) %*% rho %*% diag(sigmas)
+
+# how many cafes would you like?
+n_obs <- 1000
+
+set.seed(13)  # used to replicate example
+df_boys <- 
+  MASS::mvrnorm(n_obs, mu, sigma) %>% 
+  data.frame() %>% 
+  set_names("height", "weight") %>% 
+  as_tibble() %>% 
+  mutate(gender = "male")
+
+
+
+girl_mu_height       <- 165   
+girl_mu_weight       <- 110    
+sigma_a <-  5     # std dev in intercepts
+sigma_b <-  4     # std dev in slopes
+rho     <-  0.7   # correlation between intercepts and slopes
+
+mu     <- c(girl_mu_height, girl_mu_weight)
+
+sigmas <- c(sigma_a, sigma_b)          # standard deviations
+rho    <- matrix(c(1, rho,             # correlation matrix
+                   rho, 1), nrow = 2)
+
+# now matrix multiply to get covariance matrix
+sigma <- diag(sigmas) %*% rho %*% diag(sigmas)
+
+# how many cafes would you like?
+n_obs <- 1000
+
+
+df_girls <- 
+  MASS::mvrnorm(n_obs, mu, sigma) %>% 
+  data.frame() %>% 
+  set_names("height", "weight") %>% 
+  as_tibble() %>% 
+  mutate(gender = "female")
+
+
+
+df <- bind_rows(df_boys, df_girls)
 ```
 
 
@@ -10,6 +70,7 @@ library(tidyverse)
 
 这是一份身高和体重的数据集
 ```{r eda-height-2}
+library(tidyverse)
 d <- read_csv("./demo_data/weight-height.csv")
 d
 ```
