@@ -11,7 +11,123 @@ theme_set(bayesplot::theme_default())
 
 ```
 
-## 数据模拟
+
+## 企鹅案例
+
+筛选出物种为"Gentoo"的企鹅，并构建gender变量，male 对应1，female对应0
+
+```{r}
+library(palmerpenguins)
+gentoo <- penguins %>%
+  filter(species == "Gentoo", !is.na(sex)) %>% 
+  mutate(gender = if_else(sex == "male", 1, 0))
+gentoo
+```
+
+### dotplots
+
+借鉴ggdist的[Logit dotplots](https://mjskay.github.io/ggdist/articles/dotsinterval.html)
+的画法，画出dotplot
+
+```{r}
+gentoo %>%
+  ggplot(aes(x = body_mass_g, y = sex, side = ifelse(sex == "male", "bottom", "top"))) +
+  geom_dots(scale = 0.5) +
+  ggtitle(
+    "geom_dots(scale = 0.5)",
+    'aes(side = ifelse(sex == "male", "bottom", "top"))'
+  )
+```
+
+$$
+\begin{align*}
+y_i & = \text{bernoulli}( p_i) \\
+p_i & =\text{logit}^{-1}(X_i \beta) 
+\end{align*}
+$$
+
+### bayesian logit模型
+
+```{r}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] x;
+  int<lower=0,upper=1> y[N];
+  int<lower=0> M;
+  vector[M] new_x;  
+}
+parameters {
+  real alpha;
+  real beta;
+}
+model {
+  // more efficient and arithmetically stable
+  y ~ bernoulli_logit(alpha + beta * x);
+}
+generated quantities {
+  vector[M] y_epred; 
+  vector[M] mu = alpha + beta * new_x;
+
+  for(i in 1:M) {
+    y_epred[i] = inv_logit(mu[i]);
+  }
+   
+}
+"
+
+newdata <- data.frame(
+    body_mass_g = seq(min(gentoo$body_mass_g), max(gentoo$body_mass_g), length.out = 100)
+   ) 
+
+
+stan_data <- list(
+  N = nrow(gentoo),
+  y = gentoo$gender, 
+  x = gentoo$body_mass_g,
+  M = nrow(newdata),
+  new_x = newdata$body_mass_g
+)
+
+m <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+```{r}
+fit <- m %>%
+  tidybayes::gather_draws(y_epred[i]) %>%
+  ggdist::mean_qi(.value)
+fit
+```
+
+
+
+两个图画在一起
+```{r}
+fit %>% 
+  bind_cols(newdata) %>% 
+  ggplot(aes(x = body_mass_g)) +
+  geom_dots(
+    data = gentoo,
+    aes(y = gender, side = ifelse(sex == "male", "bottom", "top")),
+    scale = 0.4
+  ) +
+  geom_lineribbon(
+    aes(y = .value, ymin = .lower, ymax = .upper), 
+    alpha = 1/4, 
+    fill = "#08306b"
+  ) +
+  labs(
+    title = "logit dotplot: stat_dots() with stat_lineribbon()",
+    subtitle = 'aes(side = ifelse(sex == "male", "bottom", "top"))',
+    x = "Body mass (g) of Gentoo penguins",
+    y = "Pr(sex = male)"
+  )
+```
+
+
+## 篮球案例
+
 我们模拟100个选手每人投篮20次，假定命中概率是身高的线性函数，案例来源`chap15.3` of [Regression and Other Stories] (page270). 
 
 ```{r}
@@ -27,7 +143,7 @@ head(data)
 
 
 
-## 常规做法
+### 常规做法
 ```{r}
 fit_glm <- glm(
   cbind(y, 20-y) ~ height, family = binomial(link = "logit"),
@@ -37,7 +153,7 @@ fit_glm
 ```
 
 
-## stan 代码
+### stan 代码
 $$
 \begin{align*}
 y_i & = \text{Binomial}(n_i, p_i) \\
@@ -89,7 +205,7 @@ fit
 ```{r, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(data, fit_glm, fit, n)
+rm(gentoo, fit, m, stan_data, stan_program, data, fit_glm, fit, n)
 ```
 
 ```{r, echo = F, message = F, warning = F, results = "hide"}
