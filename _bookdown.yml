@@ -95,9 +95,11 @@ rmd_files: [
   "bayesian_mixtures.Rmd",
   "bayesian_categorical.Rmd",
   "bayesian_workflow.Rmd",
+  "bayesian_tidybayes.Rmd",
   "bayesian_vaccine_effectiveness.Rmd",
   "bayesian_tokyo-olympics-100m.Rmd",
   "bayesian_GLMM.Rmd",
+
 
  # 应用篇
   "eda_nobel.Rmd",

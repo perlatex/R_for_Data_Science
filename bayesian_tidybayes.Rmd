@@ -1,0 +1,207 @@
+# 抽样数据的规整与可视化 {#bayesian-tidybayes}
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(ggdist)
+library(rstan)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
+在贝叶斯抽样样本量比较大，我们需要规整和可视化，就需要借助一些函数。这里简单介绍[tidybayes](https://github.com/mjskay/tidybayes)宏包和它的姊妹宏包
+[ggdist](https://mjskay.github.io/ggdist/)，更多的技术参数见官方手册。
+
+## 企鹅案例
+
+问题简化，我们只挑选Gentoo类企鹅
+
+```{r}
+library(palmerpenguins)
+
+gentoo <- penguins %>% 
+  drop_na() %>% 
+  filter(species == "Gentoo")
+
+gentoo
+```
+
+
+先看下两个变量的关系
+```{r}
+gentoo %>% 
+  ggplot(aes(x = bill_length_mm, bill_depth_mm)) +
+  geom_point()
+```
+
+
+
+## Stan模型
+
+假设我们建立最简单的线性模型，其中预测因子bill_length_mm，被解释变量是 bill_depth_mm 
+
+$$
+\begin{align}
+y_n &\sim \operatorname{normal}(\mu_n, \,\, \sigma)\\
+\mu_n &= \alpha + \beta x_n 
+\end{align}
+$$
+
+```{r, warning=FALSE, message=FALSE}
+stan_program <- "
+data {
+  int<lower=0> N;
+  vector[N] y;
+  vector[N] x;
+  int<lower=0> M;
+  vector[M] new_x;  
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  y ~ normal(alpha + beta * x, sigma);
+  
+  alpha  ~ normal(0, 10);
+  beta   ~ normal(0, 10);
+  sigma  ~ exponential(1);
+}
+generated quantities {
+  vector[M] y_fit;
+  vector[M] y_rep;
+  for (n in 1:M) {
+    y_fit[n] = alpha + beta * new_x[n];
+    y_rep[n] = normal_rng(alpha + beta * new_x[n], sigma);
+  }
+}
+"
+
+library(modelr)
+newdata <- gentoo %>% 
+  data_grid(
+    bill_length_mm = seq_range(bill_length_mm, 100)
+)
+
+# or
+# newdata <- data.frame(
+#     bill_length_mm = seq(min(gentoo$bill_length_mm), max(gentoo$bill_length_mm), length.out = 100)
+#    ) 
+
+
+stan_data <- list(
+   N = nrow(gentoo),
+   x = gentoo$bill_length_mm, 
+   y = gentoo$bill_depth_mm,
+   M = nrow(newdata),
+   new_x = newdata$bill_length_mm
+  )
+
+fit <- stan(model_code = stan_program, data = stan_data)
+```
+
+
+## 抽样
+```{r}
+draws <- fit %>% 
+  tidybayes::gather_draws(alpha, beta, sigma)
+draws
+```
+
+## 统计汇总
+```{r}
+draws %>% 
+  ggdist::mean_qi(.width = c(0.65, 0.89) )
+```
+
+
+## 可视化
+
+- `geom_slabinterval() / stat_slabinterval()` family
+
+```{r}
+draws %>% 
+  ggplot(aes(x = .value, y = .variable)) + 
+  ggdist::stat_interval()
+```
+
+```{r}
+draws %>% 
+  ggplot(aes(x = .value, y = .variable)) + 
+  ggdist::stat_slab()
+```
+
+
+```{r}
+draws %>% 
+  ggplot(aes(x = .value, y = .variable)) + 
+  ggdist::stat_slabinterval()
+```
+
+
+
+```{r}
+draws %>% 
+  filter(.variable %in% c("beta", "sigma")) %>% 
+  ggplot(aes(x = .value, y = .variable)) + 
+  ggdist::stat_slabinterval()  +
+  facet_grid(~ .variable, labeller = "label_both", scales = "free") 
+```
+
+- `geom_dotsinterval() / stat_dotsinterval()` family
+
+```{r}
+draws %>% 
+  filter(.variable %in% c("beta", "sigma")) %>% 
+  ggplot(aes(x = .value, y = .variable)) + 
+  stat_dotsinterval(
+    quantiles = 200,
+    justification = -0.1,
+    slab_color = "black",
+    slab_fill = "orange",
+    interval_color = "red"
+  ) 
+```
+
+
+- `geom_lineribbon() / stat_lineribbon()` family
+
+```{r}
+fit %>% 
+  tidybayes::gather_draws(y_fit[i]) %>% 
+  ggdist::median_qi(.width = c(0.89)) %>%
+  bind_cols(newdata) %>% 
+  
+  ggplot() + 
+  geom_point(
+    data = gentoo,
+    aes(bill_length_mm, bill_depth_mm)
+  ) +
+  geom_lineribbon(
+    aes(x = bill_length_mm, y = .value, ymin = .lower, ymax = .upper),
+    alpha = 0.3, 
+    fill = "gray50"
+  ) +
+  theme_classic() +
+  scale_fill_brewer(direction = -1)
+```
+
+- 组合
+
+```{r}
+penguins %>%
+  ggplot(aes(y = species, x = bill_length_mm, fill = species)) +
+  stat_slab(aes(thickness = after_stat(pdf*n)), scale = 0.7) +
+  stat_dotsinterval(side = "bottom", scale = 0.7, slab_size = NA) +
+  scale_fill_brewer(palette = "Set2") +
+  ggtitle("Rain cloud plot")
+```
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
