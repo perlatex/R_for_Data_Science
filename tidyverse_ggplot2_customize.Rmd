@@ -687,6 +687,68 @@ ggplot(mpg, aes(x = displ, y = hwy)) +
 ```
 
 
+## "coord_cartesian() 与 scale_x_continuous()"
+
+
+乍一看，这两个操作没有区别
+
+```{r,fig.asp = 0.4, out.width = '95%'}
+p1 <- mtcars %>% 
+  ggplot(aes(disp, wt)) +
+  geom_point() +
+  scale_x_continuous(limits = c(325, 500)) +
+  ggtitle("scale_x_continuous(limits = c(325, 500))")
+
+p2 <- mtcars %>% 
+  ggplot(aes(disp, wt)) +
+  geom_point() +
+  coord_cartesian(xlim = c(325, 500)) +
+  ggtitle("coord_cartesian(xlim = c(325, 500))")
+
+
+p1 + p2
+```
+
+
+
+实际上这两个操作，区别蛮大的
+
+```{r,fig.asp = 0.33, out.width = '100%'}
+p3 <- mtcars %>% 
+  ggplot(aes(disp, wt)) +
+  geom_point() +
+  geom_smooth() +
+  ggtitle("no limits setting") 
+
+p4 <- mtcars %>% 
+  ggplot(aes(disp, wt)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(limits = c(325, 500)) +
+  ggtitle("scale_x_continuous(limits = c(325, 500))")
+
+
+p5 <- mtcars %>% 
+  ggplot(aes(disp, wt)) +
+  geom_point() +
+  geom_smooth() +
+  coord_cartesian(xlim = c(325, 500)) +
+  ggtitle("coord_cartesian(xlim = c(325, 500))")
+
+
+
+p3 + p4 + p5
+```
+
+
+解释：
+
+- `scale_x_continuous(limits = c(325,500))`
+的骚操作，会把limits指定范围之外的点全部弄成NA, 也就说改变了原始数据，那么 `geom_smooth()` 会基于调整之后的数据做平滑曲线。
+
+- `coord_cartesian(xlim = c(325,500))`
+操作，不会改变数据，只是拿了一个放大镜，重点显示`xlim = c(325, 500)`这个范围。
+
 
 
 ## 练习
