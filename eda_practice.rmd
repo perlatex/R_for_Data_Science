@@ -692,6 +692,49 @@ games %>%
   )
 ```
 
+## day18
+
+只让gentoo这个分面，背景色高亮
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(vars(species), ncol = 3)
+```
+
+```{r eval=FALSE, include=FALSE}
+# way 1
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_rect(
+    data = penguins %>% filter(species == "Gentoo"),
+    aes(fill = species),
+    xmin = -Inf, xmax = Inf,
+    ymin = -Inf, ymax = Inf,
+    alpha = 0.05
+  ) +
+  geom_point() +
+  facet_wrap(vars(species), ncol = 3)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# way 2
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_rect(
+    aes(fill = species == "Gentoo"),
+    xmin = -Inf, xmax = Inf,
+    ymin = -Inf, ymax = Inf,
+    alpha = 0.05
+  ) +
+  geom_point() +
+  facet_wrap(vars(species), ncol = 3) +
+  scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "transparent"))
+```
 
 ```{r practice99, echo = F}
 # remove the objects
