@@ -736,6 +736,54 @@ penguins %>%
   scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "transparent"))
 ```
 
+
+
+## day19
+
+用下面的数据，画出柱中柱效果
+```{r}
+tb <- tibble::tribble(
+      ~group,   ~product, ~sale,
+    "Target", "Balender",   80,
+    "Target",      "Fan",   90,
+    "Target",   "Cooler",   70,
+    "Target",       "AC",   95,
+  "Achieved", "Balender",   50,
+  "Achieved",      "Fan",   55,
+  "Achieved",   "Cooler",   60,
+  "Achieved",       "AC",   45
+  )
+
+tb
+```
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images", "replot_bar_in_bar.png"))
+```
+
+```{r eval=FALSE, include=FALSE}
+df <- tb %>% 
+  group_split(group) %>% 
+  map( ~ select(.x, -group)) %>% 
+  reduce(left_join, by = "product") %>% 
+  janitor::clean_names()
+
+  
+df %>% 
+  mutate(product = factor(product, levels = c("Balender", "Fan", "Cooler", "AC"))) %>% 
+  ggplot(aes(x = product)) +
+  geom_col(width = 0.5, aes(y = sale_y), fill = "gray", alpha = 0.8) +
+  geom_text(aes(y = sale_y, label = sale_y), vjust = -1) +
+  geom_col(width = 0.3, aes(y = sale_x), fill = "#175676") +
+  geom_text(aes(y = sale_x, label = sale_x), vjust = -1) +
+  theme_classic()
+```
+
+
+
+
+
+
 ```{r practice99, echo = F}
 # remove the objects
 # rm(list=ls())
