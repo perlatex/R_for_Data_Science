@@ -394,6 +394,22 @@ vis_dat(airquality)
 ```
 
 
+## 让妹纸激发你的热情
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+library(cowplot)
+
+plot <- penguins %>% 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(colour = species), size = 2) +
+  theme_minimal()
+
+
+ggdraw() + 
+  draw_image("./images/mm.jpeg") + 
+  draw_plot(plot)
+```
 
 
 
