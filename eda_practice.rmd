@@ -781,7 +781,25 @@ df %>%
 
 
 
+## day20
 
+修改列名，在m或者f的后面加下划线
+```{r}
+tb <- tibble::tribble(
+  ~id, ~new_ep_m014, ~newrel_f1524, ~new_sp_f65, ~new_ep_m3544,
+   1L,           3L,            2L,          4L,            1L,
+   2L,           4L,            4L,          5L,            2L,
+   3L,           5L,            5L,          6L,            6L,
+   4L,           6L,            6L,          7L,            8L
+  )
+tb
+```
+
+
+```{r eval=FALSE, include=FALSE}
+tb %>% 
+  rename_with(~ str_replace(.x, "([m|f])", "\\1_"))
+```
 
 
 ```{r practice99, echo = F}
