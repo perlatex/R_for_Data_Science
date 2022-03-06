@@ -801,11 +801,44 @@ tb %>%
   rename_with(~ str_replace(.x, "([m|f])", "\\1_"))
 ```
 
+## day21
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+df <- tibble(
+  x = 1:10,
+  y = sample(c("a", "b"), size = 10, replace = TRUE)
+)
+df
+```
+
+说出这里三行代码分别的含义
+```{r, eval=FALSE}
+df %>%
+  summarise(
+    y1 = sum(x),              
+    y2 = sum(y == "a"),       
+    y3 = sum(x[y == "a"])     
+  )
+```
+
+
+```{r eval=FALSE, include=FALSE}
+df %>%
+  summarise(
+    y1 = sum(x),              # x列之和
+    y2 = sum(y == "a"),       # y列中 "a" 出现的个数
+    y3 = sum(x[y == "a"])     # y为 "a" 时对应位置上的x之和
+  )
+```
+
+
 
 ```{r practice99, echo = F}
 # remove the objects
 # rm(list=ls())
-rm(d, data, my_function, text_subtitle, genes, big_list, games)
+rm(d, data, df, my_function, text_subtitle, genes, big_list, games)
 ```
 
 
