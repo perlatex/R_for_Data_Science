@@ -216,14 +216,15 @@ my_scale(y)
 安装宏包 `install.packages("dplyr")` 相当于你买了一台电视机，安装一次就够了; 加载 `library("dplyr")`相当于你每次要看电视，就需要插上电、打开电视的动作，运行`library("dplyr")`才能用里面的函数。
 
 ```{r out.width = '100%', echo = FALSE}
-knitr::include_graphics("images/loading_packages.png")
+#knitr::include_graphics("images/loading_packages.png")
+knitr::include_graphics("images/what-is-install.jpg")
 ```
 
 各种宏包也为我们准备了不同的函数，我们在使用前一般会先加载该宏包，比如后面章节我们会用的`dplyr`宏包中的`select()`函数，它用于选取数据框的某列
 ```{r, eval=FALSE}
 library(dplyr)
 
-select(mtcars, mpg)
+select(starwars, height)
 ```
 
 ### 指定函数的所属宏包

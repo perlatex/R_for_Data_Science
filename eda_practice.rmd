@@ -833,6 +833,47 @@ df %>%
   )
 ```
 
+## day22
+
+看中这个张图<https://www.healthsystemtracker.org/brief/covid-19-leading-cause-of-death-ranking/>，数据也是可以下载的
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images", "replot_cause_of_death_ranking.png"))
+```
+
+```{r eval=FALSE, include=FALSE}
+library(tidyverse)
+library(scales)
+
+df <- read_csv("./demo_data/data-GHV6u.csv")
+
+df <- df %>% 
+  rename(value = `Average Daily Deaths`)
+
+df %>% 
+  ggplot(aes(x = value, y = fct_reorder(Category, value))) +
+  geom_col(aes(fill = Category == "COVID-19")) +
+  geom_text(
+    aes(label = label_number(big.mark = ",")(value),
+        hjust = ifelse(value > 150, 1, -.1), 
+        color = ifelse(value > 150, "white", "black") 
+      ),
+    fontface = "bold"
+  ) +
+  scale_fill_manual(
+    values = c("#1F3669", "#EC25A1")
+  ) +
+  scale_color_identity() +
+  scale_x_continuous(
+    expand = expansion(mult = 0, add = 0)
+  ) +
+  labs(x = NULL, y = NULL, title = "Average Daily Deaths") +
+  theme(
+    panel.background = element_rect(fill = "transparent"),
+    axis.ticks.y =  element_blank(),
+    legend.position = "none"
+  )
+```
 
 
 ```{r practice99, echo = F}
