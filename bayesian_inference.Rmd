@@ -45,7 +45,6 @@ $$
 假定这是收集的200位学生身高和体重数据
 
 ```{r}
-library(tidyverse)
 d <- readr::read_rds(here::here('demo_data', "height_weight.rds")) 
 head(d)
 ```
@@ -86,6 +85,7 @@ d %>%
 把我们的猜测画出来就是这样的，
 
 ```{r, fig.width = 6, fig.height = 2.5}
+library(patchwork)
 p1 <- 
   ggplot(data = tibble(x = seq(from = 100, to = 230, by = .1)), 
        aes(x = x, y = dnorm(x, mean = 168, sd = 20))) +
