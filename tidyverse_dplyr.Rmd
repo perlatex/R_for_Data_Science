@@ -133,7 +133,7 @@ knitr::include_graphics("images/pipe2.png")
 df %>% mutate(extra = reward) 
 ```
 
-是不是很赞。
+是不是很赞^[从R4.1开始，支持 `|>` 作为管道符号，但大家似乎已经习惯与 `%>% `]。
 
 
 ```{r out.width = '50%', echo = FALSE}

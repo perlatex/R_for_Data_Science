@@ -210,7 +210,7 @@ knitr::include_graphics("images/rbook1.png")
 
 有的同学，这样一上来就问：**老师，我的代码怎么运行不出来呢？**或者图省事，干脆手机拍个照片一发。
 
-- 我想说，要想获得快速的帮助，在问问题之前，请先告诉对方三个信息：
+- 要想获得快速的帮助，在问问题之前，请先告诉对方三个信息：
    - 想解决的问题是什么？
    - 代码是什么？
    - 报错信息是什么？
@@ -221,7 +221,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r index-3, eval = FALSE}
 my_packages <- 
-   c("brms", "broom", "broom.mixed", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geoshpere", "gganimate", "ggbeeswarm", "ggeffects", "ggforce", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "margins", "MASS", "modelr", "naniar", "nycflights13", "ordinal", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "readr", "readxl", "remotes", "reprex", "rlang", "rmarkdown", "rstan", "rvest", "scales", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "namer", "ggfx", "equatiomatic")
+   c("brms", "broom", "broom.mixed", "clock", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geomtextpath", "geoshpere", "gganimate", "ggbeeswarm", "ggdist", "ggeffects", "ggforce", "ggfx", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "infer", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "marginaleffects", "margins", "MASS", "modelr", "namer", "naniar", "nycflights13", "ordinal", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "ragg", "readr", "readxl", "remotes", "reprex", "reticulate", "rlang", "rmarkdown", "rnaturalearth", "rstan", "rstatix", "rvest", "scales", "see", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat")
 ```
 
 
@@ -234,7 +234,6 @@ install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = 
 可能用到的开发版本的宏包
 
 ```{r index-5, eval = FALSE}
-#remotes::install_github("datalorax/equatiomatic")
 devtools::install_github("easystats/report")
 devtools::install_github("kassambara/navdata")
 devtools::install_github('cttobin/ggthemr')
