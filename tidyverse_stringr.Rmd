@@ -877,6 +877,14 @@ d %>%
 - https://github.com/daranzolin/inferregex
 - https://github.com/VerbalExpressions/RVerbalExpressions
 
+## 作业
+
+找出所有单词中，元音重复两次的单词，比如`good`, `see`
+```{r, eval = FALSE}
+library(tidyverse)
+library(words)      # install.packages("word")
+```
+
 
 ```{r stringr-87}
 library(inferregex) # remotes::install_github("daranzolin/inferregex")

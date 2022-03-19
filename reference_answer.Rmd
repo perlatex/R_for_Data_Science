@@ -239,6 +239,19 @@ d %>%
   arrange(name %in% c("all"))
 ```
 
+## 正则表达式
+
+找出所有单词中，元音重复两次的单词，比如`good`, `see`
+```{r, eval=FALSE}
+library(tidyverse)
+library(words)      # install.packages("word")
+words %>% 
+  as_tibble() %>% 
+  filter(
+    str_detect(word,  "([aeiou])\\1")
+  )
+```
+
 
 ## 因子型变量
 

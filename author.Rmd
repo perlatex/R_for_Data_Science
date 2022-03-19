@@ -1,3 +1,3 @@
 # 作者简介 {#author .unnumbered}
 
-王敏杰，爱好数据科学，喜欢用R, tidyverse, tidymodels和Stan统计编程，联系方式 wangmj@sicnu.edu.cn
+王敏杰，物理学博士，对R, Tidyverse, Tidymodels和Stan统计编程充满热情，长期致力于数据科学的应用与推广，为多个学院开设相关课程，联系方式 wangmj@sicnu.edu.cn
