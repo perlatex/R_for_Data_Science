@@ -875,6 +875,81 @@ df %>%
   )
 ```
 
+## day23
+
+问题，这两张图一样吗？
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+library(dplyr)
+library(ggplot2)
+
+df <- data.frame(
+  x = rnorm(n = 2 * 500),
+  group = rep(c("1", "2"), each = 500)
+)
+
+ggplot(df) +
+  geom_line(
+    mapping = aes(x = x, group = group),
+    stat = "density",
+    alpha = 0.5
+  )
+
+ggplot(df) +
+  stat_density(
+    mapping = aes(x = x, group = group),
+    geom = "line",
+    alpha = 0.5
+  )
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# 第一张图
+
+ggplot(df) +
+  geom_line(
+    mapping = aes(x = x, group = group),
+    stat = "density",
+    alpha = 0.5
+  )
+
+# 等价于
+df %>%
+  ggplot(aes(x = x, group = group)) +
+  layer(
+    stat = "density",
+    geom = "line", 
+    params = list(na.rm = FALSE),
+    position = "identity"
+  )
+
+
+
+
+
+# 第二张图
+ggplot(df) +
+  stat_density(
+    mapping = aes(x = x, group = group),
+    geom = "line",
+    alpha = 0.5
+  )
+
+# 等价于
+df %>%
+  ggplot(aes(x = x, group = group)) +
+  layer(
+    stat = "density",
+    geom = "line", 
+    params = list(na.rm = FALSE),
+    position = "stack"            # 一个人骑在另一个人身上的感觉
+  )
+
+```
+
+
+
 
 ```{r practice99, echo = F}
 # remove the objects
