@@ -948,7 +948,18 @@ df %>%
 
 ```
 
+## day24
 
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+1 == "1"
+```
+
+结果会是什么？
+
+1. TRUE 
+2. FALSE 
+3. Error 
+4. NULL
 
 
 ```{r practice99, echo = F}
