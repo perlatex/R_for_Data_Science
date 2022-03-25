@@ -961,6 +961,11 @@ df %>%
 3. Error 
 4. NULL
 
+```{r, eval=FALSE, include=FALSE}
+# 左边的 1 被转换成 "1"， 变成了"1"  == "1"
+# 所以结果是 TRUE
+```
+
 
 ```{r practice99, echo = F}
 # remove the objects

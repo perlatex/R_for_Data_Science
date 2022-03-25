@@ -348,6 +348,38 @@ str_view(ft, "(.)(.)\\2\\1", match = TRUE)
 
 是不是很神奇？
 
+### 大小写敏感
+
+希望找出线上平台是google和meet的记录，显然Google和google是一个意思，都应该被筛选出
+```{r}
+df <- tibble::tribble(
+  ~tch_id,  ~online_platform,
+      105,          "Google",
+      106,            "meet",
+      107,            "Zoom",
+      108,            "zoom",
+      109,     "Google Meet",
+      112, "Microsoft Teams",
+      113,                NA
+  )
+df
+```
+
+方法1，使用`stringr::regex()`
+```{r}
+df %>%
+   filter(
+      str_detect(online_platform, regex("google|meet", ignore_case = TRUE))
+   )
+```
+
+方法2，使用`(?i)`
+```{r}
+df %>%
+   filter(
+      str_detect(online_platform, "(?i)google|meet")
+   )
+```
 
 
 ## 解决实际问题
