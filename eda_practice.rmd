@@ -966,6 +966,46 @@ df %>%
 # 所以结果是 TRUE
 ```
 
+## day25
+
+如何让连续在一起的类别，分为一组。比如这里的x变量，分为4组
+
+```{r}
+df <- tibble::tribble(
+  ~x,   ~y,
+  "a",   2,
+  "a",   3,
+  "b",   4,
+  "b",   5,
+  "a",   1,
+  "a",   3,
+  "a",   2,
+  "b",   3
+  )
+
+df
+```
+
+
+
+```{r eval=FALSE, include=FALSE}
+# 方法1
+df %>% 
+  mutate(
+    g = cumsum(c(0, x[1:(length(x) - 1)] != x[2:length(x)]))
+  )
+
+
+# 方法2
+df$x %>% rle()
+
+df %>% 
+  mutate(
+    g = rep(  1:length(rle(x)$value), times = rle(x)$lengths   )
+  )
+```
+
+
 
 ```{r practice99, echo = F}
 # remove the objects
