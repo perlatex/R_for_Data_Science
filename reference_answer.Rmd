@@ -241,7 +241,7 @@ d %>%
 
 ## 正则表达式
 
-找出所有单词中，元音重复两次的单词，比如`good`, `see`
+- 找出所有单词中，元音重复两次的单词，比如`good`, `see`
 ```{r, eval=FALSE}
 library(tidyverse)
 library(words)      # install.packages("word")
@@ -252,6 +252,53 @@ words %>%
   )
 ```
 
+
+- 检查每行是否包含1，这里指的是单独的1，不包括11, 10这种。
+```{r}
+dat <- data.frame(
+  teachcert = c("", "1", "1,11", "1,11,8", "1,3", "10,2,6", "2", "2,1"), 
+  n = rnorm(8)
+  )
+dat
+```
+
+
+```{r}
+# way 1
+dat %>% 
+  mutate(elem_cert = 
+     if_else(str_detect(teachcert, "\\b1\\b"), 1, 0)
+  )
+
+
+# way 2
+dat %>% 
+  mutate(elem_cert = 
+      if_else(str_detect(teachcert, "(^|,)1(,|$)"), 1, 0)
+  )
+
+# way 3
+dat %>% 
+  mutate(elem_cert = 
+      if_else(str_detect(teachcert, "^1,|,1,|,1$|^1$"), 1, 0)
+  )
+
+# way 4
+dat %>% 
+  mutate(elem_cert = 
+      as.numeric(str_detect(teachcert, "^1,|,1,|,1$|^1$"))
+  )
+
+
+
+# way 5 最骚
+dat %>% 
+  mutate(teachcert_lgl = map_lgl(str_split(teachcert, ","), ~ "1" %in% .x))
+
+
+dat %>% 
+  mutate(elem_cert = as.numeric(map_lgl(str_split(teachcert, ","), ~ "1" %in% .x)))
+```
 
 ## 因子型变量
 

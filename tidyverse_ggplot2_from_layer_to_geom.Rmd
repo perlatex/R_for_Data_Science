@@ -740,7 +740,7 @@ penguins %>%
 
 ## stat_sum() 
 
-统计落在x(连续), y(连续)位置上，点的个数
+统计落在x(离散或者连续), y(离散或者连续)位置上，点的个数
 
 
 `Computed variables`
@@ -2374,7 +2374,95 @@ penguins %>%
 
 
 
+## 课后作业
 
+- 写成对应的`stat_***()` 版本和`geom_***()`版本
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+
+penguins <- penguins %>% drop_na()
+
+ggplot() +
+  layer(
+      data       = penguins,
+      mapping    = aes(x = species, y = bill_length_mm, color = fct_rev(sex)),
+      stat       = "summary", 
+      params     = list(fun = "mean"),
+      geom       = "point",
+      position   = position_dodge(width = 0.5)
+  )
+```
+
+```{r, include=FALSE, eval=FALSE}
+penguins %>% 
+  ggplot(aes(x = species, y = bill_length_mm, color = fct_rev(sex))) +
+  stat_summary(
+    geom       = "point",
+    fun        = mean,
+    position   = position_dodge(width = 0.5)
+  )
+
+
+penguins %>% 
+  ggplot(aes(x = species, y = bill_length_mm, color = fct_rev(sex))) +
+  geom_point(
+    stat       = "summary",
+    fun        = mean,
+    position   = position_dodge(width = 0.5)
+  )
+
+```
+
+
+- 写出对应的`stat_***()` 版本和`layer()`版本
+```{r}
+penguins %>% 
+  ggplot(aes(species, island)) +
+  geom_count(aes(size = after_stat(n)), show.legend = FALSE) 
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+penguins %>% 
+  ggplot(aes(species, island)) +
+  stat_sum(
+    mapping = aes(size = after_stat(n)), 
+    geom = "point",
+    position = "identity",
+    show.legend = FALSE
+  ) 
+
+ggplot() +
+  layer(
+    data        = penguins,
+    mapping     = aes(x = species, y = island, size = after_stat(n)), 
+    stat        = "sum",
+    geom        = "point",
+    position    = "identity",
+    show.legend = FALSE
+  ) 
+```
+
+- 上题用layer写，但要求不用`stat = "sum"`, 而用`stat = "summary"`
+
+```{r, include=FALSE, eval=FALSE}
+my_count <- function(x) {
+  tibble( y = x ) %>% 
+    count(y)
+}
+
+ggplot() +
+  layer(
+    data        = penguins,
+    mapping     = aes(x = species, y = island, size = after_stat(n)), 
+    stat        = "summary",
+    params      = list(fun.data = my_count),
+    geom        = "point",
+    position    = "identity",
+    show.legend = FALSE
+  ) 
+```
 
 
 

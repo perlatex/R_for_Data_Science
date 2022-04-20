@@ -46,7 +46,7 @@ rmd_files: [
   "tidyverse_ggplot2_stat_layer.Rmd",
   "tidyverse_ggplot2_from_layer_to_geom.Rmd",
   "tidyverse_ggplot2_colors.Rmd",
-  "tidyverse_ggplot2_override_aes.Rmd",
+  "tidyverse_ggplot2_guides_override_aes.Rmd",
   "tidyverse_ggplot2_aes_eval.Rmd",
   "tidyverse_ggplot2_academic.Rmd",
   "tidyverse_ggplot2_gganimate.Rmd",

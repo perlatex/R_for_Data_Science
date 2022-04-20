@@ -305,6 +305,24 @@ dat %>%
 ```
 
 
+## 课后作业
+
+- 修改下图的图例，希望图例的点透明度为1和形状为方形的点
+
+```{r}
+mtcars %>% 
+  ggplot(aes(vs, am, color = factor(cyl), fill = factor(cyl)) ) +
+  geom_jitter(alpha = 1/5, size = 2, shape = 21) 
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+mtcars %>% 
+  ggplot(aes(vs, am, color = factor(cyl), fill = factor(cyl)) ) +
+  geom_jitter(alpha = 1/5, size = 2, shape = 21) +
+  guides(fill = guide_legend(override.aes = list(alpha = 1, shape = 22)))
+```
+
 
 
 ## 参考

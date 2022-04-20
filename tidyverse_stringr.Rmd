@@ -484,7 +484,15 @@ str_view_all("abababa", "aba")
 ```
 
 
+这里插播一个正则表达式"\b"，它用于匹配单词字符与非单词字符（比如逗号、空格、句点）之间的位置。比如这里返回字符串中`s`的个数
+```{r}
+c("she sells seashells") %>% str_count(pattern = "s")
+```
 
+这里的`s`后面必须跟一个非字符的符号，比如逗号、空格、句点等，因此是2个
+```{r}
+c("she sells seashells") %>% str_count(pattern = "s\\b")
+```
 
 
 ### 提取匹配的内容
@@ -905,17 +913,10 @@ d %>%
 
 ## 一些有趣的正则表达式的宏包
 
+- 我在这里学正则表达式 https://regexr.com/
 - https://github.com/gadenbuie/regexplain
 - https://github.com/daranzolin/inferregex
 - https://github.com/VerbalExpressions/RVerbalExpressions
-
-## 作业
-
-找出所有单词中，元音重复两次的单词，比如`good`, `see`
-```{r, eval = FALSE}
-library(tidyverse)
-library(words)      # install.packages("word")
-```
 
 
 ```{r stringr-87}
@@ -924,6 +925,24 @@ s <- "abcd-9999-ab9"
 infer_regex(s)$regex
 ```
 
+
+## 作业
+
+- 找出所有单词中，元音重复两次的单词，比如`good`, `see`
+```{r, eval = FALSE}
+library(tidyverse)
+library(words)      # install.packages("word")
+```
+
+
+- 检查每行是否包含1，这里指的是单独的1，不包括11, 10这种。
+```{r}
+dat <- data.frame(
+  teachcert = c("", "1", "1,11", "1,11,8", "1,3", "10,2,6", "2", "2,1"), 
+  n = rnorm(8)
+  )
+dat
+```
 
 
 
