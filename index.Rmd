@@ -228,7 +228,7 @@ knitr::include_graphics("images/rbook1.png")
 
 ```{r index-3, eval = FALSE}
 my_packages <- 
-   c("brms", "broom", "broom.mixed", "clock", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geomtextpath", "geoshpere", "gganimate", "ggbeeswarm", "ggdist", "ggeffects", "ggforce", "ggfx", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "infer", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "marginaleffects", "margins", "MASS", "modelr", "namer", "naniar", "nycflights13", "ordinal", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "ragg", "readr", "readxl", "remotes", "reprex", "reticulate", "rlang", "rmarkdown", "rnaturalearth", "rstan", "rstatix", "rvest", "scales", "see", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat")
+   c("brms", "broom", "broom.mixed", "clock", "colorspace", "corrr", "countrycode", "cowplot", "cranlogs", "datapasta", "datasauRus", "devtools", "dplyr", "equatiomatic", "forcats", "gapminder", "geomtextpath", "geoshpere", "gganimate", "ggbeeswarm", "ggdist", "ggeffects", "ggforce", "ggfx", "gghighlight", "ggimage", "ggplot2", "ggpubr", "ggraph", "ggrepel", "ggridges", "ggstatsplot", "ggtext", "ggthemes", "gt", "gtsummary", "haven", "here", "infer", "janitor", "knitr", "latex2exp", "lme4", "lubridate", "maps", "marginaleffects", "margins", "MASS", "modelr", "namer", "naniar", "nycflights13", "ordinal", "pacman", "paletteer", "palmerpenguins", "patchwork", "performance", "purrr", "ragg", "readr", "readxl", "remotes", "reprex", "reticulate", "rlang", "rmarkdown", "rnaturalearth", "rstan", "rstatix", "rvest", "scales", "see", "sf", "shadowtext", "showtext", "slider", "stars", "statsExpressions", "stringr", "styler", "tibble", "tibbletime", "tidybayes", "tidygraph", "tidymodels", "tidyr", "tidytext", "tidyverse", "tinytex", "viridis", "visdat", "COVID19", "flipbookr", "binb", "xaringan", "report")
 ```
 
 
@@ -256,6 +256,7 @@ devtools::install_github("seasmith/AlignAssign")
 devtools::install_github("sharlagelfand/ggkeyboard", ref = "main")
 devtools::install_github("gadenbuie/grkstyle")
 remotes::install_github("r-lib/downlit")
+devtools::install_github("EvaMaeRey/ggcalendar")
 ```
 
 

@@ -198,13 +198,23 @@ pdf文档可以插入漂亮的矢量图和优雅的数学公式，所以备受�
 2. 安装pdf查看器，[sumatrapdf网站](https://www.sumatrapdfreader.org/download-free-pdf-viewer.html)
 3. 安装 [LaTeX](https://www.latex-project.org/get/). 然而这个软件会比较大
    (e.g. MacTeX is approximate 3.9G). 如果你之前没有安装过
-   LaTeX，我推荐你安装轻量级的 `tinytex`. 安装方法如下，打开R，然后再命令行输入:
+   LaTeX，我推荐你安装轻量级的 [tinytex](https://yihui.org/tinytex/cn/). 安装方法如下，打开R，然后再命令行输入:
 
 ```{r, eval = FALSE}
 install.packages("tinytex")
 tinytex::install_tinytex(dir = "D:\\Tinytex", force = T)
 ```
+
 中途会有两次警告，按 “ 确定 ” 就可以了。
+
+
+::: {.rmdnote}
+
+国内下载 TinyTeX 比较慢，可以用浏览器或其它下载工具直接下载：https://github.com/yihui/tinytex-releases/releases 然后把下载的文件路径传给安装函数，比如：
+
+`tinytex:::install_prebuilt('TinyTeX-v2022.04.04.zip')`
+
+:::
 
 
 4. 修改头文件，用下面的内容替换Rmarkdown的头文件, 不要修改缩进
