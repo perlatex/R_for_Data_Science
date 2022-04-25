@@ -6,7 +6,7 @@
 
 
 
-## 配置环境
+## R4.1配置方法
 
 - 安装 [Rtools4.0](https://cran.r-project.org/bin/windows/Rtools/)到`C`盘
    
@@ -28,10 +28,26 @@ install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption
 install.packages(c("tidybayes", "bayesplot"))
 ```
 
-- 遇到问题，请参考
 
-  - <https://mc-stan.org/r-packages/>
-  - <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+## R4.2配置方法
+
+- 安装 [Rtools42](https://cran.r-project.org/bin/windows/Rtools/rtools42/rtools.html)到`C`盘，推荐使用它默认的路径
+
+
+- [安装rstan宏包](https://mc-stan.org/r-packages/)
+
+```{r, eval=FALSE}
+remove.packages(c("rstan", "StanHeaders"))
+install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+install.packages(c("tidybayes", "bayesplot"))
+```
+
+
+
+## 遇到问题，请参考
+
+- <https://mc-stan.org/r-packages/>
+- <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
 
 
 
