@@ -38,7 +38,7 @@ install.packages(c("tidybayes", "bayesplot"))
 
 ```{r, eval=FALSE}
 remove.packages(c("rstan", "StanHeaders"))
-install.packages("rstan", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+install.packages(c("rstan", "StanHeaders"), repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 install.packages(c("tidybayes", "bayesplot"))
 ```
 
