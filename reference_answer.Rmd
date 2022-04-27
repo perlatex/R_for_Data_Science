@@ -254,7 +254,7 @@ words %>%
 
 
 - 检查每行是否包含1，这里指的是单独的1，不包括11, 10这种。
-```{r}
+```{r, eval=FALSE}
 dat <- data.frame(
   teachcert = c("", "1", "1,11", "1,11,8", "1,3", "10,2,6", "2", "2,1"), 
   n = rnorm(8)
@@ -263,7 +263,7 @@ dat
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 # way 1
 dat %>% 
   mutate(elem_cert = 
