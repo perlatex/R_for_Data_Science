@@ -210,9 +210,11 @@ tinytex::install_tinytex(dir = "D:\\Tinytex", force = T)
 
 ::: {.rmdnote}
 
-国内下载 TinyTeX 比较慢，可以用浏览器或其它下载工具直接下载：https://github.com/yihui/tinytex-releases/releases 然后把下载的文件路径传给安装函数，比如：
+国内下载 TinyTeX 比较慢，可以用浏览器或其它下载工具直接下载：https://github.com/yihui/tinytex-releases/releases 然后把下载的文件路径传给安装函数，比如下面三步走：
 
-`tinytex:::install_prebuilt('TinyTeX-v2022.04.04.zip')`
+- `install.packages("tinytex")`
+- `tinytex::tlmgr_repo('http://mirrors.tuna.tsinghua.edu.cn/CTAN/')`
+- `tinytex:::install_prebuilt('TinyTeX-v2022.04.04.zip')`
 
 :::
 
