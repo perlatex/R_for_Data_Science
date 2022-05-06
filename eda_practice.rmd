@@ -1006,6 +1006,49 @@ df %>%
 ```
 
 
+## day26
+
+都是size = 15 为什么一个大一个小呢？
+
+```{r, out.width = '85%', echo = FALSE}
+knitr::include_graphics(here::here("images", "font_problem.png"))
+```
+
+
+<!-- 因为在theme里 size 的单位是pts，而在geom_text()里size 的单位是mm, 所以一个大一个小。 -->
+
+
+<!-- 两者的关系是1 pt = 0.35 mm，ggplot2还很贴心地提供了彼此转换关系的量 -->
+<!-- ```{r} -->
+<!-- ggplot2::.pt -->
+<!-- ``` -->
+
+<!-- 所以 -->
+
+<!-- - from pt to mm : mm = pt / .pt ， 比如 15 / 2.845276 = 5.27 -->
+<!-- - from mm to pt : pt = mm * .pt ， 比如 5.27 * 2.845276 = 15 -->
+
+<!-- 上面的代码可以改写为 -->
+<!-- ```{r, eval=FALSE, include=FALSE} -->
+<!-- penguins %>% -->
+<!--   ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) + -->
+<!--   geom_point() + -->
+<!--   geom_text(x = 45, y = 20, label = "Example of font problem", size = 15/.pt, inherit.aes = FALSE) + -->
+<!--   labs(title = "Bill length and depth relation by species") + -->
+<!--   theme(plot.title = element_text(size = 15)) -->
+<!-- ``` -->
+
+<!-- ```{r, eval=FALSE, include=FALSE} -->
+<!-- penguins %>% -->
+<!--   ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) + -->
+<!--   geom_point() + -->
+<!--   geom_text(x = 45, y = 20, label = "Example of font problem", size = 15, inherit.aes = FALSE) + -->
+<!--   labs(title = "Bill length and depth relation by species") + -->
+<!--   theme(plot.title = element_text(size = 15 * .pt)) -->
+<!-- ``` -->
+
+
+
 
 ```{r practice99, echo = F}
 # remove the objects
