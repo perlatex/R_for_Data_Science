@@ -132,7 +132,7 @@ install.packages(my_packages, repos = "http://cran.rstudio.com")
 
 ## 开始 
 
-安装完毕后，从windos`开始菜单`，点开`rstudio`图标，就打开了rstudio的窗口，界面效果如下
+安装完毕后，从windows`开始菜单`，点开`rstudio`图标，就打开了rstudio的窗口，界面效果如下
 
 ```{r, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/rstudio-editor.png")

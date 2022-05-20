@@ -146,11 +146,25 @@ performance::check_model(model)
 
 
 ## 统计表格不用愁
-```{r lazyman-gtsummary1, results="asis", eval=FALSE}
+
+这个确实省力不少
+
+```{r lazyman-gtsummary0, results="asis"}
+library(palmerpenguins)
 library(gtsummary)
 ## https://github.com/ddsjoberg/gtsummary
 
+penguins %>%
+  drop_na() %>% 
+  select(starts_with("bill_")) %>%
+  tbl_summary(
+    type = list(everything() ~ "continuous"),
+    statistic = list(all_continuous() ~ "{mean} ({sd})")
+  )
+```
 
+
+```{r lazyman-gtsummary1, results="asis"}
 gtsummary::trial %>%
   dplyr::select(trt, age, grade, response) %>%
   gtsummary::tbl_summary(
@@ -165,7 +179,7 @@ gtsummary::trial %>%
 
 
 直接复制到论文即可
-```{r lazyman-gtsummary2, results="asis", eval=FALSE}
+```{r lazyman-gtsummary2, results="asis"}
 t1 <-
   glm(response ~ trt + age + grade, trial, family = binomial) %>%
   gtsummary::tbl_regression(exponentiate = TRUE)
@@ -186,7 +200,7 @@ gtsummary::tbl_merge(
 
 ## 统计结果写图上
 
-```{r lazyman-statsExpressions, out.width='99%', eval=FALSE, include=TRUE}
+```{r lazyman-statsExpressions, out.width='99%'}
 library(ggplot2)
 library(statsExpressions)
 # https://github.com/IndrajeetPatil/statsExpressions
@@ -397,7 +411,6 @@ vis_dat(airquality)
 ## 让妹纸激发你的热情
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(palmerpenguins)
 library(cowplot)
 
 plot <- penguins %>% 

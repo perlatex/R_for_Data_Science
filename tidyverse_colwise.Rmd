@@ -466,7 +466,7 @@ knitr::include_graphics(path = "images/vctr.png")
 ```
 
 tidyverse遵循的tidy原则，一列表示一个变量，一行表示一次观察。
-这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不同友好。比如
+这种数据的存储格式，对ggplot2很方便，但对**行方向**的操作或者运算不友好。比如
 
 ### 行方向上的统计
 ```{r colwise-46}
