@@ -206,12 +206,16 @@ library(statsExpressions)
 # https://github.com/IndrajeetPatil/statsExpressions
 
 
-ggplot(mtcars, aes(x = mpg, y = wt)) +
+# dataframe with results
+results_data <- corr_test(mtcars, mpg, wt, type = "nonparametric")
+
+# create a scatter plot
+ggplot(mtcars, aes(mpg, wt)) +
   geom_point() +
-  geom_smooth(method = "lm") +
+  geom_smooth(method = "lm", formula = y ~ x) +
   labs(
     title = "Spearman's rank correlation coefficient",
-    subtitle = expr_corr_test(mtcars, mpg, wt, type = "nonparametric")
+    subtitle = parse(text = results_data$expression)
   )
 ```
 

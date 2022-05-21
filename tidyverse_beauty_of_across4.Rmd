@@ -199,6 +199,19 @@ d %>%
   mutate(100 * proportions(across(.names = "%{.col}")))
 ```
 
+### 方法6
+更好的呈现比例
+
+```{r beauty-of-across4-8-0}
+d %>%
+  rowwise() %>% 
+  mutate(
+   across(c(water, food), ~scales::label_percent(scale = 100)(.x /sum(c_across())), .names = "{.col}_%")
+  )
+```
+
+
+
 上面的方法虽然很多，但基本思路是一样的。
 
 

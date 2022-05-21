@@ -160,4 +160,24 @@ mystat <- function(x){
 
 ## 更多
 
+冰淇淋放大器，这个机器有很多档位，可以让冰淇淋放大指定的倍数，默认为10倍
+
+```{r}
+enlarge_icecream <- function(multi = 10) {
+  function(penis) {
+    penis * multi
+  }
+}
+```
+
+等待被放大的冰淇淋的大小
+```{r}
+x <- c(2, 3, 4.5)
+x
+```
+
+这个冰淇淋机器 `extent_penis(multi = 100)()`有很多档位，可以指定放大的倍数，比如这里设定为100倍
+```{r}
+enlarge_icecream(multi = 100)(x)
+```
 
