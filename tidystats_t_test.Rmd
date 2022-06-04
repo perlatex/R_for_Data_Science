@@ -282,7 +282,7 @@ species 有三组，也就说有三个层级，程序不接受。方法是：**�
 #### using `pairwise.t.test()`
 
 ```{r, eval=FALSE}
-pairwise.t.test(x, f) # x is a vector of the data, y is the group factor
+pairwise.t.test(x, y) # x is a vector of the data, y is the group factor
 ```
 
 
