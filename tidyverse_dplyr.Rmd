@@ -205,6 +205,11 @@ df
 
 
 
+```{r out.width = '65%', echo = FALSE}
+knitr::include_graphics("images/Pipe_baking_magrittr_backAssign.gif")
+```
+
+
 ## 选取列 `select()`
 
 `select() `顾名思义选择，就是选择数据框的某一列，或者某几列。
