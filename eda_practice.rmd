@@ -1048,6 +1048,47 @@ knitr::include_graphics(here::here("images", "font_problem.png"))
 <!-- ``` -->
 
 
+## day27
+
+```{r}
+ww <- c("ab1", "vf2", "aaba2", "ddb76", "d8p")
+ww
+```
+
+- 找出数值
+- 找出b后紧跟的数值
+- 找出b后面出现的数值
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+# 找出数值
+stringr::str_extract(ww, "\\d+")
+```
+
+
+
+```{r eval=FALSE, include=FALSE}
+# 找出b后紧跟的数值
+stringr::str_extract(ww, "(?<=b)\\d+")
+```
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+# 找出b后面出现的数值
+stringr::str_extract(ww, "(?<=b\\D{0,10})\\d+")
+
+
+# 或者
+res <- stringr::str_match(ww, "b\\D*?(\\d+)")
+res[,2]
+```
+
+
+
 
 
 ```{r practice99, echo = F}
