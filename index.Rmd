@@ -267,8 +267,8 @@ remotes::install_github("jhelvy/xaringanBuilder", dependencies = TRUE)
 
 ## RYouWithMe {-}
 
-```{r index-6, echo = FALSE, out.width = "30%"}
-knitr::include_graphics("images/QQgroup.png")
+```{r index-6, echo = FALSE, out.width = "25%"}
+knitr::include_graphics(c("images/QQgroup.png", "images/QQgroup2.png"))
 ```
 
 
