@@ -1,4 +1,5 @@
 book_filename: R4DS
+new_session: true
 clean: [packages.bib, bookdown.bbl]
 delete_merged_file: true
 language:

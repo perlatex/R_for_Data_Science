@@ -8,9 +8,9 @@ Statistical Inference: A Tidy Approach
 knitr::include_graphics("images/imdb.png")
 ```
 
-这是一个关于电影评分的数据集[^1]，
+这是一个关于电影评分的数据集[^2]，
 
-[^1]: <https://github.com/hadley/ggplot2movies/blob/master/R/movies.R>
+[^2]: <https://github.com/hadley/ggplot2movies/blob/master/R/movies.R>
 
 ```{r infer-2}
 library(tidyverse)
