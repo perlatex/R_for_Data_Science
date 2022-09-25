@@ -207,6 +207,11 @@ summary(mod_mass)
 
 输出结果得到有序分类 logistic 回归模型中截距和回归系数的最大似然估计值，确定出回归方程为：
 
+```{r, eval=FALSE, echo=FALSE}
+library(equatiomatic) # https://datalorax.github.io/equatiomatic/
+extract_eq(mod_mass, use_coefs = TRUE, wrap = TRUE)
+```
+
 
 
 $$
