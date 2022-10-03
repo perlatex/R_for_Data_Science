@@ -552,6 +552,9 @@ df %>%
 ### 案例：替换一行中最大的值
 
 看一行中哪个最大，最大的变为1，其余的变为0
+```{r}
+df
+```
 
 ```{r beauty-of-across-25}
 replace_rowwise_max <- function(vec) {
@@ -580,6 +583,15 @@ df %>%
 ```
 
 
+最风骚的是
+
+```{r}
+df %>%
+  rowwise() %>%
+  mutate(
+    across(x:z, ~ if_else(.x == max(c_across(x:z)), 1, 0))
+  )
+```
 
 
 ## across()总结
