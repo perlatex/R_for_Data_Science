@@ -610,7 +610,7 @@ font_add("heiti", "simhei.ttf")
 font_add("constan", "constan.ttf", italic = "constani.ttf")
 font_add("kaishu", "simkai.ttf")
 # font_add("Noto", "NotoSansCJKsc-Regular.otf")
-font_add("Yahei", "Yahei.ttf")
+# font_add("Yahei", "Yahei.ttf")
 
 # 也可放在指定的目录(尽量英文)
 # https://github.com/yixuan/showtext/issues/18

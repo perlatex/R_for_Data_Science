@@ -189,7 +189,6 @@ x2 <- c(1, 2, 3)
 逻辑型常称为布尔型（Boolean）， 它的常量值只有 `TRUE` 和 `FALSE`。注意 `TRUE` 和 `FALSE` 是在R语言中的保留词汇，所谓保留词汇，就是专用词，类似圆周率$\pi$(`pi`)，特指某个含义，请勿将保留词汇用作变量名。
 
 ```{r}
-TRUE <- 3 # Work?
 x <- c(TRUE, TRUE, FALSE, FALSE)
 x <- c(T, T, F, F)            # Equivalent, but not recommended
 ```
