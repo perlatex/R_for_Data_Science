@@ -107,7 +107,7 @@ knitr::include_graphics("images/tidyverse.png")
 
 | 功能 | 宏包        |
 |:------|:-------------|
-有颜值担当 | ggplot2 |
+颜值担当 | ggplot2 |
 数据处理王者 | dplyr |
 数据转换专家  | tidyr |
 数据载入利器 | readr |
