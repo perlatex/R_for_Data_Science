@@ -164,8 +164,8 @@ mystat <- function(x){
 
 ```{r}
 enlarge_icecream <- function(multi = 10) {
-  function(penis) {
-    penis * multi
+  function(icecream) {
+    icecream * multi
   }
 }
 ```
@@ -176,7 +176,7 @@ x <- c(2, 3, 4.5)
 x
 ```
 
-这个冰淇淋机器 `extent_penis(multi = 100)()`有很多档位，可以指定放大的倍数，比如这里设定为100倍
+这个冰淇淋机器 `enlarge_icecream(multi = 100)()`有很多档位，可以指定放大的倍数，比如这里设定为100倍
 ```{r}
 enlarge_icecream(multi = 100)(x)
 ```
