@@ -58,11 +58,11 @@ mpg %>%
   geom_point() +
   ggtitle("This is my title") +
   labs(x = "x_displ", y = "y_hwy") +
-  guides(color = guide_bins(
+  guides(color = guide_legend(
                  title = "my title",
                  label.hjust = 1
                  )
-         )
+  )
 ```
 
 

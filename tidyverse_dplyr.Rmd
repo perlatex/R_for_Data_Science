@@ -187,20 +187,20 @@ knitr::include_graphics("images/mutate-calc-square3.png")
 
 
 好，现在我们把添加奖励分、计算总成绩和保存结果这三个步骤一气呵成的完成
-```{r how-to-save-new-df, include=FALSE, eval=FALSE}
-df = df %>% 
+```{r how-to-save-new-df}
+df_new <- df %>% 
   mutate(extra = reward) %>% 
   mutate(total = score + extra)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 flair::decorate("how-to-save-new-df") %>% 
   flair::flair_rx("df %>%[\\s\\S]*", background = "pink")
 ```
 
 
 ```{r}
-df
+df_new
 ```
 
 
@@ -223,72 +223,72 @@ knitr::include_graphics("images/dplyr-select.png")
 
 
 ```{r}
-df %>% select(name)
+df_new %>% select(name)
 ```
 
 注意，结果是只有一列的数据框（仍然数据框喔，**数据框进数据框出是dplyr函数的第二个特点**）。如果要选取多列，就再多写几个列名就行了
 ```{r}
-df %>% select(name, extra)
-df %>% select(name, score, extra, total)
+df_new %>% select(name, extra)
+df_new %>% select(name, score, extra, total)
 ```
 
 
 如果不想要某列，可以在变量前面加 `-` 或者 `!`，两者的结果是一样的。
 ```{r}
-df %>% select(-type)
-df %>% select(!type)
+df_new %>% select(-type)
+df_new %>% select(!type)
 ```
 
 
 也可以通过位置索引进行选取，比如选取头三列
 ```{r}
-df %>% select(1, 2, 3)
-df %>% select(2:3)
+df_new %>% select(1, 2, 3)
+df_new %>% select(2:3)
 ```
 
 
 
 如果要选取数据框的列很多，我们也可以先观察列名的特征，用特定的函数进行选取，比如选取以"s"开头的列
 ```{r}
-df %>% select(starts_with("s"))
+df_new %>% select(starts_with("s"))
 
 ```
 
 选取以"e"结尾的列
 ```{r}
-df %>% select(ends_with("e"))
+df_new %>% select(ends_with("e"))
 ```
 
 选取含有以"score"的列
 ```{r}
-df %>% select(contains("score"))
+df_new %>% select(contains("score"))
 ```
 
 当然，也可以通过变量的类型来选取，比如选取所有字符串类型的列
 ```{r}
-df %>% select(where(is.character))
+df_new %>% select(where(is.character))
 ```
 
 选取所有数值类型的列
 ```{r}
-df %>% select(where(is.numeric))
+df_new %>% select(where(is.numeric))
 ```
 
 
 
 选取所有数值类型的并且以"s"开头的列
 ```{r}
-df %>% select(where(is.numeric) & starts_with("t"))
+df_new %>% select(where(is.numeric) & starts_with("t"))
 ```
 
 选取以"s"开头或者以"e"结尾的列
 ```{r}
-df %>% select(starts_with("s") | ends_with("e"))
+df_new %>% select(starts_with("s") | ends_with("e"))
 ```
 
 
 ```{r}
-df %>% select(!starts_with("s"))
+df_new %>% select(!starts_with("s"))
 ```
 
 
@@ -298,7 +298,7 @@ df %>% select(!starts_with("s"))
 \index{rename()} 
 
 ```{r}
-df %>% 
+df_new %>% 
   select(name, type, total) %>% 
   rename(total_score = total)
 ```
@@ -319,26 +319,26 @@ knitr::include_graphics("images/dplyr-filter.png")
 
 比如这里把**成绩等于90分的**同学筛选出来 \index{filter()} 。
 ```{r, error=TRUE}
-df %>% filter(score = 90)
+df_new %>% filter(score = 90)
 ```
 
 注意，这里判断是否相等要使用 `==` 而不是 `=`
 ```{r, error=TRUE}
-df %>% filter(score == 90)
+df_new %>% filter(score == 90)
 ```
 
 R提供了其他比较关系的算符: `<`, `>`, `<=`, `>=`, `==` (equal), `!=` (not equal), `%in%`, `is.na()` 和 `!is.na()` . 
 
 比如把**成绩大于等于80分的**同学筛选出来
 ```{r}
-df %>% filter(score >= 80)
+df_new %>% filter(score >= 80)
 ```
 
 
 也可以限定多个条件进行筛选, 比如，限定英语学科，同时要求成绩高于75分的所有条目筛选出来
 
 ```{r}
-df %>% filter(type == "english", score >= 75)
+df_new %>% filter(type == "english", score >= 75)
 ```
 
 也就说，逗号分隔的两个条件都要满足。
@@ -348,14 +348,14 @@ df %>% filter(type == "english", score >= 75)
 
 - 把 "=" 误认为 "=="
 ```{r, eval=FALSE}
-df %>% filter(type = "english")   # error
-df %>% filter(type == "english")
+df_new %>% filter(type = "english")   # error
+df_new %>% filter(type == "english")
 ```
 
 - 忘记引号
 ```{r, eval=FALSE}
-df %>% filter(type == english)   # error
-df %>% filter(type == "english")
+df_new %>% filter(type == english)   # error
+df_new %>% filter(type == "english")
 ```
 
 
@@ -364,28 +364,28 @@ df %>% filter(type == "english")
 多个参数的情形，本质上是逻辑与的关系，每个条件都返回TRUE
 
 ```{r}
-df %>% filter(type == "english" & score >= 75)
+df_new %>% filter(type == "english" & score >= 75)
 ```
 当然也可以使用其他的布尔算符 (& is “and,” | is “or,” and ! is “not.”).
 
 比如，以下代码找出成绩等于70**或者**等于90的行
 ```{r}
-df %>% filter(score == 70 | score == 90)
+df_new %>% filter(score == 70 | score == 90)
 ```
 在filter()中有一个非常有效的等价方法，即使用 `x %in% y`，意思是**如果当前x的值是向量y的一员，那么就选出当前行**，因此，我们可以重写上面代码:
 
 ```{r}
-df %>% filter(score %in% c(70, 90))
+df_new %>% filter(score %in% c(70, 90))
 ```
 
 当然还可以配合一些函数使用，比如把最高分的同学找出来
 ```{r}
-df %>% filter(score == max(score))
+df_new %>% filter(score == max(score))
 ```
 
 把成绩高于均值的找出来
 ```{r}
-df %>% filter(score > mean(score))
+df_new %>% filter(score > mean(score))
 ```
 
 
@@ -398,19 +398,19 @@ knitr::include_graphics("images/dplyr-summarize.png")
 `summarise() `函数非常强大，主要用于统计汇总，往往与其他函数配合使用，比如计算所有同学考试成绩的均值 \index{summarise()} 
 
 ```{r}
-df %>% summarise(mean_score = mean(score))
+df_new %>% summarise(mean_score = mean(score))
 ```
 
 
 计算所有同学的考试成绩的标准差
 ```{r}
-df %>% summarise( sd_score = sd(score))
+df_new %>% summarise( sd_score = sd(score))
 ```
 
 
 还可以同时完成多个统计
 ```{r}
-df %>% summarise(
+df_new %>% summarise(
   mean_score   = mean(score),
   median_score = median(score),
   n            = n(),
@@ -437,7 +437,7 @@ knitr::include_graphics("images/dplyr-group-by.png")
 比如，我们想统计每个学生的平均成绩，那么就需要先按照学生`name`分组，然后每组求平均 \index{group\_by()} 
 
 ```{r}
-df %>%
+df_new %>%
   group_by(name) %>%
   summarise(
     mean_score = mean(total),
@@ -461,25 +461,25 @@ knitr::include_graphics("images/dplyr-arrange.png")
 比如我们按照考试总成绩从低到高排序，然后输出 \index{arrange()} 
 
 ```{r}
-df %>% arrange(total)
+df_new %>% arrange(total)
 ```
 
 
 默认情况是从小到大排序，如果从高到低降序排序呢，有两种方法，第一种方法是在用于排序的变量前面加 `-` 号，
 ```{r}
-df %>% arrange(-total)
+df_new %>% arrange(-total)
 ```
 
 
 第二种方法可读性更强些，需要使用`desc()`函数
 ```{r}
-df %>% arrange(desc(total))
+df_new %>% arrange(desc(total))
 ```
 
 
 也可对多个变量依次排序。比如，我们先按学科类型排序，然后按照成绩从高到底降序排列
 ```{r}
-df %>% 
+df_new %>% 
   arrange(type, desc(total))
 ```
 
@@ -492,7 +492,7 @@ df %>%
 \index{left\_join()}
 
 ```{r}
-df1 <- df %>% 
+df1 <- df_new %>% 
   group_by(name) %>% 
   summarise( 
     mean_score = mean(total) 

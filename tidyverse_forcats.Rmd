@@ -52,11 +52,11 @@ x
 
 也可以指定顺序
 ```{r forcats-7}
-x %>% fct_relevel(levels = c("high", "medium", "low"))
+x %>% fct_relevel( c("high", "medium", "low"))
 ```
 或者让"medium" 移动到最前面
 ```{r forcats-8}
-x %>% fct_relevel(levels = c("medium"))
+x %>% fct_relevel( c("medium"))
 ```
 或者让"medium" 移动到最后面
 

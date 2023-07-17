@@ -87,7 +87,7 @@ knitr::include_graphics("images/tidyr-fig.png")
 
 所以现在使用`pivot_longer()`函数
 
-```{r how-to-pivot, include=FALSE, eval=FALSE}
+```{r how-to-pivot}
 long <- plant_height %>%
   pivot_longer(
     cols = A:D,
@@ -98,7 +98,7 @@ long
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 flair::decorate("how-to-pivot") %>% 
   flair::flair("cols") %>% 
   flair::flair("names_to") %>% 
