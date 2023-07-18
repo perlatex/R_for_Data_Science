@@ -824,10 +824,11 @@ str_split_fixed(df$y, ":", 6) %>%                   # return matrix
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 df %>%
   mutate(
-    new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% map(., ~.x[1:4]) # return list-column: a list of vectors
+    new = str_split(y, pattern = ":", simplify = FALSE, n = 6) %>% 
+      map(., ~.x[1:4]) # return list-column: a list of vectors
   ) %>%
   unnest_wider(col = new) %>%
   set_names(c("x", "y", "e1", "e2", "e3", "e4"))

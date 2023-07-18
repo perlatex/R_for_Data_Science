@@ -137,7 +137,7 @@ df
 
 df %>%
   dplyr::mutate(., rand = map(mean, ~ rnorm(5, .))) %>%
-  tidyr::unnest_wider(rand)
+  tidyr::unnest_wider(col = rand, names_sep = " ")
 ```
 
 
@@ -149,7 +149,7 @@ df %>%
 ```{r dot-16, warning=FALSE, message=FALSE}
 df %>%
   dplyr::mutate(rand = map2(mean, sd, ~ rnorm(5, .x, .y))) %>%
-  tidyr::unnest_wider(rand)
+  tidyr::unnest_wider(rand, names_sep = " ")
 ```
 
 - `mean`传给 `.x`
