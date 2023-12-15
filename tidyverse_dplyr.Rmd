@@ -248,7 +248,7 @@ df_new %>% select(2:3)
 
 
 
-如果要选取数据框的列很多，我们也可以先观察列名的特征，用特定的函数进行选取，比如选取以"s"开头的列
+如果要选取数据框的列很多，我们也可以先观察列名的特征，用特定的函数进行选取，比如选取以“s"开头的列
 ```{r}
 df_new %>% select(starts_with("s"))
 
@@ -278,7 +278,7 @@ df_new %>% select(where(is.numeric))
 
 选取所有数值类型的并且以"s"开头的列
 ```{r}
-df_new %>% select(where(is.numeric) & starts_with("t"))
+df_new %>% select(where(is.numeric) & starts_with("s"))
 ```
 
 选取以"s"开头或者以"e"结尾的列
@@ -315,7 +315,7 @@ df_new %>%
 knitr::include_graphics("images/dplyr-filter.png")
 ```
 
-注意，这里filter()函数不是字面上“过滤掉”的意思，而是保留符合条件的行，也就说keep，不是drop的意思。 第一次会有一点点迷惑，我相信习惯就好了。
+注意，这里filter()函数不是字面上“过滤掉”的意思，而是“筛选”，保留符合条件的行，也就说keep，不是drop的意思。 第一次会有一点点迷惑，我相信习惯就好了。
 
 比如这里把**成绩等于90分的**同学筛选出来 \index{filter()} 。
 ```{r, error=TRUE}
