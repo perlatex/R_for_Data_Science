@@ -645,7 +645,7 @@ d
 ## 延伸阅读
 
 - 推荐[https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/).
-- [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
+- [cheatsheet](https://github.com/rstudio/cheatsheets/raw/main/data-transformation.pdf)
 - <https://tidydatatutor.com/vis.html>
 - 作业：读懂并运行下面的代码
 
