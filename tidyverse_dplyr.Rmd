@@ -366,7 +366,7 @@ df_new %>% filter(type == "english")
 ```{r}
 df_new %>% filter(type == "english" & score >= 75)
 ```
-当然也可以使用其他的布尔算符 (& is “and,” | is “or,” and ! is “not.”).
+当然也可以使用其他的布尔算符 (`&`即“and”, `|`即“or”, `!`即“not”).
 
 比如，以下代码找出成绩等于70**或者**等于90的行
 ```{r}
