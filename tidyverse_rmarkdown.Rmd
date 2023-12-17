@@ -397,6 +397,8 @@ xfun::embed_file('./data/my_pdf_document.Rmd')
 ## 延伸阅读
 
 * Markdown tutorial https://www.markdowntutorial.com (10分钟学完)
+* Markdown 中文教程 https://www.appinn.com/markdown/ 
+* Markdown 在线编辑器 https://pandao.github.io/editor.md/  http://editor.md.ipandao.com/
 * LaTeX tutorial https://www.latex-tutorial.com/quick-start/
 * Rmarkdown 介绍 https://bookdown.org/yihui/rmarkdown/
 * Rmarkdown 手册 https://bookdown.org/yihui/rmarkdown-cookbook/
