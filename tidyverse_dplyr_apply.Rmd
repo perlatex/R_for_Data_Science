@@ -150,7 +150,7 @@ tb %>%
   select(where(~sum(.x) == 0))
 ```
 
-**课堂练习**：剔除全部为NA的列
+**课堂练习**：剔除全部为NA的列或者全部为NA的行
 ```{r}
 df <- tibble(
   x = c(NA, NA, NA),
@@ -158,11 +158,11 @@ df <- tibble(
   z = c(NA, 5, NA)
 )
 
-
+# columns
 df %>%
   select(where(~ !all(is.na(.x))))
 
-# or
+# rows
 df %>%
   filter(
     if_any(everything(), ~ !is.na(.x))
