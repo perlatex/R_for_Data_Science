@@ -76,7 +76,7 @@ colorspace::sequential_hcl(n = 7, palette = "Peach") %>%
 |:-----------                         | :--------  | :--------- | :------------|
 |`scale_color_discrete_qualitative()` | `color`    | discrete   | qualitative |
 |`scale_fill_continuous_sequential()` | `fill`     | continuous | sequential |
-|`scale_colour_continous_divergingx()` | `colour`   | continuous | diverging |
+|`scale_colour_continuous_divergingx()` | `colour`   | continuous | diverging |
 
 
 ## 使用案例1
