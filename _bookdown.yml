@@ -26,7 +26,7 @@ rmd_files: [
   "baseR_functions_adv.Rmd",
   "baseR_subsetting.Rmd",
 
- # tidyverse篇
+  # tidyverse篇
   "tidyverse_rmarkdown.Rmd",
   "tidyverse_readr.Rmd",
   "tidyverse_dplyr.Rmd",
@@ -65,7 +65,7 @@ rmd_files: [
   "tidyverse_dot.Rmd",
   "tidyverse_tidyeval.Rmd",
 
- # 建模篇
+  # 建模篇
   "tidystats_sampling.Rmd",
   "tidystats_sampling_permute.Rmd",
   "tidystats_sampling_bootstrap.Rmd",
@@ -80,12 +80,13 @@ rmd_files: [
   "tidystats_logistic_regression.Rmd",
   "tidystats_ordinal.Rmd",
   "tidystats_marginaleffects.Rmd",
+  "tidystats_sem.Rmd",
 
-# tidymodels 篇
+  # tidymodels 篇
   "tidymodels_intro.Rmd",
 
 
- # 贝叶斯篇
+  # 贝叶斯篇
   "bayesian_inference.Rmd",
   "bayesian_intro_stan.Rmd",
   "bayesian_lm.Rmd",
@@ -102,7 +103,7 @@ rmd_files: [
   "bayesian_GLMM.Rmd",
 
 
- # 应用篇
+  # 应用篇
   "eda_nobel.Rmd",
   "eda_olympics.Rmd",
   "eda_covid2019.Rmd",
@@ -123,6 +124,9 @@ rmd_files: [
   "eda_lazyman.Rmd",
   "eda_pandas_vs_dplyr.Rmd",
   "eda_practice.Rmd",
+
+  # 论文代码复现
+  "replicate_paper.Rmd",
 
   "Appendix.Rmd",
   "reference_answer.Rmd",

@@ -1,5 +1,13 @@
 # ggplot2之让你的数据骚动起来 {#tidyverse-ggplot2-gganimate}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 这节课，我们讲如何让我们的图动起来。（因为渲染需要花费很长时间，所以文档中的动图代码都没有执行。）
 

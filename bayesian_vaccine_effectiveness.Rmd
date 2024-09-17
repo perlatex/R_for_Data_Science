@@ -3,6 +3,15 @@
 
 ## 引言
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 
 ```{r eda-vaccine-effectiveness-1, out.width = '70%', fig.align='center', echo = FALSE}
 knitr::include_graphics("images/vaccine.png")

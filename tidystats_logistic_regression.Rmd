@@ -1,5 +1,14 @@
 # logistic回归模型 {#tidystats-logistic-regression}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章讲广义线性模型中的logistic回归模型。
 
 ## 问题

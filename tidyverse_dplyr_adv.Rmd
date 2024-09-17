@@ -1,5 +1,14 @@
 # tidyverse进阶 {#tidyverse-dplyr-adv}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 让我们继续聊聊，相见恨晚的tidyverse
 
 ```{r adv-dplyr-1, message = FALSE, warning = FALSE}

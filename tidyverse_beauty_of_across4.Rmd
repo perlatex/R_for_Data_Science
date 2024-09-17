@@ -1,5 +1,14 @@
 # tidyverse中的across()之美4 {#tidyverse-beauty-of-across4}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章讲讲`mutate()`中的`across()`与`c_acorss()`、`map_df()`、`map2_dfc()`系列的纠缠。
 
 内容涉及迭代、泛函、返回数据框、**数据框并入**等概念。

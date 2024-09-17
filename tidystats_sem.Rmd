@@ -1,0 +1,12 @@
+# 结构方程模型 {#tidystats-sem}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+

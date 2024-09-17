@@ -1,7 +1,13 @@
 # 统计检验与线性模型的等价性 {#tidystats-tests-as-linear}
 
-
-
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 
 心理学专业的同学最喜欢的统计方法，估计是方差分析(ANOVA) 和它的堂兄协变量分析 (ANCOVA)，事实上[常用的统计检验本质上都是线性模型](https://lindeloev.github.io/tests-as-linear/)，所以你学了线性模型，就可以不用学统计检验了，是不是很开心？

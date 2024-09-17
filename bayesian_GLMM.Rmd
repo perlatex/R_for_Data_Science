@@ -1,5 +1,13 @@
 # 广义线性混合模型 {#bayesian-glmm}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 文章数据和模型来源于[Solomon Kurz的课件](https://osf.io/3g8vf/)，我在他的基础上用Stan重写了代码
 

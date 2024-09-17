@@ -2,6 +2,16 @@
 
 # 机器学习 {#tidymodels-intro}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 Rstudio工厂的 Max Kuhn 大神正主持**机器学习**的开发，日臻成熟了，感觉很强大啊。
 
 ```{r tidymodels-1, message = FALSE, warning = FALSE}

@@ -1,6 +1,14 @@
 # 贝叶斯层级模型 {#bayesian-hierarchical}
 
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)

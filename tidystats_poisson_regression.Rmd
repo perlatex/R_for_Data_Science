@@ -1,5 +1,14 @@
 # 广义线性模型 {#tidystats-poisson-regression}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 
 ## 线性回归回顾
 

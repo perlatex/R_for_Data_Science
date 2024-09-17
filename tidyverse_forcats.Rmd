@@ -1,5 +1,14 @@
 # 因子型变量 {#tidyverse-forcats}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章介绍R语言中的因子类型数据。因子型变量常用于数据处理和可视化中，尤其在希望不以字母顺序排序的时候，因子就格外有用。
 
 ## 什么是因子
@@ -12,7 +21,7 @@
 
 
 ## 创建因子
-```{r forcats-1}
+```{r forcats-1, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(palmerpenguins)
 ```

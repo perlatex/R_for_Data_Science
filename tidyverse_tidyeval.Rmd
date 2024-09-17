@@ -1,5 +1,15 @@
 # 非标准性评估 {#tidyverse-tidyeval}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 Tidy Evaluation (Tidy Eval)，不是一个宏包，而是一个非标准评估的框架，也叫延迟评估。主要目的是更方便地与tidyverse里的函数配合使用，事实上，很多时候我们不一定需要用到它。我这里尽可能规避较专业的词汇，用通俗的语言介绍一些简单用法，表述可能不准确。如果想了解背后复杂的机制请阅读[advance R](https://adv-r.hadley.nz/quasiquotation.html)。
 
 ## 编写函数

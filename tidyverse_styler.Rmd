@@ -1,5 +1,13 @@
 # Tidyverse代码书写规范 {#tidyverse-styler}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 书写规范的重要性
 

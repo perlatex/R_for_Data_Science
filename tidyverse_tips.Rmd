@@ -1,5 +1,14 @@
 # tidyverse中的若干技巧 {#tidyverse-tips}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 聊聊tidyverse中常用的一些小技巧
 
 > "most of data science is counting, and sometimes dividing"

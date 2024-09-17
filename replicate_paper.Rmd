@@ -1,0 +1,46 @@
+# (PART) 论文复现篇 {-}
+
+# 论文代码复现 {#replicate-paper}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
+## 社会科学开放数据库
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+
+plan <- readxl::read_excel("./data/dataset.xlsx")
+plan %>% 
+  select(1:3) %>% 
+  mutate(`编号` = 1:n(), .before = 1L) %>% 
+  flextable::flextable() %>% 
+  flextable::align(j = 1, align = "center", part = "all") %>% 
+  flextable::fontsize(size = 10) %>% 
+  flextable::autofit() %>% 
+  flextable::fit_to_width(max_width = 21, unit = "cm") %>% 
+  flextable::width(j = 3, width = 5, unit = "cm") 
+```
+
+
+## 若干论文复现代码
+
+- https://github.com/perlatex/replicate_paper_CHARLS_depressive
+
+- https://github.com/perlatex/replicate_paper_NHANES_coffee
+
+- https://github.com/perlatex/replicate_paper_heart_disease_glm
+
+- https://github.com/perlatex/replicate_paper_Consumer_Fraud
+
+- https://github.com/perlatex/replicate_paper_yanyu_in_tourism
+
+- https://github.com/perlatex/replicate_paper_parent-child_relationship_lavaan
+
+- https://github.com/perlatex/replicate_paper_Nostalgia_Stan

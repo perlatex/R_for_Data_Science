@@ -1,5 +1,13 @@
 # ggplot2之科研数据可视化 {#tidyverse-ggplot2-academic}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r ggplot2-academic-1, echo = FALSE, message = FALSE}
 library(tidyverse)

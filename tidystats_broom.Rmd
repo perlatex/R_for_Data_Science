@@ -1,5 +1,13 @@
 # 模型输出结果的规整 {#tidystats-broom}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 案例
 

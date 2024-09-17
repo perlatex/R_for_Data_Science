@@ -1,5 +1,13 @@
 # 探索性数据分析-anscombe数据集 {#eda-anscombe}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 在可视化章节，我们提到 Anscombe’s quartet这个数据集，
 ```{r eda-anscombe-1, eval=FALSE}

@@ -1,5 +1,14 @@
 # 探索性数据分析-哺乳动物脑量与体重的关系 {#eda-mammal-species}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 我在[网上](https://www.reddit.com/r/dataisbeautiful/comments/poq0ks/oc_brain_size_vs_body_weight_of_various_animals/)看到这张图
 
 ```{r, echo=FALSE, out.width = '100%'}

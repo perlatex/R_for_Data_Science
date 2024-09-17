@@ -1,5 +1,15 @@
 # 统计推断 {#tidystats-infer}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 Statistical Inference: A Tidy Approach
 
 ## 案例1:你会给爱情片还是动作片高分？

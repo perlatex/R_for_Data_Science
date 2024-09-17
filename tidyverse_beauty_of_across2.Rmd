@@ -1,5 +1,14 @@
 # tidyverse中的across()之美2 {#tidyverse-beauty-of-across2}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 ```{r beauty-of-across2-1}
 library(tidyverse)
 library(palmerpenguins)

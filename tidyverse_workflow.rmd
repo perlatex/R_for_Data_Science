@@ -1,5 +1,14 @@
 # 回望tidyverse之旅 {#tidyverse-workflow}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 ```{r tidyverse-workflow-1}
 library(tidyverse)
 ```

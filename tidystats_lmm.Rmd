@@ -1,5 +1,13 @@
 # 多层线性模型 {#tidystats-lmm}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 
 ## 分组数据

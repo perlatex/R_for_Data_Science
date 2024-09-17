@@ -1,5 +1,14 @@
 # 数据规整2 {#tidyverse-tidyr2}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 接着上一章，罗列一些`tidyr`的函数
 
 ```{r, message = FALSE, warning = FALSE}

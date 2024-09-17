@@ -1,5 +1,14 @@
 # 函数式编程1 {#tidyverse-purrr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 
 很多教材都是讲函数和循环，都是从`for, while, ifelse`讲起
 ，如果我也这样讲，又回到了Base R的老路上去了。考虑到大家都没有编程背景，也不会立志当程序员，所以我直接讲purrr包，留坑以后填吧。

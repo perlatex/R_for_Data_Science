@@ -1,5 +1,15 @@
 # 有序logistic回归 {#tidystats-ordinal}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 本节课，是广义线性模型的延续
 
 ```{r ordinal-1, message = FALSE, warning = FALSE}

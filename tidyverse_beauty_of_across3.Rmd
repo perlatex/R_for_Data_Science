@@ -1,5 +1,13 @@
 # tidyverse中的across()之美3 {#tidyverse-beauty-of-across3}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 
 有同学说`across()`函数只能在`summarise()`或者`mutate()`中使用，事实上能使用`across()`的函数还是挺多的。我们列举一些看看。

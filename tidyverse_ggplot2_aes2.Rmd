@@ -1,5 +1,14 @@
 # 数据可视化 {#tidyverse-ggplot2-aes}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 上节课介绍了R语言的基本数据结构，可能大家有种看美剧的感觉，有些懵。这很正常，我在开始学习R的时候，感觉和大家一样，所以不要惊慌，我们后面会慢慢填补这些知识点。
 
 这节课，我们介绍R语言最强大的可视化，看看都有哪些炫酷的操作。
@@ -106,11 +115,11 @@ knitr::include_graphics("./images/common-aesthetics.png")
 ## 宏包ggplot2 
 
 ggplot2是RStudio首席科学家Hadley Wickham在2005年读博士期间的作品。很多人学习R语言，就是因为ggplot2宏包。目前，
-ggplot2已经发展成为最受欢迎的R宏包，没有之一。我们可以看看它2019年cran的下载量
+ggplot2已经发展成为最受欢迎的R宏包，没有之一。我们可以看看它2024年cran的下载量
 ```{r ggplot2-aes2-4}
 library(cranlogs)
 
-d <- cran_downloads(package = "ggplot2", from = "2019-01-01", to = "2019-12-31")
+d <- cran_downloads(package = "ggplot2", from = "2024-01-01", to = "2024-08-31")
 
 sum(d$count)
 ```

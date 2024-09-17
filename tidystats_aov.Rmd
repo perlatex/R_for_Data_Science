@@ -1,5 +1,13 @@
 # Tidy Statistics {#tidystats-aov}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 一个事实是，**用统计的，往往不是学统计的**。 
 

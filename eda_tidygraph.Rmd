@@ -1,6 +1,14 @@
 # 社会网络分析 {#eda-tidygraph}
 
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 本章通过tidygraph宏包介绍社会网络分析。社会网络分析涉及的知识比较多，而tidygraph将网络结构规整地比较清晰，降低了学习难度，很适合入门学习。
 

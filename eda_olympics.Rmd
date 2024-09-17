@@ -1,5 +1,13 @@
 # 探索性数据分析-奥林匹克 {#eda-olympics}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 这是Nature期刊上的一篇文章[Nature. 2004 September 30; 431(7008)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3173856/#SD2)，
 

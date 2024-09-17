@@ -25,13 +25,13 @@ options(digits = 4,
         )
 
 knitr::opts_chunk$set(
-                      echo = TRUE, 
-                      warning = FALSE, 
-                      message = FALSE,
-                      fig.width = 6, 
-                      fig.height = 4,
-                      fig.showtext = TRUE
-                      )
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.width    = 6, 
+   fig.height   = 4,
+   fig.showtext = TRUE
+)
 ```
 
 # 前言 {.unnumbered}
@@ -136,6 +136,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidystats-logistic-regression) 章介绍logistic回归模型
    - 第 \@ref(tidystats-ordinal) 章介绍有序logistic回归模型
    - 第 \@ref(tidystats-marginaleffects) 章介绍模型的边际效应
+   - 第 \@ref(tidystats-sem) 章介绍结构方程模型
    
 - tidymodels篇
    - 第 \@ref(tidymodels-intro) 章介绍机器学习与Tidymodels
@@ -178,8 +179,10 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(eda-pandas-vs-dplyr) 章Pandas vs. dplyr谁是数据分析中最好用的宏包 
    - 第 \@ref(eda-practice) 章一日一练，有些题目还是很有挑战性的喔
 
-
-
+- 论文复现篇
+   - 第 \@ref(replicate-paper) 章列出社会科学数据库，以及若干论文复现代码
+   
+   
 2、**课件源代码和数据**
 
   我将持续改进课件，所以欢迎大家提出建议
@@ -232,7 +235,7 @@ my_packages <-
 
 
 ```{r index-4, eval = FALSE}
-install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = T)
+install.packages(my_packages, repos = "http://cran.rstudio.com", dependencies = TRUE)
 ```
 
 
@@ -267,7 +270,7 @@ remotes::install_github("jhelvy/xaringanBuilder", dependencies = TRUE)
 ## RYouWithMe {-}
 
 ```{r index-6, echo = FALSE, out.width = "25%"}
-knitr::include_graphics(c("images/QQgroup.png", "images/QQgroup2.png"))
+knitr::include_graphics(c("images/QQgroup2.png"))
 ```
 
 

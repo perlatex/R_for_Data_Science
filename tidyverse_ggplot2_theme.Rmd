@@ -1,5 +1,15 @@
 # ggplot2之主题设置 {#tidyverse-ggplot2-theme}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 这一章我们一起学习ggplot2中的theme elements
 语法，感谢[Henry Wang](https://henrywang.nl/ggplot2-theme-elements-demonstration/)提供了很好的思路。如果需要详细了解，可以参考Hadley Wickham最新版的[《ggplot2: Elegant Graphics for Data Analysis》](https://ggplot2-book.org/)，最推荐的是[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
 

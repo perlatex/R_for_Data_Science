@@ -1,6 +1,15 @@
 # 函数式编程2 {#tidyverse-purrr-adv}
 
-```{r}
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
 

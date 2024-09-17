@@ -1,5 +1,15 @@
 # 模型的边际效应 {#tidystats-marginaleffects}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 本章介绍模型的边际效应，主要围绕[marginaleffects](https://vincentarelbundock.github.io/marginaleffects/index.html)宏包，本章的内容也是来源该宏包的说明文档。
 
 

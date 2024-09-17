@@ -1,6 +1,14 @@
 # Stan入门 {#bayesian-intro-stan}
 
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 相比于传统的方法来说，[Stan](https://mc-stan.org/)建模具有更好的可操作性、透明性和可解释性。本周开始，我们将开始学习贝叶斯数据分析，希望通过一些案例，让大家了解Stan的强大和价值。根据我有限的学习经验，采用code first 教学。
 

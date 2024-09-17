@@ -1,5 +1,14 @@
 # 双样本t检验 {#tidystats-t-test}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章需要的宏包，希望大家提前安装
 
 ```{r, eval=FALSE}

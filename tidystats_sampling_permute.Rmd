@@ -1,5 +1,13 @@
 # 模拟与抽样2 {#tidystats-sampling-permute}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 我很推崇infer基于模拟的假设检验。本节课的内容是用tidyverse技术重复infer过程，让统计分析透明。
 

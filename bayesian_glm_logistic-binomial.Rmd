@@ -1,5 +1,15 @@
 # 贝叶斯logistic-binomial模型 {#bayesian-glm-logistic-binomial}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tidybayes)

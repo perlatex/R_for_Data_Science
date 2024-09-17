@@ -1,5 +1,14 @@
 # ggplot2之延迟映射 {#tidyverse-ggplot2-aes-eval}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章是翻译的ggplot的官方文档，后续我会增加一些案例
 
 ```{r, message=FALSE, warning=FALSE}

@@ -1,5 +1,14 @@
 # tidyverse中行方向的操作 {#eda-rowwise}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 dplyr 1.0 推出之后，数据框**行方向**的操作得到完美解决，因此本章的内容已经过时，大家可以跳出本章，直接阅读第\@ref(tidyverse-colwise) 章。（留着本章，主要是让自己时常回顾下之前的探索。让自己最难忘的，或许就是曾经的痛点吧）
 
 

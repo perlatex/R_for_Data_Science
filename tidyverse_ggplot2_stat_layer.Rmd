@@ -1,5 +1,13 @@
 # ggplot2之统计图层 {#tidyverse-ggplot2-stat-layer}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 导言
 

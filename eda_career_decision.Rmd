@@ -1,5 +1,14 @@
 # 探索性数据分析-大学生职业决策 {#eda-career-decision}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 ## 预备知识
 
 ```{r eda-career-decision-1, message=FALSE, warning=FALSE}

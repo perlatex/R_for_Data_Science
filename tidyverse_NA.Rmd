@@ -1,5 +1,13 @@
 # tidyverse中的缺失值 {#tidyverse-NA}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 今天我们聊聊数据处理中的缺失值。
 

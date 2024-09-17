@@ -1,7 +1,14 @@
 # 探索性数据分析-ames房屋价格 {#eda-ames-houseprice}
 
 
-
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 数据故事
 

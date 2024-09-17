@@ -1,5 +1,14 @@
 # tidyverse中的列方向和行方向 {#tidyverse-colwise}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 dplyr宏包是数据科学tidyverse集合的核心部件之一，Hadley  Wickham大神说将会在5月15日发布dplyr 1.0版本，欢呼。
 
 为迎接新时代的到来，我在线上同大家一起分享dplyr 1.0版本新的特点和功能，看看都为我们带来哪些惊喜？

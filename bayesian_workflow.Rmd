@@ -1,5 +1,13 @@
 # 贝叶斯工作流程 {#bayesian-workflow}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 贝叶斯工作流程
 

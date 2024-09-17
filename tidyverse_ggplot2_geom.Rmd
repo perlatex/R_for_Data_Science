@@ -1,5 +1,15 @@
 # ggplot2之几何形状 {#tidyverse-ggplot2-geom}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 > 采菊东篱下，悠然见南山。
 >
 
@@ -9,7 +19,7 @@
 
 
 
-```{r ggplot2-geom-1,warning = FALSE, message = FALSE}
+```{r ggplot2-geom-1, warning = FALSE, message = FALSE}
 library(tidyverse)
 ```
 
@@ -18,13 +28,13 @@ library(tidyverse)
 
 先看一组数据
 
-```{r ggplot2-geom-2}
+```{r ggplot2-geom-2, message=FALSE, warning=FALSE}
 df <- read_csv("./demo_data/datasaurus.csv")
 df
 ```
 
 先用`dataset`分组后，然后计算每组下`x`的均值和方差，`y`的均值和方差，以及`x，y`两者的相关系数，我们发现每组数据下它们几乎都是相等的
-```{r ggplot2-geom-3}
+```{r ggplot2-geom-3, message=FALSE, warning=FALSE}
 df %>%
   group_by(dataset) %>%
   summarise(
@@ -162,7 +172,7 @@ ggplot2会将字符串型、因子型、逻辑型默认为**离散变量**，而
 
 ### 导入数据
 
-```{r ggplot2-geom-11}
+```{r ggplot2-geom-11, message=FALSE, warning=FALSE}
 gapdata <- read_csv("./demo_data/gapminder.csv")
 gapdata
 ```

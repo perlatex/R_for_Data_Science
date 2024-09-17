@@ -1,5 +1,14 @@
 # 读取数据 {#tidyverse-readr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 在学习R语言过程中，除了使用内置的数据集外，我们更多的需要导入外部数据，
 比如实验观察数据、社会调研的数据等等。
 在讲如何读取数据到 **R**之前，先介绍下数据科学中的项目管理。

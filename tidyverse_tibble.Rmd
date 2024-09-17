@@ -1,5 +1,13 @@
 # 简单数据框 {#tidyverse-tibble}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r tibble-1, message = FALSE, warning = FALSE}
 library(tidyverse)

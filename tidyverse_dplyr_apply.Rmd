@@ -1,5 +1,13 @@
 # dplyr进阶 {#tidyverse-dplyr-apply}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 本章主要关注dplyr的一些应用。
 

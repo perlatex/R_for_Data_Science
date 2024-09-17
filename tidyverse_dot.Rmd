@@ -1,5 +1,14 @@
 # tidyverse中的dot {#tidyverse-dot}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章介绍tidyverse的语法中经常遇到`.`， 不同的场景，含义不同。因此很有必要弄清楚各自的含义。
 
 ```{r dot-1, message = FALSE, warning = FALSE}

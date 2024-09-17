@@ -1,6 +1,13 @@
 # 贝叶斯分类模型 {#bayesian-categorical}
 
-
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 
 ```{r, message=FALSE, warning=FALSE}

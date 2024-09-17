@@ -1,18 +1,27 @@
 # Pandas vs. dplyr谁是数据分析中最好用的宏包 {#eda-pandas-vs-dplyr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章，我们用一些例子来比较数据科学领域Pandas vs. dplyr 两个宏包的用法
 
 
 ```{r Pandas01, echo=FALSE, eval=FALSE, include=FALSE}
 knitr::opts_chunk$set(
-  engine.path = list(python = "E:\\Anaconda3\\python.exe")
+  engine.path = list(python = "F:\\Anaconda3\\python.exe")
   )
 ```
 
 首先，需要加载这个宏包
 ```{r Pandas02}
 library(reticulate)
-use_python("E:/Anaconda3/python.exe") 
+use_python("F:/Anaconda3/python.exe") 
 #use_condaenv("Anaconda3", required = TRUE)
 #py_config()
 ```
@@ -134,7 +143,7 @@ gapminder %>%
 
 这是用 Pandas 方法，
 
-```{python}
+```{python, eval = FALSE}
 gapminder[gapminder['year'] == 2007].groupby(by='continent').mean()['lifeExp']
 ```
 

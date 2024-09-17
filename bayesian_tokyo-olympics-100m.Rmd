@@ -1,5 +1,15 @@
 # 贝叶斯分析案例-预测奥运会男子100米短跑成绩 {#bayesian-tokyo-olympics-100m}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tidybayes)

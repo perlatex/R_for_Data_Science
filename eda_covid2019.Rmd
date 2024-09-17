@@ -1,5 +1,13 @@
 # 探索性数据分析-新冠疫情 {#eda-covid2019}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r eda-covid2019-1, message = FALSE, warning = FALSE}
 library(tidyverse)

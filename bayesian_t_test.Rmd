@@ -1,5 +1,13 @@
 # 贝叶斯假设检验 {#bayesian-t-test}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r}
 library(tidyverse)

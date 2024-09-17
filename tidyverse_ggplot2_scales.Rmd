@@ -1,5 +1,14 @@
 # ggplot2之标度 {#tidyverse-ggplot2-scales}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 > 用 ggplot2 画图，有种恋爱的感觉:
 > “你懂我的图谋不轨，我懂你的故作矜持”
 

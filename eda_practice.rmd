@@ -1,5 +1,14 @@
 # 一天一练 {#eda-practice}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 > “表达我自己比被人喜欢更重要。” 加油
 
 尽可能的在tidyverse的框架下完成

@@ -2,6 +2,14 @@
 
 # 模拟与抽样1 {#tidystats-sampling}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r sampling-1, message = FALSE, warning = FALSE}
 library(tidyverse)

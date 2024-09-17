@@ -1,5 +1,13 @@
 # ggplot2之数据可视化中的配色 {#tidyverse-ggplot2-colors}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r ggplot2-colors-1, message = FALSE, warning = FALSE}
 library(tidyverse)

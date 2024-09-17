@@ -1,5 +1,14 @@
 # ggplot2中传递函数作为参数值 {#tidyverse-ggplot2-pass-function-as-parameters}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章汇总ggplot2中常见的**参数值是一个函数**的情形。
 
 

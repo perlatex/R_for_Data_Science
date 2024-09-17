@@ -2,6 +2,16 @@
 
 # 贝叶斯推断 {#bayesian-inference}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 ```{r bayes-01, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tidybayes)

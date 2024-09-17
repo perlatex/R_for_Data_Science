@@ -1,5 +1,13 @@
 # ggplot2之扩展内容 {#tidyverse-ggplot2-customize}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ggplot2的强大，还在于它的扩展包。本章在介绍ggplot2新的内容的同时还会引入一些新的宏包，需要提前安装
 ```{r ggplot2-customize-1, eval=FALSE}

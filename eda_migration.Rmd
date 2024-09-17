@@ -1,5 +1,13 @@
 # 探索性数据分析-移民缺口 {#eda-migration}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ## 引言
 

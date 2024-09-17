@@ -1,5 +1,15 @@
 # 数据处理 {#tidyverse-dplyr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 我们用一个应用场景，复习上两章讲的数据类型和数据结构等概念。比如，这里有一个表格
 
 - 如果构建学生们的成绩，需要用到是**向量**，一列就可以了。

@@ -1,5 +1,15 @@
 # 正则表达式 {#tidyverse-stringr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+
 ```{r stringr-1, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(stringr)

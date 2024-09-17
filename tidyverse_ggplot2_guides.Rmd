@@ -1,5 +1,14 @@
 # ggplot2之图例系统 {#tidyverse-ggplot2-guides}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 这一章，我们一起学习ggplot2中的图例系统，内容相对简单，但还是推荐大家阅读[ggplot2官方文档](https://cran.r-project.org/web/packages/ggplot2/index.html)
 
 

@@ -1,5 +1,14 @@
 # 探索性数据分析-驯鹿迁移 {#eda-caribou}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 本章我们分析加拿大哥伦比亚林地**驯鹿追踪数据**，数据包含了从1988年到2016年期间260只驯鹿，近250000个位置标签。
 
 ## 驯鹿位置跟踪

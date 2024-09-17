@@ -1,5 +1,13 @@
 # 懒人系列 {#eda-lazyman}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 R社区上很多大神，贡献了很多非常优秀的工具，节省了我们的时间，也给我们的生活增添了无限乐趣。我平时逛github的时候时整理一些，现在分享出来供像我一样的懒人用，因此本文档叫“懒人系列”。欢迎大家补充。
 

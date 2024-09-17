@@ -26,14 +26,14 @@ knitr::include_graphics("images/Rinstall.png")
 
 ### 第二步安装 RStudio
 
-为了更好的使用 R 软件，我推荐大家使用 [RStudio](https://www.rstudio.com/products/rstudio) IDE。因此，安装完 R 后，还需要安装 [RStudio](https://www.rstudio.com/products/rstudio)。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。但我更觉得 R 是有趣的灵魂，而 Rstudio 是好看的皮囊。
+为了更好的使用 R 软件，我推荐大家使用 [RStudio](https://posit.co/download/rstudio-desktop/) IDE。因此，安装完 R 后，还需要安装 [RStudio](https://posit.co/download/rstudio-desktop/)。有同学可能要问 R 与 RStudio 是什么关系呢？打个比方吧，R 就像汽车的发动机, RStudio 就是汽车的仪表盘。但我更觉得 R 是有趣的灵魂，而 Rstudio 是好看的皮囊。
 
 ```{r out.width = '49%', echo = FALSE}
 knitr::include_graphics(c("images/engine.jpg", "images/dashboard.jpg"))
 ```
 
 
-同样，我们从官方网站[https://www.rstudio.com/download](https://www.rstudio.com/download)下载`RStudio Desktop`版并安装，如果你是苹果系统的用户，选择苹果系统对应的rstudio版本即可。
+同样，我们从官方网站[https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)下载`RStudio Desktop`版并安装，如果你是苹果系统的用户，选择苹果系统对应的rstudio版本即可。
 
 ```{r, out.width = '100%', echo = FALSE}
 knitr::include_graphics("images/rstudio_install.png")
@@ -79,7 +79,7 @@ knitr::include_graphics("images/dont-load-data.png")
 
 - 安装过程中提示，我的系统不能兼容 64 位的 Rstudio。
 
-可能你是低版本的windows系统，建议安装旧版本的Rstudio，可以在[https://rstudio.com/products/rstudio/older-versions/](https://rstudio.com/products/rstudio/older-versions/)找到旧版本.
+可能你是低版本的windows系统，建议安装旧版本的Rstudio，可以在[https://docs.posit.co/previous-versions/rstudio.html](https://rstudio.com/products/rstudio/older-versions/)找到旧版本.
 
 - Windows系统中文用户名的问题
 

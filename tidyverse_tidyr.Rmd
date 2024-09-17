@@ -1,5 +1,13 @@
 # 数据规整1 {#tidyverse-tidyr}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 ```{r tidyr-1, message = FALSE, warning = FALSE}
 library(tidyverse)

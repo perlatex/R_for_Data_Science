@@ -1,5 +1,13 @@
 # 探索性数据分析-企鹅的故事 {#eda-penguins}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
 
 今天讲一个关于企鹅的数据故事。这个故事来源于科考人员记录的大量企鹅体征[数据](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv)，图片来源[这里](https://github.com/allisonhorst/palmerpenguins). 
 

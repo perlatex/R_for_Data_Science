@@ -1,8 +1,18 @@
 # 网络爬虫 {#eda-rvest}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   eval         = FALSE,
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 大神说[rvest](https://rvest.tidyverse.org/) 马上推出1.0版本了。
 
-```{r rvest-1, message = FALSE, warning = FALSE}
+```{r rvest-1}
 library(tidyverse)
 library(rvest)
 library(sf)

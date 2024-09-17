@@ -2,6 +2,15 @@
 
 # 探索性数据分析-诺奖获得者 {#eda-nobel}
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
 探索性数据分析（exporatory data analysis）是各种知识的综合运用。本章通过一个案例，讲解探索性数据分析的基本思路，也算是对前面几章内容的一次总结复习。
 
 ## 探索性
