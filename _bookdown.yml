@@ -127,6 +127,7 @@ rmd_files: [
 
   # 论文代码复现
   "replicate_paper.Rmd",
+  "replicate_data_from_paper.Rmd",
 
   "Appendix.Rmd",
   "reference_answer.Rmd",

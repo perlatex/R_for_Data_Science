@@ -181,6 +181,7 @@ knitr::include_graphics("images/rbook1.png")
 
 - 论文复现篇
    - 第 \@ref(replicate-paper) 章列出社会科学数据库，以及若干论文复现代码
+   - 第 \@ref(replicate-suppdata) 章列出开放数据网站，这些网站上的文章大多提供了原始数据，方便复现和学习
    
    
 2、**课件源代码和数据**

@@ -1,0 +1,25 @@
+# 开放数据网站 {#replicate-suppdata}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+## download data from published papers
+
+- https://osf.io
+- https://datadryad.org/
+- https://figshare.com
+- https://zenodo.org
+- https://www.sciencedirect.com/journal/data-in-brief
+- https://data.mendeley.com/
+- https://dataverse.harvard.edu/
+- https://www.mdpi.com/
+- https://peerj.com/
+
+
+
