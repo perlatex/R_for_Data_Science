@@ -138,16 +138,16 @@ my_tibble %>%
 ### 选择全部为0的列
 ```{r}
 tb <- tibble(
-  x = 1:5,
+  x = c(1, 2, 3, 4, 5),
   y = 0,
-  z = 5:1,
-  w = 0
+  z = c(-1, -2, 0, 2, 1),
+  w = c(0, 1, 2, 3, 4)
 )
 tb
 
 
 
-myfun <- function(x) sum(x) == 0
+myfun <- function(x) all(x == 0)
 tb %>%
   select(where(myfun))
 
@@ -155,8 +155,17 @@ tb %>%
 
 # or
 tb %>%
-  select(where(~sum(.x) == 0))
+  select(where(~all(.x == 0)))  # 找出选择全部为0的列
+
+tb %>%
+  select(where(~sum(.x) == 0))  # 找出这一列元素之和为0的列
+
+tb %>%
+  select(where(~any(.x == 0)))  # 找出这一列元素含有0的列
 ```
+
+
+
 
 **课堂练习**：剔除全部为NA的列或者全部为NA的行
 ```{r}
@@ -176,6 +185,8 @@ df %>%
     if_any(everything(), ~ !is.na(.x))
   )
 ```
+
+
 
 
 
