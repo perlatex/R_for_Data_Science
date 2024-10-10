@@ -538,7 +538,7 @@ exams %>% as_tibble() %>% modify(~ . - mean(.))
 ```{r purrr-44, eval=FALSE}
 mtcars %>% map_chr(typeof)
 mtcars %>% map_lgl(is.double)
-mtcars %>% map_int(n_unique)
+mtcars %>% map_int(n_distinct)
 mtcars %>% map_dbl(mean)
 ```
 
