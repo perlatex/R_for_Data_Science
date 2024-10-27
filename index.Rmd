@@ -117,6 +117,7 @@ knitr::include_graphics("images/rbook1.png")
    - 第 \@ref(tidyverse-beauty-of-across2) 章介绍Tidyverse中的across()之美2
    - 第 \@ref(tidyverse-beauty-of-across3) 章介绍Tidyverse中的across()之美3
    - 第 \@ref(tidyverse-beauty-of-across4) 章介绍Tidyverse中的across()之美4
+   - 第 \@ref(tidyverse-beauty-of-purrr1) 章介绍Tidyverse中的purrr之美1
    - 第 \@ref(tidyverse-NA) 章介绍Tidyverse中的NA
    - 第 \@ref(tidyverse-dot) 章介绍Tidyverse中的dot
    - 第 \@ref(tidyverse-tidyeval) 章介绍非标准性评估

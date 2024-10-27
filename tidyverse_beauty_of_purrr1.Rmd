@@ -1,0 +1,71 @@
+# tidyverse中的purrr之美1 {#tidyverse-beauty-of-purrr1}
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+   echo         = TRUE, 
+   warning      = FALSE, 
+   message      = FALSE,
+   fig.showtext = TRUE
+)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(broom)
+penguins <- palmerpenguins::penguins %>% drop_na()
+```
+
+
+## 接、化、发
+
+向马保国老师的武术精髓致敬。
+
+
+```{r}
+f <- list(
+  body_mass_g ~ bill_length_mm,
+  body_mass_g ~ bill_length_mm + bill_depth_mm,
+  body_mass_g ~ bill_length_mm + bill_depth_mm + flipper_length_mm
+) 
+```
+
+
+```{r, eval=FALSE}
+f %>% 
+  set_names(paste("model", 1:3)) %>%            # 接
+  map( ~ tidy(lm(.x, data = penguins)) ) %>%    # 化
+  list_rbind(names_to = "model")                # 发
+```
+
+
+
+
+```{r, echo=FALSE}
+f %>% 
+  set_names(paste("model", 1:3)) %>% 
+  map( ~ tidy(lm(.x, data = penguins)) ) %>% 
+  list_rbind(names_to = "model") %>% 
+  flextable::as_grouped_data(groups = "model") %>% 
+  flextable::flextable() %>% 
+  flextable::colformat_double(digits = 3) 
+```
+
+
+也可以不用`broom::tidy()`, 而使用`gtsummary::tbl_regression()`
+```{r}
+library(gtsummary)
+
+f %>%                                                    
+  set_names() %>%                                       # 接       
+  map(~ tbl_regression(lm(.x, data = penguins)) ) %>%   # 化
+  tbl_merge(tab_spanner = paste("model", 1:3))          # 发
+```
+
+
+
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
+
