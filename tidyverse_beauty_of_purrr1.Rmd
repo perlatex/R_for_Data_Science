@@ -52,7 +52,7 @@ f %>%
 
 
 也可以不用`broom::tidy()`, 而使用`gtsummary::tbl_regression()`
-```{r}
+```{r, eval=FALSE}
 library(gtsummary)
 
 f %>%                                                    
@@ -61,6 +61,16 @@ f %>%
   tbl_merge(tab_spanner = paste("model", 1:3))          # 发
 ```
 
+
+```{r, echo=FALSE}
+library(gtsummary)
+
+f %>%                                                    
+  set_names() %>%                                       # 接       
+  map(~ tbl_regression(lm(.x, data = penguins)) ) %>%   # 化
+  tbl_merge(tab_spanner = paste("model", 1:3)) %>%      # 发
+  as_flex_table() 
+```
 
 
 
