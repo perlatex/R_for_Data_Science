@@ -98,7 +98,7 @@ df %>% complete(x, y, fill = list(z = 0))
 df %>% complete(x, y)
 ```
 
-- 补位的时候造成的空缺，可通过`fill = list(x = 0)` 控制填充
+- 补位的时候造成的空缺，可通过`fill = list(z = 0)` 控制填充
 
 ```{r}
 df %>% complete(x, y, fill = list(z = 0))
