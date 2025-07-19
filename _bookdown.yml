@@ -102,6 +102,7 @@ rmd_files: [
   "bayesian_vaccine_effectiveness.Rmd",
   "bayesian_tokyo-olympics-100m.Rmd",
   "bayesian_GLMM.Rmd",
+  "bayesian_in_journals.Rmd",
 
 
   # 应用篇
