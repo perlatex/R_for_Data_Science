@@ -46,7 +46,7 @@ knitr::include_graphics("images/ggplot2_guides.jpg")
 - `guide_colorsteps()`: makes colorbar discrete 
 
 
-```{r out.width = "80%"}
+```{r out.width = "80%", echo = FALSE}
 knitr::include_graphics("images/img/guides_examples.png")
 ```
 
